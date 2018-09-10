@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Net;
 using System.IO;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace FlyingPiggyCloud.Controllers
 {
     public class RestClient
     {
-        private string BaseUri;
+        private readonly string BaseUri;
         public RestClient(string baseUri)
         {
             BaseUri = baseUri;
@@ -48,9 +45,12 @@ namespace FlyingPiggyCloud.Controllers
 
         #region POST方式实现
 
-        public string Post(string data, string uri)
+        public async Task<string> PostAsync(string data, string uri)
         {
-            return CommonHttpRequest(data, uri, "POST");
+            return await Task.Run(()=>
+            {
+                return CommonHttpRequest(data, uri, "POST");
+            });
         }
 
         public string CommonHttpRequest(string data, string uri, string type)
@@ -61,7 +61,7 @@ namespace FlyingPiggyCloud.Controllers
             //构造http请求的对象
             HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(serviceUrl);
             //转成网络流
-            byte[] buf = System.Text.Encoding.GetEncoding("UTF-8").GetBytes(data);
+            byte[] buf = Encoding.GetEncoding("UTF-8").GetBytes(data);
             //设置
             myRequest.Method = type;
             myRequest.ContentLength = buf.Length;
@@ -73,7 +73,15 @@ namespace FlyingPiggyCloud.Controllers
             newStream.Write(buf, 0, buf.Length);
             newStream.Close();
             // 获得接口返回值
-            HttpWebResponse myResponse = (HttpWebResponse)myRequest.GetResponse();
+            HttpWebResponse myResponse;
+            try
+            {
+                myResponse = (HttpWebResponse)myRequest.GetResponse();
+            }
+            catch(WebException e)
+            {
+                myResponse = (HttpWebResponse)e.Response;
+            }
             StreamReader reader = new StreamReader(myResponse.GetResponseStream(), Encoding.UTF8);
             string ReturnXml = reader.ReadToEnd();
             reader.Close();

@@ -19,6 +19,9 @@ namespace FlyingPiggyCloud.Controllers.Results
 
         [JsonProperty(PropertyName = "status")]
         public string Status { get; set; }
+
+        [JsonProperty(PropertyName = "token")]
+        public string Token { get; set; }
     }
 
     namespace User
@@ -29,9 +32,6 @@ namespace FlyingPiggyCloud.Controllers.Results
         /// </summary>
         public class SendRegisterMessageResult: ResponseMessageBase
         {
-            [JsonProperty(PropertyName = "token")]
-            public string Token { get; set; }
-
             [JsonProperty(PropertyName = "result")]
             public string Result { get; set; }
         }
@@ -41,9 +41,6 @@ namespace FlyingPiggyCloud.Controllers.Results
         /// </summary>
         public class RegisterResponseResult : ResponseMessageBase
         {
-            [JsonProperty(PropertyName = "token")]
-            public string Token { get; set; }
-
             [JsonProperty(PropertyName = "result")]
             public UserInformation Result { get; set; }
         }
@@ -98,9 +95,6 @@ namespace FlyingPiggyCloud.Controllers.Results
         /// </summary>
         public class LoginResponseResult:ResponseMessageBase
         {
-            [JsonProperty(PropertyName = "token")]
-            public string Token { get; set; }
-
             [JsonProperty(PropertyName = "result")]
             public UserInformation Result { get; set; }
         }
@@ -150,7 +144,7 @@ namespace FlyingPiggyCloud.Controllers.Results
             /// 父目录id
             /// </summary>
             [JsonProperty(PropertyName = "parent")]
-            public int Parent { get; set; }
+            public string Parent { get; set; }
 
             /// <summary>
             /// 文件创建时间
@@ -172,6 +166,13 @@ namespace FlyingPiggyCloud.Controllers.Results
 
             /// <summary>
             /// 用户id
+            /// </summary>
+            [JsonProperty(PropertyName = "userId")]
+            public long UserId { get; set; }
+
+
+            /// <summary>
+            /// 路径
             /// </summary>
             [JsonProperty(PropertyName = "path")]
             public string Path { get; set; }
@@ -205,6 +206,30 @@ namespace FlyingPiggyCloud.Controllers.Results
             /// </summary>
             [JsonProperty(PropertyName = "recycle")]
             public int Recycle { get; set; }
+
+            /// <summary>
+            /// 文件版本
+            /// </summary>
+            [JsonProperty(PropertyName = "version")]
+            public int Version { get; set; }
+
+            /// <summary>
+            /// 是否锁定
+            /// </summary>
+            [JsonProperty(PropertyName = "locking")]
+            public bool Locking { get; set; }
+
+            /// <summary>
+            /// 如果锁定,文件锁定的情况下，当前后台正进行的操作
+            /// </summary>
+            [JsonProperty(PropertyName = "opt")]
+            public int Opt { get; set; }
+
+            /// <summary>
+            /// 文件下载地址
+            /// </summary>
+            [JsonProperty(PropertyName = "downloadAddress")]
+            public string DownloadAddress { get; set; }
         }
 
         /// <summary>
@@ -254,9 +279,6 @@ namespace FlyingPiggyCloud.Controllers.Results
         /// </summary>
         public class PageResponseResult:ResponseMessageBase
         {
-            [JsonProperty(PropertyName = "token")]
-            public string Token { get; set; }
-
             [JsonProperty(PropertyName = "result")]
             public FilesListPage Result { get; set; }
         }
@@ -269,9 +291,6 @@ namespace FlyingPiggyCloud.Controllers.Results
         /// </summary>
         public class GetMetaDataResponseResult:ResponseMessageBase
         {
-            [JsonProperty(PropertyName = "token")]
-            public string Token { get; set; }
-
             [JsonProperty(PropertyName = "result")]
             public FileMetaData Result { get; set; }
         }
@@ -282,9 +301,6 @@ namespace FlyingPiggyCloud.Controllers.Results
         /// </summary>
         public class UploadResponseResult:ResponseMessageBase
         {
-            [JsonProperty(PropertyName = "token")]
-            public string Token { get; set; }
-
             [JsonProperty(PropertyName = "result")]
             public Dictionary<string,string> Result { get; set; }
         }

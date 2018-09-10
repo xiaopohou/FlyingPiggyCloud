@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,6 +24,15 @@ namespace FlyingPiggyCloud
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private async void ModuleTest_Click(object sender, RoutedEventArgs e)
+        {
+            var TestWindow = new Views.LoginWindow();
+            TestWindow.ShowDialog();
+            //Controllers.UserCenterMethods userCenterMethods = new Controllers.UserCenterMethods(FlyingPiggyCloud.Properties.Settings.Default.BaseUri);
+
+            //DebugTextBlock.Text = JsonConvert.SerializeObject(Controllers.ConverterToolKits.UserMd5("flyingpiggy"));
         }
     }
 }

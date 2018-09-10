@@ -59,5 +59,75 @@ namespace FlyingPiggyCloud.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] SourceHanSansSC_Bold {
+            get {
+                object obj = ResourceManager.GetObject("SourceHanSansSC_Bold", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] SourceHanSansSC_ExtraLight {
+            get {
+                object obj = ResourceManager.GetObject("SourceHanSansSC_ExtraLight", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] SourceHanSansSC_Heavy {
+            get {
+                object obj = ResourceManager.GetObject("SourceHanSansSC_Heavy", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] SourceHanSansSC_Light {
+            get {
+                object obj = ResourceManager.GetObject("SourceHanSansSC_Light", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] SourceHanSansSC_Medium {
+            get {
+                object obj = ResourceManager.GetObject("SourceHanSansSC_Medium", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] SourceHanSansSC_Normal {
+            get {
+                object obj = ResourceManager.GetObject("SourceHanSansSC_Normal", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] SourceHanSansSC_Regular {
+            get {
+                object obj = ResourceManager.GetObject("SourceHanSansSC_Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

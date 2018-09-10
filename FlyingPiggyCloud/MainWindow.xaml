@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <TextBlock Name="DebugTextBlock" TextWrapping="Wrap" Margin="0"/>
+        <Button Name="ModuleTest" Content="单元测试" HorizontalAlignment="Left" Margin="183,194,0,0" VerticalAlignment="Top" Width="75" Click="ModuleTest_Click"/>
     </Grid>
 </Window>

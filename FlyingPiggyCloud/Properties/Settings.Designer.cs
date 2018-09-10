@@ -22,5 +22,14 @@ namespace FlyingPiggyCloud.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.6pan.cn")]
+        public string BaseUri {
+            get {
+                return ((string)(this["BaseUri"]));
+            }
+        }
     }
 }
