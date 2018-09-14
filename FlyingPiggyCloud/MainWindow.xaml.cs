@@ -26,9 +26,9 @@ namespace FlyingPiggyCloud
             InitializeComponent();
         }
 
-        private async void ModuleTest_Click(object sender, RoutedEventArgs e)
+        private void ModuleTest_Click(object sender, RoutedEventArgs e)
         {
-            var TestWindow = new Views.LoginWindow();
+            var TestWindow = new Views.MainFrameWork();
             TestWindow.ShowDialog();
             //Controllers.UserCenterMethods userCenterMethods = new Controllers.UserCenterMethods(FlyingPiggyCloud.Properties.Settings.Default.BaseUri);
 

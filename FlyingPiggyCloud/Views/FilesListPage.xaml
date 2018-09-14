@@ -7,8 +7,73 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="FilesListPage">
-
+    <Page.Resources>
+        <DataTemplate x:Key="MetaName">
+            <Grid>
+                <Image Width="24" Height="20" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Name}" Foreground="#FF5A5A5A" FontSize="12" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"  HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" />
+                <Image Width="14" Opacity="0" Height="12" Source="/Resources/more.png" x:Name="MoreBotton" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <Image Width="14" Opacity="0" Height="12" Source="/Resources/download.png" x:Name="DownloadBotton" HorizontalAlignment="Right" Margin="0,0,34,0" VerticalAlignment="Center"/>
+            </Grid>
+            <DataTemplate.Triggers>
+                <!--鼠标移过时显示附加按钮-->
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="MoreBotton" Property="Opacity" Value="1"/>
+                    <Setter TargetName="DownloadBotton" Property="Opacity" Value="1"/>
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+        <DataTemplate x:Key="MetaSize">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A" Text="{Binding Size}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="MetaMTime">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A" Text="{Binding MTime}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
     <Grid>
+        <!--一个ObservableCollection对象用于绑定路径地址-->
+        <ListBox Name="AdressBar" Height="24" VerticalAlignment="Top">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="11" Source="/Resources/next.png"/>
+                        <TextBlock Foreground="#FF5A5A5A" Text="{Binding DirectoryName}" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         
+        <!--这个ListView是本Page的主要结构-->
+        <ListView Name="FileListPage" Margin="0,24,0,0">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperFlieName, Path=ActualWidth}" CellTemplate="{StaticResource MetaName}" Header="文件名"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperFileSize, Path=ActualWidth}" CellTemplate="{StaticResource MetaSize}" Header="大小"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperMTime, Path=ActualWidth}" CellTemplate="{StaticResource MetaMTime}" Header="修改时间"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        
+        <!--这个Grid用于帮助GridView自动校正分栏宽度-->
+        <Grid Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="18*"/>
+                <ColumnDefinition Width="16*"/>
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" x:Name="WidthHelperFlieName"/>
+            <Grid Grid.Column="1" x:Name="WidthHelperFileSize"/>
+            <Grid Grid.Column="2" x:Name="WidthHelperMTime"/>
+        </Grid>
+        <!--<Grid Width="100" Height="50" Background="#ff000000" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Opacity="1"/>-->
     </Grid>
 </Page>

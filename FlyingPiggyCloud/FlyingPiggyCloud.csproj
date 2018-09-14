@@ -73,6 +73,9 @@
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MainFrameWork.xaml.cs">
+      <DependentUpon>MainFrameWork.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainFrameWork.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -143,6 +150,32 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\BasicLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\next.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\download.png" />
+    <Resource Include="Resources\more.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\last.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\图片.png" />
+    <Resource Include="Resources\垃圾箱.png" />
+    <Resource Include="Resources\完成.png" />
+    <Resource Include="Resources\文件.png" />
+    <Resource Include="Resources\视频.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\上传.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\正在上传.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\正在下载.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
