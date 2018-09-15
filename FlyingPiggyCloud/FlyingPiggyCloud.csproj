@@ -177,5 +177,8 @@
   <ItemGroup>
     <Resource Include="Resources\正在下载.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\RewriteControls\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

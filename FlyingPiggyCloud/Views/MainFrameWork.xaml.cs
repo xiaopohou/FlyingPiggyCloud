@@ -19,9 +19,31 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class MainFrameWork : Window
     {
+        //应有的用于绑定的对象：一个用户信息、一个页控制器、一个渲染页
         public MainFrameWork()
         {
             InitializeComponent();
+        }
+
+        private void MinWinButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void CloseWinButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void Grid_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+
+            {
+
+                DragMove();
+
+            }
         }
     }
 }

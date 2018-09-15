@@ -198,11 +198,140 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!--最小化按钮样式-->
+        <Style x:Key="WinMinBtnStyle" TargetType="Button">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Width" Value="25"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="MainBorder" Background="Transparent">
+                            <Grid>
+                                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="MainBorder" Property="Background" Value="#33a58d"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--关闭按钮样式-->
+        <Style x:Key="WinCloseBtnStyle" TargetType="Button">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Width" Value="25"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="MainBorder" Background="Transparent">
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="MainBorder" Property="Background" Value="#d44c45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--窗体控件模板-->
+        <ControlTemplate x:Key="MetroWindowTemplate" TargetType="{x:Type Window}">
+            <Border Background="White">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Background="#FF2EC17C" MouseMove="Grid_MouseMove">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="WindowTitleTbl" Grid.Column="0" Text="{TemplateBinding Title}" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="10,0" Foreground="White"/>
+                        <Button x:Name="MinWinButton" Grid.Column="2" Style="{StaticResource WinMinBtnStyle}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="MinWinButton_Click">
+                            <Button.Content>
+                                <StackPanel>
+                                    <Path Stroke="White" StrokeThickness="2" Data="M1,6 L18,6"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                        
+                        <Button x:Name="CloseWinButton" Grid.Column="3" Style="{StaticResource WinCloseBtnStyle}" Margin="2,0,8,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="CloseWinButton_Click">
+                            <Button.Content>
+                                <StackPanel>
+                                    <Path Stroke="White" StrokeThickness="2" Data="M2,2 L16,16 M2,16 L16,2"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+
+                    <AdornerDecorator Grid.Row="1">
+                        <ContentPresenter/>
+                    </AdornerDecorator>
+                </Grid>
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="#FF5A5A5A"/>
+                </Border.Effect>
+            </Border>
+        </ControlTemplate>
+
+        <Style x:Key="MetroWindowStyle" TargetType="{x:Type Window}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="AllowsTransparency" Value="True"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="WindowStyle" Value="None"/>
+            <Setter Property="Template" Value="{StaticResource MetroWindowTemplate}"/>
+        </Style>
+
+        <!-- Show Chat Window Animation -->
+        <!--<Storyboard x:Key="showChatWindow">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Window" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:001" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ChatControl" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:001" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>-->
+
+
+        <!-- Close Chat Window Animation -->
+        <!--<Storyboard x:Key="hideChatWindow">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Window" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:001" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ChatControl" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:001" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>-->
     </Window.Resources>
     <Grid Background="#FFFFFFFF">
-        <Frame NavigationUIVisibility="Hidden" Source="{Binding CurrentPage}" Margin="200,60,0,0"/>
+        <Frame Name="MainFrame" NavigationUIVisibility="Hidden" Source="{Binding CurrentPage}" Margin="200,60,0,0"/>
         <Grid Background="#FFF5F5F5" HorizontalAlignment="Left" Width="200">
-            <Grid Height="160" Margin="0" VerticalAlignment="Top">
+            <Grid Name="UserGrid" Height="160" Margin="0" VerticalAlignment="Top">
                 <Border CornerRadius="50" BorderThickness="1" Height="75" Margin="0,29,0,0" VerticalAlignment="Top" Width="75">
                     <Border.Effect>
                         <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="#FF5A5A5A"/>
@@ -263,9 +392,6 @@
                     </RadioButton>
                 </StackPanel>
             </Border>
-            <!--<Grid.Effect>
-                <DropShadowEffect ShadowDepth="1" BlurRadius="3"/>
-            </Grid.Effect>-->
         </Grid>
         <Grid Background="#FFF5F5F5" Height="60" Margin="200,0,0,0" VerticalAlignment="Top">
             <Button HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="0" Style="{StaticResource ButtonBasicDesign}" Margin="180,0,0,0" Background="#FFFFFFFF">
@@ -286,10 +412,10 @@
                     <TextBlock Text="上传" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FFFFFFFF"/>
                 </StackPanel>
             </Button>
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource CircleButton}" Margin="10,0,0,0">
+            <Button Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource CircleButton}" Margin="10,0,0,0">
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/last.png" Stretch="Fill"/>
             </Button>
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource CircleButton}" Margin="40,0,0,0">
+            <Button Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource CircleButton}" Margin="40,0,0,0">
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/next.png" Stretch="Fill"/>
             </Button>
         </Grid>
