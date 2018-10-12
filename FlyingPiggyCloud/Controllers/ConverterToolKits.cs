@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace FlyingPiggyCloud.Controllers
 {
     public static class ConverterToolKits
     {
+        private const float V = 1024f;
+
         /// <summary>
         /// 根据指定字符串依据UTF-8编码计算其md5小写值
         /// </summary>
@@ -32,7 +31,7 @@ namespace FlyingPiggyCloud.Controllers
             }
 
             // Return the hexadecimal string.
-            var x = sBuilder.ToString();
+            string x = sBuilder.ToString();
             return x;
         }
 
@@ -45,7 +44,10 @@ namespace FlyingPiggyCloud.Controllers
             {
                 string Value = (string)value;
                 if ((string)value == "")
+                {
                     return false;
+                }
+
                 return true;
             }
 
@@ -53,11 +55,39 @@ namespace FlyingPiggyCloud.Controllers
             {
                 bool Value = (bool)value;
                 if (Value)
+                {
                     return "1";
+                }
                 else
+                {
                     return "0";
+                }
             }
         }
 
+        /// <summary>
+        /// 将单位为字节的文件尺寸表示为可读性良好的字符串
+        /// </summary>
+        /// <param name="Size"></param>
+        /// <returns></returns>
+        public static string SizeCalculator(long Size)
+        {
+            if (Size / V < 1)
+            {
+                return ((float)Size).ToString("F2") + "B";
+            }
+            else if (Size / V / V < 1)
+            {
+                return (Size / V).ToString("F2") + "KB";
+            }
+            else if (Size / V / V / V < 1)
+            {
+                return (Size / V / V).ToString("F2") + "MB";
+            }
+            else
+            {
+                return (Size / V / V / V).ToString("F2") + "GB";
+            }
+        }
     }
 }
