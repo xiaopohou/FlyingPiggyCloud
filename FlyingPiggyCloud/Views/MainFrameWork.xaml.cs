@@ -60,7 +60,7 @@ namespace FlyingPiggyCloud.Views
             switch(pageNavigate)
             {
                 case PageNavigate.Root:
-                    Page = new FilesListPage();
+                    Page = new FilesListPage("/");
                     OnPropertyChanged("Page");
                     break;
                 case PageNavigate.Images:
@@ -88,7 +88,7 @@ namespace FlyingPiggyCloud.Views
                     OnPropertyChanged("Page");
                     break;
                 default:
-                    Page = new FilesListPage();
+                    Page = new FilesListPage("/");
                     break;
             }
         }

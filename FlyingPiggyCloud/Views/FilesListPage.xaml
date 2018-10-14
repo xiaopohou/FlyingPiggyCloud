@@ -189,6 +189,7 @@
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/next.png" Stretch="Fill"/>
             </Button>
         </Grid>
+        
         <!--一个ObservableCollection对象用于绑定路径地址-->
         <ListBox Name="AdressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top">
             <ListBox.ItemsPanel>
@@ -199,8 +200,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate >
                     <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#FF5A5A5A" Text="{Binding}" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
                         <Image Height="11" Source="/Resources/next.png"/>
-                        <TextBlock Foreground="#FF5A5A5A" Text="{Binding DirectoryName}" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -228,6 +229,5 @@
             <Grid Grid.Column="1" x:Name="WidthHelperFileSize"/>
             <Grid Grid.Column="2" x:Name="WidthHelperMTime"/>
         </Grid>
-        <!--<Grid Width="100" Height="50" Background="#ff000000" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Opacity="1"/>-->
     </Grid>
 </Page>

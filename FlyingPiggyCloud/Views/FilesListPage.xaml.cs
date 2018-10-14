@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace FlyingPiggyCloud.Views
@@ -11,34 +10,36 @@ namespace FlyingPiggyCloud.Views
     {
         private ViewModels.FileList fileList;
 
-        private string[] Path => fileList.CurrentPath.Split("/".ToCharArray());
+        //public FilesListPage()
+        //{
+        //    fileList = new ViewModels.FileList();
+        //    InitializeComponent();
+        //    FileListView.ItemsSource = fileList;
+        //}
 
-        public FilesListPage()
-        {
-            fileList = new ViewModels.FileList();
-            InitializeComponent();
-            FileListView.ItemsSource = fileList;
-        }
+        //public ObservableCollection<string> CurrentPath;
 
+        /// <summary>
+        /// 通过指定路径创建文件列表页，如果路径不存在将自动创建
+        /// </summary>
+        /// <param name="Path"></param>
         public FilesListPage(string Path)
         {
-            fileList = new ViewModels.FileList("", Path);
+            fileList = new ViewModels.FileList("", Path,true);
             InitializeComponent();
             FileListView.ItemsSource = fileList;
+            System.Collections.Generic.List<string> x = new System.Collections.Generic.List<string>(Path.Split(new string[] { "/" }, System.StringSplitOptions.None));
+            if (x[x.Count - 1] == "")
+                x.RemoveAt(x.Count - 1);
+            AdressBar.ItemsSource = x;
         }
 
         private async void NewFolderButton_Click(object sender, RoutedEventArgs e)
         {
             string NewFolderName = "新文件夹";
-            //int Count = 0;
-            //while (!(await fileList.NewFolder(NewFolderName)))
-            //{
-            //    Count++;
-            //    NewFolderName = "新文件夹" + string.Format("（{0}）", Count);
-            //}
-            await fileList.NewFolder(NewFolderName);
+            await fileList.NewFolder(NewFolderName,true);
             fileList.Refresh(sender, e);
-
         }
     }
+
 }

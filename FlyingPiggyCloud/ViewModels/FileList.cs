@@ -10,7 +10,7 @@ namespace FlyingPiggyCloud.ViewModels
     internal class FileList : ObservableCollection<FileListItem>
     {
         private static Controllers.FileSystemMethods FileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
-        
+
         /// <summary>
         /// 当前目录的UUID
         /// </summary>
@@ -34,7 +34,10 @@ namespace FlyingPiggyCloud.ViewModels
             {
                 PageResponseResult x = await FileSystemMethods.GetDirectory(UUID, "", Page);
                 if (!x.Success)
+                {
                     throw new Exception(x.Message);
+                }
+
                 CurrentUUID = x.Result.DictionaryInformation.UUID;
                 CurrentPath = x.Result.DictionaryInformation.Path;
                 OnPropertyChanged(new PropertyChangedEventArgs("CurrentPath"));
@@ -59,7 +62,8 @@ namespace FlyingPiggyCloud.ViewModels
         /// 把指定Path的目录加载到当前列表
         /// </summary>
         /// <param name="Path"></param>
-        private async void GetDirectoryByPath(string Path,bool CreatingForMissing=true)
+        /// <param name="IsAutoCreating">当路径不存在时是否自动新建该文件夹</param>
+        private async void GetDirectoryByPath(string Path, bool IsAutoCreating = false)
         {
             Clear();
             List<FileMetaData> items = new List<FileMetaData>();
@@ -67,23 +71,26 @@ namespace FlyingPiggyCloud.ViewModels
             do
             {
                 PageResponseResult x = await FileSystemMethods.GetDirectory("", Path, Page);
-                if (!x.Success&&CreatingForMissing)
+                if (!x.Success && IsAutoCreating)
                 {
                     await FileSystemMethods.CreatDirectory("", "", Path);
                     x = await FileSystemMethods.GetDirectory("", Path, Page);
                 }
-                CurrentUUID = x.Result.DictionaryInformation.UUID;
-                CurrentPath = x.Result.DictionaryInformation.Path;
-                OnPropertyChanged(new PropertyChangedEventArgs("CurrentPath"));
-                if (Page == x.Result.TotalPage)
+                if (x.Success)
                 {
-                    Page = 0;
+                    CurrentUUID = x.Result.DictionaryInformation.UUID;
+                    CurrentPath = x.Result.DictionaryInformation.Path;
+                    OnPropertyChanged(new PropertyChangedEventArgs("CurrentPath"));
+                    if (Page == x.Result.TotalPage)
+                    {
+                        Page = 0;
+                    }
+                    else
+                    {
+                        Page++;
+                    }
+                    items.AddRange(x.Result.List);
                 }
-                else
-                {
-                    Page++;
-                }
-                items.AddRange(x.Result.List);
             } while (Page != 0);
 
             foreach (FileMetaData a in items)
@@ -96,20 +103,32 @@ namespace FlyingPiggyCloud.ViewModels
         /// 指定文件夹名称在当前路径新建文件夹
         /// </summary>
         /// <param name="Name"></param>
+        /// <param name="IsAutoRename">指示若存在同名文件夹，是否自动重命名</param>
         /// <returns></returns>
-        public async Task<bool> NewFolder(string Name)
+        public async Task<bool> NewFolder(string Name, bool IsAutoRename = false)
         {
-            foreach(FileListItem a in Items)
+            foreach (FileListItem a in Items)
             {
-                if(a.Name==Name)
+                if (a.Name == Name)
                 {
-                    Name = Name + DateTime.Now.ToString();
+                    if (IsAutoRename)
+                    {
+                        Name = Name + DateTime.Now.ToString();
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
                     break;
                 }
             }
-            var x = await FileSystemMethods.CreatDirectory(Name, CurrentUUID);
+            GetMetaDataResponseResult x = await FileSystemMethods.CreatDirectory(Name, CurrentUUID);
             if (!x.Success)
+            {
                 throw new Exception(x.Message);
+            }
+
             if (x.Success)
             {
                 Add(new FileListItem(x.Result));
@@ -132,12 +151,16 @@ namespace FlyingPiggyCloud.ViewModels
         /// </summary>
         /// <param name="UUID"></param>
         /// <param name="Path"></param>
-        public FileList(string UUID="",string Path="/")
+        public FileList(string UUID = "", string Path = "/", bool IsAutoCreating = false)
         {
             if (UUID != "")
+            {
                 GetDirectoryByUUID(UUID);
+            }
             else
-                GetDirectoryByPath(Path);
+            {
+                GetDirectoryByPath(Path,IsAutoCreating);
+            }
         }
     }
 
