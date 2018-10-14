@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
         mc:Ignorable="d"
-        Title="MainFrameWork" MinHeight="600" MinWidth="800" d:DesignWidth="800" d:DesignHeight="600" Style="{DynamicResource MetroWindowStyle}">
+        Title="MainFrameWork" MinHeight="600" MinWidth="800" d:DesignWidth="800" d:DesignHeight="600" Style="{DynamicResource MetroWindowStyle}" Name="ListWindow">
     <Window.Resources>
         <!--单选框的模板重写用于左边栏-->
         <SolidColorBrush x:Key="RadioButton.Static.Background" Color="#FFFFFFFF"/>
@@ -21,6 +21,7 @@
         <SolidColorBrush x:Key="RadioButton.Pressed.Glyph" Color="#FF212121"/>
         <SolidColorBrush x:Key="RadioButton.Static.Glyph" Color="#FF212121"/>
         <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{StaticResource RadioButton.Static.Background}"/>
             <Setter Property="BorderBrush" Value="{StaticResource RadioButton.Static.Border}"/>
@@ -223,44 +224,44 @@
             <Border BorderBrush="#FFBFBFBF" BorderThickness="0,2,0,0" Margin="0,160,0,0">
                 <StackPanel Name="LeftRadioButtonsGroup">
                     <TextBlock Text="我的文件" Margin="10" Foreground="#FF919191" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=0, Converter={StaticResource LeftRadioIsCheckdConvert}}">
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=0, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/文件.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="全部文件" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=1, Converter={StaticResource LeftRadioIsCheckdConvert}}">
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=1, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/图片.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="图片" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=2, Converter={StaticResource LeftRadioIsCheckdConvert}}">
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=2, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/视频.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="视频" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
                     <TextBlock Text="传输列表" Margin="10" Foreground="#FF919191" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=3, Converter={StaticResource LeftRadioIsCheckdConvert}}">
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=3, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/正在上传.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="正在上传" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=4, Converter={StaticResource LeftRadioIsCheckdConvert}}">
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=4, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Width="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/正在下载.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="正在下载" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=5, Converter={StaticResource LeftRadioIsCheckdConvert}}">
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=5, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/完成.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="传输完成" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=6, Converter={StaticResource LeftRadioIsCheckdConvert}}">
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=6, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/垃圾箱.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="垃圾箱" VerticalAlignment="Center" HorizontalAlignment="Left"/>

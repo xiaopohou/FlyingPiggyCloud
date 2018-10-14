@@ -30,13 +30,15 @@ namespace FlyingPiggyCloud.Views
         private async void NewFolderButton_Click(object sender, RoutedEventArgs e)
         {
             string NewFolderName = "新文件夹";
-            int Count = 0;
-            while (!(await fileList.NewFolder(NewFolderName)))
-            {
-                Count++;
-                NewFolderName = NewFolderName + string.Format("（{0}）", Count);
-            }
+            //int Count = 0;
+            //while (!(await fileList.NewFolder(NewFolderName)))
+            //{
+            //    Count++;
+            //    NewFolderName = "新文件夹" + string.Format("（{0}）", Count);
+            //}
+            await fileList.NewFolder(NewFolderName);
             fileList.Refresh(sender, e);
+
         }
     }
 }

@@ -33,6 +33,8 @@ namespace FlyingPiggyCloud.ViewModels
             do
             {
                 PageResponseResult x = await FileSystemMethods.GetDirectory(UUID, "", Page);
+                if (!x.Success)
+                    throw new Exception(x.Message);
                 CurrentUUID = x.Result.DictionaryInformation.UUID;
                 CurrentPath = x.Result.DictionaryInformation.Path;
                 OnPropertyChanged(new PropertyChangedEventArgs("CurrentPath"));
@@ -57,7 +59,7 @@ namespace FlyingPiggyCloud.ViewModels
         /// 把指定Path的目录加载到当前列表
         /// </summary>
         /// <param name="Path"></param>
-        private async void GetDirectoryByPath(string Path)
+        private async void GetDirectoryByPath(string Path,bool CreatingForMissing=true)
         {
             Clear();
             List<FileMetaData> items = new List<FileMetaData>();
@@ -65,6 +67,11 @@ namespace FlyingPiggyCloud.ViewModels
             do
             {
                 PageResponseResult x = await FileSystemMethods.GetDirectory("", Path, Page);
+                if (!x.Success&&CreatingForMissing)
+                {
+                    await FileSystemMethods.CreatDirectory("", "", Path);
+                    x = await FileSystemMethods.GetDirectory("", Path, Page);
+                }
                 CurrentUUID = x.Result.DictionaryInformation.UUID;
                 CurrentPath = x.Result.DictionaryInformation.Path;
                 OnPropertyChanged(new PropertyChangedEventArgs("CurrentPath"));
@@ -92,7 +99,17 @@ namespace FlyingPiggyCloud.ViewModels
         /// <returns></returns>
         public async Task<bool> NewFolder(string Name)
         {
+            foreach(FileListItem a in Items)
+            {
+                if(a.Name==Name)
+                {
+                    Name = Name + DateTime.Now.ToString();
+                    break;
+                }
+            }
             var x = await FileSystemMethods.CreatDirectory(Name, CurrentUUID);
+            if (!x.Success)
+                throw new Exception(x.Message);
             if (x.Success)
             {
                 Add(new FileListItem(x.Result));
@@ -158,7 +175,7 @@ namespace FlyingPiggyCloud.ViewModels
         /// <summary>
         /// 文件名
         /// </summary>
-        public string FileName => MetaData.Name;
+        public string Name => MetaData.Name;
 
         /// <summary>
         /// 文件大小

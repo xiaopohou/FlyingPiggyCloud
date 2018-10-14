@@ -24,16 +24,20 @@ namespace FlyingPiggyCloud.Views
         //应有的用于绑定的对象：一个用户信息、一个页控制器、一个渲染页
         public MainFrameWork()
         {
-            CurrentPage=PageNavigate.Root;
+            CurrentPage=PageNavigate.Downloading;
             InitializeComponent();
-            MainFrame.Content = Page;
-            LeftRadioButtonsGroup.DataContext = this;
+            DataContext = this;
+            BindingOperations.SetBinding(MainFrame, Frame.ContentProperty, new Binding
+            {
+                Path = new PropertyPath("Page"),
+                Mode = BindingMode.TwoWay
+            });
         }
 
         /// <summary>
         /// 与左边栏绑定
         /// </summary>
-        internal PageNavigate CurrentPage
+        public PageNavigate CurrentPage
         {
             get
             {
@@ -41,15 +45,15 @@ namespace FlyingPiggyCloud.Views
             }
             set
             {
-                Navigate(value);
                 currentPage = value;
+                Navigate(value);
                 OnPropertyChanged("CurrentPage");
             }
         }
 
         private PageNavigate currentPage;
 
-        private Page Page { get; set; }
+        public Page Page { get; set; }
 
         private void Navigate(PageNavigate pageNavigate)
         {
@@ -71,18 +75,18 @@ namespace FlyingPiggyCloud.Views
                 //    Page = new UploadingListPage();
                 //    OnPropertyChanged("Page");
                 //    break;
-                //case PageNavigate.Downloading:
-                //    Page = new DownloadingListPage();
-                //    OnPropertyChanged("Page");
-                //    break;
-                //case PageNavigate.Completed:
-                //    Page = new CompletedListPage();
-                //    OnPropertyChanged("Page");
-                //    break;
-                //case PageNavigate.RecoveryBox:
-                //    Page = new RecoveryBoxPage();
-                //    OnPropertyChanged("Page");
-                //    break;
+                case PageNavigate.Downloading:
+                    Page = new DownloadingListPage();
+                    OnPropertyChanged("Page");
+                    break;
+                case PageNavigate.Completed:
+                    Page = new CompletedListPage();
+                    OnPropertyChanged("Page");
+                    break;
+                case PageNavigate.RecoveryBox:
+                    Page = new RecoveryBoxPage();
+                    OnPropertyChanged("Page");
+                    break;
                 default:
                     Page = new FilesListPage();
                     break;
@@ -142,7 +146,7 @@ namespace FlyingPiggyCloud.Views
         }
     }
 
-    internal enum PageNavigate
+    public enum PageNavigate
     {
         Root,
         Images,
