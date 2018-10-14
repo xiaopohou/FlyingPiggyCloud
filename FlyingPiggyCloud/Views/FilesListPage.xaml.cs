@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FlyingPiggyCloud.Views
 {
@@ -20,9 +9,32 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class FilesListPage : Page
     {
+        private ViewModels.FileList fileList;
+
+        private string[] Path => fileList.CurrentPath.Split("/".ToCharArray());
+
         public FilesListPage()
         {
+            fileList = new ViewModels.FileList();
             InitializeComponent();
+        }
+
+        public FilesListPage(string Path)
+        {
+            fileList = new ViewModels.FileList("", Path);
+            InitializeComponent();
+        }
+
+        private async void NewFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            string NewFolderName = "新文件夹";
+            int Count = 0;
+            while (!(await fileList.NewFolder(NewFolderName)))
+            {
+                Count++;
+                NewFolderName = NewFolderName + string.Format("（{0}）", Count);
+            }
+            fileList.Refresh(sender, e);
         }
     }
 }

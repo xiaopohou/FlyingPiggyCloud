@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace FlyingPiggyCloud.ViewModels
 {
     internal class FileList : ObservableCollection<FileListItem>
     {
         private static Controllers.FileSystemMethods FileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
-
+        
         /// <summary>
         /// 当前目录的UUID
         /// </summary>
@@ -85,6 +86,21 @@ namespace FlyingPiggyCloud.ViewModels
         }
 
         /// <summary>
+        /// 指定文件夹名称在当前路径新建文件夹
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public async Task<bool> NewFolder(string Name)
+        {
+            var x = await FileSystemMethods.CreatDirectory(Name, CurrentUUID);
+            if (x.Success)
+            {
+                Add(new FileListItem(x.Result));
+            }
+            return x.Success;
+        }
+
+        /// <summary>
         /// 刷新当前列表
         /// </summary>
         /// <param name="Sender"></param>
@@ -94,9 +110,17 @@ namespace FlyingPiggyCloud.ViewModels
             GetDirectoryByUUID(CurrentUUID);
         }
 
-        public FileList(string UUID)
+        /// <summary>
+        /// 根据UUID或Path获取指定文件夹的内容，如果均空则返回根目录
+        /// </summary>
+        /// <param name="UUID"></param>
+        /// <param name="Path"></param>
+        public FileList(string UUID="",string Path="/")
         {
-            GetDirectoryByUUID(UUID);
+            if (UUID != "")
+                GetDirectoryByUUID(UUID);
+            else
+                GetDirectoryByPath(Path);
         }
     }
 
@@ -109,6 +133,8 @@ namespace FlyingPiggyCloud.ViewModels
         public string UUID => MetaData.UUID;
 
         public bool IsChecked { get; set; }
+
+        public string MTime => MetaData.Mtime.ToString();
 
         /// <summary>
         /// 图标

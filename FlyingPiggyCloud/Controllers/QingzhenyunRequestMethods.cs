@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace FlyingPiggyCloud.Controllers
 {
+    /// <summary>
+    /// APP生命周期内，所有派生于此抽象类的对象，均拥有共同的Token字段
+    /// </summary>
     public abstract class QingzhenyunRequestBase
     {
         protected RestClient client;
@@ -116,7 +119,7 @@ namespace FlyingPiggyCloud.Controllers
         /// <param name="OldPassword">旧密码</param>
         /// <param name="NewPassword">新密码</param>
         /// <returns></returns>
-        public async Task<Results.ResponseMessageBase> ChangePasswordByOldPassword(string OldPassword, string NewPassword)
+        public async Task<ResponseMessageBase> ChangePasswordByOldPassword(string OldPassword, string NewPassword)
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
