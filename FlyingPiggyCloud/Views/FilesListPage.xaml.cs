@@ -17,12 +17,14 @@ namespace FlyingPiggyCloud.Views
         {
             fileList = new ViewModels.FileList();
             InitializeComponent();
+            FileListView.ItemsSource = fileList;
         }
 
         public FilesListPage(string Path)
         {
             fileList = new ViewModels.FileList("", Path);
             InitializeComponent();
+            FileListView.ItemsSource = fileList;
         }
 
         private async void NewFolderButton_Click(object sender, RoutedEventArgs e)

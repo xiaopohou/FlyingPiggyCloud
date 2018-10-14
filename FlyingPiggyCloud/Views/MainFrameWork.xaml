@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainFrameWork" MinHeight="600" MinWidth="800" d:DesignWidth="800" d:DesignHeight="600" Style="{DynamicResource MetroWindowStyle}">
     <Window.Resources>
+        <!--单选框的模板重写用于左边栏-->
         <SolidColorBrush x:Key="RadioButton.Static.Background" Color="#FFFFFFFF"/>
         <SolidColorBrush x:Key="RadioButton.Static.Border" Color="#FF707070"/>
         <SolidColorBrush x:Key="RadioButton.MouseOver.Background" Color="#FFF3F9FF"/>
@@ -201,9 +202,10 @@
                 <SplineDoubleKeyFrame KeyTime="00:00:001" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>-->
+        <local:LeftRadioButton x:Key="LeftRadioIsCheckdConvert"/>
     </Window.Resources>
     <Grid Background="#FFFFFFFF">
-        <Frame Name="MainFrame" NavigationUIVisibility="Hidden" Source="{Binding CurrentPage}" Margin="200,60,0,0"/>
+        <Frame Name="MainFrame" NavigationUIVisibility="Hidden" Margin="200,0,0,0"/>
         <Grid Background="#FFF5F5F5" HorizontalAlignment="Left" Width="200">
             <Grid Name="UserGrid" Height="160" Margin="0" VerticalAlignment="Top">
                 <Border CornerRadius="50" BorderThickness="1" Height="75" Margin="0,29,0,0" VerticalAlignment="Top" Width="75">
@@ -219,46 +221,46 @@
                 <ProgressBar Value="50" HorizontalAlignment="Center" Height="5" Margin="0,124,0,0" VerticalAlignment="Top" Width="125"/>
             </Grid>
             <Border BorderBrush="#FFBFBFBF" BorderThickness="0,2,0,0" Margin="0,160,0,0">
-                <StackPanel>
+                <StackPanel Name="LeftRadioButtonsGroup">
                     <TextBlock Text="我的文件" Margin="10" Foreground="#FF919191" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
-                    <RadioButton>
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=0, Converter={StaticResource LeftRadioIsCheckdConvert}}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/文件.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="全部文件" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton>
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=1, Converter={StaticResource LeftRadioIsCheckdConvert}}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/图片.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="图片" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton>
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=2, Converter={StaticResource LeftRadioIsCheckdConvert}}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/视频.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="视频" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
                     <TextBlock Text="传输列表" Margin="10" Foreground="#FF919191" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
-                    <RadioButton>
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=3, Converter={StaticResource LeftRadioIsCheckdConvert}}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/正在上传.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="正在上传" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton>
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=4, Converter={StaticResource LeftRadioIsCheckdConvert}}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Width="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/正在下载.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="正在下载" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton>
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=5, Converter={StaticResource LeftRadioIsCheckdConvert}}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/完成.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="传输完成" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton>
+                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=6, Converter={StaticResource LeftRadioIsCheckdConvert}}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/垃圾箱.png" Stretch="Fill"/>
                             <TextBlock TextWrapping="Wrap" Text="垃圾箱" VerticalAlignment="Center" HorizontalAlignment="Left"/>

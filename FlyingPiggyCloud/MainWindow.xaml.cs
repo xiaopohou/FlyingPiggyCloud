@@ -31,7 +31,6 @@ namespace FlyingPiggyCloud
             var TestWindow = new Views.MainFrameWork();
             TestWindow.ShowDialog();
             //Controllers.UserCenterMethods userCenterMethods = new Controllers.UserCenterMethods(FlyingPiggyCloud.Properties.Settings.Default.BaseUri);
-
             //DebugTextBlock.Text = JsonConvert.SerializeObject(Controllers.ConverterToolKits.UserMd5("flyingpiggy"));
         }
     }

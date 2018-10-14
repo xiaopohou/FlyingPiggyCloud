@@ -207,7 +207,7 @@
         </ListBox>
         
         <!--这个ListView是本Page的主要结构-->
-        <ListView Name="FileListPage" Margin="0,84,0,0">
+        <ListView Name="FileListView" Margin="0,84,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperFlieName, Path=ActualWidth}" CellTemplate="{StaticResource MetaName}" Header="文件名"/>

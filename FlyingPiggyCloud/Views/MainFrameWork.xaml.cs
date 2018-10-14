@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,26 +24,70 @@ namespace FlyingPiggyCloud.Views
         //应有的用于绑定的对象：一个用户信息、一个页控制器、一个渲染页
         public MainFrameWork()
         {
+            CurrentPage=PageNavigate.Root;
             InitializeComponent();
-        }
-
-        private enum PageNavigate
-        {
-            Root,
-            Images,
-            Videos,
-            Uploading,
-            Downloading,
-            Completed,
-            RecoveryBox
+            MainFrame.Content = Page;
+            LeftRadioButtonsGroup.DataContext = this;
         }
 
         /// <summary>
         /// 与左边栏绑定
         /// </summary>
-        private PageNavigate CurrentPage { get; set; }
+        internal PageNavigate CurrentPage
+        {
+            get
+            {
+                return currentPage;
+            }
+            set
+            {
+                Navigate(value);
+                currentPage = value;
+                OnPropertyChanged("CurrentPage");
+            }
+        }
 
-        private Page Page = new FilesListPage();
+        private PageNavigate currentPage;
+
+        private Page Page { get; set; }
+
+        private void Navigate(PageNavigate pageNavigate)
+        {
+            switch(pageNavigate)
+            {
+                case PageNavigate.Root:
+                    Page = new FilesListPage();
+                    OnPropertyChanged("Page");
+                    break;
+                case PageNavigate.Images:
+                    Page = new FilesListPage("/Images");
+                    OnPropertyChanged("Page");
+                    break;
+                case PageNavigate.Videos:
+                    Page = new FilesListPage("/Videos");
+                    OnPropertyChanged("Page");
+                    break;
+                //case PageNavigate.Uploading:
+                //    Page = new UploadingListPage();
+                //    OnPropertyChanged("Page");
+                //    break;
+                //case PageNavigate.Downloading:
+                //    Page = new DownloadingListPage();
+                //    OnPropertyChanged("Page");
+                //    break;
+                //case PageNavigate.Completed:
+                //    Page = new CompletedListPage();
+                //    OnPropertyChanged("Page");
+                //    break;
+                //case PageNavigate.RecoveryBox:
+                //    Page = new RecoveryBoxPage();
+                //    OnPropertyChanged("Page");
+                //    break;
+                default:
+                    Page = new FilesListPage();
+                    break;
+            }
+        }
 
         private void MinWinButton_Click(object sender, RoutedEventArgs e)
         {
@@ -76,5 +121,35 @@ namespace FlyingPiggyCloud.Views
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    internal class LeftRadioButton : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            PageNavigate s = (PageNavigate)value;
+            return s == (PageNavigate)int.Parse(parameter.ToString());
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool isChecked = (bool)value;
+            if (!isChecked)
+            {
+                return null;
+            }
+            return (PageNavigate)int.Parse(parameter.ToString());
+        }
+    }
+
+    internal enum PageNavigate
+    {
+        Root,
+        Images,
+        Videos,
+        Uploading,
+        Downloading,
+        Completed,
+        RecoveryBox
     }
 }
