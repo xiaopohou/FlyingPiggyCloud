@@ -34,11 +34,22 @@ namespace FlyingPiggyCloud.Views
             AdressBar.ItemsSource = x;
         }
 
+        private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            fileList.GetDirectoryByUUID(((ViewModels.FileListItem)((ListViewItem)sender).DataContext).UUID);
+                
+        }
+
         private async void NewFolderButton_Click(object sender, RoutedEventArgs e)
         {
             string NewFolderName = "新文件夹";
             await fileList.NewFolder(NewFolderName,true);
             fileList.Refresh(sender, e);
+        }
+
+        private void DownloadBotton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(((ViewModels.FileListItem)((Button)sender).DataContext).DownloadAddress);
         }
     }
 

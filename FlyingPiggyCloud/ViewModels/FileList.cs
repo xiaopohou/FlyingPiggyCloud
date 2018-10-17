@@ -25,7 +25,7 @@ namespace FlyingPiggyCloud.ViewModels
         /// 把指定UUID的目录加载到当前列表
         /// </summary>
         /// <param name="UUID"></param>
-        private async void GetDirectoryByUUID(string UUID)
+        public async void GetDirectoryByUUID(string UUID)
         {
             Clear();
             List<FileMetaData> items = new List<FileMetaData>();
@@ -63,7 +63,7 @@ namespace FlyingPiggyCloud.ViewModels
         /// </summary>
         /// <param name="Path"></param>
         /// <param name="IsAutoCreating">当路径不存在时是否自动新建该文件夹</param>
-        private async void GetDirectoryByPath(string Path, bool IsAutoCreating = false)
+        public async void GetDirectoryByPath(string Path, bool IsAutoCreating = false)
         {
             Clear();
             List<FileMetaData> items = new List<FileMetaData>();

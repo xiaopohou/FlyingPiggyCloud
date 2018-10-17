@@ -8,19 +8,36 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="FilesListPage">
     <Page.Resources>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Height" Value="36"/>
+            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+        </Style>
         <DataTemplate x:Key="MetaName">
             <Grid>
                 <Image Width="24" Height="20" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Name}" Foreground="#FF5A5A5A" FontSize="12" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"  HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" />
-                <Image Width="14" Opacity="0" Height="12" Source="/Resources/more.png" x:Name="MoreBotton" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                <Image Width="14" Opacity="0" Height="12" Source="/Resources/download.png" x:Name="DownloadBotton" HorizontalAlignment="Right" Margin="0,0,34,0" VerticalAlignment="Center"/>
+
+                <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="MoreBotton" Style="{StaticResource CircleButton}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <Image  Source="/Resources/more.png" />
+                </Button>
+
+                <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="DownloadBotton" Style="{StaticResource CircleButton}" Click="DownloadBotton_Click" HorizontalAlignment="Right" Margin="0,0,64,0" VerticalAlignment="Center">
+                    <Image  Source="/Resources/download.png" />
+                </Button>
+
             </Grid>
             <DataTemplate.Triggers>
                 <!--鼠标移过时显示附加按钮-->
-                <Trigger Property="IsMouseOver" Value="true">
-                    <Setter TargetName="MoreBotton" Property="Opacity" Value="1"/>
-                    <Setter TargetName="DownloadBotton" Property="Opacity" Value="1"/>
-                </Trigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True"/>
+                        <!--<Condition Property="IsMouseOver" Value="True"/>-->
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="MoreBotton" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="DownloadBotton" Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
         <DataTemplate x:Key="MetaSize">
@@ -34,6 +51,7 @@
             </StackPanel>
         </DataTemplate>
 
+        <!--圆按钮-->
         <Style x:Key="CircleButton" TargetType="Button">
             <!--圆按钮-->
             <!--按钮字体颜色-->
@@ -163,6 +181,7 @@
 
     </Page.Resources>
     <Grid>
+        <!--上方栏-->
         <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
             <Button Name="NewFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="0" Style="{StaticResource ButtonBasicDesign}" Margin="180,0,0,0" Background="#FFFFFFFF" Click="NewFolderButton_Click">
                 <Button.Effect>
@@ -189,8 +208,7 @@
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/next.png" Stretch="Fill"/>
             </Button>
         </Grid>
-        
-        <!--一个ObservableCollection对象用于绑定路径地址-->
+        <!--地址栏-->
         <ListBox Name="AdressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -206,24 +224,26 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        
         <!--这个ListView是本Page的主要结构-->
         <ListView Name="FileListView" Margin="0,84,0,0">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="{Binding ElementName=WidthHelperFlieName, Path=ActualWidth}" CellTemplate="{StaticResource MetaName}" Header="文件名"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperFlieName, Path=ActualWidth}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
                     <GridViewColumn Width="{Binding ElementName=WidthHelperFileSize, Path=ActualWidth}" CellTemplate="{StaticResource MetaSize}" Header="大小"/>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperMTime, Path=ActualWidth}" CellTemplate="{StaticResource MetaMTime}" Header="修改时间"/>
                 </GridView>
             </ListView.View>
+            <!--<ListViewItem Content="ListViewItem" IsSelected="True"/>-->
+            <!--<ListViewItem Content="hello world" Background="Black"/>-->
         </ListView>
-        
+
         <!--这个Grid用于帮助GridView自动校正分栏宽度-->
         <Grid Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="18*"/>
                 <ColumnDefinition Width="16*"/>
                 <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" x:Name="WidthHelperFlieName"/>
             <Grid Grid.Column="1" x:Name="WidthHelperFileSize"/>
