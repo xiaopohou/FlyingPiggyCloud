@@ -256,5 +256,99 @@ namespace FlyingPiggyCloud.Controllers
             Token = x.Token;
             return x;
         }
+
+        /// <summary>
+        /// 移动文件夹或文件
+        /// </summary>
+        /// <param name="SourceMeta">被移动的项目</param>
+        /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
+        /// <returns></returns>
+        public async Task<ResponesResult<bool>> Move(FileMetaData SourceMeta, FileMetaData TargetDirectory)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "uuid", SourceMeta.UUID },
+                { "parent", TargetDirectory.UUID }
+            };
+            if (Token == null)
+            {
+                var GetToken = new Views.LoginWindow();
+                GetToken.ShowDialog();
+            }
+            data.Add("token", Token);
+            var x = await PostAsync<ResponesResult<bool>>(JsonConvert.SerializeObject(data), "v1/files/move");
+            Token = x.Token;
+            return x;
+        }
+
+        /// <summary>
+        /// 复制文件夹或文件
+        /// </summary>
+        /// <param name="SourceMeta">被复制的项目</param>
+        /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
+        /// <returns></returns>
+        public async Task<ResponesResult<bool>> Copy(FileMetaData SourceMeta, FileMetaData TargetDirectory)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "uuid", SourceMeta.UUID },
+                { "parent", TargetDirectory.UUID }
+            };
+            if (Token == null)
+            {
+                var GetToken = new Views.LoginWindow();
+                GetToken.ShowDialog();
+            }
+            data.Add("token", Token);
+            var x = await PostAsync<ResponesResult<bool>>(JsonConvert.SerializeObject(data), "v1/files/copy");
+            Token = x.Token;
+            return x;
+        }
+
+        /// <summary>
+        /// 删除文件夹或文件
+        /// </summary>
+        /// <param name="SourceMeta">被删除的项目</param>
+        /// <returns></returns>
+        public async Task<ResponesResult<bool>> Remove(FileMetaData SourceMeta)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "uuid", SourceMeta.UUID }
+            };
+            if (Token == null)
+            {
+                var GetToken = new Views.LoginWindow();
+                GetToken.ShowDialog();
+            }
+            data.Add("token", Token);
+            var x = await PostAsync<ResponesResult<bool>>(JsonConvert.SerializeObject(data), "v1/files/remove");
+            Token = x.Token;
+            return x;
+        }
+
+        /// <summary>
+        /// 重命名文件夹或文件
+        /// </summary>
+        /// <param name="SourceMeta">被重命名的项目</param>
+        /// <param name="NewName">新名称</param>
+        /// <returns></returns>
+        public async Task<GetMetaDataResponseResult> Rename(FileMetaData SourceMeta, string NewName)
+        {
+            if (Token == null)
+            {
+                var GetToken = new Views.LoginWindow();
+                GetToken.ShowDialog();
+            }
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "uuid", SourceMeta.UUID },
+                { "name", NewName },
+                { "token", Token }
+            };
+            var x = await PostAsync<GetMetaDataResponseResult>(JsonConvert.SerializeObject(data), "v1/files/rename");
+            Token = x.Token;
+            return x;
+        }
     }
 }

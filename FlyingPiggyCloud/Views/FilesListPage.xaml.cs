@@ -51,6 +51,11 @@ namespace FlyingPiggyCloud.Views
         {
             MessageBox.Show(((ViewModels.FileListItem)((Button)sender).DataContext).DownloadAddress);
         }
+
+        private void MoreBotton_Click(object sender, RoutedEventArgs e)
+        {
+            ((Button)sender).ContextMenu.IsOpen = true;
+        }
     }
 
 }

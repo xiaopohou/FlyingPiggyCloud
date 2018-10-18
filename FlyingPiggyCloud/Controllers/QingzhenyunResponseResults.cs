@@ -24,6 +24,15 @@ namespace FlyingPiggyCloud.Controllers.Results
         public string Token { get; set; }
     }
 
+    /// <summary>
+    /// 泛型返回体
+    /// </summary>
+    public class ResponesResult<T> : ResponseMessageBase
+    {
+        [JsonProperty(PropertyName = "result")]
+        public T Result { get; set; }
+    }
+
     namespace User
     {
 

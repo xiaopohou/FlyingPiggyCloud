@@ -19,14 +19,21 @@
                 <Image Width="24" Height="20" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Name}" Foreground="#FF5A5A5A" FontSize="12" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"  HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" />
 
-                <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="MoreBotton" Style="{StaticResource CircleButton}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center">
-                    <Image  Source="/Resources/more.png" />
+                <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="MoreBotton" Style="{StaticResource CircleButton}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
+                    <Image Width="20" Source="/Resources/more.png" />
+                    <Button.ContextMenu>
+                        <ContextMenu Name="MoreButtonMenu">
+                            <MenuItem Header="移动"/>
+                            <MenuItem Header="复制"/>
+                            <MenuItem Header="重命名"/>
+                            <MenuItem Header="删除"/>
+                        </ContextMenu>
+                    </Button.ContextMenu>
                 </Button>
 
                 <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="DownloadBotton" Style="{StaticResource CircleButton}" Click="DownloadBotton_Click" HorizontalAlignment="Right" Margin="0,0,64,0" VerticalAlignment="Center">
-                    <Image  Source="/Resources/download.png" />
+                    <Image Width="20" Source="/Resources/download.png" />
                 </Button>
-
             </Grid>
             <DataTemplate.Triggers>
                 <!--鼠标移过时显示附加按钮-->

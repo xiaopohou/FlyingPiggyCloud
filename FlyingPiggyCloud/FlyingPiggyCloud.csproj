@@ -61,7 +61,9 @@
     </ApplicationDefinition>
     <Compile Include="Controllers\ConverterToolKits.cs" />
     <Compile Include="Controllers\QingzhenyunLogicalProgress.cs" />
+    <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="ViewModels\FileList.cs" />
+    <Compile Include="ViewModels\FileListItem.cs" />
     <Compile Include="ViewModels\ForgotPasswordViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
@@ -98,7 +100,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\FlyingPiggyCloudLocalMethods.cs" />
-    <Compile Include="Controllers\HttpMethods.cs" />
     <Compile Include="Controllers\QingzhenyunRequestMethods.cs" />
     <Compile Include="Controllers\QingzhenyunResponseResults.cs" />
     <Compile Include="MainWindow.xaml.cs">
