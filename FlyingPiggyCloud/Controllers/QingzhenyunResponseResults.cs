@@ -316,9 +316,4 @@ namespace FlyingPiggyCloud.Controllers.Results
 
 
     }
-
-    namespace OfflineDownload
-    {
-
-    }
 }

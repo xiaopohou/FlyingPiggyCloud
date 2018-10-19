@@ -36,8 +36,16 @@ namespace FlyingPiggyCloud.Views
 
         private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            fileList.GetDirectoryByUUID(((ViewModels.FileListItem)((ListViewItem)sender).DataContext).UUID);
-                
+            var a = (ViewModels.FileListItem)((ListViewItem)sender).DataContext;
+            if (a.IsEnable)
+            {
+                fileList.GetDirectoryByUUID(((ViewModels.FileListItem)((ListViewItem)sender).DataContext).UUID);
+            }
+            else
+            {
+                MessageBox.Show("这个项目被远程服务器锁定（可能的原因：正在被删除，或者其他客户端正在修改该项目）");
+                fileList.Refresh(this, new System.EventArgs());
+            }
         }
 
         private async void NewFolderButton_Click(object sender, RoutedEventArgs e)
@@ -54,7 +62,21 @@ namespace FlyingPiggyCloud.Views
 
         private void MoreBotton_Click(object sender, RoutedEventArgs e)
         {
-            ((Button)sender).ContextMenu.IsOpen = true;
+            var btn = (Button)sender;
+            btn.ContextMenu.DataContext = btn.DataContext;
+            btn.ContextMenu.IsOpen = true;
+        }
+
+        private async void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            var x = (MenuItem)sender;
+            //x.IsEnabled = false;
+            await ((ViewModels.FileListItem)x.DataContext).Remove();
+            //System.Threading.Thread.Sleep(200);
+            lock(fileList)
+            {
+                fileList.Refresh(this, new System.EventArgs());
+            }
         }
     }
 

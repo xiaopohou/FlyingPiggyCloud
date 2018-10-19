@@ -26,7 +26,7 @@
                             <MenuItem Header="移动"/>
                             <MenuItem Header="复制"/>
                             <MenuItem Header="重命名"/>
-                            <MenuItem Header="删除"/>
+                            <MenuItem Name="Delete" Header="删除" Click="Delete_Click"/>
                         </ContextMenu>
                     </Button.ContextMenu>
                 </Button>

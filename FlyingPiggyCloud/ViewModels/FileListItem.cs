@@ -1,4 +1,5 @@
 ﻿using FlyingPiggyCloud.Controllers.Results.FileSystem;
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
@@ -38,7 +39,12 @@ namespace FlyingPiggyCloud.ViewModels
             return MetaData;
         }
 
-        public string MTime => MetaData.Mtime.ToString();
+        private string UnixTimeStampConverter(long UnixTimeStamp)
+        {
+            return TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)).AddMilliseconds(UnixTimeStamp).ToString("yyyy/MM/dd HH:mm:ss");
+        }
+
+        public string MTime => UnixTimeStampConverter(MetaData.Mtime);
 
         /// <summary>
         /// 图标
@@ -63,6 +69,8 @@ namespace FlyingPiggyCloud.ViewModels
         /// 文件名
         /// </summary>
         public string Name => MetaData.Name;
+
+        public bool IsEnable => !MetaData.Locking;
 
         /// <summary>
         /// 文件大小
