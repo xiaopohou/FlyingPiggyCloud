@@ -209,5 +209,11 @@
   <ItemGroup>
     <Folder Include="Resources\RewriteControls\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlyingAria2c\FlyingAria2c.csproj">
+      <Project>{25677591-187d-4d06-9712-d8dbe4a6c450}</Project>
+      <Name>FlyingAria2c</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

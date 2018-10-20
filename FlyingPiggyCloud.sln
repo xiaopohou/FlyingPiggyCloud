@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyingPiggyCloud", "FlyingP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "测试单元", "测试单元\测试单元.csproj", "{D413F3F3-E2D0-481B-AB16-C31E1CA4D07D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyingAria2c", "FlyingAria2c\FlyingAria2c.csproj", "{25677591-187D-4D06-9712-D8DBE4A6C450}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D413F3F3-E2D0-481B-AB16-C31E1CA4D07D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D413F3F3-E2D0-481B-AB16-C31E1CA4D07D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D413F3F3-E2D0-481B-AB16-C31E1CA4D07D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25677591-187D-4D06-9712-D8DBE4A6C450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25677591-187D-4D06-9712-D8DBE4A6C450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25677591-187D-4D06-9712-D8DBE4A6C450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25677591-187D-4D06-9712-D8DBE4A6C450}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
