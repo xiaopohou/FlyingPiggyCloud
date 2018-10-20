@@ -69,12 +69,12 @@ namespace FlyingAria2c
             public string Method { get; set; }
 
             [JsonProperty(PropertyName = "params")]
-            public List<string> Params { get; set; }
+            public object[] Params { get; set; }
 
             [JsonProperty(PropertyName = "id")]
             public int Id { get; set; }
 
-            public Request(string n, int i, List<string> e)
+            public Request(string n, int i, object[] e)
             {
                 Method = n;
                 Id = i;
@@ -120,13 +120,15 @@ namespace FlyingAria2c
 
         private Line WebSocketLine;
 
+        public string Token;
+
         /// <summary>
         /// 异步开始一个远程调用
         /// </summary>
         /// <param name="methord">方法</param>
         /// <param name="Params">参数数组</param>
         /// <returns></returns>
-        public async Task<T> JsonRpcAsync<T>(string methord, List<string> Params)
+        public async Task<T> JsonRpcAsync<T>(string methord, object[] Params)
         {
             Request NewTask = new Request(methord, WebSocketLine.Idlist++, Params);
             WebSocketLine.Send(NewTask);
@@ -148,7 +150,7 @@ namespace FlyingAria2c
         /// <param name="methord">方法</param>
         /// <param name="Params">参数数组</param>
         /// <returns></returns>
-        public T JsonRpc<T>(string methord, List<string> Params)
+        public T JsonRpc<T>(string methord, object[] Params)
         {
             Request NewTask = new Request(methord, WebSocketLine.Idlist++, Params);
             WebSocketLine.Send(NewTask);
@@ -167,7 +169,7 @@ namespace FlyingAria2c
         /// <param name="methord"></param>
         /// <param name="Params"></param>
         /// <returns></returns>
-        public void JsonRpcWithoutRes(string methord, List<string> Params)
+        public void JsonRpcWithoutRes(string methord, object[] Params)
         {
             Request NewTask = new Request(methord, WebSocketLine.Idlist++, Params);
             WebSocketLine.Send(NewTask);
@@ -176,6 +178,7 @@ namespace FlyingAria2c
         public JsonRpcConnection(Aria2cProgressHandle aria2CProgressHandle)
         {
             WebSocketLine = new Line(aria2CProgressHandle);
+            Token = aria2CProgressHandle.Token;
         }
     }
 }

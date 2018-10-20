@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace 测试单元
 {
@@ -10,9 +11,10 @@ namespace 测试单元
     {
         static void Main(string[] args)
         {
-            //Regex regex = new Regex("/");
-            //Console.WriteLine((regex.Split("/hello/world/!"))[3]);
-            //Console.ReadLine();
+            string[] a = { "hello", "hi" };
+            object[] b = { "how are you", a };
+            Console.WriteLine(JsonConvert.SerializeObject(b));
+            Console.ReadLine();
         }
     }
 }

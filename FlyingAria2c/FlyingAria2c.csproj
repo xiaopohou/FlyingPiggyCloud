@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aria2cMethords.cs" />
     <Compile Include="Aria2cProgressHandle.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="DownloadTask.cs" />
