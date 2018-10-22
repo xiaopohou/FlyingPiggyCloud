@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Core\BucketManager.cs" />
     <Compile Include="Core\Config.cs" />
+    <Compile Include="Core\FlyingPiggyCloudUploadMethord.cs" />
     <Compile Include="Core\PutExtra.cs" />
     <Compile Include="Core\SimpleUpload.cs" />
     <Compile Include="Core\SliceUpload.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Utility\Base64.cs" />
     <Compile Include="Utility\CRC32.cs" />
     <Compile Include="Utility\ETag.cs" />
+    <Compile Include="Utility\FlyingPiggyClouldAuthToken.cs" />
     <Compile Include="Utility\Hash.cs" />
     <Compile Include="Utility\Mac.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

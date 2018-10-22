@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Wangsu.WcsLib.HTTP;
 using Wangsu.WcsLib.Utility;
+using WcsLib.Utility;
 
 // ChangeLog:
 // UMU @ 2017/12/19, Fix bug on MAC, AppendLine -> Append + "\r\n"
@@ -18,36 +17,33 @@ namespace Wangsu.WcsLib.Core
     /// </summary>
     public class SimpleUpload
     {
-        public SimpleUpload(Auth auth, Config config)
+        public SimpleUpload(FlyingPiggyClouldAuthToken auth, string url)
         {
             this.auth = auth;
-            this.config = config;
-            this.httpManager = new HttpManager();
+            //this.config = config;
+            this.url = url;
+            httpManager = new HttpManager();
         }
 
-        public SimpleUpload(Mac mac, Config config) : this(new Auth(mac), config)
-        {
-        }
+        //public SimpleUpload(Mac mac, Config config) : this(new FlyingPiggyClouldAuthToken(mac), config)
+        //{
+        //}
 
         /// <summary>
         /// 上传数据
-        /// putPolicy 中的 JSON 字符串是严格模式，不允许最后一个元素后面有逗号
-        /// https://stackoverflow.com/questions/201782/can-you-use-a-trailing-comma-in-a-json-object
-        /// 请确保 JSON 字符串的正确性和紧凑性，最好用 JSON 库生成，而不要自己用字符串拼接。
         /// </summary>
         /// <param name="data">待上传的数据</param>
-        /// <param name="putPolicy">上传策略数据，JSON 字符串</param>
         /// <param name="key">可选，要保存的key</param>
         /// <param name="extra">可选，上传可选设置</param>
         /// <returns>上传数据后的返回结果</returns>
-        public HttpResult UploadData(byte[] data, string putPolicy, string key = null, PutExtra putExtra = null)
+        public HttpResult UploadData(byte[] data, string key = null, PutExtra putExtra = null)
         {
-#if DEBUG
-            if (null == putPolicy)
-            {
-                throw new ArgumentNullException("putPolicy");
-            }
-#endif
+//#if DEBUG
+//            if (null == putPolicy)
+//            {
+//                throw new ArgumentNullException("putPolicy");
+//            }
+//#endif
             if (putExtra == null)
             {
                 putExtra = new PutExtra();
@@ -58,19 +54,19 @@ namespace Wangsu.WcsLib.Core
             {
                 filename = "uploading.tmp";
             }
-            
+
             string boundary = HttpManager.CreateFormDataBoundary();
             StringBuilder bodyBuilder = new StringBuilder();
 
             // write token
             bodyBuilder.Append("--" + boundary + "\r\n"
                 + "Content-Disposition: form-data; name=\"token\"\r\n\r\n"
-                + auth.CreateUploadToken(putPolicy) + "\r\n");
-            
+                + auth.CreateUploadToken() + "\r\n");
+
             // write extra params
             if (null != putExtra.Params && putExtra.Params.Count > 0)
             {
-                foreach (var p in putExtra.Params)
+                foreach (KeyValuePair<string, string> p in putExtra.Params)
                 {
                     if (p.Key.StartsWith("x:"))
                     {
@@ -137,8 +133,8 @@ namespace Wangsu.WcsLib.Core
                 Buffer.BlockCopy(data, 0, body, partHead.Length, data.Length);
                 Buffer.BlockCopy(partTail, 0, body, partHead.Length + data.Length, partTail.Length);
             }
-            
-            string url = config.GetUploadUrlPrefix() + "/file/upload";
+
+            //string url = config.GetUploadUrlPrefix() + "/file/upload";
             HttpResult result = httpManager.PostMultipart(url, body, boundary);
 
             return result;
@@ -152,14 +148,14 @@ namespace Wangsu.WcsLib.Core
         /// <param name="key">可选，要保存的key</param>
         /// <param name="extra">上传可选设置</param>
         /// <returns>上传数据流后的返回结果</returns>
-        public HttpResult UploadStream(Stream stream, string putPolicy, string key = null, PutExtra putExtra = null)
+        public HttpResult UploadStream(Stream stream, string key = null, PutExtra putExtra = null)
         {
-#if DEBUG
-            if (null == putPolicy)
-            {
-                throw new ArgumentNullException("putPolicy");
-            }
-#endif
+//#if DEBUG
+//            if (null == putPolicy)
+//            {
+//                throw new ArgumentNullException("putPolicy");
+//            }
+//#endif
             int bufferSize = 4 * 1024 * 1024;
             byte[] buffer = new byte[bufferSize];
             int bytesRead = 0;
@@ -169,7 +165,7 @@ namespace Wangsu.WcsLib.Core
                 {
                     dataMS.Write(buffer, 0, bytesRead);
                 }
-                return UploadData(dataMS.ToArray(), putPolicy, key, putExtra);
+                return UploadData(dataMS.ToArray(), key, putExtra);
             }
         }
 
@@ -181,20 +177,21 @@ namespace Wangsu.WcsLib.Core
         /// <param name="key">可选，要保存的key</param>
         /// <param name="extra">上传可选设置</param>
         /// <returns>上传数据流后的返回结果</returns>
-        public HttpResult UploadFile(string localFilename, string putPolicy, string key = null, PutExtra putExtra = null)
+        public HttpResult UploadFile(string localFilename, string key = null, PutExtra putExtra = null)
         {
-#if DEBUG
-            if (null == putPolicy)
-            {
-                throw new ArgumentNullException("putPolicy");
-            }
-#endif
+//#if DEBUG
+//            if (null == putPolicy)
+//            {
+//                throw new ArgumentNullException("putPolicy");
+//            }
+//#endif
             FileStream fs = new FileStream(localFilename, FileMode.Open);
-            return this.UploadStream(fs, putPolicy, key, putExtra);
+            return UploadStream(fs, key, putExtra);
         }
 
-        private Auth auth;
-        private Config config;
+        private FlyingPiggyClouldAuthToken auth;
+        //private Config config;
         private HttpManager httpManager;
+        private string url;
     }
 }
