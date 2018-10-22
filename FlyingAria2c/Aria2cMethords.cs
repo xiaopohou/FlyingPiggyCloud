@@ -76,7 +76,6 @@ namespace FlyingAria2c
 
             public static async Task<string> Remove(JsonRpcConnection Connection, string Gid)
             {
-                //string[] Gids = new string[] { Gid };
                 object[] Params = { "token:" + Connection.Token, Gid };
                 string Result = (await Connection.JsonRpcAsync<JsonRpcConnection.Response<string>>("aria2.remove", Params)).Result;
                 return Result;
@@ -108,94 +107,61 @@ namespace FlyingAria2c
                 await Connection.JsonRpcAsync<JsonRpcConnection.Response<string>>("aria2.unpauseAll", Params);
             }
 
-            public static async Task<JRCtler.JsonRpcRes> TellStatus(JsonRpcConnection Connection, string Gid)
+            public static async Task<T> TellStatus<T>(JsonRpcConnection Connection, string Gid)
             {
                 string[] Keys = new string[] { "status", "totalLength", "completedLength", "downloadSpeed", "gid" };
-                object[] Params = new object[]
-            {
-                "token:" + Stc.GloConf.Rpc_secret,
-                Gid,
-                Keys
-            };
-                JRCtler.JsonRpcRes Result = await Stc.Line.JsonRpcAsync("aria2.tellStatus", Params);
-                return Result;
+                object[] Params = { "token:" + Connection.Token, Gid, Keys};
+                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellStatus", Params);
+                return Result.Result;
             }
 
-            public static async Task<JRCtler.JsonRpcRes> TellStatus(JsonRpcConnection Connection, string Gid, string[] Keys)
+            public static async Task<T> TellStatus<T>(JsonRpcConnection Connection, string Gid, string[] Keys)
             {
-                object[] Params = new object[]
-            {
-                "token:" + Stc.GloConf.Rpc_secret,
-                Gid,
-                Keys
-            };
-                JRCtler.JsonRpcRes Result = await Stc.Line.JsonRpcAsync("aria2.tellStatus", Params);
-                return Result;
+                object[] Params = { "token:" + Connection.Token, Gid, Keys };
+                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellStatus", Params);
+                return Result.Result;
             }
 
-            public static async Task<JRCtler.JsonRpcRes> TellActive(JsonRpcConnection Connection)
+            public static async Task<T> TellActive<T>(JsonRpcConnection Connection)
             {
                 string[] Keys = new string[] { "status", "totalLength", "completedLength", "downloadSpeed", "gid" };
-                object[] Params = new object[]
-            {
-                "token:" + Stc.GloConf.Rpc_secret,
-                Keys
-            };
-                JRCtler.JsonRpcRes Result = await Stc.Line.JsonRpcAsync("aria2.tellActive", Params);
-                return Result;
+                object[] Params = { "token:" + Connection.Token, Keys };
+                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellActive", Params);
+                return Result.Result;
             }
 
-            public static async Task<JRCtler.JsonRpcRes> TellWaiting(JsonRpcConnection Connection)
+            public static async Task<T> TellWaiting<T>(JsonRpcConnection Connection)
             {
                 string[] Keys = new string[] { "status", "totalLength", "completedLength", "downloadSpeed", "gid" };
-                object[] Params = new object[]
-            {
-                "token:" + Stc.GloConf.Rpc_secret,
-                0,
-                50,
-                Keys
-            };
-                JRCtler.JsonRpcRes Result = await Stc.Line.JsonRpcAsync("aria2.tellWaiting", Params);
-                return Result;
+                object[] Params = { "token:" + Connection.Token, Keys };
+                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellWaiting", Params);
+                return Result.Result;
             }
 
             /// <summary>
             /// 查询已停止的任务
             /// </summary>
             /// <returns>返回最近50个结果</returns>
-            public static async Task<JRCtler.JsonRpcRes> TellStopped(JsonRpcConnection Connection)
+            public static async Task<T> TellStopped<T>(JsonRpcConnection Connection)
             {
                 string[] Keys = new string[] { "status", "totalLength", "completedLength", "downloadSpeed", "gid" };
-                object[] Params = new object[]
-            {
-                "token:" + Stc.GloConf.Rpc_secret,
-                0,
-                50,
-                Keys
-            };
-                JRCtler.JsonRpcRes Result = await Stc.Line.JsonRpcAsync("aria2.tellStopped", Params);
-                return Result;
+                object[] Params = { "token:" + Connection.Token, 0, 50, Keys };
+                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellStopped", Params);
+                return Result.Result;
             }
 
-            public static async Task<JRCtler.JsonRpcRes> GetFiles(JsonRpcConnection Connection, string Gid)
+            public static async Task<T> GetFiles<T>(JsonRpcConnection Connection, string Gid)
             {
-                object[] Params = new object[]
-            {
-                "token:" + Stc.GloConf.Rpc_secret,
-                Gid
-            };
-                JRCtler.JsonRpcRes Result = await Stc.Line.JsonRpcAsync("aria2.getFiles", Params);
-                return Result;
+                object[] Params = { "token:" + Connection.Token, Gid };
+                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.getFiles", Params);
+                return Result.Result;
             }
 
-            public static async Task<JRCtler.JsonRpcRes> GetGlobalStat(JsonRpcConnection Connection)
+            public static async Task<T> GetGlobalStat<T>(JsonRpcConnection Connection)
             {
-                object[] Params = new object[]
-            {
-                "token:" + Stc.GloConf.Rpc_secret,
-            };
-                JRCtler.JsonRpcRes Result = await Stc.Line.JsonRpcAsync("aria2.getGlobalStat", Params);
-                return Result;
+                object[] Params = { "token:" + Connection.Token };
+                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.getGlobalStat", Params);
+                return Result.Result;
 
             }
 
@@ -204,12 +170,8 @@ namespace FlyingAria2c
             /// </summary>
             public static void ShutDown(JsonRpcConnection Connection)
             {
-                object[] Params = new object[]
-            {
-                "token:" + Stc.GloConf.Rpc_secret,
-            };
+                object[] Params = { "token:" + Connection.Token };
                 Connection.JsonRpcWithoutRes("aria2.shutdown", Params);
-                Stc.Line.Quit();
             }
 
         }
