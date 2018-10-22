@@ -134,7 +134,6 @@ namespace Wangsu.WcsLib.Core
                 Buffer.BlockCopy(partTail, 0, body, partHead.Length + data.Length, partTail.Length);
             }
 
-            //string url = config.GetUploadUrlPrefix() + "/file/upload";
             HttpResult result = httpManager.PostMultipart(url, body, boundary);
 
             return result;
@@ -179,12 +178,6 @@ namespace Wangsu.WcsLib.Core
         /// <returns>上传数据流后的返回结果</returns>
         public HttpResult UploadFile(string localFilename, string key = null, PutExtra putExtra = null)
         {
-//#if DEBUG
-//            if (null == putPolicy)
-//            {
-//                throw new ArgumentNullException("putPolicy");
-//            }
-//#endif
             FileStream fs = new FileStream(localFilename, FileMode.Open);
             return UploadStream(fs, key, putExtra);
         }

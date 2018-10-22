@@ -16,17 +16,13 @@ namespace Wangsu.WcsLib.Core
     /// </summary>
     public class SliceUpload
     {
-        public SliceUpload(FlyingPiggyClouldAuthToken auth, Config config)
+        public SliceUpload(Config config)
         {
-            this.auth = auth;
-            //this.config = config;
+            //this.auth = auth;
+            this.config = config;
             this.httpManager = new HttpManager();
             uploadBatch = Guid.NewGuid().ToString();
         }
-
-        //public SliceUpload(Mac mac, Config config) : this(new Auth(mac), config)
-        //{
-        //}
 
         /// <summary>
         /// 创建块(携带首片数据),同时检查CRC32
@@ -119,7 +115,7 @@ namespace Wangsu.WcsLib.Core
             return httpManager.Post(url.ToString(), Encoding.UTF8.GetBytes(ctxList.ToString(0, ctxList.Length - 1)), uploadToken, "text/plain;charset=UTF-8", customHeaders);
         }
 
-        private FlyingPiggyClouldAuthToken auth;
+        //private FlyingPiggyClouldAuthToken auth;
         private Config config;
         private HttpManager httpManager;
         private string uploadBatch;
