@@ -17,11 +17,11 @@ namespace Wangsu.WcsLib.Core
     /// </summary>
     public class SimpleUpload
     {
-        public SimpleUpload(FlyingPiggyClouldAuthToken auth, string url)
+        public SimpleUpload(FlyingPiggyClouldAuthToken auth, Config config)
         {
             this.auth = auth;
-            //this.config = config;
-            this.url = url;
+            this.config = config;
+            //this.url = url;
             httpManager = new HttpManager();
         }
 
@@ -133,7 +133,7 @@ namespace Wangsu.WcsLib.Core
                 Buffer.BlockCopy(data, 0, body, partHead.Length, data.Length);
                 Buffer.BlockCopy(partTail, 0, body, partHead.Length + data.Length, partTail.Length);
             }
-
+            string url = config.GetUploadUrlPrefix() + "/file/upload";
             HttpResult result = httpManager.PostMultipart(url, body, boundary);
 
             return result;
@@ -183,8 +183,8 @@ namespace Wangsu.WcsLib.Core
         }
 
         private FlyingPiggyClouldAuthToken auth;
-        //private Config config;
+        private Config config;
         private HttpManager httpManager;
-        private string url;
+        //private string url;
     }
 }

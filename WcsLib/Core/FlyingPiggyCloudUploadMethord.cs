@@ -7,7 +7,7 @@ namespace WcsLib.Core
     {
         public static async Task<HttpResult> SimpleUploadAsync(string FilePath, string Token, string UploadUrl)
         {
-            Wangsu.WcsLib.Core.SimpleUpload simpleUpload = new Wangsu.WcsLib.Core.SimpleUpload(new Utility.FlyingPiggyClouldAuthToken(Token), UploadUrl);
+            Wangsu.WcsLib.Core.SimpleUpload simpleUpload = new Wangsu.WcsLib.Core.SimpleUpload(new Utility.FlyingPiggyClouldAuthToken(Token), new Wangsu.WcsLib.Core.Config(UploadUrl));
             HttpResult x = await Task.Run(() =>
                  {
                      return simpleUpload.UploadFile(FilePath);

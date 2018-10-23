@@ -11,9 +11,9 @@ namespace 测试单元
     {
         static void Main(string[] args)
         {
-            string[] a = { "hello", "hi" };
-            object[] b = { "how are you", a };
-            Console.WriteLine(JsonConvert.SerializeObject(b));
+            int a = 4 * 1024 * 1024;
+            int b = 7 * 1024 * 1024;
+            Console.WriteLine((a + b - 1) / a);
             Console.ReadLine();
         }
     }
