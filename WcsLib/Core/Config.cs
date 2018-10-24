@@ -7,7 +7,7 @@ using Wangsu.WcsLib.Utility;
 
 namespace Wangsu.WcsLib.Core
 {
-    public class Config
+    internal class Config
     {
         public Config(string uploadHost = null, bool useHttp = false)
         {

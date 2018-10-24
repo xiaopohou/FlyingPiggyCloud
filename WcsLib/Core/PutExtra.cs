@@ -6,7 +6,7 @@ namespace Wangsu.WcsLib.Core
     /// <summary>
     /// 文件上传的额外可选设置
     /// </summary>
-    public class PutExtra
+    internal class PutExtra
     {
         public PutExtra()
         {

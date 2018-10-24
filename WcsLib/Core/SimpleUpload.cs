@@ -15,9 +15,9 @@ namespace Wangsu.WcsLib.Core
     /// https://wcs.chinanetcenter.com/document/API/FileUpload/Upload
     /// 若文件大小超过500M，必须使用分片上传。
     /// </summary>
-    public class SimpleUpload
+    internal class SimpleUpload
     {
-        public SimpleUpload(FlyingPiggyClouldAuthToken auth, Config config)
+        public SimpleUpload(Auth auth, Config config)
         {
             this.auth = auth;
             this.config = config;
@@ -25,7 +25,7 @@ namespace Wangsu.WcsLib.Core
             httpManager = new HttpManager();
         }
 
-        //public SimpleUpload(Mac mac, Config config) : this(new FlyingPiggyClouldAuthToken(mac), config)
+        //public SimpleUpload(Mac mac, Config config) : this(new Auth(mac), config)
         //{
         //}
 
@@ -182,7 +182,7 @@ namespace Wangsu.WcsLib.Core
             return UploadStream(fs, key, putExtra);
         }
 
-        private FlyingPiggyClouldAuthToken auth;
+        private Auth auth;
         private Config config;
         private HttpManager httpManager;
         //private string url;

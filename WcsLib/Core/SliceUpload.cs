@@ -14,7 +14,7 @@ namespace Wangsu.WcsLib.Core
     /// 分片上传
     /// https://wcs.chinanetcenter.com/document/API/FileUpload/SliceUpload
     /// </summary>
-    public class SliceUpload
+    internal class SliceUpload
     {
         public SliceUpload(Config config)
         {
@@ -37,8 +37,10 @@ namespace Wangsu.WcsLib.Core
         public HttpResult MakeBlock(long blockSize, long blockOrder, byte[] chunk, int chunkOffset, int chunkSize, string uploadToken, string key = null)
         {
             string url = config.GetUploadUrlPrefix() + "/mkblk/" + blockSize.ToString() + "/" + blockOrder.ToString();
-            Dictionary<string, string> customHeaders = new Dictionary<string, string>();
-            customHeaders.Add("UploadBatch", uploadBatch);
+            Dictionary<string, string> customHeaders = new Dictionary<string, string>
+            {
+                { "UploadBatch", uploadBatch }
+            };
             if (!string.IsNullOrEmpty(key))
             {
                 customHeaders.Add("Key", Base64.UrlSafeBase64Encode(key));
@@ -59,8 +61,10 @@ namespace Wangsu.WcsLib.Core
         public HttpResult Bput(string context, long offset, byte[] chunk, int chunkOffset, int chunkSize, string uploadToken, string key = null)
         {
             string url = config.GetUploadUrlPrefix() + "/bput/" + context + "/" + offset.ToString();
-            Dictionary<string, string> customHeaders = new Dictionary<string, string>();
-            customHeaders.Add("UploadBatch", uploadBatch);
+            Dictionary<string, string> customHeaders = new Dictionary<string, string>
+            {
+                { "UploadBatch", uploadBatch }
+            };
             if (!string.IsNullOrEmpty(key))
             {
                 customHeaders.Add("Key", Base64.UrlSafeBase64Encode(key));
@@ -98,8 +102,10 @@ namespace Wangsu.WcsLib.Core
             {
                 ctxList.Append(ctx + ",");
             }
-            Dictionary<string, string> customHeaders = new Dictionary<string, string>();
-            customHeaders.Add("UploadBatch", uploadBatch);
+            Dictionary<string, string> customHeaders = new Dictionary<string, string>
+            {
+                { "UploadBatch", uploadBatch }
+            };
             if (!string.IsNullOrEmpty(key))
             {
                 customHeaders.Add("Key", Base64.UrlSafeBase64Encode(key));
@@ -115,7 +121,7 @@ namespace Wangsu.WcsLib.Core
             return httpManager.Post(url.ToString(), Encoding.UTF8.GetBytes(ctxList.ToString(0, ctxList.Length - 1)), uploadToken, "text/plain;charset=UTF-8", customHeaders);
         }
 
-        //private FlyingPiggyClouldAuthToken auth;
+        //private Auth auth;
         private Config config;
         private HttpManager httpManager;
         private string uploadBatch;
