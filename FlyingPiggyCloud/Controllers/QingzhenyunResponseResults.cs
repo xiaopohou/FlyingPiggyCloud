@@ -308,12 +308,23 @@ namespace FlyingPiggyCloud.Controllers.Results
         /// 开启上传请求的返回体
         /// 这个返回体可能不一定正确工作
         /// </summary>
-        public class UploadResponseResult:ResponseMessageBase
+        public class UploadResponseResult
         {
-            [JsonProperty(PropertyName = "result")]
-            public Dictionary<string,string> Result { get; set; }
-        }
+            [JsonProperty(PropertyName = "userId")]
+            public int UserId { get; set; }
 
+            [JsonProperty(PropertyName = "token")]
+            public string Token { get; set; }
+
+            [JsonProperty(PropertyName = "type")]
+            public int Type { get; set; }
+
+            [JsonProperty(PropertyName = "uploadUrl")]
+            public string UploadUrl { get; set; }
+
+            [JsonProperty(PropertyName = "version")]
+            public int Version { get; set; }
+        }
 
     }
 }

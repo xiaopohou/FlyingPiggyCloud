@@ -214,6 +214,10 @@
       <Project>{25677591-187d-4d06-9712-d8dbe4a6c450}</Project>
       <Name>FlyingAria2c</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WcsLib\WcsLib.csproj">
+      <Project>{4d3d362c-9ab8-4962-a74f-c429407faf85}</Project>
+      <Name>WcsLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

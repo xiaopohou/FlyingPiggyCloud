@@ -9,7 +9,7 @@ using System.IO;
 namespace Wangsu.WcsLib.Utility
 {
     // UMU: https://www.codeproject.com/tips/353819/get-all-assembly-information
-    public class AssemblyInfo
+    internal class AssemblyInfo
     {
         public AssemblyInfo(Assembly assembly)
         {

@@ -15,7 +15,7 @@ namespace Wangsu.WcsLib.Utility
     /// <summary>
     /// CRC32, LE, Polynomial == 0xEDB88320, XorOut == 0xFFFFFFFF
     /// </summary>
-    public sealed class CRC32
+    internal sealed class CRC32
     {
         /// <summary>
         /// magic

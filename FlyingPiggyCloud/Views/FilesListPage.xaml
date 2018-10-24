@@ -199,7 +199,7 @@
                     <TextBlock Text="新建文件夹" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A"/>
                 </StackPanel>
             </Button>
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" BorderThickness="0" Style="{StaticResource ButtonBasicDesign}" Margin="100,0,0,0" Background="#FF2EC17C">
+            <Button Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" BorderThickness="0" Style="{StaticResource ButtonBasicDesign}" Margin="100,0,0,0" Background="#FF2EC17C" Click="UploadButton_Click">
                 <Button.Effect>
                     <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
                 </Button.Effect>

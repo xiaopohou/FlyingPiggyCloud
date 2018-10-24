@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using Microsoft.Win32;
+using System.Windows;
 using System.Windows.Controls;
+using Wangsu.WcsLib.Core;
 
 namespace FlyingPiggyCloud.Views
 {
@@ -55,9 +57,12 @@ namespace FlyingPiggyCloud.Views
             fileList.Refresh(sender, e);
         }
 
-        private void DownloadBotton_Click(object sender, RoutedEventArgs e)
+        private async void DownloadBotton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(((ViewModels.FileListItem)((Button)sender).DataContext).DownloadAddress);
+            string uuid = ((ViewModels.FileListItem)((Button)sender).DataContext).UUID;
+            Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
+            var x = await fileSystemMethods.GetDetailsByUUID(uuid);
+            MessageBox.Show(x.Result.DownloadAddress);
         }
 
         private void MoreBotton_Click(object sender, RoutedEventArgs e)
@@ -76,6 +81,17 @@ namespace FlyingPiggyCloud.Views
             lock(fileList)
             {
                 fileList.Refresh(this, new System.EventArgs());
+            }
+        }
+
+        private async void UploadButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog().GetValueOrDefault())
+            {
+                Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
+                var x = await fileSystemMethods.UploadFile(openFileDialog.SafeFileName, fileList.CurrentUUID);
+                Upload.Start(x.Result.Token, openFileDialog.FileName, x.Result.UploadUrl);
             }
         }
     }

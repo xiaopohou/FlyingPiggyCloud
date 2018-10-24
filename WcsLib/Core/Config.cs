@@ -22,7 +22,8 @@ namespace Wangsu.WcsLib.Core
         /// <returns></returns>
         public string GetUploadUrlPrefix()
         {
-            return (UseHttps ? "https://" : "http://") + UploadHost;
+            return UploadHost;
+            //return (UseHttps ? "https://" : "http://") + UploadHost;
         }
 
         /// <summary>

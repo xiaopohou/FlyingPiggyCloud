@@ -6,7 +6,7 @@ namespace Wangsu.WcsLib.Utility
     /// <summary>
     /// Base64 编码/解码
     /// </summary>
-    public class Base64
+    internal class Base64
     {
         /// <summary>
         /// 字符串 URL 安全 Base64 编码

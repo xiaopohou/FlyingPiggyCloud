@@ -14,7 +14,7 @@ namespace Wangsu.WcsLib.HTTP
     /// HttpManager for .NET
     /// 不支持 UWP
     /// </summary>
-    public sealed class HttpManager
+    internal sealed class HttpManager
     {
         /// <summary>
         /// 构造函数

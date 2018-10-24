@@ -7,7 +7,7 @@ using Wangsu.WcsLib.Utility;
 
 namespace WcsLib.Utility
 {
-    public class Auth
+    internal class Auth
     {
         /// <summary>
         /// 一般初始化

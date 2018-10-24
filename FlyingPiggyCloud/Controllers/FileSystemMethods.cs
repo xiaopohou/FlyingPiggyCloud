@@ -187,5 +187,43 @@ namespace FlyingPiggyCloud.Controllers
             Token = x.Token;
             return x;
         }
+
+        public async Task<ResponesResult<UploadResponseResult>> UploadFile(string Name, string Parent, string Hash=null)
+        {
+            if (Token == null)
+            {
+                var GetToken = new Views.LoginWindow();
+                GetToken.ShowDialog();
+            }
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "name", Name},
+                { "parent", Parent },
+                { "token", Token }
+            };
+            if (Hash == null)
+                data.Add("hash", Hash);
+            var x = await PostAsync<ResponesResult<UploadResponseResult>>(JsonConvert.SerializeObject(data), "v1/store/token");
+            Token = x.Token;
+            return x;
+        }
+
+        public async Task<ResponesResult<FileMetaData>> GetDetailsByUUID(string UUID)
+        {
+            if (Token == null)
+            {
+                var GetToken = new Views.LoginWindow();
+                GetToken.ShowDialog();
+            }
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "uuid", UUID },
+                { "token", Token }
+            };
+            var x = await PostAsync<ResponesResult<FileMetaData>>(JsonConvert.SerializeObject(data), "v1/files/get");
+            Token = x.Token;
+            return x;
+
+        }
     }
 }

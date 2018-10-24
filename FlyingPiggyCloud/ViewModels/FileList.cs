@@ -14,7 +14,7 @@ namespace FlyingPiggyCloud.ViewModels
         /// <summary>
         /// 当前目录的UUID
         /// </summary>
-        private string CurrentUUID;
+        public string CurrentUUID { get; private set;}
 
         /// <summary>
         /// 当前路径

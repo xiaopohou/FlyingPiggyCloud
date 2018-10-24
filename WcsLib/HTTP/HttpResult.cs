@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Wangsu.WcsLib.HTTP
 {
-    public class HttpResult
+    internal class HttpResult
     {
         /// <summary>
         /// 初始化
