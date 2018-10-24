@@ -16,7 +16,7 @@ namespace Wangsu.WcsLib.Core
         /// <summary>
         /// 上传可选参数字典，参数名次以 x: 开头
         /// </summary>
-        public Dictionary<string, string> Params;
+        public Dictionary<string, string> Params { get; set; }
 
         /// <summary>
         /// 指定文件的 MimeType

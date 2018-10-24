@@ -58,6 +58,8 @@
     <Compile Include="Utility\Base64.cs" />
     <Compile Include="Utility\CRC32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ETag.cs" />
+    <Compile Include="Utility\Hash.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
