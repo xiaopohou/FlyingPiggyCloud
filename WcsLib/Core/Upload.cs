@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Wangsu.WcsLib.HTTP;
+using Wangsu.WcsLib.Utility;
 using WcsLib.Utility;
 
 namespace Wangsu.WcsLib.Core
@@ -20,9 +21,10 @@ namespace Wangsu.WcsLib.Core
         /// <param name="UploadToken">Qingzhenyun返回的上传token</param>
         /// <param name="FilePath">文件的本地路径</param>
         /// <param name="UploadUrl">Qingzhenyun返回的上传地址</param>
-        public static async void Start(string UploadToken, string FilePath, string UploadUrl)
+        public static async void Start(string UploadToken, string FilePath, string UploadUrl,string Key=null)
         {
             Config config = new Config(UploadUrl);
+            string eTag = ETag.ComputeEtag(FilePath);
             long dataSize = new FileInfo(FilePath).Length;
             if (dataSize < BLOCKSIZE)
                 await SimpleUploadAsync(FilePath, UploadToken, UploadUrl);
@@ -42,21 +44,24 @@ namespace Wangsu.WcsLib.Core
                 // 第一个分片不宜太大，因为可能遇到错误，上传太大是白费流量和时间！
                 SliceUpload su = new SliceUpload(config);
                 long Index = 0;
-                TotalContexts[Index] = UploadFirstBlock(binaryReader.ReadBytes(BLOCKSIZE), Index, su, UploadToken);
+                TotalContexts[Index] = UploadFirstBlock(binaryReader.ReadBytes(BLOCKSIZE), Index, su, UploadToken,Key);
                 do
                 {
                     Index++;
-                    TotalContexts[Index] = UploadBlock(binaryReader.ReadBytes(BLOCKSIZE), Index, su, UploadToken);
+                    TotalContexts[Index] = UploadBlock(binaryReader.ReadBytes(BLOCKSIZE), Index, su, UploadToken,Key);
                 } while (Index < blockCount - 1);
                 //上传结束，将所有的块合成一个文件
                 HttpResult result = su.MakeFile(dataSize, null, TotalContexts, UploadToken);
+                JObject jo = JObject.Parse(result.Text);
+                if (jo["hash"].ToString() != eTag)
+                    throw new Exception("上传文件校验失败");
                 //Console.WriteLine("---MakeFile---\n{0}", result.ToString());
             }
         }
 
-        private static string UploadBlock(byte[] data,long Index, SliceUpload su, string uploadToken)
+        private static string UploadBlock(byte[] data,long Index, SliceUpload su, string uploadToken,string Key)
         {
-            HttpResult result = su.MakeBlock(data.Length, Index, data, 0, data.Length, uploadToken);
+            HttpResult result = su.MakeBlock(data.Length, Index, data, 0, data.Length, uploadToken,Key);
             if ((int)HttpStatusCode.OK == result.Code)
             {
                 JObject jo = JObject.Parse(result.Text);
@@ -68,20 +73,20 @@ namespace Wangsu.WcsLib.Core
             }
         }
 
-        private static string UploadFirstBlock(byte[] data,long Index, SliceUpload su, string uploadToken)
+        private static string UploadFirstBlock(byte[] data,long Index, SliceUpload su, string uploadToken,string Key)
         {
             if(data.Length != BLOCKSIZE)
             {
                 throw new Exception("文件不足4MB，请使用普通方式上传");
             }
 
-            HttpResult result = su.MakeBlock(BLOCKSIZE, Index, data, 0, FIRSTCHUNKSIZE, uploadToken);
+            HttpResult result = su.MakeBlock(BLOCKSIZE, Index, data, 0, FIRSTCHUNKSIZE, uploadToken,Key);
             if ((int)HttpStatusCode.OK == result.Code)
             {
                 JObject jo = JObject.Parse(result.Text);
                 string ctx = jo["ctx"].ToString();
                 // 上传第 1 个 block 剩下的数据
-                result = su.Bput(ctx, FIRSTCHUNKSIZE, data, FIRSTCHUNKSIZE, BLOCKSIZE - FIRSTCHUNKSIZE, uploadToken);
+                result = su.Bput(ctx, FIRSTCHUNKSIZE, data, FIRSTCHUNKSIZE, BLOCKSIZE - FIRSTCHUNKSIZE, uploadToken,Key);
                 if ((int)HttpStatusCode.OK == result.Code)
                 {
                     jo = JObject.Parse(result.Text);
