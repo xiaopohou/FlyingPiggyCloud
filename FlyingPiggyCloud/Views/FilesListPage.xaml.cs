@@ -90,8 +90,8 @@ namespace FlyingPiggyCloud.Views
             if (openFileDialog.ShowDialog().GetValueOrDefault())
             {
                 Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
-                var x = await fileSystemMethods.UploadFile(openFileDialog.SafeFileName, fileList.CurrentUUID);
-                Upload.Start(x.Result.Token, openFileDialog.FileName, x.Result.UploadUrl);
+                var x = await fileSystemMethods.UploadFile(openFileDialog.SafeFileName, fileList.CurrentUUID, OriginalFilename: openFileDialog.SafeFileName);
+                Upload.Start(x.Result.Token, openFileDialog.FileName, x.Result.UploadUrl,openFileDialog.SafeFileName);
             }
         }
     }

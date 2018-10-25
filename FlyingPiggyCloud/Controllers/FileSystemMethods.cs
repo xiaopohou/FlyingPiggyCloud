@@ -149,15 +149,15 @@ namespace FlyingPiggyCloud.Controllers
         /// <returns></returns>
         public async Task<ResponesResult<bool>> Remove(FileMetaData SourceMeta)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "uuid", SourceMeta.UUID }
-            };
             if (Token == null)
             {
                 var GetToken = new Views.LoginWindow();
                 GetToken.ShowDialog();
             }
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "uuid", SourceMeta.UUID }
+            };
             data.Add("token", Token);
             var x = await PostAsync<ResponesResult<bool>>(JsonConvert.SerializeObject(data), "v1/files/remove");
             Token = x.Token;
@@ -188,7 +188,7 @@ namespace FlyingPiggyCloud.Controllers
             return x;
         }
 
-        public async Task<ResponesResult<UploadResponseResult>> UploadFile(string Name, string Parent, string Hash=null)
+        public async Task<ResponesResult<UploadResponseResult>> UploadFile(string Name, string Parent, string Hash=null, string OriginalFilename=null)
         {
             if (Token == null)
             {
@@ -201,8 +201,10 @@ namespace FlyingPiggyCloud.Controllers
                 { "parent", Parent },
                 { "token", Token }
             };
-            if (Hash == null)
+            if (Hash != null)
                 data.Add("hash", Hash);
+            if (OriginalFilename != null)
+                data.Add("originalFilename", OriginalFilename);
             var x = await PostAsync<ResponesResult<UploadResponseResult>>(JsonConvert.SerializeObject(data), "v1/store/token");
             Token = x.Token;
             return x;
