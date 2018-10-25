@@ -33,7 +33,7 @@ namespace FlyingPiggyCloud.Views
             System.Collections.Generic.List<string> x = new System.Collections.Generic.List<string>(Path.Split(new string[] { "/" }, System.StringSplitOptions.None));
             if (x[x.Count - 1] == "")
                 x.RemoveAt(x.Count - 1);
-            AdressBar.ItemsSource = x;
+            AddressBar.ItemsSource = x;
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)

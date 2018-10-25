@@ -8,6 +8,12 @@ namespace FlyingAria2c
     {
         private string Gid;
 
+        private long totalLength = 0;
+
+        private long completedLength = 0;
+
+        public event Action<DownloadTask> Complete;
+
         public enum TaskAction
         {
             Active,
@@ -59,43 +65,50 @@ namespace FlyingAria2c
             }
         }
 
-        private long totalLength = 0;
-
-        private long completedLength = 0;
-
         public string DownloadSpeed
         {
             get
             {
                 double SpeedLong = downloadSpeed;
                 if (SpeedLong / 1024 == 0)
+                {
                     return Math.Round(SpeedLong, 2).ToString() + "B/S";
+                }
                 else if (SpeedLong / 1048576 == 0)
+                {
                     return Math.Round((SpeedLong / 1024), 2).ToString() + "KB/S";
+                }
                 else
+                {
                     return Math.Round((SpeedLong / 1048578), 2).ToString() + "MB/S";
+                }
             }
         }
         private long downloadSpeed = 0;
 
-        public async Task RefreshStatus()
+        protected async Task RefreshStatus()
         {
-            var x = await Aria2Methords.TellStatus(Downloader.RpcConnection, Gid);
+            System.Collections.Generic.Dictionary<string, string> x = await Aria2Methords.TellStatus(Downloader.RpcConnection, Gid);
             status = x["status"];
             totalLength = long.Parse(x["totalLength"]);
             completedLength = long.Parse(x["completedLength"]);
             downloadSpeed = long.Parse(x["downloadSpeed"]);
+            if (Status == TaskAction.Complete)
+            {
+                Complete?.Invoke(this);
+            }
         }
 
-        private async void Create(string DownloadAdress)
+        private async void Create(string DownloadAddress)
         {
-            Gid = await Aria2Methords.AddUri(Downloader.RpcConnection, DownloadAdress);
+            Gid = await Aria2Methords.AddUri(Downloader.RpcConnection, DownloadAddress);
             await RefreshStatus();
         }
 
-        public DownloadTask(string DownloadAdress)
+        public DownloadTask(string DownloadAddress, Action<DownloadTask> CompletedEventHandle = null)
         {
-            Create(DownloadAdress);
+            Create(DownloadAddress);
+            Complete += CompletedEventHandle;
         }
     }
 }

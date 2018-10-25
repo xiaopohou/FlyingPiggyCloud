@@ -65,6 +65,7 @@
     <Compile Include="Controllers\QingzhenyunRequestBase.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\UserCenterMethods.cs" />
+    <Compile Include="ViewModels\DownloadTask.cs" />
     <Compile Include="ViewModels\FileList.cs" />
     <Compile Include="ViewModels\FileListItem.cs" />
     <Compile Include="ViewModels\ForgotPasswordViewModel.cs" />

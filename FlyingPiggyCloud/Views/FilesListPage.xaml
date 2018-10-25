@@ -216,7 +216,7 @@
             </Button>
         </Grid>
         <!--地址栏-->
-        <ListBox Name="AdressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top">
+        <ListBox Name="AddressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>
