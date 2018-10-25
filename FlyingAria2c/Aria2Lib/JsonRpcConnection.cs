@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
 
-namespace FlyingAria2c
+namespace FlyingAria2c.Aria2Lib
 {
     internal class JsonRpcConnection
     {

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace FlyingAria2c
+namespace FlyingAria2c.Aria2Lib
 {
     internal static class Aria2cMethords
     {
@@ -107,34 +108,34 @@ namespace FlyingAria2c
                 await Connection.JsonRpcAsync<JsonRpcConnection.Response<string>>("aria2.unpauseAll", Params);
             }
 
-            public static async Task<T> TellStatus<T>(JsonRpcConnection Connection, string Gid)
+            public static async Task<Dictionary<string, string>> TellStatus(JsonRpcConnection Connection, string Gid)
             {
                 string[] Keys = new string[] { "status", "totalLength", "completedLength", "downloadSpeed", "gid" };
                 object[] Params = { "token:" + Connection.Token, Gid, Keys};
-                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellStatus", Params);
+                JsonRpcConnection.Response<Dictionary<string, string>> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<Dictionary<string, string>>>("aria2.tellStatus", Params);
                 return Result.Result;
             }
 
-            public static async Task<T> TellStatus<T>(JsonRpcConnection Connection, string Gid, string[] Keys)
+            public static async Task<Dictionary<string, string>> TellStatus(JsonRpcConnection Connection, string Gid, string[] Keys)
             {
                 object[] Params = { "token:" + Connection.Token, Gid, Keys };
-                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellStatus", Params);
+                JsonRpcConnection.Response<Dictionary<string, string>> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<Dictionary<string, string>>>("aria2.tellStatus", Params);
                 return Result.Result;
             }
 
-            public static async Task<T> TellActive<T>(JsonRpcConnection Connection)
+            public static async Task<Dictionary<string, string>> TellActive(JsonRpcConnection Connection)
             {
                 string[] Keys = new string[] { "status", "totalLength", "completedLength", "downloadSpeed", "gid" };
                 object[] Params = { "token:" + Connection.Token, Keys };
-                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellActive", Params);
+                JsonRpcConnection.Response<Dictionary<string, string>> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<Dictionary<string, string>>>("aria2.tellActive", Params);
                 return Result.Result;
             }
 
-            public static async Task<T> TellWaiting<T>(JsonRpcConnection Connection)
+            public static async Task<Dictionary<string, string>> TellWaiting(JsonRpcConnection Connection)
             {
                 string[] Keys = new string[] { "status", "totalLength", "completedLength", "downloadSpeed", "gid" };
                 object[] Params = { "token:" + Connection.Token, Keys };
-                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellWaiting", Params);
+                JsonRpcConnection.Response<Dictionary<string, string>> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<Dictionary<string, string>>>("aria2.tellWaiting", Params);
                 return Result.Result;
             }
 
@@ -142,28 +143,27 @@ namespace FlyingAria2c
             /// 查询已停止的任务
             /// </summary>
             /// <returns>返回最近50个结果</returns>
-            public static async Task<T> TellStopped<T>(JsonRpcConnection Connection)
+            public static async Task<Dictionary<string, string>> TellStopped(JsonRpcConnection Connection)
             {
                 string[] Keys = new string[] { "status", "totalLength", "completedLength", "downloadSpeed", "gid" };
                 object[] Params = { "token:" + Connection.Token, 0, 50, Keys };
-                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.tellStopped", Params);
+                JsonRpcConnection.Response<Dictionary<string, string>> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<Dictionary<string, string>>>("aria2.tellStopped", Params);
                 return Result.Result;
             }
 
-            public static async Task<T> GetFiles<T>(JsonRpcConnection Connection, string Gid)
-            {
-                object[] Params = { "token:" + Connection.Token, Gid };
-                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.getFiles", Params);
-                return Result.Result;
-            }
+            //public static async Task<T> GetFiles<T>(JsonRpcConnection Connection, string Gid)
+            //{
+            //    object[] Params = { "token:" + Connection.Token, Gid };
+            //    JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.getFiles", Params);
+            //    return Result.Result;
+            //}
 
-            public static async Task<T> GetGlobalStat<T>(JsonRpcConnection Connection)
-            {
-                object[] Params = { "token:" + Connection.Token };
-                JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.getGlobalStat", Params);
-                return Result.Result;
-
-            }
+            //public static async Task<T> GetGlobalStat<T>(JsonRpcConnection Connection)
+            //{
+            //    object[] Params = { "token:" + Connection.Token };
+            //    JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.getGlobalStat", Params);
+            //    return Result.Result;
+            //}
 
             /// <summary>
             /// 关闭Aria2C，调用Aria2自己的方法
@@ -173,7 +173,6 @@ namespace FlyingAria2c
                 object[] Params = { "token:" + Connection.Token };
                 Connection.JsonRpcWithoutRes("aria2.shutdown", Params);
             }
-
         }
     }
 }

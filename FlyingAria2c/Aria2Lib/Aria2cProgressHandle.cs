@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 
-namespace FlyingAria2c
+namespace FlyingAria2c.Aria2Lib
 {
     internal class Aria2cProgressHandle
     {

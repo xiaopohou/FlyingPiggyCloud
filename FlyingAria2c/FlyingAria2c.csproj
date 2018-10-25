@@ -48,11 +48,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Aria2cMethords.cs" />
-    <Compile Include="Aria2cProgressHandle.cs" />
+    <Compile Include="Aria2Lib\Aria2cMethords.cs" />
+    <Compile Include="Aria2Lib\Aria2cProgressHandle.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="DownloadTask.cs" />
-    <Compile Include="JsonRpcConnection.cs" />
+    <Compile Include="Aria2Lib\JsonRpcConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
