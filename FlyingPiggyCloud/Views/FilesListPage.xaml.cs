@@ -62,7 +62,7 @@ namespace FlyingPiggyCloud.Views
             string uuid = ((ViewModels.FileListItem)((Button)sender).DataContext).UUID;
             Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
             var x = await fileSystemMethods.GetDetailsByUUID(uuid);
-            MessageBox.Show(x.Result.DownloadAddress);
+            var a = new FlyingAria2c.DownloadTask(x.Result.DownloadAddress);
         }
 
         private void MoreBotton_Click(object sender, RoutedEventArgs e)
