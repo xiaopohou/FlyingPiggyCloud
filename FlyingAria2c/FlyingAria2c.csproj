@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Aria2Lib\Aria2cMethords.cs" />
     <Compile Include="Aria2Lib\Aria2cProgressHandle.cs" />
+    <Compile Include="Aria2Lib\File.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="DownloadTask.cs" />
     <Compile Include="Aria2Lib\JsonRpcConnection.cs" />

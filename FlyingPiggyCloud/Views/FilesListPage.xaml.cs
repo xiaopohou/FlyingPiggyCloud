@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using FlyingPiggyCloud.ViewModels;
+using Microsoft.Win32;
 using System.Windows;
 using System.Windows.Controls;
 using Wangsu.WcsLib.Core;
@@ -27,18 +28,21 @@ namespace FlyingPiggyCloud.Views
         /// <param name="Path"></param>
         public FilesListPage(string Path)
         {
-            fileList = new ViewModels.FileList("", Path,true);
+            fileList = new FileList("", Path, true);
             InitializeComponent();
             FileListView.ItemsSource = fileList;
             System.Collections.Generic.List<string> x = new System.Collections.Generic.List<string>(Path.Split(new string[] { "/" }, System.StringSplitOptions.None));
             if (x[x.Count - 1] == "")
+            {
                 x.RemoveAt(x.Count - 1);
+            }
+
             AddressBar.ItemsSource = x;
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            var a = (ViewModels.FileListItem)((ListViewItem)sender).DataContext;
+            FileListItem a = (ViewModels.FileListItem)((ListViewItem)sender).DataContext;
             if (a.IsEnable)
             {
                 fileList.GetDirectoryByUUID(((ViewModels.FileListItem)((ListViewItem)sender).DataContext).UUID);
@@ -53,32 +57,32 @@ namespace FlyingPiggyCloud.Views
         private async void NewFolderButton_Click(object sender, RoutedEventArgs e)
         {
             string NewFolderName = "新文件夹";
-            await fileList.NewFolder(NewFolderName,true);
+            await fileList.NewFolder(NewFolderName, true);
             fileList.Refresh(sender, e);
         }
 
         private async void DownloadBotton_Click(object sender, RoutedEventArgs e)
         {
-            string uuid = ((ViewModels.FileListItem)((Button)sender).DataContext).UUID;
+            string uuid = ((FileListItem)((Button)sender).DataContext).UUID;
             Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
-            var x = await fileSystemMethods.GetDetailsByUUID(uuid);
-            var a = new FlyingAria2c.DownloadTask(x.Result.DownloadAddress);
+            Controllers.Results.ResponesResult<Controllers.Results.FileSystem.FileMetaData> x = await fileSystemMethods.GetDetailsByUUID(uuid);
+            DownloadTask a = new DownloadTask(x.Result);
         }
 
         private void MoreBotton_Click(object sender, RoutedEventArgs e)
         {
-            var btn = (Button)sender;
+            Button btn = (Button)sender;
             btn.ContextMenu.DataContext = btn.DataContext;
             btn.ContextMenu.IsOpen = true;
         }
 
         private async void Delete_Click(object sender, RoutedEventArgs e)
         {
-            var x = (MenuItem)sender;
+            MenuItem x = (MenuItem)sender;
             //x.IsEnabled = false;
             await ((ViewModels.FileListItem)x.DataContext).Remove();
             //System.Threading.Thread.Sleep(200);
-            lock(fileList)
+            lock (fileList)
             {
                 fileList.Refresh(this, new System.EventArgs());
             }
@@ -90,8 +94,8 @@ namespace FlyingPiggyCloud.Views
             if (openFileDialog.ShowDialog().GetValueOrDefault())
             {
                 Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
-                var x = await fileSystemMethods.UploadFile(openFileDialog.SafeFileName, fileList.CurrentUUID, OriginalFilename: openFileDialog.SafeFileName);
-                Upload.Start(x.Result.Token, openFileDialog.FileName, x.Result.UploadUrl,openFileDialog.SafeFileName);
+                Controllers.Results.ResponesResult<Controllers.Results.FileSystem.UploadResponseResult> x = await fileSystemMethods.UploadFile(openFileDialog.SafeFileName, fileList.CurrentUUID, OriginalFilename: openFileDialog.SafeFileName);
+                Upload.Start(x.Result.Token, openFileDialog.FileName, x.Result.UploadUrl, openFileDialog.SafeFileName);
             }
         }
     }

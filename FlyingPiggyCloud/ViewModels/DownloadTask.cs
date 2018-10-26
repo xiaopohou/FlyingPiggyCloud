@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FlyingPiggyCloud.Controllers.Results.FileSystem;
+using Syroot.Windows.IO;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using FlyingAria2c;
-using FlyingPiggyCloud.Controllers.Results.FileSystem;
 
 namespace FlyingPiggyCloud.ViewModels
 {
@@ -13,7 +9,7 @@ namespace FlyingPiggyCloud.ViewModels
     {
         private readonly FileMetaData fileMetaData;
 
-        public string FileName { get; set; }
+        public string FileName => fileMetaData.Name;
 
         public new async Task RefreshStatus()
         {
@@ -21,9 +17,13 @@ namespace FlyingPiggyCloud.ViewModels
             OnPropertyChanged("Status");
             OnPropertyChanged("Progress");
             OnPropertyChanged("DownloadSpeed");
+            System.Threading.Thread.Sleep(500);
         }
 
-        public DownloadTask(FileMetaData fileMetaData, Action<FlyingAria2c.DownloadTask> CompletedEventHandle = null) : base(fileMetaData.DownloadAddress, CompletedEventHandle)
+        public DownloadTask(FileMetaData fileMetaData) : base(fileMetaData.DownloadAddress, async (e) =>
+        {
+            System.IO.File.Move(await e.GetFilePath(), KnownFolders.Downloads.Path + "\\" + fileMetaData.Name);
+        })
         {
             this.fileMetaData = fileMetaData;
         }

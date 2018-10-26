@@ -14,7 +14,7 @@ namespace FlyingPiggyCloud.ViewModels
         /// <summary>
         /// 当前目录的UUID
         /// </summary>
-        public string CurrentUUID { get; private set;}
+        public string CurrentUUID { get; private set; }
 
         /// <summary>
         /// 当前路径
@@ -159,7 +159,7 @@ namespace FlyingPiggyCloud.ViewModels
             }
             else
             {
-                GetDirectoryByPath(Path,IsAutoCreating);
+                GetDirectoryByPath(Path, IsAutoCreating);
             }
         }
     }

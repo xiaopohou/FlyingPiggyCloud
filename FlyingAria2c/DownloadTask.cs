@@ -99,6 +99,12 @@ namespace FlyingAria2c
             }
         }
 
+        public async Task<string> GetFilePath()
+        {
+            File[] x = await Aria2Methords.GetFiles(Downloader.RpcConnection, Gid);
+            return x[0].Path;
+        }
+
         private async void Create(string DownloadAddress)
         {
             Gid = await Aria2Methords.AddUri(Downloader.RpcConnection, DownloadAddress);

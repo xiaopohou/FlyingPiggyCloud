@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace FlyingAria2c.Aria2Lib
@@ -14,7 +13,7 @@ namespace FlyingAria2c.Aria2Lib
         {
             try
             {
-                return Convert.ToBase64String(File.ReadAllBytes(Path));
+                return Convert.ToBase64String(System.IO.File.ReadAllBytes(Path));
             }
             catch (Exception)
             {
@@ -149,12 +148,12 @@ namespace FlyingAria2c.Aria2Lib
             return Result.Result;
         }
 
-        //public static async Task<T> GetFiles<T>(JsonRpcConnection Connection, string Gid)
-        //{
-        //    object[] Params = { "token:" + Connection.Token, Gid };
-        //    JsonRpcConnection.Response<T> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<T>>("aria2.getFiles", Params);
-        //    return Result.Result;
-        //}
+        public static async Task<File[]> GetFiles(JsonRpcConnection Connection, string Gid)
+        {
+            object[] Params = { "token:" + Connection.Token, Gid };
+            JsonRpcConnection.Response<File[]> Result = await Connection.JsonRpcAsync<JsonRpcConnection.Response<File[]>>("aria2.getFiles", Params);
+            return Result.Result;
+        }
 
         //public static async Task<T> GetGlobalStat<T>(JsonRpcConnection Connection)
         //{
