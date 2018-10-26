@@ -25,6 +25,18 @@ namespace FlyingPiggyCloud.Controllers
         public QingzhenyunRequestBase(string BaseUri)
         {
             client = new RestClient(BaseUri);
+            if (RegistryManager.IsAutoLogin && Token == null)
+            {
+                Token = RegistryManager.Token;
+            }
+        }
+
+        ~QingzhenyunRequestBase()
+        {
+            if (RegistryManager.IsAutoLogin && Token != null)
+            {
+                RegistryManager.Token = Token;
+            }
         }
     }
 }
