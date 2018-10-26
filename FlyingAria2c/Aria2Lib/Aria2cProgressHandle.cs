@@ -61,7 +61,7 @@ namespace FlyingAria2c.Aria2Lib
         {
             if (!aria2cProcess.HasExited)
             {
-                aria2cProcess.Close();
+                aria2cProcess.Kill();
             }
         }
 
@@ -87,7 +87,7 @@ namespace FlyingAria2c.Aria2Lib
 
             Port = GetRandomUnusedPort();
             Start(Aria2cPath, DefaultDownloadPath);
-            AppDomain.CurrentDomain.ProcessExit += new EventHandler(Crash);
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(Crash);
             //AppDomain.CurrentDomain.
         }
 
@@ -96,7 +96,7 @@ namespace FlyingAria2c.Aria2Lib
             ProgressHandleDisposing?.Invoke();
             if (!aria2cProcess.HasExited)
             {
-                aria2cProcess.Close();
+                aria2cProcess.Kill();
             }
         }
     }

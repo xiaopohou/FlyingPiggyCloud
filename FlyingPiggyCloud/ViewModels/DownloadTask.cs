@@ -1,6 +1,8 @@
 ﻿using FlyingPiggyCloud.Controllers.Results.FileSystem;
 using Syroot.Windows.IO;
+using System;
 using System.ComponentModel;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace FlyingPiggyCloud.ViewModels
@@ -22,7 +24,15 @@ namespace FlyingPiggyCloud.ViewModels
 
         public DownloadTask(FileMetaData fileMetaData) : base(fileMetaData.DownloadAddress, async (e) =>
         {
-            System.IO.File.Move(await e.GetFilePath(), KnownFolders.Downloads.Path + "\\" + fileMetaData.Name);
+            string NewFilePath = KnownFolders.Downloads.Path + "\\" + fileMetaData.Name;
+            int index = 1;
+            while (File.Exists(NewFilePath))
+            {
+                NewFilePath = Path.GetDirectoryName(KnownFolders.Downloads.Path + "\\" + fileMetaData.Name) + "\\" + Path.GetFileNameWithoutExtension(KnownFolders.Downloads.Path + "\\" + fileMetaData.Name) + string.Format("({0})",index) + Path.GetExtension(KnownFolders.Downloads.Path + "\\" + fileMetaData.Name);
+                index++;
+            }
+
+            File.Move(await e.GetFilePath(), NewFilePath);
         })
         {
             this.fileMetaData = fileMetaData;
