@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" Style="{StaticResource WindowBasicDesign}" Background="White" Width="340" Height="512">
     <Window.Resources>
-        
+
     </Window.Resources>
     <Grid>
         <StackPanel Margin="0,40,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
@@ -24,14 +24,14 @@
             </StackPanel>
             <TextBlock Visibility="Collapsed" Margin="0,8,0,14" Text="您已输入五次错误密码，请输入验证码" Foreground="#FFE53935"/>
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="True" Margin="0,0,107,10" Content="记住密码" Style="{DynamicResource CheckBasicDesign}" BorderBrush="#FF2EC17C"/>
+                <CheckBox IsChecked="{Binding IsSavedPassword,Mode=TwoWay}" Margin="0,0,107,10" Content="记住密码" Style="{DynamicResource CheckBasicDesign}" BorderBrush="#FF2EC17C"/>
                 <TextBlock Text="忘记密码" MouseUp="TextBlock_MouseUp"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <CheckBox Margin="0,0,107,10"  Content="自动登陆" Style="{DynamicResource CheckBasicDesign}" BorderBrush="#FF2EC17C"/>
+                <CheckBox IsChecked="{Binding IsAutoLogin, Mode=TwoWay}" Margin="0,0,107,10"  Content="自动登陆" Style="{DynamicResource CheckBasicDesign}" BorderBrush="#FF2EC17C"/>
                 <TextBlock Text="注册账号"/>
             </StackPanel>
-            
+
         </StackPanel>
         <Button Name="Login" Width="250" Height="40" Content="登陆" FontSize="18" Style="{DynamicResource ButtonBasicDesign}" BorderBrush="{x:Null}" Background="#FF2EC17C" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,31" VerticalAlignment="Bottom">
             <Button.Effect>

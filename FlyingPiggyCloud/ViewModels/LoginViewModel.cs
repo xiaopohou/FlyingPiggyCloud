@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.ComponentModel;
-using System.Windows;
 
 namespace FlyingPiggyCloud.ViewModels
 {
@@ -35,6 +33,18 @@ namespace FlyingPiggyCloud.ViewModels
         }
         private string password;
 
+        public bool IsAutoLogin
+        {
+            get => Controllers.RegistryManager.IsAutoLogin;
+            set => Controllers.RegistryManager.IsAutoLogin = value;
+        }
+
+        public bool IsSavedPassword
+        {
+            get => Controllers.RegistryManager.IsSavedPassword;
+            set => Controllers.RegistryManager.IsSavedPassword = value;
+        }
+
         public override string FriendlyErrorMessage
         {
             get => base.FriendlyErrorMessage;
@@ -63,7 +73,17 @@ namespace FlyingPiggyCloud.ViewModels
 
         public LoginByPasswordProgressViewModel() : base(Properties.Settings.Default.BaseUri)
         {
+            userName = Controllers.RegistryManager.UserName;
+            password = Controllers.RegistryManager.Password;
+        }
 
+        ~LoginByPasswordProgressViewModel()
+        {
+            Controllers.RegistryManager.UserName = userName;
+            if (IsSavedPassword)
+            {
+                Controllers.RegistryManager.Password = password;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

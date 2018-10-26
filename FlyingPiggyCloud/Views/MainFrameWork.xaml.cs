@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace FlyingPiggyCloud.Views
 {
@@ -24,7 +16,7 @@ namespace FlyingPiggyCloud.Views
         //应有的用于绑定的对象：一个用户信息、一个页控制器、一个渲染页
         public MainFrameWork()
         {
-            CurrentPage=PageNavigate.Downloading;
+            CurrentPage = Controllers.RegistryManager.DefaultPage;
             InitializeComponent();
             DataContext = this;
             BindingOperations.SetBinding(MainFrame, Frame.ContentProperty, new Binding
@@ -34,15 +26,17 @@ namespace FlyingPiggyCloud.Views
             });
         }
 
+        ~MainFrameWork()
+        {
+            Controllers.RegistryManager.DefaultPage = CurrentPage;
+        }
+
         /// <summary>
         /// 与左边栏绑定
         /// </summary>
         public PageNavigate CurrentPage
         {
-            get
-            {
-                return currentPage;
-            }
+            get => currentPage;
             set
             {
                 currentPage = value;
@@ -57,7 +51,7 @@ namespace FlyingPiggyCloud.Views
 
         private void Navigate(PageNavigate pageNavigate)
         {
-            switch(pageNavigate)
+            switch (pageNavigate)
             {
                 case PageNavigate.Root:
                     Page = new FilesListPage("/");

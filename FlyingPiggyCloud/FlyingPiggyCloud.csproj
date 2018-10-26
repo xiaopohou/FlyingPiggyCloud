@@ -66,6 +66,7 @@
     <Compile Include="Controllers\FileSystemMethods.cs" />
     <Compile Include="Controllers\QingzhenyunLogicalProgress.cs" />
     <Compile Include="Controllers\QingzhenyunRequestBase.cs" />
+    <Compile Include="Controllers\RegistryManager.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\UserCenterMethods.cs" />
     <Compile Include="ViewModels\DownloadTask.cs" />
