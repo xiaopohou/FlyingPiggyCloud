@@ -88,28 +88,46 @@ namespace FlyingPiggyCloud.ViewModels
                     //    return UriBase + "zip.png";
                     case ".ai":
                         return UriBase + "file-ai.png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
-                    case ".":
-                        return UriBase + ".png";
+                    case ".mp3":
+                    case ".aac":
+                    case ".ape":
+                    case ".flac":
+                    case ".wav":
+                    case ".wma":
+                    case ".ogg":
+                    case ".mid":
+                        return UriBase + "file-audio.png";
+                    case ".doc":
+                    case ".docx":
+                        return UriBase + "file-doc.png";
+                    case ".eps":
+                        return UriBase + "file-eps.png";
+                    case ".gif":
+                        return UriBase + "file-gif.png";
+                    case ".jpg":
+                    case ".jpeg":
+                        return UriBase + "file-jpg.png";
+                    case ".png":
+                        return UriBase + "file-png.png";
+                    case ".ppt":
+                    case ".pptx":
+                        return UriBase + "file-ppt.png";
+                    case ".psd":
+                        return UriBase + "file-psd.png";
+                    case ".svg":
+                        return UriBase + "file-svg.png";
+                    case ".xls":
+                    case ".xlsx":
+                    case ".csv":
+                        return UriBase + "file-xls.png";
+                    case ".mov":
+                    case ".rm":
+                    case ".rmvb":
+                    case ".mp4":
+                    case ".mkv":
+                    case ".wmv":
+                    case ".avi":
+                        return UriBase + "file-video.png";
 
                     default:
                         return UriBase + "file.png";
