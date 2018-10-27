@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FlyingPiggyCloud.Views
 {
@@ -20,6 +9,19 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class CompletedListPage : Page
     {
+        private static ObservableCollection<ViewModels.DownloadTask> CompletedTasks = new ObservableCollection<ViewModels.DownloadTask>();
+
+        internal static void CompletedTasksAddRange(List<ViewModels.DownloadTask> completedTasks)
+        {
+            lock (CompletedTasks)
+            {
+                foreach (ViewModels.DownloadTask a in completedTasks)
+                {
+                    CompletedTasks.Add(a);
+                }
+            }
+        }
+
         public CompletedListPage()
         {
             InitializeComponent();

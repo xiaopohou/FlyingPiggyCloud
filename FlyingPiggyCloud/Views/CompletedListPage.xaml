@@ -28,7 +28,7 @@
                     <GridViewColumn Header="操作"/>
                 </GridView>
             </ListView.View>
-            <ListViewItem Content="test" Height="50"/>
+            <!--<ListViewItem Content="test" Height="50"/>-->
         </ListView>
     </Grid>
 </Page>
