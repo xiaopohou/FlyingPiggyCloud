@@ -25,6 +25,7 @@ namespace FlyingPiggyCloud.Views
         public CompletedListPage()
         {
             InitializeComponent();
+            CompletedList.ItemsSource = CompletedTasks;
         }
     }
 }

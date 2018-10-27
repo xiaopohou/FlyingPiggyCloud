@@ -11,7 +11,7 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class FilesListPage : Page
     {
-        private ViewModels.FileList fileList;
+        private FileList fileList;
 
         /// <summary>
         /// 通过指定路径创建文件列表页，如果路径不存在将自动创建
@@ -54,10 +54,13 @@ namespace FlyingPiggyCloud.Views
 
         private async void DownloadBotton_Click(object sender, RoutedEventArgs e)
         {
-            string uuid = ((FileListItem)((Button)sender).DataContext).UUID;
-            Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
-            Controllers.Results.ResponesResult<Controllers.Results.FileSystem.FileMetaData> x = await fileSystemMethods.GetDetailsByUUID(uuid);
-            DownloadTask a = new DownloadTask(x.Result);
+            if(((FileListItem)((Button)sender).DataContext).Type==0)
+            {
+                string uuid = ((FileListItem)((Button)sender).DataContext).UUID;
+                Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
+                Controllers.Results.ResponesResult<Controllers.Results.FileSystem.FileMetaData> x = await fileSystemMethods.GetDetailsByUUID(uuid);
+                DownloadingListPage.NewDownloadTask(x.Result);
+            }
         }
 
         private void MoreBotton_Click(object sender, RoutedEventArgs e)

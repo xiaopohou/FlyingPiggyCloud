@@ -8,6 +8,9 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DownloadingListPage">
     <Page.Resources>
+        <DataTemplate x:Key="CheckBox">
+            <CheckBox/>
+        </DataTemplate>
         <DataTemplate x:Key="FileName">
             <TextBlock Text="{Binding FileName}"/>
         </DataTemplate>
@@ -22,7 +25,6 @@
                 <Button Style="{StaticResource SimpleButton}"/>
                 <Button Style="{StaticResource SimpleButton}"/>
                 <Button Style="{StaticResource SimpleButton}"/>
-
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
@@ -36,7 +38,7 @@
         <ListView Name="DownloadList" Margin="0,50,0,0">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn>
+                    <GridViewColumn CellTemplate="{StaticResource CheckBox}">
                         <GridViewColumn.Header>
                             <CheckBox/>
                         </GridViewColumn.Header>

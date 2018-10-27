@@ -20,6 +20,8 @@ namespace FlyingPiggyCloud.ViewModels
 
         public string UUID => MetaData.UUID;
 
+        public int Type => MetaData.Type;
+
         public bool IsChecked { get; set; }
 
         public async Task<bool> Remove()
