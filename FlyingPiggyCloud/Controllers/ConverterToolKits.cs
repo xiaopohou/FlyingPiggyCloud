@@ -70,7 +70,7 @@ namespace FlyingPiggyCloud.Controllers
         /// </summary>
         /// <param name="Size"></param>
         /// <returns></returns>
-        public static string SizeCalculator(long Size)
+        internal static string SizeCalculator(long Size)
         {
             if (Size / V < 1)
             {
@@ -89,5 +89,7 @@ namespace FlyingPiggyCloud.Controllers
                 return (Size / V / V / V).ToString("F2") + "GB";
             }
         }
+
+
     }
 }

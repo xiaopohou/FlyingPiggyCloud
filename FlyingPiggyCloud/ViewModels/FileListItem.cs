@@ -2,11 +2,121 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace FlyingPiggyCloud.ViewModels
 {
-    internal class FileListItem:INotifyPropertyChanged
+    internal class FileListItem : INotifyPropertyChanged
     {
+        private string IcomUriConverter()
+        {
+            const string UriBase = @"pack://application:,,,/Resources/FileMetaIcons/";
+            if (MetaData.Type == 1)
+            {
+                return UriBase + "folder.png";
+            }
+            else
+            {
+                string extension = System.IO.Path.GetExtension(MetaData.Name);
+                switch (extension)
+                {
+                    //case ".xls":
+                    //case ".xlsx":
+                    //case ".xlsm":
+                    //case ".csv":
+                    //    return UriBase + "xls.png";
+                    //case ".avi":
+                    //    return UriBase + "avi.png";
+                    ////case ".mov":
+                    //case ".mkv":
+                    //    return UriBase + "mkv.png";
+                    //case ".mp4":
+                    //    return UriBase + "mp4.png";
+                    //case ".mpg":
+                    //case ".mpeg":
+                    //    return UriBase + "mpg.png";
+                    ////case ".wmv":
+                    //case ".rm":
+                    //case ".rmvb":
+                    //    return UriBase + "rmvb.png";
+                    //case ".mp3":
+                    //    return UriBase + "mp3.png";
+                    ////case ".wma":
+                    //case ".wav":
+                    //    return UriBase + "wav.png";
+                    ////case ".ogg":
+                    ////case ".aac":
+                    ////case ".mid":
+                    ////case ".flac":
+                    ////case ".ape":
+                    ////    return UriBase + "Music.png";
+                    //case ".pdf":
+                    //    return UriBase + "pdf.png";
+                    //case ".txt":
+                    //    return UriBase + "txt.png";
+                    //case ".doc":
+                    //case ".docx":
+                    //case ".dotx":
+                    //case ".dotm":
+                    //    return UriBase + "doc.png";
+                    //case ".dll":
+                    //    return UriBase + "dll.png";
+                    //case ".exe":
+                    //    return UriBase + "exe.png";
+                    //case ".gif":
+                    //    return UriBase + "gif.png";
+                    //case ".html":
+                    //case ".htm":
+                    //    return UriBase + "html.png";
+                    //case ".jpg":
+                    //    return UriBase + "jpg.png";
+                    //case ".png":
+                    //    return UriBase + "png.png";
+                    //case ".ppt":
+                    //case ".pptx":
+                    //    return UriBase + "ppt.png";
+                    //case ".psd":
+                    //case ".psb":
+                    //    return UriBase + "psd.png";
+                    //case ".swf":
+                    //    return UriBase + "swf.png";
+                    //case ".zip":
+                    //case ".7z":
+                    //case ".rar":
+                    //case ".gz":
+                    //    return UriBase + "zip.png";
+                    case ".ai":
+                        return UriBase + "file-ai.png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+                    case ".":
+                        return UriBase + ".png";
+
+                    default:
+                        return UriBase + "file.png";
+                }
+            }
+        }
+
         private FileMetaData MetaData;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -15,6 +125,8 @@ namespace FlyingPiggyCloud.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public ImageSource Icon => new BitmapImage(new Uri(IcomUriConverter()));
 
         public string Path => MetaData.Path;
 
@@ -47,25 +159,6 @@ namespace FlyingPiggyCloud.ViewModels
         }
 
         public string MTime => UnixTimeStampConverter(MetaData.Mtime);
-
-        /// <summary>
-        /// 图标
-        /// </summary>
-        public string Icon
-        {
-            get
-            {
-                switch (MetaData.Type)
-                {
-                    case 0:
-                        return "";
-                    case 1:
-                        return "";
-                    default:
-                        return "";
-                }
-            }
-        }
 
         /// <summary>
         /// 文件名

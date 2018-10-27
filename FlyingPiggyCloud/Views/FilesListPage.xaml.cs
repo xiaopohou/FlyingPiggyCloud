@@ -1,5 +1,7 @@
 ﻿using FlyingPiggyCloud.ViewModels;
 using Microsoft.Win32;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Wangsu.WcsLib.Core;
@@ -13,6 +15,8 @@ namespace FlyingPiggyCloud.Views
     {
         private FileList fileList;
 
+        private List<string> PathArray;
+
         /// <summary>
         /// 通过指定路径创建文件列表页，如果路径不存在将自动创建
         /// </summary>
@@ -22,13 +26,13 @@ namespace FlyingPiggyCloud.Views
             fileList = new FileList("", Path, true);
             InitializeComponent();
             FileListView.ItemsSource = fileList;
-            System.Collections.Generic.List<string> x = new System.Collections.Generic.List<string>(Path.Split(new string[] { "/" }, System.StringSplitOptions.None));
-            if (x[x.Count - 1] == "")
+            PathArray = new List<string>(Path.Split(new string[] { "/" }, System.StringSplitOptions.None));
+            if (PathArray[PathArray.Count - 1] == "")
             {
-                x.RemoveAt(x.Count - 1);
+                PathArray.RemoveAt(PathArray.Count - 1);
             }
 
-            AddressBar.ItemsSource = x;
+            AddressBar.ItemsSource = PathArray;
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)

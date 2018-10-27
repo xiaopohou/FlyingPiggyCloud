@@ -224,5 +224,63 @@
       <Name>WcsLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\FileMetaIcons\archiver.png" />
+    <Resource Include="Resources\FileMetaIcons\file-add.png" />
+    <Resource Include="Resources\FileMetaIcons\file-ai.png" />
+    <Resource Include="Resources\FileMetaIcons\file-arrow-bottom.png" />
+    <Resource Include="Resources\FileMetaIcons\file-arrow-left.png" />
+    <Resource Include="Resources\FileMetaIcons\file-arrow-right.png" />
+    <Resource Include="Resources\FileMetaIcons\file-arrow-top.png" />
+    <Resource Include="Resources\FileMetaIcons\file-audio.png" />
+    <Resource Include="Resources\FileMetaIcons\file-checkmark.png" />
+    <Resource Include="Resources\FileMetaIcons\file-cog.png" />
+    <Resource Include="Resources\FileMetaIcons\file-doc.png" />
+    <Resource Include="Resources\FileMetaIcons\file-edit.png" />
+    <Resource Include="Resources\FileMetaIcons\file-eps.png" />
+    <Resource Include="Resources\FileMetaIcons\file-gif.png" />
+    <Resource Include="Resources\FileMetaIcons\file-heart.png" />
+    <Resource Include="Resources\FileMetaIcons\file-jpg.png" />
+    <Resource Include="Resources\FileMetaIcons\file-lock.png" />
+    <Resource Include="Resources\FileMetaIcons\file-photo.png" />
+    <Resource Include="Resources\FileMetaIcons\file-png.png" />
+    <Resource Include="Resources\FileMetaIcons\file-remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\FileMetaIcons\file-ppt.png" />
+    <Resource Include="Resources\FileMetaIcons\file-psd.png" />
+    <Resource Include="Resources\FileMetaIcons\file-search.png" />
+    <Resource Include="Resources\FileMetaIcons\file-star.png" />
+    <Resource Include="Resources\FileMetaIcons\file-stats.png" />
+    <Resource Include="Resources\FileMetaIcons\file-svg.png" />
+    <Resource Include="Resources\FileMetaIcons\file-table.png" />
+    <Resource Include="Resources\FileMetaIcons\file-video.png" />
+    <Resource Include="Resources\FileMetaIcons\file-xls.png" />
+    <Resource Include="Resources\FileMetaIcons\file-zip.png" />
+    <Resource Include="Resources\FileMetaIcons\file.png" />
+    <Resource Include="Resources\FileMetaIcons\files-pack-big.png" />
+    <Resource Include="Resources\FileMetaIcons\files-pack-small.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-add.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-arrow-bottom.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-arrow-left.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-arrow-right.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-arrow-top.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-audio.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-checkmark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\FileMetaIcons\folder-cog.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-edit.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-email.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-heart.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-lock.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-minus.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-photo.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-search.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-star.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-stats.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-table.png" />
+    <Resource Include="Resources\FileMetaIcons\folder-video.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
