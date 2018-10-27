@@ -96,6 +96,7 @@ namespace FlyingAria2c
             if (Status == TaskAction.Complete)
             {
                 Complete?.Invoke(this);
+                Complete = null;
             }
         }
 

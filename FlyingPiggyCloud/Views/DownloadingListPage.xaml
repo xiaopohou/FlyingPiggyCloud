@@ -7,7 +7,25 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DownloadingListPage">
+    <Page.Resources>
+        <DataTemplate x:Key="FileName">
+            <TextBlock Text="{Binding FileName}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="Size">
+            <TextBlock Text="{Binding Size}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="Status">
+            <TextBlock Text="{Binding Status}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="Operates">
+            <StackPanel>
+                <Button Style="{StaticResource SimpleButton}"/>
+                <Button Style="{StaticResource SimpleButton}"/>
+                <Button Style="{StaticResource SimpleButton}"/>
 
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
     <Grid>
         <StackPanel Orientation="Horizontal" Height="50" VerticalAlignment="Top">
             <Button Content="导航向前"/>
@@ -15,7 +33,7 @@
             <Button Content="全部开始"/>
             <Button Content="全部暂停"/>
         </StackPanel>
-        <ListView Margin="0,50,0,0">
+        <ListView Name="DownloadList" Margin="0,50,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn>
@@ -23,13 +41,13 @@
                             <CheckBox/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Header="文件名"/>
-                    <GridViewColumn Header="大小"/>
-                    <GridViewColumn Header="状态"/>
-                    <GridViewColumn Header="操作"/>
+                    <GridViewColumn CellTemplate="{StaticResource FileName}" Header="文件名"/>
+                    <GridViewColumn CellTemplate="{StaticResource Size}" Header="大小"/>
+                    <GridViewColumn CellTemplate="{StaticResource Status}" Header="状态"/>
+                    <GridViewColumn CellTemplate="{StaticResource Operates}" Header="操作"/>
                 </GridView>
             </ListView.View>
-            <ListViewItem Content="test" Height="50"/>
+            <!--<ListViewItem Content="test" Height="50"/>-->
         </ListView>
     </Grid>
 </Page>

@@ -19,11 +19,12 @@ namespace FlyingPiggyCloud.Views
             CurrentPage = Controllers.RegistryManager.DefaultPage;
             InitializeComponent();
             DataContext = this;
-            BindingOperations.SetBinding(MainFrame, Frame.ContentProperty, new Binding
+            BindingOperations.SetBinding(MainFrame, ContentProperty, new Binding
             {
                 Path = new PropertyPath("Page"),
                 Mode = BindingMode.TwoWay
             });
+
         }
 
         ~MainFrameWork()
@@ -49,6 +50,12 @@ namespace FlyingPiggyCloud.Views
 
         public Page Page { get; set; }
 
+        private DownloadingListPage DownloadingList = new DownloadingListPage();
+
+        private RecoveryBoxPage RecoveryBox = new RecoveryBoxPage();
+
+        private CompletedListPage CompletedList = new CompletedListPage();
+
         private void Navigate(PageNavigate pageNavigate)
         {
             switch (pageNavigate)
@@ -70,15 +77,15 @@ namespace FlyingPiggyCloud.Views
                 //    OnPropertyChanged("Page");
                 //    break;
                 case PageNavigate.Downloading:
-                    Page = new DownloadingListPage();
+                    Page = DownloadingList;
                     OnPropertyChanged("Page");
                     break;
                 case PageNavigate.Completed:
-                    Page = new CompletedListPage();
+                    Page = CompletedList;
                     OnPropertyChanged("Page");
                     break;
                 case PageNavigate.RecoveryBox:
-                    Page = new RecoveryBoxPage();
+                    Page = RecoveryBox;
                     OnPropertyChanged("Page");
                     break;
                 default:

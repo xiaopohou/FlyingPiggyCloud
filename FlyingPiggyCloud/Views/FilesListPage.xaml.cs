@@ -13,15 +13,6 @@ namespace FlyingPiggyCloud.Views
     {
         private ViewModels.FileList fileList;
 
-        //public FilesListPage()
-        //{
-        //    fileList = new ViewModels.FileList();
-        //    InitializeComponent();
-        //    FileListView.ItemsSource = fileList;
-        //}
-
-        //public ObservableCollection<string> CurrentPath;
-
         /// <summary>
         /// 通过指定路径创建文件列表页，如果路径不存在将自动创建
         /// </summary>
