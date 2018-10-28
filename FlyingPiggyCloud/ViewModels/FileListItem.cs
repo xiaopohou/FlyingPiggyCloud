@@ -14,7 +14,7 @@ namespace FlyingPiggyCloud.ViewModels
             const string UriBase = @"pack://application:,,,/Resources/FileMetaIcons/";
             if (MetaData.Type == 1)
             {
-                return UriBase + "folder.png";
+                return UriBase + "archiver.png";
             }
             else
             {

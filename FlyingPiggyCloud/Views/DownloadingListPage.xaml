@@ -30,10 +30,10 @@
     </Page.Resources>
     <Grid>
         <StackPanel Orientation="Horizontal" Height="50" VerticalAlignment="Top">
-            <Button Content="导航向前"/>
-            <Button Content="导航向后"/>
-            <Button Content="全部开始"/>
-            <Button Content="全部暂停"/>
+            <Button Width="45" Height="45" Content="导航向前" Margin="5" Style="{StaticResource CircleButton}"/>
+            <Button Width="45" Height="45" Content="导航向后" Margin="5" Style="{StaticResource CircleButton}"/>
+            <Button Content="全部开始" Margin="5" Style="{DynamicResource ButtonBasicDesign}"/>
+            <Button Content="全部暂停" Margin="5" Style="{DynamicResource ButtonBasicDesign}"/>
         </StackPanel>
         <ListView Name="DownloadList" Margin="0,50,0,0">
             <ListView.View>
