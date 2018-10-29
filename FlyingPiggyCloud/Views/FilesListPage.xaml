@@ -18,6 +18,8 @@
                 <Setter Property="Height" Value="36"/>
                 <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
             </Style>
+
+
             <DataTemplate x:Key="MetaName">
                 <Grid>
                     <Image Width="24" Margin="4" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -66,29 +68,23 @@
     <Grid>
         <!--上方栏-->
         <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
-            <Button Name="NewFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="0" Style="{StaticResource ButtonBasicDesign}" Margin="180,0,0,0" Background="#FFFFFFFF" Click="NewFolderButton_Click">
-                <Button.Effect>
-                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
-                </Button.Effect>
+            <Button Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="189,0,0,0" Background="#FFFFFFFF" Click="NewFolderButton_Click">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/文件.png"/>
+                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/tianjiashangpin.png"/>
                     <TextBlock Text="新建文件夹" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A"/>
                 </StackPanel>
             </Button>
-            <Button Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" BorderThickness="0" Style="{StaticResource ButtonBasicDesign}" Margin="100,0,0,0" Background="#FF2EC17C" Click="UploadButton_Click">
-                <Button.Effect>
-                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
-                </Button.Effect>
+            <Button Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="81" Style="{StaticResource ButtonBasicDesign}" Margin="96,0,0,0" Background="#FF2EC17C" Click="UploadButton_Click">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/上传.png"/>
                     <TextBlock Text="上传" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FFFFFFFF"/>
                 </StackPanel>
             </Button>
-            <Button Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource RoundedRectangleButton}" Margin="10,0,0,0">
-                <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/last.png" Stretch="Fill"/>
+            <Button Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0">
+                <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/fanhui.png" Stretch="Fill"/>
             </Button>
-            <Button Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource RoundedRectangleButton}" Margin="40,0,0,0">
-                <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/next.png" Stretch="Fill"/>
+            <Button Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="40,0,0,0">
+                <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/jinru.png" Stretch="Fill"/>
             </Button>
         </Grid>
         <!--地址栏-->
@@ -107,7 +103,6 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <!--这个ListView是本Page的主要结构-->
         <ListView Name="FileListView" Margin="0,84,0,0">
             <ListView.View>
                 <GridView>
@@ -116,8 +111,6 @@
                     <GridViewColumn Width="{Binding ElementName=WidthHelperMTime, Path=ActualWidth}" CellTemplate="{StaticResource MetaMTime}" Header="修改时间"/>
                 </GridView>
             </ListView.View>
-            <!--<ListViewItem Content="ListViewItem" IsSelected="True"/>-->
-            <!--<ListViewItem Content="hello world" Background="Black"/>-->
         </ListView>
 
         <!--这个Grid用于帮助GridView自动校正分栏宽度-->

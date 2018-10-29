@@ -109,6 +109,8 @@
             <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
             <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
             <Style x:Key="ButtonBasicDesign" TargetType="{x:Type Button}">
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="BorderBrush" Value="#FFB9B9B9"/>
                 <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
                 <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
@@ -231,6 +233,30 @@
             <Style TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
             </Style>
+            
+            <!--ListViewHeaderStyle-->
+            <Style TargetType="{x:Type GridViewColumnHeader}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                            <Border BorderThickness="1" Background="Transparent">
+                                <Border.BorderBrush>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="Gray" Offset="0"/>
+                                        <GradientStop Color="White" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.BorderBrush>
+                                <TextBlock Foreground="#FF5A5A5A" x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5" Width="{TemplateBinding Width}" TextAlignment="Center" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="FontFamily" Value="Segoe UI" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
