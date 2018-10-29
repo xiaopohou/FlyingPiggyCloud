@@ -286,5 +286,50 @@
     <Resource Include="Resources\FileMetaIcons\folder-table.png" />
     <Resource Include="Resources\FileMetaIcons\folder-video.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\暂停.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\BasicIcons\bianji.png" />
+    <Resource Include="Resources\BasicIcons\bianji_1.png" />
+    <Resource Include="Resources\BasicIcons\daichulidingdan.png" />
+    <Resource Include="Resources\BasicIcons\daihuanhuodingdan.png" />
+    <Resource Include="Resources\BasicIcons\datuzhanshi.png" />
+    <Resource Include="Resources\BasicIcons\dengdai.png" />
+    <Resource Include="Resources\BasicIcons\dingdanliang.png" />
+    <Resource Include="Resources\BasicIcons\dizhi.png" />
+    <Resource Include="Resources\BasicIcons\duoxuan.png" />
+    <Resource Include="Resources\BasicIcons\fanhui.png" />
+    <Resource Include="Resources\BasicIcons\fenleiguanli.png" />
+    <Resource Include="Resources\BasicIcons\gengduozhanshi.png" />
+    <Resource Include="Resources\BasicIcons\guigeguanli.png" />
+    <Resource Include="Resources\BasicIcons\jiaoseguanli.png" />
+    <Resource Include="Resources\BasicIcons\jinru.png" />
+    <Resource Include="Resources\BasicIcons\jujuehuanhuo.png" />
+    <Resource Include="Resources\BasicIcons\kucun.png" />
+    <Resource Include="Resources\BasicIcons\kucunliang.png" />
+    <Resource Include="Resources\BasicIcons\liulan.png" />
+    <Resource Include="Resources\BasicIcons\paixu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\BasicIcons\icon_paging_left.png" />
+    <Resource Include="Resources\BasicIcons\icon_paging_right.png" />
+    <Resource Include="Resources\BasicIcons\liebiaozhanshi.png" />
+    <Resource Include="Resources\BasicIcons\piliangdaochu.png" />
+    <Resource Include="Resources\BasicIcons\piliangshangchuan.png" />
+    <Resource Include="Resources\BasicIcons\quxiao.png" />
+    <Resource Include="Resources\BasicIcons\shanchu.png" />
+    <Resource Include="Resources\BasicIcons\shangjia.png" />
+    <Resource Include="Resources\BasicIcons\shenhebutongguo.png" />
+    <Resource Include="Resources\BasicIcons\sousuo.png" />
+    <Resource Include="Resources\BasicIcons\tianjiashangpin.png" />
+    <Resource Include="Resources\BasicIcons\tianjiayonghu.png" />
+    <Resource Include="Resources\BasicIcons\tongyihuanhuo.png" />
+    <Resource Include="Resources\BasicIcons\xiajia.png" />
+    <Resource Include="Resources\BasicIcons\xialazhankai.png" />
+    <Resource Include="Resources\BasicIcons\xiaoxi.png" />
+    <Resource Include="Resources\BasicIcons\xuanze.png" />
+    <Resource Include="Resources\BasicIcons\yincang.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

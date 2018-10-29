@@ -8,34 +8,65 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DownloadingListPage">
     <Page.Resources>
-        <DataTemplate x:Key="CheckBox">
-            <CheckBox/>
-        </DataTemplate>
-        <DataTemplate x:Key="FileName">
-            <TextBlock Text="{Binding FileName}"/>
-        </DataTemplate>
-        <DataTemplate x:Key="Size">
-            <TextBlock Text="{Binding Size}"/>
-        </DataTemplate>
-        <DataTemplate x:Key="Status">
-            <TextBlock Text="{Binding Status}"/>
-        </DataTemplate>
-        <DataTemplate x:Key="Operates">
-            <StackPanel>
-                <Button Style="{StaticResource SimpleButton}"/>
-                <Button Style="{StaticResource SimpleButton}"/>
-                <Button Style="{StaticResource SimpleButton}"/>
-            </StackPanel>
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FlyingPiggyCloud;component/Resources/ControlStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="CheckBox">
+                <CheckBox/>
+            </DataTemplate>
+            <DataTemplate x:Key="FileName">
+                <TextBlock Text="{Binding FileName}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="Size">
+                <TextBlock Text="{Binding Size}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="Status">
+                <TextBlock Text="{Binding Status}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="Operates">
+                <StackPanel>
+                    <Button Style="{StaticResource SimpleButton}"/>
+                    <Button Style="{StaticResource SimpleButton}"/>
+                    <Button Style="{StaticResource SimpleButton}"/>
+                </StackPanel>
+            </DataTemplate>
+        </ResourceDictionary>
     </Page.Resources>
     <Grid>
-        <StackPanel Orientation="Horizontal" Height="50" VerticalAlignment="Top">
-            <Button Width="45" Height="45" Content="导航向前" Margin="5" Style="{StaticResource CircleButton}"/>
-            <Button Width="45" Height="45" Content="导航向后" Margin="5" Style="{StaticResource CircleButton}"/>
-            <Button Content="全部开始" Margin="5" Style="{DynamicResource ButtonBasicDesign}"/>
-            <Button Content="全部暂停" Margin="5" Style="{DynamicResource ButtonBasicDesign}"/>
-        </StackPanel>
-        <ListView Name="DownloadList" Margin="0,50,0,0">
+        <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
+            <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0">
+                <!--<Button.Effect>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
+                </Button.Effect>-->
+                <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/last.png" Stretch="Fill"/>
+            </Button>
+            <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="45,0,0,0">
+                <!--<Button.Effect>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
+                </Button.Effect>-->
+                <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/next.png" Stretch="Fill"/>
+            </Button>
+            <Button Width="111" Height="25" Name="NewFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="218,0,0,0" Background="#FFFFFF">
+                <!--<Button.Effect>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
+                </Button.Effect>-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/暂停.png"/>
+                    <TextBlock Text="全部暂停" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#5A5A5A"/>
+                </StackPanel>
+            </Button>
+            <Button Width="111" Height="25" Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="97,0,0,0" Background="#FFFFFF">
+                <!--<Button.Effect>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
+                </Button.Effect>-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/正在下载.png"/>
+                    <TextBlock Text="全部开始" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#5A5A5A"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+        <ListView Name="DownloadList" Margin="0,60,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn CellTemplate="{StaticResource CheckBox}">

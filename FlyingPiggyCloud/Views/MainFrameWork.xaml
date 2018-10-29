@@ -26,7 +26,7 @@
             <Setter Property="BorderBrush" Value="{StaticResource RadioButton.Static.Border}"/>
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
+            <!--<Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>-->
             <Setter Property="Foreground" Value="#FF5A5A5A"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -163,6 +163,11 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="WindowStyle" Value="None"/>
             <Setter Property="Template" Value="{StaticResource MetroWindowTemplate}"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="Gray" />
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- Show Chat Window Animation -->
@@ -259,6 +264,8 @@
                 </StackPanel>
             </Border>
         </Grid>
-        
     </Grid>
+    <!--<Window.Effect>
+        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="Gray" />
+    </Window.Effect>-->
 </Window>
