@@ -239,13 +239,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                            <Border BorderThickness="1" Background="Transparent">
-                                <Border.BorderBrush>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="Gray" Offset="0"/>
-                                        <GradientStop Color="White" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.BorderBrush>
+                            <Border BorderThickness="0,0,1,0" Background="Transparent" BorderBrush="LightGray">
                                 <TextBlock Foreground="#FF5A5A5A" x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5" Width="{TemplateBinding Width}" TextAlignment="Center" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" />
                             </Border>
                         </ControlTemplate>
@@ -253,29 +247,11 @@
                 </Setter>
                 <Setter Property="OverridesDefaultStyle" Value="True" />
                 <Setter Property="Foreground" Value="Black" />
-                <!--<Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" />-->
-                <!--<Setter Property="FontSize" Value="12" />-->
             </Style>
 
             <Style TargetType="ListView">
                 <Setter Property="BorderThickness" Value="0"/>
-                <!--<Setter Property="ItemContainerStyle" Value="{StaticResource alternatingStyle}"/>
-                <Setter Property="AlternationCount" Value="2"/>-->
             </Style>
-
-            <!--<Style x:Key="alternatingStyle" TargetType="{x:Type ListViewItem}">
-                <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                        <Setter Property="Background" Value="#FFF5F5F5"/>
-                    </Trigger>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="#FFFFFFFF"/>
-                    </Trigger>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="#FF2EC17C"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>-->
 
         </ResourceDictionary>
     </Application.Resources>
