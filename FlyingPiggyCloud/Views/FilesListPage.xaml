@@ -12,11 +12,22 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FlyingPiggyCloud;component/Resources/ControlStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style TargetType="ListViewItem">
+            <Style x:Key="alternatingStyle" TargetType="ListViewItem">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Setter Property="Margin" Value="0"/>
                 <Setter Property="Height" Value="36"/>
                 <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                        <Setter Property="Background" Value="#FFF5F5F5"/>
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#FFFFFFFF"/>
+                    </Trigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FF2EC17C"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
 
@@ -103,7 +114,8 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListView Name="FileListView" Margin="0,84,0,0">
+        
+        <ListView Background="#FFF5F5F5" Name="FileListView" Margin="0,84,0,0" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperFlieName, Path=ActualWidth}" CellTemplate="{StaticResource MetaName}" Header="文件名" />

@@ -8,7 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Simple Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
+
             <!--Mac OS X风格的文本框-->
             <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
             <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
@@ -88,7 +88,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <!--基础按钮风格-->
             <Style x:Key="FocusVisual">
                 <Setter Property="Control.Template">
@@ -233,7 +233,7 @@
             <Style TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
             </Style>
-            
+
             <!--ListViewHeaderStyle-->
             <Style TargetType="{x:Type GridViewColumnHeader}">
                 <Setter Property="Template">
@@ -253,9 +253,29 @@
                 </Setter>
                 <Setter Property="OverridesDefaultStyle" Value="True" />
                 <Setter Property="Foreground" Value="Black" />
-                <Setter Property="FontFamily" Value="Segoe UI" />
-                <Setter Property="FontSize" Value="12" />
+                <!--<Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" />-->
+                <!--<Setter Property="FontSize" Value="12" />-->
             </Style>
+
+            <Style TargetType="ListView">
+                <Setter Property="BorderThickness" Value="0"/>
+                <!--<Setter Property="ItemContainerStyle" Value="{StaticResource alternatingStyle}"/>
+                <Setter Property="AlternationCount" Value="2"/>-->
+            </Style>
+
+            <!--<Style x:Key="alternatingStyle" TargetType="{x:Type ListViewItem}">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                        <Setter Property="Background" Value="#FFF5F5F5"/>
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#FFFFFFFF"/>
+                    </Trigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FF2EC17C"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>-->
 
         </ResourceDictionary>
     </Application.Resources>

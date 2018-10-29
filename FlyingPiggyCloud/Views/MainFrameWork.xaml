@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
         mc:Ignorable="d"
-        Title="MainFrameWork" MinHeight="600" MinWidth="800" d:DesignWidth="800" d:DesignHeight="600" Style="{DynamicResource MetroWindowStyle}" Name="ListWindow">
+        Title="MainFrameWork" MinHeight="600" MinWidth="800" d:DesignWidth="800" d:DesignHeight="600" Style="{StaticResource WindowBasicDesign}"  Name="ListWindow">
     <Window.Resources>
         <!--重写单选框的模板用于左边栏-->
         <SolidColorBrush x:Key="RadioButton.Static.Background" Color="#FFFFFFFF"/>
@@ -111,159 +111,103 @@
             </Setter>
         </Style>
 
-        <!--窗体控件模板-->
-        <ControlTemplate x:Key="MetroWindowTemplate" TargetType="{x:Type Window}">
-            <Border Background="White">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Grid Grid.Row="0" Background="#FF2EC17C" MouseMove="Grid_MouseMove">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock x:Name="WindowTitleTbl" Grid.Column="0" Text="{TemplateBinding Title}" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="10,0" Foreground="White"/>
-                        <Button x:Name="MinWinButton" Grid.Column="2" Style="{StaticResource WinMinBtnStyle}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="MinWinButton_Click">
-                            <Button.Content>
-                                <StackPanel>
-                                    <Path Stroke="White" StrokeThickness="2" Data="M1,6 L18,6"/>
-                                </StackPanel>
-                            </Button.Content>
-                        </Button>
-                        
-                        <Button x:Name="CloseWinButton" Grid.Column="3" Style="{StaticResource WinCloseBtnStyle}" Margin="2,0,8,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="CloseWinButton_Click">
-                            <Button.Content>
-                                <StackPanel>
-                                    <Path Stroke="White" StrokeThickness="2" Data="M2,2 L16,16 M2,16 L16,2"/>
-                                </StackPanel>
-                            </Button.Content>
-                        </Button>
-                    </Grid>
-
-                    <AdornerDecorator Grid.Row="1">
-                        <ContentPresenter/>
-                    </AdornerDecorator>
-                </Grid>
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="0" Color="#FF5A5A5A"/>
-                </Border.Effect>
-            </Border>
-        </ControlTemplate>
-
-        <Style x:Key="MetroWindowStyle" TargetType="{x:Type Window}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="AllowsTransparency" Value="True"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="WindowStyle" Value="None"/>
-            <Setter Property="Template" Value="{StaticResource MetroWindowTemplate}"/>
-            <Setter Property="Effect">
-                <Setter.Value>
-                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="Gray" />
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Show Chat Window Animation -->
-        <!--<Storyboard x:Key="showChatWindow">
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Window" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
-                <SplineDoubleKeyFrame KeyTime="00:00:001" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ChatControl" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
-                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
-                <SplineDoubleKeyFrame KeyTime="00:00:001" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>-->
-
-
-        <!-- Close Chat Window Animation -->
-        <!--<Storyboard x:Key="hideChatWindow">
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Window" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
-                <SplineDoubleKeyFrame KeyTime="00:00:001" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ChatControl" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
-                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
-                <SplineDoubleKeyFrame KeyTime="00:00:001" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>-->
         <local:LeftRadioButton x:Key="LeftRadioIsCheckdConvert"/>
     </Window.Resources>
-    <Grid Background="#FFFFFFFF">
-        <Frame Name="MainFrame" NavigationUIVisibility="Hidden" Margin="200,0,0,0"/>
-        <Grid Background="#FFF5F5F5" HorizontalAlignment="Left" Width="200">
-            <!--用户信息区域-->
-            <Grid Name="UserGrid" Height="160" Margin="0" VerticalAlignment="Top">
-                <Border CornerRadius="50" BorderThickness="1" Height="75" Margin="0,29,0,0" VerticalAlignment="Top" Width="75">
-                    <Border.Effect>
-                        <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="#FF5A5A5A"/>
-                    </Border.Effect>
-                    <Border.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#FF2EC17C" MouseMove="Grid_MouseMove"/>
+        <Grid Grid.Row="1" Background="#FFFFFFFF">
+            <Frame Name="MainFrame" NavigationUIVisibility="Hidden" Margin="200,0,0,0"/>
+            <Border  HorizontalAlignment="Left" Width="200" BorderThickness="0,0,1,0">
+                <Grid Background="#FFF5F5F5">
+                    <!--用户信息区域-->
+                    <Grid Name="UserGrid" Height="160" Margin="0" VerticalAlignment="Top">
                         <!--用户头像-->
-                        <ImageBrush ImageSource="/FlyingPiggyCloud;component/Resources/175585969.jpg" Stretch="UniformToFill"/>
-                    </Border.Background>
-                </Border>
-                <!--用户名-->
-                <TextBlock FontSize="8" Text="我是坑" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,108,0,0" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A"/>
-                <!--剩余容量-->
-                <ProgressBar Value="50" HorizontalAlignment="Center" Height="5" Margin="0,124,0,0" VerticalAlignment="Top" Width="125"/>
-            </Grid>
-            <Border BorderBrush="#FFBFBFBF" BorderThickness="0,2,0,0" Margin="0,160,0,0">
-                <StackPanel Name="LeftRadioButtonsGroup">
-                    <TextBlock Text="我的文件" Margin="10" Foreground="#FF919191" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=0, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/kucunliang.png" Stretch="Fill"/>
-                            <TextBlock TextWrapping="Wrap" Text="全部文件" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <Border CornerRadius="50" BorderThickness="1" Height="75" Margin="0,29,0,0" VerticalAlignment="Top" Width="75">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="#FF5A5A5A"/>
+                            </Border.Effect>
+                            <Border.Background>
+
+                                <ImageBrush ImageSource="/FlyingPiggyCloud;component/Resources/175585969.jpg" Stretch="UniformToFill"/>
+                            </Border.Background>
+                        </Border>
+
+                        <!--用户名-->
+                        <TextBlock FontSize="8" Text="我是坑" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,108,0,0" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A"/>
+
+                        <!--剩余容量-->
+                        <ProgressBar Value="50" HorizontalAlignment="Center" Height="5" Margin="0,124,0,0" VerticalAlignment="Top" Width="125"/>
+                    </Grid>
+
+                    <!--左侧导航栏区域-->
+                    <Border BorderBrush="#FFBFBFBF" BorderThickness="0,2,0,0" Margin="0,160,0,0">
+                        <StackPanel Name="LeftRadioButtonsGroup">
+                            <TextBlock Text="我的文件" Margin="10" Foreground="#FF919191" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
+
+                            <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=0, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/kucunliang.png" Stretch="Fill"/>
+                                    <TextBlock TextWrapping="Wrap" Text="全部文件" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=1, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/kucun.png" Stretch="Fill"/>
+                                    <TextBlock TextWrapping="Wrap" Text="图片" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=2, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/kucun.png" Stretch="Fill"/>
+                                    <TextBlock TextWrapping="Wrap" Text="视频" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <TextBlock Text="传输列表" Margin="10" Foreground="#FF919191" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
+                            <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=3, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/shangjia.png" Stretch="Fill"/>
+                                    <TextBlock TextWrapping="Wrap" Text="正在上传" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=4, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image Height="14" Width="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/xiajia.png" Stretch="Fill"/>
+                                    <TextBlock TextWrapping="Wrap" Text="正在下载" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=5, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/tongyihuanhuo.png" Stretch="Fill"/>
+                                    <TextBlock TextWrapping="Wrap" Text="传输完成" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=6, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/shanchu.png" Stretch="Fill"/>
+                                    <TextBlock TextWrapping="Wrap" Text="垃圾箱" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </RadioButton>
+
                         </StackPanel>
-                    </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=1, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/kucun.png" Stretch="Fill"/>
-                            <TextBlock TextWrapping="Wrap" Text="图片" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        </StackPanel>
-                    </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=2, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/kucun.png" Stretch="Fill"/>
-                            <TextBlock TextWrapping="Wrap" Text="视频" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        </StackPanel>
-                    </RadioButton>
-                    <TextBlock Text="传输列表" Margin="10" Foreground="#FF919191" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=3, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/shangjia.png" Stretch="Fill"/>
-                            <TextBlock TextWrapping="Wrap" Text="正在上传" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        </StackPanel>
-                    </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=4, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Image Height="14" Width="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/xiajia.png" Stretch="Fill"/>
-                            <TextBlock TextWrapping="Wrap" Text="正在下载" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        </StackPanel>
-                    </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=5, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/tongyihuanhuo.png" Stretch="Fill"/>
-                            <TextBlock TextWrapping="Wrap" Text="传输完成" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        </StackPanel>
-                    </RadioButton>
-                    <RadioButton IsChecked="{Binding CurrentPage, ConverterParameter=6, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Image Height="14" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/shanchu.png" Stretch="Fill"/>
-                            <TextBlock TextWrapping="Wrap" Text="垃圾箱" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        </StackPanel>
-                    </RadioButton>
-                </StackPanel>
+                    </Border>
+
+                </Grid>
+                <Border.Effect>
+                    <DropShadowEffect Color="LightGray" Direction="0" ShadowDepth="1" BlurRadius="3"/>
+                </Border.Effect>
             </Border>
         </Grid>
+
     </Grid>
     <!--<Window.Effect>
         <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="Gray" />
