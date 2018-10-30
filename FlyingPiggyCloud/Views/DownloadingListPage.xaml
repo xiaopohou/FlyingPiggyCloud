@@ -74,13 +74,28 @@
                             <CheckBox/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn CellTemplate="{StaticResource FileName}" Header="文件名"/>
-                    <GridViewColumn CellTemplate="{StaticResource Size}" Header="大小"/>
-                    <GridViewColumn CellTemplate="{StaticResource Status}" Header="状态"/>
-                    <GridViewColumn CellTemplate="{StaticResource Operates}" Header="操作"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperFileName ,Path=ActualWidth}" CellTemplate="{StaticResource FileName}" Header="文件名"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperSize ,Path=ActualWidth}" CellTemplate="{StaticResource Size}" Header="大小"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperStatus ,Path=ActualWidth}" CellTemplate="{StaticResource Status}" Header="状态"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperPrograss ,Path=ActualWidth}" Header="进度"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperOperator ,Path=ActualWidth}" CellTemplate="{StaticResource Operates}" Header="操作"/>
                 </GridView>
             </ListView.View>
             <!--<ListViewItem Content="test" Height="50"/>-->
         </ListView>
+        <Grid VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="WidthHelperFileName" Grid.Column="0"/>
+            <Grid x:Name="WidthHelperSize" Grid.Column="1"/>
+            <Grid x:Name="WidthHelperStatus" Grid.Column="2"/>
+            <Grid x:Name="WidthHelperPrograss" Grid.Column="3"/>
+            <Grid x:Name="WidthHelperOperator" Grid.Column="4"/>
+        </Grid>
     </Grid>
 </Page>
