@@ -118,7 +118,9 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="#FF2EC17C" MouseMove="Grid_MouseMove"/>
+        <Grid Grid.Row="0" Background="#FF2EC17C" MouseMove="Grid_MouseMove">
+            
+        </Grid>
         <Grid Grid.Row="1" Background="#FFFFFFFF">
             <Frame Name="MainFrame" NavigationUIVisibility="Hidden" Margin="200,0,0,0"/>
             <Border  HorizontalAlignment="Left" Width="200" BorderThickness="0,0,1,0">

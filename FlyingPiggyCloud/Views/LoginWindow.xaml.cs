@@ -31,12 +31,17 @@ namespace FlyingPiggyCloud.Views
             LoginByPasswordProgressViewModel.LoginSuccessful += LoginSuccessful;
         }
 
-        private void LoginSuccessful(UserInformation e)
+        private void LoginSuccessful(UserInformation e) => Close();
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
+
+        private void Registering_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            RegisterWindow registerWindow = new RegisterWindow();
+            registerWindow.ShowDialog();
         }
 
-        private void TextBlock_MouseUp(object sender, MouseButtonEventArgs e)
+        private void ForgotPassword_Click(object sender, RoutedEventArgs e)
         {
             ForgotPassword forgotPassword = new ForgotPassword();
             forgotPassword.ShowDialog();
