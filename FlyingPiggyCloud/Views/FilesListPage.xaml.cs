@@ -1,7 +1,6 @@
 ﻿using FlyingPiggyCloud.ViewModels;
 using Microsoft.Win32;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Wangsu.WcsLib.Core;
@@ -38,14 +37,17 @@ namespace FlyingPiggyCloud.Views
         private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
             FileListItem a = (ViewModels.FileListItem)((ListViewItem)sender).DataContext;
-            if (a.IsEnable)
+            if (a.Type == 1)
             {
-                fileList.GetDirectoryByUUID(((ViewModels.FileListItem)((ListViewItem)sender).DataContext).UUID);
-            }
-            else
-            {
-                MessageBox.Show("这个项目被远程服务器锁定（可能的原因：正在被删除，或者其他客户端正在修改该项目）");
-                fileList.Refresh(this, new System.EventArgs());
+                if (a.IsEnable)
+                {
+                    fileList.GetDirectoryByUUID(((ViewModels.FileListItem)((ListViewItem)sender).DataContext).UUID);
+                }
+                else
+                {
+                    MessageBox.Show("这个项目被远程服务器锁定（可能的原因：正在被删除，或者其他客户端正在修改该项目）");
+                    fileList.Refresh(this, new System.EventArgs());
+                }
             }
         }
 
@@ -58,7 +60,7 @@ namespace FlyingPiggyCloud.Views
 
         private async void DownloadBotton_Click(object sender, RoutedEventArgs e)
         {
-            if(((FileListItem)((Button)sender).DataContext).Type==0)
+            if (((FileListItem)((Button)sender).DataContext).Type == 0)
             {
                 string uuid = ((FileListItem)((Button)sender).DataContext).UUID;
                 Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);

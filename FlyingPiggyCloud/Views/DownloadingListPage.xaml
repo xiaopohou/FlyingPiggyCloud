@@ -12,25 +12,55 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FlyingPiggyCloud;component/Resources/ControlStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
+            </Style>
             <DataTemplate x:Key="CheckBox">
                 <CheckBox/>
             </DataTemplate>
+
             <DataTemplate x:Key="FileName">
                 <TextBlock Text="{Binding FileName}"/>
             </DataTemplate>
+
             <DataTemplate x:Key="Size">
                 <TextBlock Text="{Binding Size}"/>
             </DataTemplate>
+
             <DataTemplate x:Key="Status">
                 <TextBlock Text="{Binding Status}"/>
             </DataTemplate>
+
+            <DataTemplate x:Key="Progress">
+                <ProgressBar Value="{Binding Progress, Mode=OneWay}" Height="15"/>
+            </DataTemplate>
+
             <DataTemplate x:Key="Operates">
-                <StackPanel>
-                    <Button Style="{StaticResource SimpleButton}"/>
-                    <Button Style="{StaticResource SimpleButton}"/>
-                    <Button Style="{StaticResource SimpleButton}"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Height="15" Width="15" Style="{StaticResource CircleButton}"/>
+                    <Button Height="15" Width="15" Style="{StaticResource CircleButton}"/>
+                    <Button Height="15" Width="15" Style="{StaticResource CircleButton}"/>
                 </StackPanel>
             </DataTemplate>
+
+            <Style x:Key="alternatingStyle" TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="Height" Value="36"/>
+                <!--<EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>-->
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                        <Setter Property="Background" Value="#FFF5F5F5"/>
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#FFFFFFFF"/>
+                    </Trigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FF2EC17C"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -66,7 +96,7 @@
                 </StackPanel>
             </Button>
         </Grid>
-        <ListView Name="DownloadList" Margin="0,60,0,0">
+        <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" Name="DownloadList" Margin="0,60,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn CellTemplate="{StaticResource CheckBox}">
@@ -77,7 +107,7 @@
                     <GridViewColumn Width="{Binding ElementName=WidthHelperFileName ,Path=ActualWidth}" CellTemplate="{StaticResource FileName}" Header="文件名"/>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperSize ,Path=ActualWidth}" CellTemplate="{StaticResource Size}" Header="大小"/>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperStatus ,Path=ActualWidth}" CellTemplate="{StaticResource Status}" Header="状态"/>
-                    <GridViewColumn Width="{Binding ElementName=WidthHelperPrograss ,Path=ActualWidth}" Header="进度"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperPrograss ,Path=ActualWidth}" CellTemplate="{StaticResource Progress}" Header="进度"/>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperOperator ,Path=ActualWidth}" CellTemplate="{StaticResource Operates}" Header="操作"/>
                 </GridView>
             </ListView.View>

@@ -1,4 +1,5 @@
 ﻿using FlyingPiggyCloud.Controllers.Results.FileSystem;
+using FlyingPiggyCloud.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -11,7 +12,10 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class DownloadingListPage : Page
     {
-        private static ObservableCollection<ViewModels.DownloadTask> DownloadTasks = new ObservableCollection<ViewModels.DownloadTask>();
+        /// <summary>
+        /// 下载列表，对该对象的写操作务必在主线程执行
+        /// </summary>
+        private static ObservableCollection<DownloadTask> DownloadTasks = new ObservableCollection<ViewModels.DownloadTask>();
 
         private static System.Timers.Timer timer = new System.Timers.Timer(500d);
 
@@ -19,49 +23,67 @@ namespace FlyingPiggyCloud.Views
         {
             timer.Enabled = false;
 
-            List<ViewModels.DownloadTask> Completed = new List<ViewModels.DownloadTask>();
-            if (DownloadTasks.Count != 0)
+            List<DownloadTask> Completed = new List<DownloadTask>();
+            try
             {
-                foreach (ViewModels.DownloadTask a in DownloadTasks)
+                if (DownloadTasks.Count != 0)
                 {
-                    await a.RefreshStatus();
-                    if (a.Status == FlyingAria2c.DownloadTask.TaskAction.Complete)
+                    DownloadTask[] downloadTasks;
+                    lock (DownloadTasks)
                     {
-                        Completed.Add(a);
+                        downloadTasks = new DownloadTask[DownloadTasks.Count];
+                        DownloadTasks.CopyTo(downloadTasks, 0);
+                    }
+
+                    foreach (DownloadTask a in downloadTasks)
+                    {
+                        await a.RefreshStatus();
+                        if (a.Status == FlyingAria2c.DownloadTask.TaskAction.Complete)
+                        {
+                            Completed.Add(a);
+                        }
+                    }
+                    if (Completed.Count != 0)
+                    {
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            lock (DownloadTasks)
+                            {
+                                foreach (DownloadTask a in Completed)
+                                {
+                                    DownloadTasks.Remove(a);
+                                }
+
+                            }
+                        });
+                        CompletedListPage.CompletedTasksAddRange(Completed);
                     }
                 }
-                if (Completed.Count == 0)
+            }
+            catch (System.Exception)
+            {
+
+            }
+            finally
+            {
+                if (DownloadTasks.Count != 0)
                 {
                     timer.Enabled = true;
-                }
-                else
-                {
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        lock (DownloadTasks)
-                        {
-                            foreach (ViewModels.DownloadTask a in Completed)
-                            {
-                                DownloadTasks.Remove(a);
-                            }
-                            if (DownloadTasks.Count != 0)
-                            {
-                                timer.Enabled = true;
-                            }
-                        }
-                        CompletedListPage.CompletedTasksAddRange(Completed);
-                    });
                 }
             }
         }
 
         public static void NewDownloadTask(FileMetaData fileMetaData)
         {
-            ViewModels.DownloadTask downloadTask = new ViewModels.DownloadTask(fileMetaData);
-            lock (DownloadTasks)
+            DownloadTask downloadTask = new ViewModels.DownloadTask(fileMetaData);
+            App.Current.Dispatcher.Invoke(() =>
             {
-                DownloadTasks.Add(downloadTask);
-            }
+                lock (DownloadTasks)
+                {
+                    DownloadTasks.Add(downloadTask);
+
+                }
+            });
             timer.Enabled = true;
         }
 

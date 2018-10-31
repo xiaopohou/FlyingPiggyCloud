@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using FlyingPiggyCloud.ViewModels;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace FlyingPiggyCloud.Views
 {
@@ -9,15 +11,21 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class CompletedListPage : Page
     {
-        private static ObservableCollection<ViewModels.DownloadTask> CompletedTasks = new ObservableCollection<ViewModels.DownloadTask>();
+        private static ObservableCollection<DownloadTask> CompletedTasks = new ObservableCollection<DownloadTask>();
 
-        internal static void CompletedTasksAddRange(List<ViewModels.DownloadTask> completedTasks)
+        internal static void CompletedTasksAddRange(List<DownloadTask> completedTasks)
         {
-            lock (CompletedTasks)
+            foreach (DownloadTask a in completedTasks)
             {
-                foreach (ViewModels.DownloadTask a in completedTasks)
+                if (!CompletedTasks.Contains(a))
                 {
-                    CompletedTasks.Add(a);
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        lock (CompletedTasks)
+                        {
+                            CompletedTasks.Add(a);
+                        }
+                    });
                 }
             }
         }
