@@ -14,16 +14,16 @@
                 <ControlTemplate TargetType="Button">
                     <!--背景色-->
                     <Border x:Name="back" Opacity="0.8" CornerRadius="50">
-                        <Border.BitmapEffect>
-                            <OuterGlowBitmapEffect Opacity="0.7" GlowSize="0" GlowColor="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Button.Background).(SolidColorBrush.Color)}" />
-                        </Border.BitmapEffect>
+                        <!--<Border.Effect>
+                            <BlurEffect/>
+                        </Border.Effect>-->
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1.5">
                                 <GradientBrush.GradientStops>
                                     <GradientStopCollection>
                                         <GradientStop Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Button.Background).(SolidColorBrush.Color)}" Offset="0"/>
                                         <GradientStop Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Button.Background).(SolidColorBrush.Color)}" Offset="0.4"/>
-                                        <GradientStop Color="#FFF" Offset="1"/>
+                                        <GradientStop Color="#FFFFFFFF" Offset="1"/>
                                     </GradientStopCollection>
                                 </GradientBrush.GradientStops>
                             </LinearGradientBrush>
@@ -34,17 +34,17 @@
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                     <GradientBrush.GradientStops>
                                         <GradientStopCollection>
-                                            <GradientStop Color="#6FFF" Offset="0.5"/>
-                                            <GradientStop Color="#1111" Offset="0.51"/>
+                                            <GradientStop Color="#66FFFFFF" Offset="0.5"/>
+                                            <GradientStop Color="#11111111" Offset="0.51"/>
                                         </GradientStopCollection>
                                     </GradientBrush.GradientStops>
                                 </LinearGradientBrush>
                             </Border.Background>
                             <!--按钮内容-->
                             <ContentPresenter x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding  Content}">
-                                <ContentPresenter.BitmapEffect>
-                                    <DropShadowBitmapEffect Color="#000" Direction="-90" ShadowDepth="2" Softness="0.1" Opacity="0.3" />
-                                </ContentPresenter.BitmapEffect>
+                                <ContentPresenter.Effect>
+                                    <DropShadowEffect Color="#00000000" Direction="-90" ShadowDepth="2" Opacity="0.3" />
+                                </ContentPresenter.Effect>
                             </ContentPresenter>
                         </Border>
                     </Border>
@@ -56,8 +56,8 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation To="6" Duration="0:0:0.2" Storyboard.TargetName="back" Storyboard.TargetProperty="(Border.BitmapEffect).(OuterGlowBitmapEffect.GlowSize)" />
-                                        <ColorAnimation To="#AFFF" BeginTime="0:0:0.2" Duration="0:0:0.2" Storyboard.TargetName="fore" Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.GradientStops)[0].(GradientStop.Color)" />
-                                        <ColorAnimation To="#3FFF" BeginTime="0:0:0.2" Duration="0:0:0.2" Storyboard.TargetName="fore" Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.GradientStops)[1].(GradientStop.Color)" />
+                                        <ColorAnimation To="#AAFFFFFF" BeginTime="0:0:0.2" Duration="0:0:0.2" Storyboard.TargetName="fore" Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.GradientStops)[0].(GradientStop.Color)" />
+                                        <ColorAnimation To="#33FFFFFF" BeginTime="0:0:0.2" Duration="0:0:0.2" Storyboard.TargetName="fore" Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.GradientStops)[1].(GradientStop.Color)" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -145,16 +145,16 @@
                 <ControlTemplate TargetType="Button">
                     <!--背景色-->
                     <Border x:Name="back" Opacity="1" CornerRadius="5">
-                        <Border.BitmapEffect>
-                            <OuterGlowBitmapEffect Opacity="0.7" GlowSize="0" GlowColor="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Button.Background).(SolidColorBrush.Color)}" />
-                        </Border.BitmapEffect>
+                        <!--<Border.Effect>
+                            <BlurEffect/>
+                        </Border.Effect>-->
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1.5">
                                 <GradientBrush.GradientStops>
                                     <GradientStopCollection>
                                         <GradientStop Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Button.Background).(SolidColorBrush.Color)}" Offset="0"/>
                                         <GradientStop Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Button.Background).(SolidColorBrush.Color)}" Offset="0.4"/>
-                                        <GradientStop Color="#FFF" Offset="1"/>
+                                        <GradientStop Color="White" Offset="1"/>
                                     </GradientStopCollection>
                                 </GradientBrush.GradientStops>
                             </LinearGradientBrush>
@@ -165,8 +165,8 @@
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                     <GradientBrush.GradientStops>
                                         <GradientStopCollection>
-                                            <GradientStop Color="#6FFF" Offset="0.5"/>
-                                            <GradientStop Color="#1111" Offset="0.51"/>
+                                            <GradientStop Color="#66FFFFFF" Offset="0.5"/>
+                                            <GradientStop Color="#11111111" Offset="0.51"/>
                                         </GradientStopCollection>
                                     </GradientBrush.GradientStops>
                                 </LinearGradientBrush>
