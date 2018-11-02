@@ -30,26 +30,41 @@
                 </Style.Triggers>
             </Style>
 
-
             <DataTemplate x:Key="MetaName">
                 <Grid>
                     <Image Width="24" Margin="4" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding Name}" Foreground="#FF5A5A5A" FontSize="16" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"  HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" />
 
                     <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="MoreBotton" Style="{StaticResource CircleButton}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
-                        <Image Width="20" Source="/Resources/more.png" />
+                        <Image Width="20" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/datuzhanshi.png" />
                         <Button.ContextMenu>
                             <ContextMenu Name="MoreButtonMenu">
-                                <MenuItem Header="移动"/>
-                                <MenuItem Header="复制"/>
-                                <MenuItem Header="重命名"/>
-                                <MenuItem Name="Delete" Header="删除" Click="Delete_Click"/>
+                                <MenuItem Header="移动">
+                                    <MenuItem.Icon>
+                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/piliangdaochu.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="复制">
+                                    <MenuItem.Icon>
+                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/piliangshangchuan.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="重命名">
+                                    <MenuItem.Icon>
+                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/bianji.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Name="Delete" Header="删除" Click="Delete_Click">
+                                    <MenuItem.Icon>
+                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/shanchu.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
 
                     <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="DownloadBotton" Style="{StaticResource CircleButton}" Click="DownloadBotton_Click" HorizontalAlignment="Right" Margin="0,0,64,0" VerticalAlignment="Center">
-                        <Image Width="20" Source="/Resources/download.png" />
+                        <Image Width="20" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/paixu.png" />
                     </Button>
                 </Grid>
                 <DataTemplate.Triggers>

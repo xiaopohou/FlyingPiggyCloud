@@ -12,10 +12,7 @@ namespace FlyingPiggyCloud.Controllers
 
         protected static string Token;
 
-        protected async Task<T> PostAsync<T>(string data, string uri)
-        {
-            return JsonConvert.DeserializeObject<T>(await client.PostAsync(data, uri));
-        }
+        protected async Task<T> PostAsync<T>(string data, string uri) => JsonConvert.DeserializeObject<T>(await client.PostAsync(data, uri));
 
         protected T Get<T>(string uri)
         {

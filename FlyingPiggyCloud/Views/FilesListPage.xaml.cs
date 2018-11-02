@@ -1,6 +1,7 @@
 ﻿using FlyingPiggyCloud.ViewModels;
 using Microsoft.Win32;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Wangsu.WcsLib.Core;
@@ -90,6 +91,12 @@ namespace FlyingPiggyCloud.Views
 
         private async void UploadButton_Click(object sender, RoutedEventArgs e)
         {
+            await Task.Run(UploadFunction);
+            //await UploadFunction();
+        }
+
+        private async Task UploadFunction()
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog().GetValueOrDefault())
             {
@@ -99,5 +106,4 @@ namespace FlyingPiggyCloud.Views
             }
         }
     }
-
 }

@@ -75,7 +75,7 @@ namespace FlyingPiggyCloud.Views
 
         public static void NewDownloadTask(FileMetaData fileMetaData)
         {
-            DownloadTask downloadTask = new ViewModels.DownloadTask(fileMetaData);
+            DownloadTask downloadTask = new DownloadTask(fileMetaData);
             App.Current.Dispatcher.Invoke(() =>
             {
                 lock (DownloadTasks)
