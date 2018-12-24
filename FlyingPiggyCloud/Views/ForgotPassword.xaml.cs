@@ -19,7 +19,7 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class ForgotPassword : Window
     {
-        private ViewModels.ForgotPasswordViewModel ViewModel = new ViewModels.ForgotPasswordViewModel();
+        private Models.ForgotPasswordViewModel ViewModel = new Models.ForgotPasswordViewModel();
 
         public ForgotPassword()
         {

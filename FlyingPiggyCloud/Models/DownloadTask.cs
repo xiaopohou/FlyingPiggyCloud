@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace FlyingPiggyCloud.ViewModels
+namespace FlyingPiggyCloud.Models
 {
     internal class DownloadTask : FlyingAria2c.DownloadTask, INotifyPropertyChanged
     {

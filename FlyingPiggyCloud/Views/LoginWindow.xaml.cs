@@ -21,7 +21,7 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class LoginWindow : Window
     {
-        private ViewModels.LoginByPasswordProgressViewModel LoginByPasswordProgressViewModel = new ViewModels.LoginByPasswordProgressViewModel();
+        private Models.LoginByPasswordProgressViewModel LoginByPasswordProgressViewModel = new Models.LoginByPasswordProgressViewModel();
 
         public LoginWindow()
         {

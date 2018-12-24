@@ -20,7 +20,7 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class RegisterWindow : Window
     {
-        private ViewModels.RegisterViewModel RegisterViewModel = new ViewModels.RegisterViewModel();
+        private Models.RegisterViewModel RegisterViewModel = new Models.RegisterViewModel();
 
         public RegisterWindow()
         {

@@ -1,21 +1,32 @@
 ﻿using FlyingPiggyCloud.Controllers.Results.FileSystem;
 using FlyingPiggyCloud.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace FlyingPiggyCloud.Views
 {
     /// <summary>
-    /// DownloadingListPage.xaml 的交互逻辑
+    /// UploadingListPage.xaml 的交互逻辑
     /// </summary>
-    public partial class DownloadingListPage : Page
+    public partial class UploadingListPage : Page
     {
         /// <summary>
         /// 下载列表，对该对象的写操作务必在主线程执行
         /// </summary>
-        private static ObservableCollection<DownloadTask> DownloadTasks = new ObservableCollection<Models.DownloadTask>();
+        private static ObservableCollection<DownloadTask> DownloadTasks = new ObservableCollection<DownloadTask>();
 
         private static System.Timers.Timer timer = new System.Timers.Timer(500d);
 
@@ -87,18 +98,9 @@ namespace FlyingPiggyCloud.Views
             timer.Enabled = true;
         }
 
-        static DownloadingListPage()
-        {
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(async (sender, e) =>
-              {
-                  await RefreshStatus();
-              });
-        }
-
-        public DownloadingListPage()
+        public UploadingListPage()
         {
             InitializeComponent();
-            DownloadList.ItemsSource = DownloadTasks;
         }
     }
 }

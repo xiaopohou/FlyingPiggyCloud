@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace FlyingPiggyCloud.ViewModels
+namespace FlyingPiggyCloud.Models
 {
     internal class LoginByPasswordProgressViewModel : Controllers.LoginByPasswordProgress, INotifyPropertyChanged
     {

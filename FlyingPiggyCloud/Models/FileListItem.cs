@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace FlyingPiggyCloud.ViewModels
+namespace FlyingPiggyCloud.Models
 {
     internal class FileListItem : INotifyPropertyChanged
     {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace FlyingPiggyCloud.ViewModels
+namespace FlyingPiggyCloud.Models
 {
     internal class ForgotPasswordViewModel : Controllers.ForgotPasswordProgress, INotifyPropertyChanged
     {

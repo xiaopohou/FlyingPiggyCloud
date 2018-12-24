@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace FlyingPiggyCloud.ViewModels
+namespace FlyingPiggyCloud.Models
 {
     internal class FileList : ObservableCollection<FileListItem>
     {

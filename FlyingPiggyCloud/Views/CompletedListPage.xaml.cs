@@ -1,4 +1,4 @@
-﻿using FlyingPiggyCloud.ViewModels;
+﻿using FlyingPiggyCloud.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;

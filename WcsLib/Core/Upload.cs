@@ -21,13 +21,17 @@ namespace Wangsu.WcsLib.Core
         /// <param name="UploadToken">Qingzhenyun返回的上传token</param>
         /// <param name="FilePath">文件的本地路径</param>
         /// <param name="UploadUrl">Qingzhenyun返回的上传地址</param>
-        public static async void Start(string UploadToken, string FilePath, string UploadUrl,string Key=null, UploadProgressHandler uploadProgressHandler=null)
+        public static void Start(string UploadToken, string FilePath, string UploadUrl,string Key=null, UploadProgressHandler uploadProgressHandler=null)
         {
             Config config = new Config(UploadUrl);
             string eTag = ETag.ComputeEtag(FilePath);
             long dataSize = new FileInfo(FilePath).Length;
+            uploadProgressHandler?.Invoke(0, dataSize);
             if (dataSize < BLOCKSIZE)
-                await SimpleUploadAsync(FilePath, UploadToken, UploadUrl);
+            {
+                SimpleUpload(FilePath, UploadToken, UploadUrl);
+                uploadProgressHandler?.Invoke(dataSize, dataSize);
+            }
             else
             {
                 FileStream fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -108,6 +112,12 @@ namespace Wangsu.WcsLib.Core
             }
             );
             return x;
+        }
+
+        private static HttpResult SimpleUpload(string FilePath, string Token, string UploadUrl)
+        {
+            SimpleUpload simpleUpload = new SimpleUpload(new Auth(Token), new Config(UploadUrl));
+            return simpleUpload.UploadFile(FilePath);
         }
     }
 }

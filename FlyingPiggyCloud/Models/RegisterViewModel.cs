@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 
-namespace FlyingPiggyCloud.ViewModels
+namespace FlyingPiggyCloud.Models
 {
     class RegisterViewModel:Controllers.RegisterProgress, INotifyPropertyChanged
     {

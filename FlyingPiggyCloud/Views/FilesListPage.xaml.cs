@@ -1,4 +1,4 @@
-﻿using FlyingPiggyCloud.ViewModels;
+﻿using FlyingPiggyCloud.Models;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -37,12 +37,12 @@ namespace FlyingPiggyCloud.Views
 
         private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            FileListItem a = (ViewModels.FileListItem)((ListViewItem)sender).DataContext;
+            FileListItem a = (Models.FileListItem)((ListViewItem)sender).DataContext;
             if (a.Type == 1)
             {
                 if (a.IsEnable)
                 {
-                    fileList.GetDirectoryByUUID(((ViewModels.FileListItem)((ListViewItem)sender).DataContext).UUID);
+                    fileList.GetDirectoryByUUID(((Models.FileListItem)((ListViewItem)sender).DataContext).UUID);
                 }
                 else
                 {
@@ -81,7 +81,7 @@ namespace FlyingPiggyCloud.Views
         {
             MenuItem x = (MenuItem)sender;
             //x.IsEnabled = false;
-            await ((ViewModels.FileListItem)x.DataContext).Remove();
+            await ((Models.FileListItem)x.DataContext).Remove();
             //System.Threading.Thread.Sleep(200);
             lock (fileList)
             {
@@ -102,7 +102,7 @@ namespace FlyingPiggyCloud.Views
             {
                 Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
                 Controllers.Results.ResponesResult<Controllers.Results.FileSystem.UploadResponseResult> x = await fileSystemMethods.UploadFile(openFileDialog.SafeFileName, fileList.CurrentUUID, OriginalFilename: openFileDialog.SafeFileName);
-                Upload.Start(x.Result.Token, openFileDialog.FileName, x.Result.UploadUrl, openFileDialog.SafeFileName);
+                await Task.Run(()=>Upload.Start(x.Result.Token, openFileDialog.FileName, x.Result.UploadUrl, openFileDialog.SafeFileName));
             }
         }
     }

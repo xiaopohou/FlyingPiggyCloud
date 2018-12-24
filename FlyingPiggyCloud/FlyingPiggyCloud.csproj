@@ -70,12 +70,13 @@
     <Compile Include="Controllers\RegistryManager.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\UserCenterMethods.cs" />
-    <Compile Include="ViewModels\DownloadTask.cs" />
-    <Compile Include="ViewModels\FileList.cs" />
-    <Compile Include="ViewModels\FileListItem.cs" />
-    <Compile Include="ViewModels\ForgotPasswordViewModel.cs" />
-    <Compile Include="ViewModels\LoginViewModel.cs" />
-    <Compile Include="ViewModels\RegisterViewModel.cs" />
+    <Compile Include="Models\DownloadTask.cs" />
+    <Compile Include="Models\FileList.cs" />
+    <Compile Include="Models\FileListItem.cs" />
+    <Compile Include="Models\ForgotPasswordViewModel.cs" />
+    <Compile Include="Models\LoginViewModel.cs" />
+    <Compile Include="Models\RegisterViewModel.cs" />
+    <Compile Include="Models\UploadTask.cs" />
     <Compile Include="Views\CompletedListPage.xaml.cs">
       <DependentUpon>CompletedListPage.xaml</DependentUpon>
     </Compile>
@@ -99,6 +100,9 @@
     </Compile>
     <Compile Include="Views\RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UploadingListPage.xaml.cs">
+      <DependentUpon>UploadingListPage.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -151,6 +155,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RegisterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UploadingListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
