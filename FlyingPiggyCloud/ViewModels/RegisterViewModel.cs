@@ -137,6 +137,7 @@ namespace FlyingPiggyCloud.ViewModels
                 OnPropertyChanged("IsEnableSendMessageButton");
             }
         }
+
         private bool isEnableSendMessageButton = true;
 
         /// <summary>
@@ -147,14 +148,12 @@ namespace FlyingPiggyCloud.ViewModels
         public async void OnSendMessageButtonClick(object Sender, EventArgs e)
         {
             FriendlyErrorMessage = "";
-            if(Regex.IsMatch(PhoneNumber, "^[1]+[3,4,5,7,8,9]+\\d{9}$"))
+            if (!Regex.IsMatch(PhoneNumber, "^[1]+[3,4,5,7,8,9]+\\d{9}$"))
+                FriendlyErrorMessage = "手机号码格式不正确";
+            else
             {
                 IsEnableSendMessageButton = false;
                 await GetCodeMessage(PhoneNumber);
-            }
-            else
-            {
-                FriendlyErrorMessage = "手机号码格式不正确";
             }
         }
 
@@ -165,13 +164,24 @@ namespace FlyingPiggyCloud.ViewModels
         /// <param name="e"></param>
         public async void OnRegisterButtonClick(object Sender, EventArgs e)
         {
-            if(await Register(Name, PassWord, Code))
+            //暂时在这里实现表单项的验证逻辑
+            if (string.IsNullOrEmpty(Name))
+                FriendlyErrorMessage = "用户名不得为空";
+            else if (Name.Length > 8)
+                FriendlyErrorMessage = "用户名过长";
+            else if (Regex.IsMatch(Name, @"\W"))
+                FriendlyErrorMessage = "用户名不应包含特殊字符";
+            else if (PassWord.Length>32||PassWord.Length<8)
+                FriendlyErrorMessage = "合法的密码长度8-32位";
+            else if (!Regex.IsMatch(PassWord, @"\W") && PassWord.Length < 10)
+                FriendlyErrorMessage = "如果您的密码中不包含特殊字符，请确保长度至少为10位";
+            else if (await Register(Name, PassWord, Code))
             {
                 RegisterSuccessful(UserInformation);
             }
             else
             {
-                
+
             }
         }
 
