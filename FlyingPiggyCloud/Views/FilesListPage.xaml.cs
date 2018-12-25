@@ -89,20 +89,12 @@ namespace FlyingPiggyCloud.Views
             }
         }
 
-        private async void UploadButton_Click(object sender, RoutedEventArgs e)
-        {
-            await Task.Run(UploadFunction);
-            //await UploadFunction();
-        }
-
-        private async Task UploadFunction()
+        private void UploadButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog().GetValueOrDefault())
             {
-                Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
-                Controllers.Results.ResponesResult<Controllers.Results.FileSystem.UploadResponseResult> x = await fileSystemMethods.UploadFile(openFileDialog.SafeFileName, fileList.CurrentUUID, OriginalFilename: openFileDialog.SafeFileName);
-                await Task.Run(()=>Upload.Start(x.Result.Token, openFileDialog.FileName, x.Result.UploadUrl, openFileDialog.SafeFileName));
+                UploadingListPage.NewUploadTask(openFileDialog, fileList.CurrentUUID);
             }
         }
     }

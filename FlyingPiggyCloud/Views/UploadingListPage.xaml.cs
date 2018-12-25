@@ -24,83 +24,42 @@ namespace FlyingPiggyCloud.Views
     public partial class UploadingListPage : Page
     {
         /// <summary>
-        /// 下载列表，对该对象的写操作务必在主线程执行
+        /// 上传列表，对该对象的写操作务必在主线程执行
         /// </summary>
-        private static ObservableCollection<DownloadTask> DownloadTasks = new ObservableCollection<DownloadTask>();
+        private static ObservableCollection<UploadTask> UploadTasks = new ObservableCollection<UploadTask>();
 
-        private static System.Timers.Timer timer = new System.Timers.Timer(500d);
-
-        public static async Task RefreshStatus()
+        public static void NewUploadTask(UploadTask uploadTask,string parentUUID)
         {
-            timer.Enabled = false;
-
-            List<DownloadTask> Completed = new List<DownloadTask>();
-            try
-            {
-                if (DownloadTasks.Count != 0)
-                {
-                    DownloadTask[] downloadTasks;
-                    lock (DownloadTasks)
-                    {
-                        downloadTasks = new DownloadTask[DownloadTasks.Count];
-                        DownloadTasks.CopyTo(downloadTasks, 0);
-                    }
-
-                    foreach (DownloadTask a in downloadTasks)
-                    {
-                        await a.RefreshStatus();
-                        if (a.Status == FlyingAria2c.DownloadTask.TaskAction.Complete)
-                        {
-                            Completed.Add(a);
-                        }
-                    }
-                    if (Completed.Count != 0)
-                    {
-                        App.Current.Dispatcher.Invoke(() =>
-                        {
-                            lock (DownloadTasks)
-                            {
-                                foreach (DownloadTask a in Completed)
-                                {
-                                    DownloadTasks.Remove(a);
-                                }
-
-                            }
-                        });
-                        CompletedListPage.CompletedTasksAddRange(Completed);
-                    }
-                }
-            }
-            catch (System.Exception)
-            {
-
-            }
-            finally
-            {
-                if (DownloadTasks.Count != 0)
-                {
-                    timer.Enabled = true;
-                }
-            }
-        }
-
-        public static void NewDownloadTask(FileMetaData fileMetaData)
-        {
-            DownloadTask downloadTask = new DownloadTask(fileMetaData);
             App.Current.Dispatcher.Invoke(() =>
             {
-                lock (DownloadTasks)
+                lock (UploadTasks)
                 {
-                    DownloadTasks.Add(downloadTask);
-
+                    UploadTasks.Add(uploadTask);
                 }
             });
-            timer.Enabled = true;
+            uploadTask.StartTaskAsync(parentUUID);
+            //uploadTask.OnTaskCompleted += () =>
+            //  {
+            //      App.Current.Dispatcher.Invoke(() =>
+            //      {
+            //          lock (UploadTasks)
+            //          {
+            //              UploadTasks.Remove(uploadTask);
+
+            //          }
+            //      });
+            //  };
+        }
+
+        public static void NewUploadTask(Microsoft.Win32.OpenFileDialog openFileDialog, string parrentUUID)
+        {
+            NewUploadTask(new UploadTask(openFileDialog.FileName, openFileDialog.SafeFileName), parrentUUID);
         }
 
         public UploadingListPage()
         {
             InitializeComponent();
+            UploadList.ItemsSource = UploadTasks;
         }
     }
 }

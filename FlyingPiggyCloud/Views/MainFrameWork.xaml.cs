@@ -72,10 +72,10 @@ namespace FlyingPiggyCloud.Views
                     Page = new FilesListPage("/Videos");
                     OnPropertyChanged("Page");
                     break;
-                //case PageNavigate.Uploading:
-                //    Page = new UploadingListPage();
-                //    OnPropertyChanged("Page");
-                //    break;
+                case PageNavigate.Uploading:
+                    Page = new UploadingListPage();
+                    OnPropertyChanged("Page");
+                    break;
                 case PageNavigate.Downloading:
                     Page = DownloadingList;
                     OnPropertyChanged("Page");

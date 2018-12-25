@@ -81,7 +81,6 @@ namespace FlyingPiggyCloud.Views
                 lock (DownloadTasks)
                 {
                     DownloadTasks.Add(downloadTask);
-
                 }
             });
             timer.Enabled = true;

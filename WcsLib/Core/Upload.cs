@@ -52,6 +52,7 @@ namespace Wangsu.WcsLib.Core
                 //上传结束，将所有的块合成一个文件
                 HttpResult result = su.MakeFile(dataSize, null, TotalContexts, UploadToken);
                 JObject jo = JObject.Parse(result.Text);
+                uploadProgressHandler?.Invoke(dataSize, dataSize);
                 if (jo["hash"].ToString() != eTag)
                     throw new Exception("上传文件校验失败");
                 //Console.WriteLine("---MakeFile---\n{0}", result.ToString());

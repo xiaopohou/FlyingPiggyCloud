@@ -24,11 +24,11 @@
             </DataTemplate>
 
             <DataTemplate x:Key="Size">
-                <TextBlock Text="{Binding Size}"/>
+                <TextBlock Text="{Binding TotalBytes, Mode=OneWay}"/>
             </DataTemplate>
 
             <DataTemplate x:Key="Status">
-                <TextBlock Text="{Binding Status}"/>
+                <TextBlock Text="{Binding UploadedBytes, Mode=OneWay}"/>
             </DataTemplate>
 
             <DataTemplate x:Key="Progress">
@@ -96,7 +96,7 @@
                 </StackPanel>
             </Button>-->
         </Grid>
-        <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" Name="DownloadList" Margin="0,60,0,0">
+        <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" Name="UploadList" Margin="0,60,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn CellTemplate="{StaticResource CheckBox}">
@@ -105,8 +105,8 @@
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperFileName ,Path=ActualWidth}" CellTemplate="{StaticResource FileName}" Header="文件名"/>
-                    <GridViewColumn Width="{Binding ElementName=WidthHelperSize ,Path=ActualWidth}" CellTemplate="{StaticResource Size}" Header="大小"/>
-                    <GridViewColumn Width="{Binding ElementName=WidthHelperStatus ,Path=ActualWidth}" CellTemplate="{StaticResource Status}" Header="状态"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperSize ,Path=ActualWidth}" CellTemplate="{StaticResource Size}" Header="文件大小"/>
+                    <GridViewColumn Width="{Binding ElementName=WidthHelperStatus ,Path=ActualWidth}" CellTemplate="{StaticResource Status}" Header="已完成"/>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperPrograss ,Path=ActualWidth}" CellTemplate="{StaticResource Progress}" Header="进度"/>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperOperator ,Path=ActualWidth}" CellTemplate="{StaticResource Operates}" Header="操作"/>
                 </GridView>
@@ -115,7 +115,7 @@
         </ListView>
         <Grid VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="5*"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="4*"/>
