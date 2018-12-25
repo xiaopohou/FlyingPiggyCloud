@@ -63,12 +63,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controllers\CheckTextForIsEnable.cs" />
     <Compile Include="Controllers\ConverterToolKits.cs" />
     <Compile Include="Controllers\FileSystemMethods.cs" />
     <Compile Include="Controllers\QingzhenyunLogicalProgress.cs" />
     <Compile Include="Controllers\QingzhenyunRequestBase.cs" />
     <Compile Include="Controllers\RegistryManager.cs" />
     <Compile Include="Controllers\RestClient.cs" />
+    <Compile Include="Controllers\SizeCalculatorConverter.cs" />
     <Compile Include="Controllers\UserCenterMethods.cs" />
     <Compile Include="Models\DownloadTask.cs" />
     <Compile Include="Models\FileList.cs" />

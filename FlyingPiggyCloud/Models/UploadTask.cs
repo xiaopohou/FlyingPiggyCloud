@@ -13,14 +13,30 @@ namespace FlyingPiggyCloud.Models
     {
         private static readonly FileSystemMethods fileSystemMethods = new FileSystemMethods(Properties.Settings.Default.BaseUri);
 
+        /// <summary>
+        /// 待上传文件的绝对路径
+        /// </summary>
         private readonly string fullPath;
 
+        /// <summary>
+        /// 待上传文件的文件名
+        /// </summary>
         public string FileName { get; private set; }
 
+        /// <summary>
+        /// 已上传的字节数
+        /// </summary>
         public long UploadedBytes { get; private set; }
 
+        /// <summary>
+        /// 文件的总字节数
+        /// </summary>
         public long TotalBytes { get; private set; }
 
+
+        /// <summary>
+        /// 上传进度
+        /// </summary>
         public double Progress
         {
             get
@@ -36,6 +52,10 @@ namespace FlyingPiggyCloud.Models
             }
         }
 
+        /// <summary>
+        /// 异步开始上传任务
+        /// </summary>
+        /// <param name="parentUUID">目标目录的UUID</param>
         public async void StartTaskAsync(string parentUUID)
         {
             Controllers.Results.ResponesResult<Controllers.Results.FileSystem.UploadResponseResult> x = await fileSystemMethods.UploadFile(FileName, parentUUID, OriginalFilename: FileName);
@@ -51,8 +71,14 @@ namespace FlyingPiggyCloud.Models
                   });
               });
             await Task.Run(() => Upload.Start(x.Result.Token, fullPath, x.Result.UploadUrl, FileName,uploadProgressHandler:uploadProgressHandler));
+            OnTaskCompleted?.Invoke();
         }
 
+        /// <summary>
+        /// 实例化一个上传任务
+        /// </summary>
+        /// <param name="fullPath">文件的路径</param>
+        /// <param name="FileName">文件名</param>
         public UploadTask(string fullPath, string FileName)
         {
             this.fullPath = fullPath;

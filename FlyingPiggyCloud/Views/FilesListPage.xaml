@@ -18,10 +18,10 @@
                 <Setter Property="Height" Value="36"/>
                 <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
                 <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
                         <Setter Property="Background" Value="#FFF5F5F5"/>
                     </Trigger>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                         <Setter Property="Background" Value="#FFFFFFFF"/>
                     </Trigger>
                     <Trigger Property="IsSelected" Value="True">
