@@ -44,6 +44,12 @@ namespace FlyingPiggyCloud.Controllers
             set => ApplicationDictionary.SetValue("DefaultPage", value);
         }
 
+        public static string CurrentUserInformation
+        {
+            get => (string)ApplicationDictionary.GetValue("CurrentUserInformation");
+            set => ApplicationDictionary.SetValue("CurrentUserInformation", value);
+        }
+
         //public static string Token
         //{
         //    get => (string)ApplicationDictionary.GetValue("Token");

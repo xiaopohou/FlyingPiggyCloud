@@ -1,12 +1,14 @@
-﻿<Window x:Class="FlyingPiggyCloud.Views.MainFrameWork"
+﻿<metro:MetroWindow
+        xmlns:metro="clr-namespace:Arthas.Controls.Metro;assembly=Arthas"
+        x:Class="FlyingPiggyCloud.Views.MainFrameWork"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
         mc:Ignorable="d"
-        Title="MainFrameWork" MinHeight="600" MinWidth="800" d:DesignWidth="800" d:DesignHeight="600" Style="{StaticResource WindowBasicDesign}"  Name="ListWindow">
-    <Window.Resources>
+        Title="FlyingPiggyCloud" MinHeight="600" MinWidth="800" d:DesignWidth="800" d:DesignHeight="600" Name="ListWindow" BorderBrush="#FF2EC17C">
+    <metro:MetroWindow.Resources>
         <!--重写单选框的模板用于左边栏-->
         <SolidColorBrush x:Key="RadioButton.Static.Background" Color="#FFFFFFFF"/>
         <SolidColorBrush x:Key="RadioButton.Static.Border" Color="#FF707070"/>
@@ -112,16 +114,16 @@
         </Style>
 
         <local:LeftRadioButton x:Key="LeftRadioIsCheckdConvert"/>
-    </Window.Resources>
+    </metro:MetroWindow.Resources>
+    <metro:MetroWindow.Menu>
+        <metro:MetroTitleMenu>
+            <metro:MetroTitleMenuItem Header="退出登陆"/>
+            <metro:MetroTitleMenuItem Header="账户设置"/>
+            <metro:MetroTitleMenuItem Header="关于软件"/>
+        </metro:MetroTitleMenu>
+    </metro:MetroWindow.Menu>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="#FF2EC17C" MouseMove="Grid_MouseMove">
-            
-        </Grid>
-        <Grid Grid.Row="1" Background="#FFFFFFFF">
+        <Grid Background="#FFFFFFFF">
             <Frame Name="MainFrame" NavigationUIVisibility="Hidden" Margin="200,0,0,0"/>
             <Border  HorizontalAlignment="Left" Width="200" BorderThickness="0,0,1,0">
                 <Grid Background="#FFF5F5F5">
@@ -139,10 +141,10 @@
                         </Border>
 
                         <!--用户名-->
-                        <TextBlock FontSize="8" Text="我是坑" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,108,0,0" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A"/>
+                        <TextBlock FontSize="8" Text="{Binding Name,Mode=OneTime}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,108,0,0" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A"/>
 
                         <!--剩余容量-->
-                        <ProgressBar Value="50" HorizontalAlignment="Center" Height="5" Margin="0,124,0,0" VerticalAlignment="Top" Width="125"/>
+                        <ProgressBar Value="{Binding Progress,Mode=OneTime}" HorizontalAlignment="Center" Height="5" Margin="0,124,0,0" VerticalAlignment="Top" Width="125"/>
                     </Grid>
 
                     <!--左侧导航栏区域-->
@@ -214,4 +216,4 @@
     <!--<Window.Effect>
         <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="Gray" />
     </Window.Effect>-->
-</Window>
+</metro:MetroWindow>

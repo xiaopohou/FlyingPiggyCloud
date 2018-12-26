@@ -5,26 +5,29 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Arthas;
+using Arthas.Controls.Metro;
 
 namespace FlyingPiggyCloud.Views
 {
     /// <summary>
     /// MainFrameWork.xaml 的交互逻辑
     /// </summary>
-    public partial class MainFrameWork : Window, INotifyPropertyChanged
+    public partial class MainFrameWork : MetroWindow, INotifyPropertyChanged
     {
         //应有的用于绑定的对象：一个用户信息、一个页控制器、一个渲染页
         public MainFrameWork()
         {
             CurrentPage = Controllers.RegistryManager.DefaultPage;
+            UserInformationModel = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.UserInformationModel>(Controllers.RegistryManager.CurrentUserInformation);
             InitializeComponent();
             DataContext = this;
+            UserGrid.DataContext = UserInformationModel;
             BindingOperations.SetBinding(MainFrame, ContentProperty, new Binding
             {
                 Path = new PropertyPath("Page"),
                 Mode = BindingMode.TwoWay
             });
-
         }
 
         ~MainFrameWork()
@@ -45,10 +48,14 @@ namespace FlyingPiggyCloud.Views
                 OnPropertyChanged("CurrentPage");
             }
         }
-
         private PageNavigate currentPage;
 
+        /// <summary>
+        /// 导航页的内容
+        /// </summary>
         public Page Page { get; set; }
+
+        public Models.UserInformationModel UserInformationModel { get; set; }
 
         private DownloadingListPage DownloadingList = new DownloadingListPage();
 

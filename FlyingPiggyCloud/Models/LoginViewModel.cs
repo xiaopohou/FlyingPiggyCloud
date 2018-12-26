@@ -75,6 +75,11 @@ namespace FlyingPiggyCloud.Models
         {
             userName = Controllers.RegistryManager.UserName;
             password = Controllers.RegistryManager.Password;
+            Controllers.RegistryManager.CurrentUserInformation = "";
+            LoginSuccessful += (userInformation) =>
+              {
+                  Controllers.RegistryManager.CurrentUserInformation = Newtonsoft.Json.JsonConvert.SerializeObject(userInformation);
+              };
         }
 
         ~LoginByPasswordProgressViewModel()
