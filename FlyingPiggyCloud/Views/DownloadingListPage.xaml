@@ -120,6 +120,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="10"/>
             </Grid.ColumnDefinitions>
             <Grid x:Name="WidthHelperFileName" Grid.Column="0"/>
             <Grid x:Name="WidthHelperSize" Grid.Column="1"/>
