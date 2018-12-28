@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Wangsu.WcsLib.Core;
 
 namespace FlyingPiggyCloud.Views
@@ -96,6 +97,18 @@ namespace FlyingPiggyCloud.Views
             {
                 UploadingListPage.NewUploadTask(openFileDialog, fileList.CurrentUUID);
             }
+        }
+
+        private void Name_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var a = (TextBox)sender;
+            a.BorderBrush = new SolidColorBrush(new Color
+            {
+                ScA = 1,
+                ScB = 1,
+                ScG = 0.7F,
+                ScR = 0.3F
+            });
         }
     }
 }

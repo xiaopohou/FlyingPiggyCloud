@@ -33,8 +33,12 @@
             <DataTemplate x:Key="MetaName">
                 <Grid>
                     <Image Width="24" Margin="4" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding Name}" Foreground="#FF5A5A5A" FontSize="16" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"  HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" />
-
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" >
+                        <TextBox Name="Name" Text="{Binding Name, Mode=OneWay}" Foreground="#FF5A5A5A" FontSize="16" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"  BorderBrush="{x:Null}" Background="{x:Null}" GotFocus="Name_GotFocus">
+                        </TextBox>
+                        <Button Visibility="Hidden"/>
+                        <Button Visibility="Hidden"/>
+                    </StackPanel>
                     <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="MoreBotton" Style="{StaticResource CircleButton}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
                         <Image Width="20" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/datuzhanshi.png" />
                         <Button.ContextMenu>
