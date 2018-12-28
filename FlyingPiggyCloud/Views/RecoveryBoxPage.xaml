@@ -17,6 +17,7 @@
                 <Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
             </Style>
 
+            <!--数据模板-->
             <DataTemplate x:Key="CheckBox">
                 <CheckBox/>
             </DataTemplate>
@@ -37,6 +38,7 @@
                 </StackPanel>
             </DataTemplate>
 
+            <!--ListView斑马样式的实现-->
             <Style x:Key="alternatingStyle" TargetType="ListViewItem">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Setter Property="Margin" Value="0"/>
@@ -57,6 +59,7 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
+        <!--上方按钮区域-->
         <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
             <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0">
                 <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/last.png" Stretch="Fill"/>
@@ -72,6 +75,7 @@
             </Button>
         </Grid>
 
+        <!--Page的主体-->
         <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" Name="DownloadList" Margin="0,60,0,0">
             <ListView.View>
                 <GridView>
@@ -88,19 +92,20 @@
             </ListView.View>
             <!--<ListViewItem Content="test" Height="50"/>-->
         </ListView>
+        
+        <!--协助ListView头部宽度自动调整-->
         <Grid VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid x:Name="WidthHelperFileName" Grid.Column="0"/>
             <Grid x:Name="WidthHelperSize" Grid.Column="1"/>
             <Grid x:Name="WidthHelperStatus" Grid.Column="2"/>
             <Grid x:Name="WidthHelperOperator" Grid.Column="3"/>
         </Grid>
-
     </Grid>
 </Page>

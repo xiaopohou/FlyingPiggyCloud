@@ -15,9 +15,6 @@
             <Style TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
             </Style>
-            <DataTemplate x:Key="CheckBox">
-                <CheckBox/>
-            </DataTemplate>
 
             <DataTemplate x:Key="FileName">
                 <TextBlock Text="{Binding FileName}"/>
@@ -99,11 +96,6 @@
         <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" Name="DownloadList" Margin="0,60,0,0">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn CellTemplate="{StaticResource CheckBox}">
-                        <GridViewColumn.Header>
-                            <CheckBox/>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperFileName ,Path=ActualWidth}" CellTemplate="{StaticResource FileName}" Header="文件名"/>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperSize ,Path=ActualWidth}" CellTemplate="{StaticResource Size}" Header="大小"/>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperStatus ,Path=ActualWidth}" CellTemplate="{StaticResource Status}" Header="状态"/>
@@ -120,7 +112,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid x:Name="WidthHelperFileName" Grid.Column="0"/>
             <Grid x:Name="WidthHelperSize" Grid.Column="1"/>
