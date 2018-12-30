@@ -130,7 +130,7 @@ namespace FlyingPiggyCloud.Views
         {
             Task.Run(()=>
             {
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(250);
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent((DependencyObject)sender), 1)).Visibility = Visibility.Collapsed;
@@ -138,5 +138,6 @@ namespace FlyingPiggyCloud.Views
                 });
             });
         }
+
     }
 }

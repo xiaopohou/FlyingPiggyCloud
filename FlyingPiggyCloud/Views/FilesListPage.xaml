@@ -147,11 +147,11 @@
                                         <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/piliangshangchuan.png"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="重命名">
+                                <!--<MenuItem Header="重命名" Click="MenuItem_Click">
                                     <MenuItem.Icon>
                                         <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/bianji.png"/>
                                     </MenuItem.Icon>
-                                </MenuItem>
+                                </MenuItem>-->
                                 <MenuItem x:Name="Delete" Header="删除" Click="Delete_Click">
                                     <MenuItem.Icon>
                                         <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/shanchu.png"/>
