@@ -163,10 +163,12 @@ namespace FlyingPiggyCloud.Models
         public async Task<FileMetaData> Rename(string NewName)
         {
             Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
-            MetaData = (await fileSystemMethods.Rename(MetaData, NewName)).Result;
+            //MetaData = (await fileSystemMethods.Rename(MetaData, NewName)).Result;
+            await fileSystemMethods.Rename(MetaData, NewName);
             //OnPropertyChanged("Path");
             //OnPropertyChanged("UUID");
             //OnPropertyChanged("MTime");
+            MetaData.Name = NewName;
             OnPropertyChanged("Name");
             return MetaData;
         }

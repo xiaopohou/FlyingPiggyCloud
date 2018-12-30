@@ -170,7 +170,7 @@ namespace FlyingPiggyCloud.Controllers
         /// <param name="SourceMeta">被重命名的项目</param>
         /// <param name="NewName">新名称</param>
         /// <returns></returns>
-        public async Task<GetMetaDataResponseResult> Rename(FileMetaData SourceMeta, string NewName)
+        public async Task Rename(FileMetaData SourceMeta, string NewName)
         {
             if (Token == null)
             {
@@ -183,9 +183,8 @@ namespace FlyingPiggyCloud.Controllers
                 { "name", NewName },
                 { "token", Token }
             };
-            var x = await PostAsync<GetMetaDataResponseResult>(JsonConvert.SerializeObject(data), "v1/files/rename");
-            Token = x.Token;
-            return x;
+            var x = await PostAsync<Dictionary<string,string>>(JsonConvert.SerializeObject(data), "v1/files/rename");
+            Token = x["token"];
         }
 
         public async Task<ResponesResult<UploadResponseResult>> UploadFile(string Name, string Parent, string Hash=null, string OriginalFilename=null)

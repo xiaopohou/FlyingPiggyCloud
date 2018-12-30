@@ -82,7 +82,7 @@ namespace FlyingPiggyCloud.Views
         {
             MenuItem x = (MenuItem)sender;
             //x.IsEnabled = false;
-            await ((Models.FileListItem)x.DataContext).Remove();
+            await ((FileListItem)x.DataContext).Remove();
             //System.Threading.Thread.Sleep(200);
             lock (fileList)
             {
@@ -99,15 +99,43 @@ namespace FlyingPiggyCloud.Views
             }
         }
 
-        private void Name_GotFocus(object sender, RoutedEventArgs e)
+        private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            var a = (TextBox)sender;
-            a.BorderBrush = new SolidColorBrush(new Color
+            System.Windows.Input.Keyboard.ClearFocus();
+            var btn = (Button)sender;
+            var tbx = (TextBox)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent(btn), 0);
+            tbx.Text = ((FileListItem)tbx.DataContext).Name;
+            btn.Visibility = Visibility.Collapsed;
+            ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent(btn), 1)).Visibility = Visibility.Collapsed;
+
+        }
+
+        private void Name_GotKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        {
+            ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent((DependencyObject)sender), 1)).Visibility = Visibility.Visible;
+            ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent((DependencyObject)sender), 2)).Visibility = Visibility.Visible;
+        }
+
+        private async void Confirm_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Input.Keyboard.ClearFocus();
+            var btn = (Button)sender;
+            var tbx = (TextBox)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent(btn), 0);
+            await ((FileListItem)tbx.DataContext).Rename(tbx.Text);
+            btn.Visibility = Visibility.Collapsed;
+            ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent(btn), 2)).Visibility = Visibility.Collapsed;
+        }
+
+        private void Name_LostKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        {
+            Task.Run(()=>
             {
-                ScA = 1,
-                ScB = 1,
-                ScG = 0.7F,
-                ScR = 0.3F
+                System.Threading.Thread.Sleep(100);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent((DependencyObject)sender), 1)).Visibility = Visibility.Collapsed;
+                    ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent((DependencyObject)sender), 2)).Visibility = Visibility.Collapsed;
+                });
             });
         }
     }
