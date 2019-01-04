@@ -220,14 +220,14 @@
             </Button>
         </Grid>
         <!--地址栏-->
-        <ListBox x:Name="AddressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top">
+        <ListBox x:Name="AddressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top" SelectionChanged="AddressBar_SelectionChanged">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
-                <DataTemplate >
+                <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="#FF5A5A5A" Text="{Binding}" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
                         <Image Height="11" Source="/Resources/next.png"/>

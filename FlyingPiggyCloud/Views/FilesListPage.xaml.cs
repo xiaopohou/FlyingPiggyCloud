@@ -28,7 +28,6 @@ namespace FlyingPiggyCloud.Views
             InitializeComponent();
             FileListView.ItemsSource = fileList;
             CreatePathArray(path);
-            AddressBar.ItemsSource = PathArray;
         }
 
         private void CreatePathArray(string path)
@@ -40,6 +39,7 @@ namespace FlyingPiggyCloud.Views
                 });
             else
                 PathArray = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace));
+            AddressBar.ItemsSource = PathArray;
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
@@ -147,5 +147,21 @@ namespace FlyingPiggyCloud.Views
             });
         }
 
+        private void AddressBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var index = ((ListBox)sender).SelectedIndex;
+            string path = "";
+            if (PathArray[0] == "root")
+                path = "/";
+            else
+            {
+                for (int i = 1; i <= index; i++)
+                {
+                    path = path + "/" + PathArray[i];
+                }
+            }
+            fileList.GetDirectoryByPath(path);
+            CreatePathArray(path);
+        }
     }
 }
