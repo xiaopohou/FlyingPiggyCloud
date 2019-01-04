@@ -18,6 +18,9 @@ namespace FlyingPiggyCloud.Views
         //应有的用于绑定的对象：一个用户信息、一个页控制器、一个渲染页
         public MainFrameWork()
         {
+            DownloadingList = new DownloadingListPage();
+            RecoveryBox = new RecoveryBoxPage();
+            CompletedList = new CompletedListPage();
             CurrentPage = Controllers.RegistryManager.DefaultPage;
             UserInformationModel = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.UserInformationModel>(Controllers.RegistryManager.CurrentUserInformation);
             InitializeComponent();
@@ -57,11 +60,11 @@ namespace FlyingPiggyCloud.Views
 
         public Models.UserInformationModel UserInformationModel { get; set; }
 
-        private DownloadingListPage DownloadingList = new DownloadingListPage();
+        private DownloadingListPage DownloadingList;
 
-        private RecoveryBoxPage RecoveryBox = new RecoveryBoxPage();
+        private RecoveryBoxPage RecoveryBox;
 
-        private CompletedListPage CompletedList = new CompletedListPage();
+        private CompletedListPage CompletedList;
 
         private void Navigate(PageNavigate pageNavigate)
         {
@@ -129,7 +132,7 @@ namespace FlyingPiggyCloud.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public virtual void OnPropertyChanged(string propertyName)
+        public void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

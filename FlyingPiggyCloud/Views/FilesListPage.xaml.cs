@@ -21,29 +21,36 @@ namespace FlyingPiggyCloud.Views
         /// <summary>
         /// 通过指定路径创建文件列表页，如果路径不存在将自动创建
         /// </summary>
-        /// <param name="Path"></param>
-        public FilesListPage(string Path)
+        /// <param name="path"></param>
+        public FilesListPage(string path)
         {
-            fileList = new FileList("", Path, true);
+            fileList = new FileList("", path, true);
             InitializeComponent();
             FileListView.ItemsSource = fileList;
-            PathArray = new List<string>(Path.Split(new string[] { "/" }, System.StringSplitOptions.None));
-            if (PathArray[PathArray.Count - 1] == "")
-            {
-                PathArray.RemoveAt(PathArray.Count - 1);
-            }
-
+            CreatePathArray(path);
             AddressBar.ItemsSource = PathArray;
+        }
+
+        private void CreatePathArray(string path)
+        {
+            if (path == "/")
+                PathArray = new List<string>(new string[]
+                {
+                    "root"
+                });
+            else
+                PathArray = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace));
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            FileListItem a = (Models.FileListItem)((ListViewItem)sender).DataContext;
+            FileListItem a = (FileListItem)((ListViewItem)sender).DataContext;
             if (a.Type == 1)
             {
                 if (a.IsEnable)
                 {
-                    fileList.GetDirectoryByUUID(((Models.FileListItem)((ListViewItem)sender).DataContext).UUID);
+                    fileList.GetDirectoryByUUID(((FileListItem)((ListViewItem)sender).DataContext).UUID);
+                    CreatePathArray(a.Path);
                 }
                 else
                 {
@@ -51,6 +58,7 @@ namespace FlyingPiggyCloud.Views
                     fileList.Refresh(this, new System.EventArgs());
                 }
             }
+            
         }
 
         private async void NewFolderButton_Click(object sender, RoutedEventArgs e)

@@ -71,7 +71,7 @@ namespace FlyingPiggyCloud.Models
                   });
               });
             await Task.Run(() => Upload.Start(x.Result.Token, fullPath, x.Result.UploadUrl, FileName,uploadProgressHandler:uploadProgressHandler));
-            OnTaskCompleted?.Invoke();
+            OnTaskCompleted?.Invoke(this,new EventArgs());
         }
 
         /// <summary>
@@ -87,7 +87,8 @@ namespace FlyingPiggyCloud.Models
             TotalBytes = 0;
         }
 
-        public event Action OnTaskCompleted;
+        public delegate void TaskStatuChanged(object sender, EventArgs e);
+        public event TaskStatuChanged OnTaskCompleted;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
