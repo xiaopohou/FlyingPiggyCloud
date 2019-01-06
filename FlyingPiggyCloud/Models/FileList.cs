@@ -71,12 +71,16 @@ namespace FlyingPiggyCloud.Models
             do
             {
                 PageResponseResult x = await FileSystemMethods.GetDirectory("", Path, Page);
-                if (!x.Success && IsAutoCreating)
+                if(!x.Success&&!IsAutoCreating)
+                {
+                    //throw new System.IO.DirectoryNotFoundException("给定的路径不存在");
+                }
+                else if (!x.Success && IsAutoCreating)
                 {
                     await FileSystemMethods.CreatDirectory("", "", Path);
                     x = await FileSystemMethods.GetDirectory("", Path, Page);
                 }
-                if (x.Success)
+                else if (x.Success)
                 {
                     CurrentUUID = x.Result.DictionaryInformation.UUID;
                     CurrentPath = x.Result.DictionaryInformation.Path;

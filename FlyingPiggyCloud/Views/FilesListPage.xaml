@@ -212,10 +212,10 @@
                     <TextBlock Text="上传" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FFFFFFFF"/>
                 </StackPanel>
             </Button>
-            <Button Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0">
+            <Button x:Name="Previous" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0" Click="Previous_Click">
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/fanhui.png" Stretch="Fill"/>
             </Button>
-            <Button Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="40,0,0,0">
+            <Button x:Name="Next" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="40,0,0,0" Click="Next_Click">
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/jinru.png" Stretch="Fill"/>
             </Button>
         </Grid>
@@ -239,7 +239,7 @@
         <ListView Background="#FFF5F5F5" x:Name="FileListView" Margin="0,84,0,0" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName,Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileSize}" CellTemplate="{StaticResource MetaSize}" Header="大小"/>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" CellTemplate="{StaticResource MetaMTime}" Header="修改时间"/>
                 </GridView>

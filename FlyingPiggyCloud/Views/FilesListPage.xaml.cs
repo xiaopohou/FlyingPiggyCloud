@@ -1,5 +1,6 @@
 ﻿using FlyingPiggyCloud.Models;
 using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,7 +17,17 @@ namespace FlyingPiggyCloud.Views
     {
         private FileList fileList;
 
-        private List<string> PathArray;
+        private List<string> pathArray;
+
+        /// <summary>
+        /// 为后退按钮保存历史路径
+        /// </summary>
+        private Stack<string> previousPath;
+
+        /// <summary>
+        /// 为前进按钮保存历史路径
+        /// </summary>
+        private Stack<string> nextPath;
 
         /// <summary>
         /// 通过指定路径创建文件列表页，如果路径不存在将自动创建
@@ -28,18 +39,20 @@ namespace FlyingPiggyCloud.Views
             InitializeComponent();
             FileListView.ItemsSource = fileList;
             CreatePathArray(path);
+            previousPath = new Stack<string>();
+            nextPath = new Stack<string>();
         }
 
         private void CreatePathArray(string path)
         {
             if (path == "/")
-                PathArray = new List<string>(new string[]
+                pathArray = new List<string>(new string[]
                 {
                     "root"
                 });
             else
-                PathArray = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace));
-            AddressBar.ItemsSource = PathArray;
+                pathArray = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace));
+            AddressBar.ItemsSource = pathArray;
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
@@ -49,6 +62,8 @@ namespace FlyingPiggyCloud.Views
             {
                 if (a.IsEnable)
                 {
+                    previousPath.Push(fileList.CurrentPath);
+                    nextPath.Clear();
                     fileList.GetDirectoryByUUID(((FileListItem)((ListViewItem)sender).DataContext).UUID);
                     CreatePathArray(a.Path);
                 }
@@ -155,17 +170,66 @@ namespace FlyingPiggyCloud.Views
             {
                 ((ListBox)sender).SelectedIndex = -1;
                 string path = "";
-                if (PathArray[0] == "root")
+                if (pathArray[0] == "root")
                     path = "/";
                 else
                 {
                     for (int i = 1; i <= index; i++)
                     {
-                        path = path + "/" + PathArray[i];
+                        path = path + "/" + pathArray[i];
                     }
                 }
+                previousPath.Push(fileList.CurrentPath);
+                nextPath.Clear();
                 fileList.GetDirectoryByPath(path);
                 CreatePathArray(path);
+            }
+        }
+
+        private void Previous_Click(object sender, RoutedEventArgs e)
+        {
+            nextPath.Push(fileList.CurrentPath);
+            if(previousPath.Count>0)
+            {
+                bool success;
+                do
+                {
+                    try
+                    {
+                        string path = previousPath.Pop();
+                        fileList.GetDirectoryByPath(path);
+                        success = true;
+                        CreatePathArray(path);
+                    }
+                    catch (System.IO.DirectoryNotFoundException)
+                    {
+                        success = false;
+                    }
+                } while (!success && previousPath.Count != 0);
+            }
+            
+        }
+
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+            previousPath.Push(fileList.CurrentPath);
+            if(nextPath.Count>0)
+            {
+                bool success;
+                do
+                {
+                    try
+                    {
+                        string path = nextPath.Pop();
+                        fileList.GetDirectoryByPath(path);
+                        success = true;
+                        CreatePathArray(path);
+                    }
+                    catch (System.IO.DirectoryNotFoundException)
+                    {
+                        success = false;
+                    }
+                } while (!success && nextPath.Count != 0);
             }
         }
     }
