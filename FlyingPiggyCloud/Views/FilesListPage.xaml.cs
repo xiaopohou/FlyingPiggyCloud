@@ -55,7 +55,7 @@ namespace FlyingPiggyCloud.Views
             AddressBar.ItemsSource = pathArray;
         }
 
-        private void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
+        private async void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
             FileListItem a = (FileListItem)((ListViewItem)sender).DataContext;
             if (a.Type == 1)
@@ -64,13 +64,13 @@ namespace FlyingPiggyCloud.Views
                 {
                     previousPath.Push(fileList.CurrentPath);
                     nextPath.Clear();
-                    fileList.GetDirectoryByUUID(((FileListItem)((ListViewItem)sender).DataContext).UUID);
+                    await fileList.GetDirectoryByUUID(((FileListItem)((ListViewItem)sender).DataContext).UUID);
                     CreatePathArray(a.Path);
                 }
                 else
                 {
                     MessageBox.Show("这个项目被远程服务器锁定（可能的原因：正在被删除，或者其他客户端正在修改该项目）");
-                    fileList.Refresh(this, new System.EventArgs());
+                    fileList.Refresh(this, new EventArgs());
                 }
             }
             
@@ -163,7 +163,7 @@ namespace FlyingPiggyCloud.Views
             });
         }
 
-        private void AddressBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void AddressBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = ((ListBox)sender).SelectedIndex;
             if(index!=-1)
@@ -181,12 +181,12 @@ namespace FlyingPiggyCloud.Views
                 }
                 previousPath.Push(fileList.CurrentPath);
                 nextPath.Clear();
-                fileList.GetDirectoryByPath(path);
+                await fileList.GetDirectoryByPath(path);
                 CreatePathArray(path);
             }
         }
 
-        private void Previous_Click(object sender, RoutedEventArgs e)
+        private async void Previous_Click(object sender, RoutedEventArgs e)
         {
             nextPath.Push(fileList.CurrentPath);
             if(previousPath.Count>0)
@@ -197,7 +197,7 @@ namespace FlyingPiggyCloud.Views
                     try
                     {
                         string path = previousPath.Pop();
-                        fileList.GetDirectoryByPath(path);
+                        await fileList.GetDirectoryByPath(path);
                         success = true;
                         CreatePathArray(path);
                     }
@@ -210,7 +210,7 @@ namespace FlyingPiggyCloud.Views
             
         }
 
-        private void Next_Click(object sender, RoutedEventArgs e)
+        private async void Next_Click(object sender, RoutedEventArgs e)
         {
             previousPath.Push(fileList.CurrentPath);
             if(nextPath.Count>0)
@@ -221,7 +221,7 @@ namespace FlyingPiggyCloud.Views
                     try
                     {
                         string path = nextPath.Pop();
-                        fileList.GetDirectoryByPath(path);
+                        await fileList.GetDirectoryByPath(path);
                         success = true;
                         CreatePathArray(path);
                     }

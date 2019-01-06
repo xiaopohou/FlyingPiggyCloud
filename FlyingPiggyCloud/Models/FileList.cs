@@ -25,7 +25,7 @@ namespace FlyingPiggyCloud.Models
         /// 把指定UUID的目录加载到当前列表
         /// </summary>
         /// <param name="UUID"></param>
-        public async void GetDirectoryByUUID(string UUID)
+        public async Task GetDirectoryByUUID(string UUID)
         {
             Clear();
             List<FileMetaData> items = new List<FileMetaData>();
@@ -63,7 +63,7 @@ namespace FlyingPiggyCloud.Models
         /// </summary>
         /// <param name="Path"></param>
         /// <param name="IsAutoCreating">当路径不存在时是否自动新建该文件夹</param>
-        public async void GetDirectoryByPath(string Path, bool IsAutoCreating = false)
+        public async Task GetDirectoryByPath(string Path, bool IsAutoCreating = false)
         {
             Clear();
             List<FileMetaData> items = new List<FileMetaData>();
@@ -73,7 +73,7 @@ namespace FlyingPiggyCloud.Models
                 PageResponseResult x = await FileSystemMethods.GetDirectory("", Path, Page);
                 if(!x.Success&&!IsAutoCreating)
                 {
-                    //throw new System.IO.DirectoryNotFoundException("给定的路径不存在");
+                    throw new System.IO.DirectoryNotFoundException("给定的路径不存在");
                 }
                 else if (!x.Success && IsAutoCreating)
                 {
@@ -145,9 +145,9 @@ namespace FlyingPiggyCloud.Models
         /// </summary>
         /// <param name="Sender"></param>
         /// <param name="e"></param>
-        public void Refresh(object Sender, EventArgs e)
+        public async void Refresh(object Sender, EventArgs e)
         {
-            GetDirectoryByUUID(CurrentUUID);
+            await GetDirectoryByUUID(CurrentUUID);
         }
 
         /// <summary>
@@ -159,11 +159,12 @@ namespace FlyingPiggyCloud.Models
         {
             if (UUID != "")
             {
-                GetDirectoryByUUID(UUID);
+                Task t = GetDirectoryByUUID(UUID);
+                
             }
             else
             {
-                GetDirectoryByPath(Path, IsAutoCreating);
+                Task t = GetDirectoryByPath(Path, IsAutoCreating);
             }
         }
     }
