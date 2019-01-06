@@ -136,6 +136,7 @@ namespace FlyingPiggyCloud.Views
 
         private void Name_LostKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
+            //失去键盘焦点后延迟250ms隐藏按钮，应当有更好的解决办法
             Task.Run(()=>
             {
                 System.Threading.Thread.Sleep(250);
@@ -150,18 +151,22 @@ namespace FlyingPiggyCloud.Views
         private void AddressBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = ((ListBox)sender).SelectedIndex;
-            string path = "";
-            if (PathArray[0] == "root")
-                path = "/";
-            else
+            if(index!=-1)
             {
-                for (int i = 1; i <= index; i++)
+                ((ListBox)sender).SelectedIndex = -1;
+                string path = "";
+                if (PathArray[0] == "root")
+                    path = "/";
+                else
                 {
-                    path = path + "/" + PathArray[i];
+                    for (int i = 1; i <= index; i++)
+                    {
+                        path = path + "/" + PathArray[i];
+                    }
                 }
+                fileList.GetDirectoryByPath(path);
+                CreatePathArray(path);
             }
-            fileList.GetDirectoryByPath(path);
-            CreatePathArray(path);
         }
     }
 }
