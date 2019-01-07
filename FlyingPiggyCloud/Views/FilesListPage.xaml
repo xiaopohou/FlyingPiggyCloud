@@ -13,55 +13,66 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FlyingPiggyCloud;component/Resources/ControlStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <!--<Style x:Key="TextBoxStyle1" TargetType="{x:Type TextBox}">
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
-                <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="AllowDrop" Value="true"/>
-                <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
-                <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type TextBox}">
-                            <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                                <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsEnabled" Value="false">
-                                    <Setter Property="Opacity" TargetName="border" Value="0.56"/>
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="true">
-                                    <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
-                                </Trigger>
-                                <Trigger Property="IsKeyboardFocused" Value="true">
-                                    <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <MultiTrigger>
-                        <MultiTrigger.Conditions>
-                            <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
-                            <Condition Property="IsSelectionActive" Value="false"/>
-                        </MultiTrigger.Conditions>
-                        <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
-                    </MultiTrigger>
-                </Style.Triggers>
-            </Style>-->
-
+            <SolidColorBrush x:Key ="{x:Static SystemColors.HighlightBrushKey}" Color ="Red"/>
             <Controllers:KeyboardFocusToVisibilityConverter x:Key="KeyboardFocusToVisibilityConverter"/>
+
+            <!--ListView的斑马纹-->
             <Style x:Key="alternatingStyle" TargetType="{x:Type ListViewItem}">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Setter Property="Margin" Value="0"/>
                 <Setter Property="Height" Value="36"/>
                 <EventSetter Event="Control.MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="2" SnapsToDevicePixels="true">
+                                <Border x:Name="InnerBorder" BorderThickness="1" CornerRadius="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="11"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <!--<Rectangle x:Name="UpperHighlight" Fill="#75FFFFFF" Visibility="Collapsed"/>-->
+                                        <GridViewRowPresenter Grid.RowSpan="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Grid>
+                                </Border>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <!--<Setter Property="Background" Value="{StaticResource ListItemHoverFill}"/>-->
+                                    <Setter Property="BorderBrush" Value="#FF2EC17C"/>
+                                    <!--<Setter Property="Visibility" TargetName="UpperHighlight" Value="Visible"/>-->
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="true">
+                                    <!--<Setter Property="Background" Value="{StaticResource ListItemSelectedFill}"/>-->
+                                    <Setter Property="BorderBrush" Value="#FF2EC17C"/>
+                                    <Setter Property="BorderBrush" TargetName="InnerBorder" Value="#80FFFFFF"/>
+                                    <!--<Setter Property="Visibility" TargetName="UpperHighlight" Value="Visible"/>
+                                    <Setter Property="Fill" TargetName="UpperHighlight" Value="#40FFFFFF"/>-->
+                                </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsSelected" Value="true"/>
+                                        <Condition Property="Selector.IsSelectionActive" Value="false"/>
+                                    </MultiTrigger.Conditions>
+                                    <!--<Setter Property="Background" Value="{StaticResource ListItemSelectedInactiveFill}"/>-->
+                                    <Setter Property="BorderBrush" Value="#FFCFCFCF"/>
+                                </MultiTrigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsSelected" Value="true"/>
+                                        <Condition Property="IsMouseOver" Value="true"/>
+                                    </MultiTrigger.Conditions>
+                                    <!--<Setter Property="Background" Value="{StaticResource ListItemSelectedHoverFill}"/>-->
+                                    <Setter Property="BorderBrush" Value="#FF98DDFB"/>
+                                </MultiTrigger>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="1">
                         <Setter Property="Background" Value="#FFF5F5F5"/>
@@ -71,6 +82,9 @@
                     </Trigger>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="Background" Value="#FF2EC17C"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <!--<Setter Property="Background" Value="Black"/>-->
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -86,15 +100,6 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type TextBox}">
                             <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                                <!--<StackPanel Orientation="Horizontal">
-                                    <ScrollViewer VerticalAlignment="Center" x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
-                                    <Button Visibility="Collapsed" Name="Confirm">
-                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/xuanze.png" />
-                                    </Button>
-                                    <Button Visibility="Collapsed" Name="Cancel" Click="Cancel_Click">
-                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/quxiao.png"/>
-                                    </Button>
-                                </StackPanel>-->
                                 <ScrollViewer VerticalAlignment="Center" x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
 
                             </Border>
@@ -127,10 +132,10 @@
                     <!--<TextBox Name="Name" Style="{StaticResource NameTextBox}" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center"/>-->
                     <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center">
                         <TextBox x:Name="Name" Style="{StaticResource NameTextBox}" Text="{Binding Name, Mode=OneTime}" GotKeyboardFocus="Name_GotKeyboardFocus" LostKeyboardFocus="Name_LostKeyboardFocus"/>
-                        <Button Visibility="Collapsed" x:Name="Confirm" Click="Confirm_Click">
+                        <Button Style="{StaticResource ButtonBasicDesign}" Background="#FF2EC17C" Margin="2" Visibility="Collapsed" x:Name="Confirm" Click="Confirm_Click">
                             <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/xuanze.png" />
                         </Button>
-                        <Button Visibility="Collapsed" Click="Cancel_Click">
+                        <Button Style="{StaticResource ButtonBasicDesign}" Background="White" Margin="2" Visibility="Collapsed" Click="Cancel_Click">
                             <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/quxiao.png"/>
                         </Button>
                     </StackPanel>
@@ -183,7 +188,7 @@
                     </MultiDataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
-            
+
             <DataTemplate x:Key="MetaSize">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A" Text="{Binding Size}"/>
@@ -194,6 +199,7 @@
                     <TextBlock FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A" Text="{Binding MTime}"/>
                 </StackPanel>
             </DataTemplate>
+            
 
         </ResourceDictionary>
     </Page.Resources>

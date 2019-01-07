@@ -28,7 +28,7 @@ namespace FlyingPiggyCloud.Views
         /// </summary>
         private static ObservableCollection<UploadTask> UploadTasks = new ObservableCollection<UploadTask>();
 
-        public static void NewUploadTask(UploadTask uploadTask,string parentUUID)
+        public static async void NewUploadTask(UploadTask uploadTask,string parentUUID)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
@@ -37,7 +37,15 @@ namespace FlyingPiggyCloud.Views
                     UploadTasks.Add(uploadTask);
                 }
             });
-            uploadTask.StartTaskAsync(parentUUID);
+            try
+            {
+                await uploadTask.StartTaskAsync(parentUUID);
+            }
+            catch(Exception)
+            {
+                //这里以后提供上传任务失败的处理
+                //uploadTask.FileName = "（失败）" + uploadTask.FileName;
+            }
             //uploadTask.OnTaskCompleted += () =>
             //  {
             //      App.Current.Dispatcher.Invoke(() =>

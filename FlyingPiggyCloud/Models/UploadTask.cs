@@ -56,7 +56,7 @@ namespace FlyingPiggyCloud.Models
         /// 异步开始上传任务
         /// </summary>
         /// <param name="parentUUID">目标目录的UUID</param>
-        public async void StartTaskAsync(string parentUUID)
+        public async Task StartTaskAsync(string parentUUID)
         {
             Controllers.Results.ResponesResult<Controllers.Results.FileSystem.UploadResponseResult> x = await fileSystemMethods.UploadFile(FileName, parentUUID, OriginalFilename: FileName);
             UploadProgressHandler uploadProgressHandler = new UploadProgressHandler((a, b) =>
