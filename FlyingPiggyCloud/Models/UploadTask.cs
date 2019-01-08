@@ -70,9 +70,36 @@ namespace FlyingPiggyCloud.Models
                       OnPropertyChanged("Progress");
                   });
               });
-            await Task.Run(() => Upload.Start(x.Result.Token, fullPath, x.Result.UploadUrl, FileName,uploadProgressHandler:uploadProgressHandler));
+            try
+            {
+                await Task.Run(() => Upload.Start(x.Result.Token, fullPath, x.Result.UploadUrl, FileName, uploadProgressHandler: uploadProgressHandler,userCommand:OnUserCommand));
+                Status = "上传成功";
+                OnPropertyChanged("Status");
+            }
+            catch (Exception ex)
+            {
+                Status = ex.Message;
+                OnPropertyChanged(Status);
+            }
             OnTaskCompleted?.Invoke(this,new EventArgs());
         }
+
+        private event UserCommandEventHandle OnUserCommand;
+
+        /// <summary>
+        /// 取消上传任务，这个指令会在当前块上传结束后执行，如果待上传文件只有一个块则该指令可能无法生效
+        /// </summary>
+        public void Cancel()
+        {
+            OnUserCommand += new UserCommandEventHandle((sender,e) =>
+              {
+                  Status = "上传任务被用户取消";
+                  OnPropertyChanged("Status");
+                  throw new WcsLib.Exception.OperatingAbortedException("上传任务被用户取消");
+              });
+        }
+
+        public string Status { get; set; }
 
         /// <summary>
         /// 实例化一个上传任务
@@ -85,6 +112,9 @@ namespace FlyingPiggyCloud.Models
             this.FileName = FileName;
             UploadedBytes = 0;
             TotalBytes = 0;
+#if DEBUG
+            Status = "新鲜热乎的上传任务";
+#endif
         }
 
         public delegate void TaskStatuChanged(object sender, EventArgs e);

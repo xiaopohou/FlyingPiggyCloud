@@ -69,5 +69,12 @@ namespace FlyingPiggyCloud.Views
             InitializeComponent();
             UploadList.ItemsSource = UploadTasks;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var s = (Button)sender;
+            var t = (UploadTask)s.DataContext;
+            t.Cancel();
+        }
     }
 }

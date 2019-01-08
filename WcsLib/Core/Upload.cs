@@ -6,10 +6,13 @@ using System.Net;
 using System.Threading.Tasks;
 using Wangsu.WcsLib.HTTP;
 using Wangsu.WcsLib.Utility;
+using WcsLib.Exception;
 using WcsLib.Utility;
 
 namespace Wangsu.WcsLib.Core
 {
+    public delegate void UserCommandEventHandle(object sender, EventArgs e);
+
     public static class Upload
     {
         private const int BLOCKSIZE = 4 * 1024 * 1024;
@@ -21,7 +24,7 @@ namespace Wangsu.WcsLib.Core
         /// <param name="UploadToken">Qingzhenyun返回的上传token</param>
         /// <param name="FilePath">文件的本地路径</param>
         /// <param name="UploadUrl">Qingzhenyun返回的上传地址</param>
-        public static void Start(string UploadToken, string FilePath, string UploadUrl,string Key=null, UploadProgressHandler uploadProgressHandler=null)
+        public static void Start(string UploadToken, string FilePath, string UploadUrl,string Key=null, UploadProgressHandler uploadProgressHandler=null, UserCommandEventHandle userCommand=null)
         {
             Config config = new Config(UploadUrl);
             string eTag = ETag.ComputeEtag(FilePath);
@@ -36,26 +39,39 @@ namespace Wangsu.WcsLib.Core
             {
                 FileStream fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                 BinaryReader binaryReader = new BinaryReader(fileStream);
-                long blockCount = (dataSize + BLOCKSIZE - 1) / BLOCKSIZE;
-                string[] TotalContexts = new string[blockCount];
-                // 第一个分片不宜太大，因为可能遇到错误，上传太大是白费流量和时间！
-                SliceUpload su = new SliceUpload(config);
-                long Index = 0;
-                TotalContexts[Index] = UploadFirstBlock(binaryReader.ReadBytes(BLOCKSIZE), Index, su, UploadToken,Key);
-                uploadProgressHandler?.Invoke(Index * BLOCKSIZE, dataSize);
-                do
+                try
                 {
-                    Index++;
-                    TotalContexts[Index] = UploadBlock(binaryReader.ReadBytes(BLOCKSIZE), Index, su, UploadToken,Key);
-                    uploadProgressHandler?.Invoke(Index * BLOCKSIZE < dataSize ? Index * BLOCKSIZE : dataSize, dataSize);
-                } while (Index < blockCount - 1);
-                //上传结束，将所有的块合成一个文件
-                HttpResult result = su.MakeFile(dataSize, null, TotalContexts, UploadToken);
-                JObject jo = JObject.Parse(result.Text);
-                uploadProgressHandler?.Invoke(dataSize, dataSize);
-                if (jo["hash"].ToString() != eTag)
-                    throw new Exception("上传文件校验失败");
-                //Console.WriteLine("---MakeFile---\n{0}", result.ToString());
+                    userCommand?.Invoke(new object(),new EventArgs());
+                    long blockCount = (dataSize + BLOCKSIZE - 1) / BLOCKSIZE;
+                    string[] TotalContexts = new string[blockCount];
+                    // 第一个分片不宜太大，因为可能遇到错误，上传太大是白费流量和时间！
+                    SliceUpload su = new SliceUpload(config);
+                    long Index = 0;
+                    TotalContexts[Index] = UploadFirstBlock(binaryReader.ReadBytes(BLOCKSIZE), Index, su, UploadToken, Key);
+                    uploadProgressHandler?.Invoke(Index * BLOCKSIZE, dataSize);
+                    do
+                    {
+                        userCommand?.Invoke(new object(), new EventArgs());
+                        Index++;
+                        TotalContexts[Index] = UploadBlock(binaryReader.ReadBytes(BLOCKSIZE), Index, su, UploadToken, Key);
+                        uploadProgressHandler?.Invoke(Index * BLOCKSIZE < dataSize ? Index * BLOCKSIZE : dataSize, dataSize);
+                    } while (Index < blockCount - 1);
+                    //上传结束，将所有的块合成一个文件
+                    HttpResult result = su.MakeFile(dataSize, null, TotalContexts, UploadToken);
+                    JObject jo = JObject.Parse(result.Text);
+                    uploadProgressHandler?.Invoke(dataSize, dataSize);
+                    if (jo["hash"].ToString() != eTag)
+                        throw new Exception("上传文件校验失败");
+                    //Console.WriteLine("---MakeFile---\n{0}", result.ToString());
+                }
+                catch(OperatingAbortedException)
+                {
+                    //通过在userCommand委托中引发异常的方式终止上传任务
+                }
+                finally
+                {
+                    binaryReader.Close();
+                }
             }
         }
 

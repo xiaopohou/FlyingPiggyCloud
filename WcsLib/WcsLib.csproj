@@ -51,6 +51,7 @@
     <Compile Include="Core\Upload.cs" />
     <Compile Include="Core\UploadController.cs" />
     <Compile Include="Core\UploadProgressHandler.cs" />
+    <Compile Include="Exception\OperatingAbortedException.cs" />
     <Compile Include="HTTP\HttpManager.cs" />
     <Compile Include="HTTP\HttpResult.cs" />
     <Compile Include="Utility\AssemblyInfo.cs" />
