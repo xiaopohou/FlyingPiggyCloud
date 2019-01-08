@@ -37,26 +37,7 @@ namespace FlyingPiggyCloud.Views
                     UploadTasks.Add(uploadTask);
                 }
             });
-            try
-            {
-                await uploadTask.StartTaskAsync(parentUUID);
-            }
-            catch(Exception)
-            {
-                //这里以后提供上传任务失败的处理
-                //uploadTask.FileName = "（失败）" + uploadTask.FileName;
-            }
-            //uploadTask.OnTaskCompleted += () =>
-            //  {
-            //      App.Current.Dispatcher.Invoke(() =>
-            //      {
-            //          lock (UploadTasks)
-            //          {
-            //              UploadTasks.Remove(uploadTask);
-
-            //          }
-            //      });
-            //  };
+            await uploadTask.StartTaskAsync(parentUUID);
         }
 
         public static void NewUploadTask(Microsoft.Win32.OpenFileDialog openFileDialog, string parrentUUID)

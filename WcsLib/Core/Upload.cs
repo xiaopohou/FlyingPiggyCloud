@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Wangsu.WcsLib.HTTP;
 using Wangsu.WcsLib.Utility;
+using WcsLib.Core;
 using WcsLib.Exception;
 using WcsLib.Utility;
 
@@ -24,7 +25,7 @@ namespace Wangsu.WcsLib.Core
         /// <param name="UploadToken">Qingzhenyun返回的上传token</param>
         /// <param name="FilePath">文件的本地路径</param>
         /// <param name="UploadUrl">Qingzhenyun返回的上传地址</param>
-        public static void Start(string UploadToken, string FilePath, string UploadUrl,string Key=null, UploadProgressHandler uploadProgressHandler=null, UserCommandEventHandle userCommand=null)
+        public static void Start(string UploadToken, string FilePath, string UploadUrl,string Key=null, UploadProgressHandler uploadProgressHandler=null, UploadTaskOperator userCommand=null)
         {
             Config config = new Config(UploadUrl);
             string eTag = ETag.ComputeEtag(FilePath);
@@ -41,7 +42,7 @@ namespace Wangsu.WcsLib.Core
                 BinaryReader binaryReader = new BinaryReader(fileStream);
                 try
                 {
-                    userCommand?.Invoke(new object(),new EventArgs());
+                    userCommand.userCommand?.Invoke();
                     long blockCount = (dataSize + BLOCKSIZE - 1) / BLOCKSIZE;
                     string[] TotalContexts = new string[blockCount];
                     // 第一个分片不宜太大，因为可能遇到错误，上传太大是白费流量和时间！
@@ -51,7 +52,7 @@ namespace Wangsu.WcsLib.Core
                     uploadProgressHandler?.Invoke(Index * BLOCKSIZE, dataSize);
                     do
                     {
-                        userCommand?.Invoke(new object(), new EventArgs());
+                        userCommand.userCommand?.Invoke();
                         Index++;
                         TotalContexts[Index] = UploadBlock(binaryReader.ReadBytes(BLOCKSIZE), Index, su, UploadToken, Key);
                         uploadProgressHandler?.Invoke(Index * BLOCKSIZE < dataSize ? Index * BLOCKSIZE : dataSize, dataSize);
@@ -66,7 +67,7 @@ namespace Wangsu.WcsLib.Core
                 }
                 catch(OperatingAbortedException)
                 {
-                    //通过在userCommand委托中引发异常的方式终止上传任务
+                    throw new Exception("上传任务被用户取消");
                 }
                 finally
                 {
