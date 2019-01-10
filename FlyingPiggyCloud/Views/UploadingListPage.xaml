@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
-      xmlns:Controllers="clr-namespace:FlyingPiggyCloud.Controllers" x:Class="FlyingPiggyCloud.Views.UploadingListPage"
+      xmlns:Controllers="clr-namespace:FlyingPiggyCloud.Controllers"
+    xmlns:metro="clr-namespace:Arthas.Controls.Metro;assembly=Arthas" x:Class="FlyingPiggyCloud.Views.UploadingListPage"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="UploadingListPage">
@@ -33,12 +34,14 @@
             </DataTemplate>
 
             <DataTemplate x:Key="Progress">
-                <ProgressBar ToolTip="{Binding Status, Mode=OneWay}" Value="{Binding Progress, Mode=OneWay}" Height="15"/>
+                <metro:MetroProgressBar ToolTip="{Binding Status, Mode=OneWay}" Value="{Binding Progress, Mode=OneWay}" Height="15"/>
             </DataTemplate>
 
             <DataTemplate x:Key="Operates">
                 <StackPanel Orientation="Horizontal">
-                    <Button Height="15" Width="15" Style="{StaticResource CircleButton}" ToolTip="这个按钮并不能帮你取消上传任务" Click="Button_Click"/>
+                    <Button Margin="5,0" Background="DarkRed" Height="18" Width="18" Style="{StaticResource CircleButton}" ToolTip="这个按钮可以帮你取消上传任务" Click="Button_Click">
+                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/quxiao.png"/>
+                    </Button>
                 </StackPanel>
             </DataTemplate>
 
@@ -100,10 +103,10 @@
 
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                        <Setter Property="Background" Value="#FFF5F5F5"/>
+                        <Setter Property="Background" Value="#FFFFFFFF"/>
                     </Trigger>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="#FFFFFFFF"/>
+                        <Setter Property="Background" Value="#FFF5F5F5"/>
                     </Trigger>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="Background" Value="#FF2EC17C"/>
@@ -115,21 +118,17 @@
     </Page.Resources>
     <Grid>
         <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
-            <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0">
-                <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/last.png" Stretch="Fill"/>
-            </Button>
-
-            <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="45,0,0,0">
-                <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/next.png" Stretch="Fill"/>
+            <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="81" Style="{StaticResource ButtonBasicDesign}" Margin="96,0,0,0" Background="#FF2EC17C">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/垃圾箱.png"/>
+                    <TextBlock Text="全部取消" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FFFFFFFF"/>
+                </StackPanel>
             </Button>
         </Grid>
         
         <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" x:Name="UploadList" Margin="0,60,0,0">
             <ListView.View>
                 <GridView>
-                    <!--<GridViewColumn CellTemplate="{StaticResource CheckBox}">
-                        <CheckBox/>
-                    </GridViewColumn>-->
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileName}" CellTemplate="{StaticResource FileName}" Header="文件名"/>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperSize}" CellTemplate="{StaticResource Size}" Header="文件大小"/>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperStatus}" CellTemplate="{StaticResource Uploaded}" Header="已完成"/>

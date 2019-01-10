@@ -100,6 +100,7 @@
     </ApplicationDefinition>
     <Compile Include="Controllers\CheckTextForIsEnable.cs" />
     <Compile Include="Controllers\ConverterToolKits.cs" />
+    <Compile Include="Controllers\DownloadTaskPropertyConverter.cs" />
     <Compile Include="Controllers\FileSystemMethods.cs" />
     <Compile Include="Controllers\KeyboardFocusToVisibilityConverter.cs" />
     <Compile Include="Controllers\QingzhenyunLogicalProgress.cs" />

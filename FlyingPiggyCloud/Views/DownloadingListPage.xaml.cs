@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace FlyingPiggyCloud.Views
 {
@@ -98,6 +99,27 @@ namespace FlyingPiggyCloud.Views
         {
             InitializeComponent();
             DownloadList.ItemsSource = DownloadTasks;
+        }
+
+        private async void Stop_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var btn = (Button)sender;
+            var task = (DownloadTask)btn.DataContext;
+            await task.Stop();
+        }
+
+        private async void Pause_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var btn = (Button)sender;
+            var task = (DownloadTask)btn.DataContext;
+            if (task.Status==FlyingAria2c.DownloadTask.TaskAction.Paused)
+            {
+                await task.Start();
+            }
+            else
+            {
+                await task.Pause();
+            }
         }
     }
 }
