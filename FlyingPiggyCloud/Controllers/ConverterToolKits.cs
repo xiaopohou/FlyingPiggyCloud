@@ -3,7 +3,7 @@ using System.Text;
 
 namespace FlyingPiggyCloud.Controllers
 {
-    public static class ConverterToolKits
+    internal static class Calculators
     {
         private const float V = 1024f;
 
@@ -12,7 +12,7 @@ namespace FlyingPiggyCloud.Controllers
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static string UserMd5(string input)
+        internal static string UserMd5(string input)
         {
             byte[] data = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(input));
 
@@ -35,25 +35,25 @@ namespace FlyingPiggyCloud.Controllers
         /// <summary>
         /// 将单位为字节的文件尺寸表示为可读性良好的字符串
         /// </summary>
-        /// <param name="Size"></param>
+        /// <param name="size"></param>
         /// <returns></returns>
-        internal static string SizeCalculator(long Size)
+        internal static string SizeCalculator(long size)
         {
-            if (Size / V < 1)
+            if (size / V < 1)
             {
-                return ((float)Size).ToString("F2") + "B";
+                return ((float)size).ToString("F2") + "B";
             }
-            else if (Size / V / V < 1)
+            else if (size / V / V < 1)
             {
-                return (Size / V).ToString("F2") + "KB";
+                return (size / V).ToString("F2") + "KB";
             }
-            else if (Size / V / V / V < 1)
+            else if (size / V / V / V < 1)
             {
-                return (Size / V / V).ToString("F2") + "MB";
+                return (size / V / V).ToString("F2") + "MB";
             }
             else
             {
-                return (Size / V / V / V).ToString("F2") + "GB";
+                return (size / V / V / V).ToString("F2") + "GB";
             }
         }
     }

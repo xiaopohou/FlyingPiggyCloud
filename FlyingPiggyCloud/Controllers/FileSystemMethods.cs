@@ -8,7 +8,7 @@ namespace FlyingPiggyCloud.Controllers
 {
     public class FileSystemMethods : QingzhenyunRequestBase
     {
-        public FileSystemMethods(string BaseUri) : base(BaseUri)
+        public FileSystemMethods(string baseUri) : base(baseUri)
         {
 
         }
@@ -16,31 +16,31 @@ namespace FlyingPiggyCloud.Controllers
         /// <summary>
         /// 请求的时候，如果 name 和 path均为空，则会返回根目录
         /// </summary>
-        /// <param name="Parent">该文件夹的ID</param>
-        /// <param name="Path">路径</param>
-        /// <param name="Page">第几页</param>
-        /// <param name="PageSize">列表大小，最大值999</param>
+        /// <param name="parent">该文件夹的ID</param>
+        /// <param name="path">路径</param>
+        /// <param name="page">第几页</param>
+        /// <param name="pageSize">列表大小，最大值999</param>
         /// <param name="OrderBy">排序：0按文件名，1按时间</param>
         /// <param name="Type">文件类型：0显示文件，1显示文件夹，-1显示文件和文件夹(默认)</param>
         /// <returns></returns>
-        public async Task<PageResponseResult> GetDirectory(string Parent="", string Path = "", int? Page = null, int? PageSize = null , int? OrderBy = null, int? Type = null)
+        public async Task<PageResponseResult> GetDirectory(string parent="", string path = "", int? page = null, int? pageSize = null , int? OrderBy = null, int? Type = null)
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
-            if(Parent!="")
+            if(parent!="")
             {
-                data.Add("parent", Parent);
+                data.Add("parent", parent);
             }
-            if (Path != "")
+            if (path != "")
             {
-                data.Add("path", Path);
+                data.Add("path", path);
             }
-            if (Page != null)
+            if (page != null)
             {
-                data.Add("page", Page);
+                data.Add("page", page);
             }
-            if (PageSize != null)
+            if (pageSize != null)
             {
-                data.Add("pageSize", PageSize);
+                data.Add("pageSize", pageSize);
             }
             if (OrderBy != null)
             {

@@ -42,7 +42,7 @@ namespace FlyingPiggyCloud.Controllers
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "name", Name },
-                {"password", ConverterToolKits.UserMd5(Password) },
+                {"password", Calculators.UserMd5(Password) },
                 {"code",Code },
                 {"phoneInfo", PhoneInfo }
             };
@@ -62,7 +62,7 @@ namespace FlyingPiggyCloud.Controllers
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "value", Value },
-                { "password", ConverterToolKits.UserMd5(Password) }
+                { "password", Calculators.UserMd5(Password) }
             };
             var x = await PostAsync<LoginResponseResult>(JsonConvert.SerializeObject(data), "v1/user/login");
             Token = x.Token;
@@ -97,8 +97,8 @@ namespace FlyingPiggyCloud.Controllers
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
-                { "OldPassword", ConverterToolKits.UserMd5(OldPassword) },
-                {"newPassword", ConverterToolKits.UserMd5(NewPassword) },
+                { "OldPassword", Calculators.UserMd5(OldPassword) },
+                {"newPassword", Calculators.UserMd5(NewPassword) },
                 {"token",Token },
             };
             var x = await PostAsync<ResponseMessageBase>(JsonConvert.SerializeObject(data), "v1/user/changePassword");
@@ -134,7 +134,7 @@ namespace FlyingPiggyCloud.Controllers
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "phoneInfo", PhoneInfo },
-                {"newPassword", ConverterToolKits.UserMd5(NewPassword) },
+                {"newPassword", Calculators.UserMd5(NewPassword) },
                 {"code",Code },
             };
             var x = await PostAsync<ChangePasswordResponesResult>(JsonConvert.SerializeObject(data), "v1/user/changePasswordByMessage2");

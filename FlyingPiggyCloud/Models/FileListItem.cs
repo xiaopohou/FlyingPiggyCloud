@@ -190,7 +190,7 @@ namespace FlyingPiggyCloud.Models
         /// <summary>
         /// 文件大小
         /// </summary>
-        public string Size => Controllers.ConverterToolKits.SizeCalculator(MetaData.Size);
+        public string Size => Controllers.Calculators.SizeCalculator(MetaData.Size);
 
         /// <summary>
         /// 下载地址

@@ -98,7 +98,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controllers\CheckTextForIsEnable.cs" />
     <Compile Include="Controllers\ConverterToolKits.cs" />
     <Compile Include="Controllers\DownloadTaskPropertyConverter.cs" />
     <Compile Include="Controllers\FileSystemMethods.cs" />

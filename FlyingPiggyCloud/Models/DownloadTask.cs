@@ -13,7 +13,7 @@ namespace FlyingPiggyCloud.Models
 
         public string FileName => fileMetaData.Name;
 
-        public string Size => Controllers.ConverterToolKits.SizeCalculator(fileMetaData.Size);
+        public string Size => Controllers.Calculators.SizeCalculator(fileMetaData.Size);
 
         public new async Task RefreshStatus()
         {

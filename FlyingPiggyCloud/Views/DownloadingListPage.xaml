@@ -66,15 +66,9 @@
     <Grid>
         <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
             <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0">
-                <!--<Button.Effect>
-                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
-                </Button.Effect>-->
                 <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/last.png" Stretch="Fill"/>
             </Button>
             <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="45,0,0,0">
-                <!--<Button.Effect>
-                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
-                </Button.Effect>-->
                 <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/next.png" Stretch="Fill"/>
             </Button>
             <Button Width="111" Height="25" x:Name="NewFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="218,0,0,0" Background="#FFFFFF">
@@ -96,7 +90,7 @@
                 </StackPanel>
             </Button>
         </Grid>
-        <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" x:Name="DownloadList" Margin="0,60,0,0">
+        <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2" x:Name="DownloadList" Margin="0,60,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileName}" CellTemplate="{StaticResource FileName}" Header="文件名"/>
