@@ -18,11 +18,11 @@ namespace FlyingPiggyCloud.Views
         /// </summary>
         private static ObservableCollection<DownloadTask> DownloadTasks = new ObservableCollection<Models.DownloadTask>();
 
-        private static System.Timers.Timer timer = new System.Timers.Timer(500d);
+        private static System.Timers.Timer refreshTimer = new System.Timers.Timer(500d);
 
         public static async Task RefreshStatus()
         {
-            timer.Enabled = false;
+            refreshTimer.Enabled = false;
 
             List<DownloadTask> Completed = new List<DownloadTask>();
             try
@@ -44,6 +44,7 @@ namespace FlyingPiggyCloud.Views
                             Completed.Add(a);
                         }
                     }
+
                     if (Completed.Count != 0)
                     {
                         App.Current.Dispatcher.Invoke(() =>
@@ -67,10 +68,7 @@ namespace FlyingPiggyCloud.Views
             }
             finally
             {
-                if (DownloadTasks.Count != 0)
-                {
-                    timer.Enabled = true;
-                }
+                refreshTimer.Enabled = true;
             }
         }
 
@@ -84,15 +82,12 @@ namespace FlyingPiggyCloud.Views
                     DownloadTasks.Add(downloadTask);
                 }
             });
-            timer.Enabled = true;
         }
 
         static DownloadingListPage()
         {
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(async (sender, e) =>
-              {
-                  await RefreshStatus();
-              });
+            refreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(async (sender, e) => await RefreshStatus());
+            refreshTimer.Enabled = true;
         }
 
         public DownloadingListPage()
@@ -120,6 +115,30 @@ namespace FlyingPiggyCloud.Views
             {
                 await task.Pause();
             }
+        }
+
+        private async void PauseAll_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var list = DownloadList.SelectedItems;
+            if(list.Count!=0)
+            {
+                foreach (DownloadTask downloadTask in list)
+                {
+                    await downloadTask.Pause();
+                }
+            }
+            else
+            {
+                await FlyingAria2c.DownloadTask.PauseAll();
+            }
+            DownloadList.SelectedItem = null;
+            
+        }
+
+        private async void StartAll_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await FlyingAria2c.DownloadTask.StartAll();
+            DownloadList.SelectedItem = null;
         }
     }
 }

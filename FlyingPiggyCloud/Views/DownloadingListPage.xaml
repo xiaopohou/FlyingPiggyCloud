@@ -15,6 +15,7 @@
                 <ResourceDictionary Source="/FlyingPiggyCloud;component/Resources/ControlStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Controllers:DownloadTaskPropertyConverter x:Key="DownloadTaskPropertyConverter"/>
+            
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
             </Style>
@@ -39,7 +40,6 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Margin="5,0" x:Name="Stop" Height="18" Width="18" Style="{StaticResource CircleButton}" Click="Stop_Click" Background="DarkRed"/>
                     <Button Margin="5,0" x:Name="Pause" Height="18" Width="18" Style="{StaticResource CircleButton}" Click="Pause_Click"/>
-                    <!--<Button Height="15" Width="15" Style="{StaticResource CircleButton}"/>-->
                 </StackPanel>
             </DataTemplate>
 
@@ -47,7 +47,6 @@
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Setter Property="Margin" Value="0"/>
                 <Setter Property="Height" Value="36"/>
-                <!--<EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>-->
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                         <Setter Property="Background" Value="#FFF5F5F5"/>
@@ -63,32 +62,24 @@
 
         </ResourceDictionary>
     </Page.Resources>
+    
     <Grid>
         <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
-            <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0">
-                <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/last.png" Stretch="Fill"/>
-            </Button>
-            <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="45,0,0,0">
-                <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/next.png" Stretch="Fill"/>
-            </Button>
-            <Button Width="111" Height="25" x:Name="NewFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="218,0,0,0" Background="#FFFFFF">
-                <!--<Button.Effect>
-                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
-                </Button.Effect>-->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/暂停.png"/>
-                    <TextBlock Text="全部暂停" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#5A5A5A"/>
-                </StackPanel>
-            </Button>
-            <Button Width="111" Height="25" x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="97,0,0,0" Background="#FFFFFF">
-                <!--<Button.Effect>
-                    <DropShadowEffect ShadowDepth="0" BlurRadius="3"/>
-                </Button.Effect>-->
+
+            <Button Width="111" Height="25" x:Name="StartAll" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="97,0,0,0" Background="#FFFFFF" Click="StartAll_Click">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/正在下载.png"/>
                     <TextBlock Text="全部开始" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#5A5A5A"/>
                 </StackPanel>
             </Button>
+            
+            <Button Width="111" Height="25" x:Name="PauseAll" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="218,0,0,0" Background="#FFFFFF" Click="PauseAll_Click">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/暂停.png"/>
+                    <TextBlock Text="全部暂停" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#5A5A5A"/>
+                </StackPanel>
+            </Button>
+            
         </Grid>
         <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2" x:Name="DownloadList" Margin="0,60,0,0">
             <ListView.View>
@@ -100,7 +91,6 @@
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperOperator}" CellTemplate="{StaticResource Operates}" Header="操作"/>
                 </GridView>
             </ListView.View>
-            <!--<ListViewItem Content="test" Height="50"/>-->
         </ListView>
         <Grid VerticalAlignment="Top">
             <Grid.ColumnDefinitions>

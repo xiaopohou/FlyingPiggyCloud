@@ -108,7 +108,11 @@ namespace FlyingAria2c
 
         public async Task Pause() => await Aria2Methords.Pause(Downloader.RpcConnection, Gid);
 
+        public static async Task PauseAll() => await Aria2Methords.PauseAll(Downloader.RpcConnection);
+
         public async Task Start() => await Aria2Methords.UpPause(Downloader.RpcConnection, Gid);
+
+        public static async Task StartAll() => await Aria2Methords.UpPauseAll(Downloader.RpcConnection);
 
         public async Task Stop() => await Aria2Methords.Remove(Downloader.RpcConnection, Gid);
 
