@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Arthas;
 using Arthas.Controls.Metro;
 
@@ -142,19 +144,44 @@ namespace FlyingPiggyCloud.Views
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            PageNavigate s = (PageNavigate)value;
-            return s == (PageNavigate)int.Parse(parameter.ToString());
+                PageNavigate s = (PageNavigate)value;
+                return s == (PageNavigate)int.Parse(parameter.ToString());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool isChecked = (bool)value;
-            if (!isChecked)
-            {
-                return null;
-            }
-            return (PageNavigate)int.Parse(parameter.ToString());
+                bool isChecked = (bool)value;
+                if (!isChecked)
+                {
+                    return null;
+                }
+                return (PageNavigate)int.Parse(parameter.ToString());
         }
+    }
+
+    internal class LeftRadioButtonIcon:IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool isChecked = (bool)value;
+            if(parameter==null)
+            {
+                return isChecked ? new SolidColorBrush(new Color { A = 255, R = 255, G = 255, B = 255 }) : new SolidColorBrush(new Color { A = 255, R = 0, G = 0, B = 0 });
+            }
+            else
+            {
+                string icon = (string)parameter;
+                string iconPath = (isChecked ? "pack://application:,,,/Resources/White/" : @"pack://application:,,,/Resources/Grey/") + icon;
+                return new BitmapImage(new Uri(iconPath));
+                //return iconPath;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new Exception("图标转换器不支持反向转换");
+        }
+
     }
 
     public enum PageNavigate

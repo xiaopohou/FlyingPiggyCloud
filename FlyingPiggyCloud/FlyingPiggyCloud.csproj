@@ -26,7 +26,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -134,6 +134,12 @@
     <Compile Include="Views\MainFrameWork.xaml.cs">
       <DependentUpon>MainFrameWork.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MetroLikeMainWindow.xaml.cs">
+      <DependentUpon>MetroLikeMainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MetroLikeMainWindow2.xaml.cs">
+      <DependentUpon>MetroLikeMainWindow2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RecoveryBoxPage.xaml.cs">
       <DependentUpon>RecoveryBoxPage.xaml</DependentUpon>
     </Compile>
@@ -186,6 +192,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainFrameWork.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MetroLikeMainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MetroLikeMainWindow2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -398,6 +412,68 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Green\Add.png" />
+    <Resource Include="Resources\Green\AddCircle.png" />
+    <Resource Include="Resources\Green\AddFolder.png" />
+    <Resource Include="Resources\Green\AddText.png" />
+    <Resource Include="Resources\Green\Clean.png" />
+    <Resource Include="Resources\Green\Close.png" />
+    <Resource Include="Resources\Green\Copy.png" />
+    <Resource Include="Resources\Green\Cut.png" />
+    <Resource Include="Resources\Green\Download.png" />
+    <Resource Include="Resources\Green\Exchange.png" />
+    <Resource Include="Resources\Green\Function.png" />
+    <Resource Include="Resources\Green\More.png" />
+    <Resource Include="Resources\Green\Rename.png" />
+    <Resource Include="Resources\Green\SelectBasic.png" />
+    <Resource Include="Resources\Green\Selected.png" />
+    <Resource Include="Resources\Green\SelectNull.png" />
+    <Resource Include="Resources\Green\Set.png" />
+    <Resource Include="Resources\Green\Stick.png" />
+    <Resource Include="Resources\Green\Upload.png" />
+    <Resource Include="Resources\Green\UploadText.png" />
+    <Resource Include="Resources\Grey\AddBasic.png" />
+    <Resource Include="Resources\Grey\AddCircle.png" />
+    <Resource Include="Resources\Grey\AddFolder.png" />
+    <Resource Include="Resources\Grey\AddText.png" />
+    <Resource Include="Resources\Grey\Clean.png" />
+    <Resource Include="Resources\Grey\Close.png" />
+    <Resource Include="Resources\Grey\Copy.png" />
+    <Resource Include="Resources\Grey\Cut.png" />
+    <Resource Include="Resources\Grey\Download.png" />
+    <Resource Include="Resources\Grey\Exchange.png" />
+    <Resource Include="Resources\Grey\Function.png" />
+    <Resource Include="Resources\Grey\More.png" />
+    <Resource Include="Resources\Grey\Rename.png" />
+    <Resource Include="Resources\Grey\SelectBasic.png" />
+    <Resource Include="Resources\Grey\Selected.png" />
+    <Resource Include="Resources\Grey\SelectNull.png" />
+    <Resource Include="Resources\Grey\Set.png" />
+    <Resource Include="Resources\Grey\Stick.png" />
+    <Resource Include="Resources\Grey\Upload.png" />
+    <Resource Include="Resources\Grey\UploadText.png" />
+    <Resource Include="Resources\White\Add.png" />
+    <Resource Include="Resources\White\AddCircle.png" />
+    <Resource Include="Resources\White\AddFolder.png" />
+    <Resource Include="Resources\White\AddText.png" />
+    <Resource Include="Resources\White\Clean.png" />
+    <Resource Include="Resources\White\Close.png" />
+    <Resource Include="Resources\White\Copy.png" />
+    <Resource Include="Resources\White\Cut.png" />
+    <Resource Include="Resources\White\Download.png" />
+    <Resource Include="Resources\White\Exchange.png" />
+    <Resource Include="Resources\White\Function.png" />
+    <Resource Include="Resources\White\More.png" />
+    <Resource Include="Resources\White\Rename.png" />
+    <Resource Include="Resources\White\SelectBasic.png" />
+    <Resource Include="Resources\White\Selected.png" />
+    <Resource Include="Resources\White\SelectNull.png" />
+    <Resource Include="Resources\White\Set.png" />
+    <Resource Include="Resources\White\Stick.png" />
+    <Resource Include="Resources\White\Upload.png" />
+    <Resource Include="Resources\White\UploadText.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

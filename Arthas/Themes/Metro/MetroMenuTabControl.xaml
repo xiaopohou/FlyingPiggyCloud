@@ -18,6 +18,7 @@
                 <ControlTemplate TargetType="{x:Type Metro:MetroMenuTabControl}">
                     <Grid Background="#00000000" KeyboardNavigation.TabNavigation="Local">
                         <Grid.ColumnDefinitions>
+                            <!--<ColumnDefinition x:Name="column0" Width="Auto"/>-->
                             <ColumnDefinition x:Name="column1" Width="Auto"/>
                             <ColumnDefinition x:Name="column2"/>
                         </Grid.ColumnDefinitions>
@@ -133,7 +134,8 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Grid x:Name="tab" MinWidth="44" Width="{Binding ActualWidth,ElementName=tabWidth}" Grid.Column="0" KeyboardNavigation.TabIndex="1" Panel.ZIndex="1" Background="{TemplateBinding BorderBrush}">
+                        <!--<Grid Grid.Column="0"/>-->
+                        <Grid x:Name="tab" Grid.Column="0" MinWidth="44" Width="{Binding ActualWidth,ElementName=tabWidth}" KeyboardNavigation.TabIndex="1" Panel.ZIndex="1" Background="{TemplateBinding BorderBrush}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>

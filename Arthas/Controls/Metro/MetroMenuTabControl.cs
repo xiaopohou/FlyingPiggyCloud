@@ -11,12 +11,14 @@ namespace Arthas.Controls.Metro
         public static readonly DependencyProperty TabPanelVerticalAlignmentProperty = ElementBase.Property<MetroMenuTabControl, VerticalAlignment>(nameof(TabPanelVerticalAlignmentProperty), VerticalAlignment.Top);
         public static readonly DependencyProperty OffsetProperty = ElementBase.Property<MetroMenuTabControl, Thickness>(nameof(OffsetProperty), new Thickness(0));
         public static readonly DependencyProperty IconModeProperty = ElementBase.Property<MetroMenuTabControl, bool>(nameof(IconModeProperty), false);
+        //public static readonly DependencyProperty HeaderProperty = ElementBase.Property<MetroMenuTabControl, Grid>(nameof(HeaderProperty));
 
         public static RoutedUICommand IconModeClickCommand = ElementBase.Command<MetroMenuTabControl>(nameof(IconModeClickCommand));
 
         public VerticalAlignment TabPanelVerticalAlignment { get { return (VerticalAlignment)GetValue(TabPanelVerticalAlignmentProperty); } set { SetValue(TabPanelVerticalAlignmentProperty, value); } }
         public Thickness Offset { get { return (Thickness)GetValue(OffsetProperty); } set { SetValue(OffsetProperty, value); } }
         public bool IconMode { get { return (bool)GetValue(IconModeProperty); } set { SetValue(IconModeProperty, value); GoToState(); } }
+        //public Grid Header { get { return (Grid)GetValue(HeaderProperty); } set { SetValue(HeaderProperty, value); } }
 
         void GoToState()
         {
