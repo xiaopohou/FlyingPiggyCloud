@@ -13,6 +13,7 @@
 
         <Setter Property="Height" Value="32"/>
         <Setter Property="Background" Value="{StaticResource Brush}"/>
+        <Setter Property="Foreground" Value="#FFFFFFFF"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Metro:MetroTitleMenuItem}">
@@ -29,8 +30,8 @@
                                 <ColumnDefinition Width="0" x:Name="subWidth"/>
                             </Grid.ColumnDefinitions>
                             <Image x:Name="icon" Source="{TemplateBinding Icon}" Width="12" Height="12" Margin="10,0,0,0"/>
-                            <Metro:MetroTextBlock Grid.Column="1" Text="{TemplateBinding Header}" Foreground="#ffffff" Margin="10,0"/>
-                            <Polyline Grid.Column="2" Points="0,0 5,5 10,0" Stroke="#ffffff" VerticalAlignment="Center"  Margin="0,0,10,0"/>
+                            <Metro:MetroTextBlock Grid.Column="1" Text="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" Margin="10,0"/>
+                            <Polyline Grid.Column="2" Points="0,0 5,5 10,0" Stroke="{TemplateBinding Foreground}" VerticalAlignment="Center"  Margin="0,0,10,0"/>
                         </Grid>
                         <Rectangle Grid.Column="3" Fill="#ffffff" Opacity="0.2" Height="12"/>
                         <Popup x:Name="PART_Popup" AllowsTransparency="True" Focusable="False" HorizontalOffset="-20" VerticalOffset="-10" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="Fade" Placement="Bottom">

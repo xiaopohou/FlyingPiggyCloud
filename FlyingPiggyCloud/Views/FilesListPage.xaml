@@ -93,7 +93,6 @@
             <Style x:Key="NameTextBox" TargetType="{x:Type TextBox}">
                 <Setter Property="Foreground" Value="#FF5A5A5A"/>
                 <Setter Property="FontSize" Value="16"/>
-                <Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
                 <Setter Property="Background" Value="{x:Null}"/>
                 <Setter Property="BorderBrush" Value="{x:Null}"/>
                 <Setter Property="Template">
@@ -191,31 +190,31 @@
 
             <DataTemplate x:Key="MetaSize">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A" Text="{Binding Size}"/>
-                </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="MetaMTime">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A" Text="{Binding MTime}"/>
+                    <TextBlock Foreground="#FF5A5A5A" Text="{Binding Size}"/>
                 </StackPanel>
             </DataTemplate>
             
-
+            <DataTemplate x:Key="MetaMTime">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Foreground="#FF5A5A5A" Text="{Binding MTime}"/>
+                </StackPanel>
+            </DataTemplate>
+            
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
         <!--上方栏-->
-        <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
-            <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="189,0,0,0" Background="#FFFFFFFF" Click="NewFolderButton_Click">
+        <Grid Background="White" Height="60" Margin="0" VerticalAlignment="Top">
+            <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="189,0,0,0" Background="#FFFFFFFF" Click="NewFolderButton_Click" BorderBrush="#FFEDEDED">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/tianjiashangpin.png"/>
-                    <TextBlock Text="新建文件夹" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FF5A5A5A"/>
+                    <TextBlock Text="新建文件夹" Foreground="#FF5A5A5A"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="81" Style="{StaticResource ButtonBasicDesign}" Margin="96,0,0,0" Background="#FF2EC17C" Click="UploadButton_Click">
+            <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="81" Style="{StaticResource ButtonBasicDesign}" Margin="96,0,0,0" Background="{StaticResource MainFocusColorBrush}" BorderBrush="{StaticResource MainFocusColorBrush}" Click="UploadButton_Click">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/上传.png"/>
-                    <TextBlock Text="上传" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" Foreground="#FFFFFFFF"/>
+                    <TextBlock Text="上传" Foreground="#FFFFFFFF"/>
                 </StackPanel>
             </Button>
             <Button x:Name="Previous" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0" Click="Previous_Click">
@@ -226,7 +225,7 @@
             </Button>
         </Grid>
         <!--地址栏-->
-        <ListBox x:Name="AddressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top" SelectionChanged="AddressBar_SelectionChanged">
+        <ListBox x:Name="AddressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top" SelectionChanged="AddressBar_SelectionChanged" BorderBrush="{x:Null}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>
@@ -235,14 +234,14 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Foreground="#FF5A5A5A" Text="{Binding}" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
+                        <TextBlock Foreground="#FF5A5A5A" Text="{Binding}"/>
                         <Image Height="11" Source="/Resources/next.png"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ListView Background="#FFF5F5F5" x:Name="FileListView" Margin="0,84,0,0" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
+        <ListView Background="White" x:Name="FileListView" Margin="0,84,0,0" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName,Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />

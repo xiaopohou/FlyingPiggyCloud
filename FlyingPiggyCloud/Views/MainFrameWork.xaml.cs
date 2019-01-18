@@ -138,6 +138,18 @@ namespace FlyingPiggyCloud.Views
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("并没有什么需要设置的地方");
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            Controllers.RegistryManager.IsAutoLogin = false;
+            Controllers.RegistryManager.Token = null;
+            Application.Current.Shutdown();
+        }
     }
 
     internal class LeftRadioButton : IValueConverter

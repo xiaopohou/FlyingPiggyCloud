@@ -112,7 +112,7 @@
             <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
             <Style x:Key="ButtonBasicDesign" TargetType="{x:Type Button}">
                 <Setter Property="Height" Value="25"/>
-                <Setter Property="BorderBrush" Value="#FFB9B9B9"/>
+                <Setter Property="BorderBrush" Value="#FFEDEDED"/>
                 <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
                 <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
@@ -231,24 +231,20 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
-            <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal"/>
-            </Style>
-
+            
             <!--ListViewHeaderStyle-->
             <Style TargetType="{x:Type GridViewColumnHeader}">
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <Setter Property="Foreground" Value="#FF848484" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                            <Border BorderThickness="0,0,1,0" Background="Transparent" BorderBrush="LightGray">
-                                <TextBlock Foreground="#FF5A5A5A" x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5" Width="{TemplateBinding Width}" TextAlignment="Center" FontFamily="/FlyingPiggyCloud;component/Resources/#Source Han Sans SC Normal" />
+                            <Border BorderThickness="0" Background="#FFF9F9F9" BorderBrush="LightGray" Height="35">
+                                <TextBlock Foreground="{TemplateBinding Foreground}" x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5" Width="{TemplateBinding Width}" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"/>
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="OverridesDefaultStyle" Value="True" />
-                <Setter Property="Foreground" Value="Black" />
             </Style>
 
             <Style TargetType="ListView">
