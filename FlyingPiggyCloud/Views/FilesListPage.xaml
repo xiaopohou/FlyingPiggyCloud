@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
-      xmlns:Controllers="clr-namespace:FlyingPiggyCloud.Controllers" x:Name="page" x:Class="FlyingPiggyCloud.Views.FilesListPage"
+      xmlns:Controllers="clr-namespace:FlyingPiggyCloud.Controllers"
+    xmlns:metro="clr-namespace:Arthas.Controls.Metro;assembly=Arthas" x:Name="page" x:Class="FlyingPiggyCloud.Views.FilesListPage"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="FilesListPage">
@@ -13,7 +14,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FlyingPiggyCloud;component/Resources/ControlStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
             <SolidColorBrush x:Key ="{x:Static SystemColors.HighlightBrushKey}" Color ="Red"/>
+
             <Controllers:KeyboardFocusToVisibilityConverter x:Key="KeyboardFocusToVisibilityConverter"/>
 
             <!--ListView的斑马纹-->
@@ -140,28 +143,28 @@
                     </StackPanel>
                     <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="MoreBotton" Style="{StaticResource CircleButton}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
                         <Button.ContextMenu>
-                            <ContextMenu x:Name="MoreButtonMenu">
+                            <metro:MetroContextMenu x:Name="MoreButtonMenu" Background="{StaticResource MainFocusColorBrush}" Foreground="White">
                                 <MenuItem Header="移动">
                                     <MenuItem.Icon>
-                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/piliangdaochu.png"/>
+                                        <Image Source="/FlyingPiggyCloud;component/Resources/White/Cut.png"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="复制">
                                     <MenuItem.Icon>
-                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/piliangshangchuan.png"/>
+                                        <Image Source="/FlyingPiggyCloud;component/Resources/White/Copy.png"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <!--<MenuItem Header="重命名" Click="MenuItem_Click">
                                     <MenuItem.Icon>
-                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/bianji.png"/>
+                                        <Image Source="/FlyingPiggyCloud;component/Resources/White/Rename.png"/>
                                     </MenuItem.Icon>
                                 </MenuItem>-->
                                 <MenuItem x:Name="Delete" Header="删除" Click="Delete_Click">
                                     <MenuItem.Icon>
-                                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/shanchu.png"/>
+                                        <Image Source="/FlyingPiggyCloud;component/Resources/White/Clean.png"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                            </ContextMenu>
+                            </metro:MetroContextMenu>
                         </Button.ContextMenu>
                         <Image Width="20" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/datuzhanshi.png" />
                     </Button>
@@ -193,19 +196,73 @@
                     <TextBlock Foreground="#FF5A5A5A" Text="{Binding Size}"/>
                 </StackPanel>
             </DataTemplate>
-            
+
             <DataTemplate x:Key="MetaMTime">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Foreground="#FF5A5A5A" Text="{Binding MTime}"/>
                 </StackPanel>
             </DataTemplate>
             
+            <!--<SolidColorBrush x:Key="Item.MouseOver.Background" Color="#1F26A0DA"/>
+            <SolidColorBrush x:Key="Item.MouseOver.Border" Color="#a826A0Da"/>
+            <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#3DDADADA"/>
+            <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#FFDADADA"/>
+            <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="#3D26A0DA"/>
+            <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="#FF26A0DA"/>-->
+            <Style x:Key="AddressBarItemStyle" TargetType="{x:Type ListBoxItem}">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Padding" Value="4,1"/>
+                <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+                <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" TargetName="Bd" Value="{StaticResource MainFocusColorBrush}"/>
+                                    <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource MainFocusColorBrush}"/>
+                                </MultiTrigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                        <Condition Property="IsSelected" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" TargetName="Bd" Value="#3DDADADA"/>
+                                    <Setter Property="BorderBrush" TargetName="Bd" Value="#FFDADADA"/>
+                                </MultiTrigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                        <Condition Property="IsSelected" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" TargetName="Bd" Value="#3D61BF83"/>
+                                    <Setter Property="BorderBrush" TargetName="Bd" Value="#FF61BF83"/>
+                                </MultiTrigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
         <!--上方栏-->
         <Grid Background="White" Height="60" Margin="0" VerticalAlignment="Top">
-            <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="189,0,0,0" Background="#FFFFFFFF" Click="NewFolderButton_Click" BorderBrush="#FFEDEDED">
+            <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="189,0,0,0" Background="#FFFFFFFF" Click="NewFolderButton_Click">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/tianjiashangpin.png"/>
                     <TextBlock Text="新建文件夹" Foreground="#FF5A5A5A"/>
@@ -217,15 +274,15 @@
                     <TextBlock Text="上传" Foreground="#FFFFFFFF"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="Previous" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0" Click="Previous_Click">
+            <Button x:Name="Previous" BorderBrush="#FFEDEDED" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0" Click="Previous_Click">
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/fanhui.png" Stretch="Fill"/>
             </Button>
-            <Button x:Name="Next" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="40,0,0,0" Click="Next_Click">
+            <Button x:Name="Next" BorderBrush="#FFEDEDED" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Style="{StaticResource ButtonBasicDesign}" Margin="40,0,0,0" Click="Next_Click">
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/jinru.png" Stretch="Fill"/>
             </Button>
         </Grid>
         <!--地址栏-->
-        <ListBox x:Name="AddressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top" SelectionChanged="AddressBar_SelectionChanged" BorderBrush="{x:Null}">
+        <ListBox x:Name="AddressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top" SelectionChanged="AddressBar_SelectionChanged" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource AddressBarItemStyle}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>

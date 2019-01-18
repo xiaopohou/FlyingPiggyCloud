@@ -241,13 +241,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\SourceHanSansSC-Bold.otf" />
-    <None Include="Resources\SourceHanSansSC-ExtraLight.otf" />
-    <None Include="Resources\SourceHanSansSC-Heavy.otf" />
-    <None Include="Resources\SourceHanSansSC-Light.otf" />
-    <None Include="Resources\SourceHanSansSC-Medium.otf" />
-    <None Include="Resources\SourceHanSansSC-Normal.otf" />
-    <None Include="Resources\SourceHanSansSC-Regular.otf" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\BasicLogo.png" />

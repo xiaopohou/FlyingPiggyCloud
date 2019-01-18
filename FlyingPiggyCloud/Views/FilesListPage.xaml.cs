@@ -109,7 +109,7 @@ namespace FlyingPiggyCloud.Views
             //System.Threading.Thread.Sleep(200);
             lock (fileList)
             {
-                fileList.Refresh(this, new System.EventArgs());
+                fileList.Remove((FileListItem)x.DataContext);
             }
         }
 

@@ -117,26 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="SourceHanSansSC_Bold" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SourceHanSansSC-Bold.otf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="SourceHanSansSC_ExtraLight" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SourceHanSansSC-ExtraLight.otf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="SourceHanSansSC_Heavy" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SourceHanSansSC-Heavy.otf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="SourceHanSansSC_Light" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SourceHanSansSC-Light.otf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="SourceHanSansSC_Medium" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SourceHanSansSC-Medium.otf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="SourceHanSansSC_Normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SourceHanSansSC-Normal.otf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="SourceHanSansSC_Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SourceHanSansSC-Regular.otf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>
