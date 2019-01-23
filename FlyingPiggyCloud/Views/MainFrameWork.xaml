@@ -172,12 +172,12 @@
                                     </StackPanel>
                                 </RadioButton>
 
-                                <RadioButton x:Name="radioButton6" IsChecked="{Binding CurrentPage, ConverterParameter=6, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
+                                <!--<RadioButton x:Name="radioButton6" IsChecked="{Binding CurrentPage, ConverterParameter=6, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                                         <Image Height="16" Margin="0,0,5,0" Source="{Binding IsChecked, ConverterParameter=Clean.png, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton6, Mode=OneWay}" Stretch="Fill"/>
                                         <TextBlock TextWrapping="Wrap" Text="垃圾箱" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{Binding IsChecked, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton6, Mode=OneWay}"/>
                                     </StackPanel>
-                                </RadioButton>
+                                </RadioButton>-->
 
                                 <Border Height="28"/>
 

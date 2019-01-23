@@ -4,16 +4,21 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
+using FlyingPiggyCloud.Controllers;
 
 namespace FlyingPiggyCloud.Models
 {
-    internal class DownloadTask : FlyingAria2c.DownloadTask, INotifyPropertyChanged
+    internal class DownloadTask : FlyingAria2c.DownloadTask, INotifyPropertyChanged,ICompletedTask
     {
         private readonly FileMetaData fileMetaData;
 
         public string FileName => fileMetaData.Name;
 
-        public string Size => Controllers.Calculators.SizeCalculator(fileMetaData.Size);
+        public string Size => Calculators.SizeCalculator(fileMetaData.Size);
+
+        public TaskTypeEnum TaskType => TaskTypeEnum.Download;
+
+        public string FilePath { get; set; }
 
         public new async Task RefreshStatus()
         {

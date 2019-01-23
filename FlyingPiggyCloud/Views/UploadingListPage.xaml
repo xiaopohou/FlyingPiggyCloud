@@ -113,16 +113,16 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
-        <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
-            <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="81" Style="{StaticResource ButtonBasicDesign}" Margin="96,0,0,0" Background="#FF2EC17C">
+        <Grid Background="White" Height="60" Margin="0" VerticalAlignment="Top">
+            <Button x:Name="CancelAll" Width="111" Height="25" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="97,0,0,0" Background="#FFFFFF" Click="CancelAll_Click" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/垃圾箱.png"/>
-                    <TextBlock Text="全部取消" Foreground="#FFFFFFFF"/>
+                    <Image Height="16" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/Grey/Clean.png"/>
+                    <TextBlock Text="全部取消" Foreground="#5A5A5A"/>
                 </StackPanel>
             </Button>
         </Grid>
         
-        <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" x:Name="UploadList" Margin="0,60,0,0">
+        <ListView Background="White"  ItemContainerStyle="{StaticResource alternatingStyle}" x:Name="UploadList" Margin="0,60,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileName}" CellTemplate="{StaticResource FileName}" Header="文件名"/>

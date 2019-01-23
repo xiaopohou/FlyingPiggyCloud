@@ -35,5 +35,10 @@ namespace FlyingPiggyCloud.Views
             InitializeComponent();
             CompletedList.ItemsSource = CompletedTasks;
         }
+
+        private void UploadButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CompletedTasks.Clear();
+        }
     }
 }

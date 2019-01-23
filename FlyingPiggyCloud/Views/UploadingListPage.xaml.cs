@@ -57,5 +57,14 @@ namespace FlyingPiggyCloud.Views
             var t = (UploadTask)s.DataContext;
             t.Cancel();
         }
+
+        private void CancelAll_Click(object sender, RoutedEventArgs e)
+        {
+            foreach(UploadTask a in UploadTasks)
+            {
+                a.Cancel();
+            }
+            UploadTasks.Clear();
+        }
     }
 }

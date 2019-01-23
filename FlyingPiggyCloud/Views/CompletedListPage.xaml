@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
+      xmlns:metro="clr-namespace:Arthas.Controls.Metro;assembly=Arthas"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="CompletedListPage">
@@ -22,10 +23,24 @@
                 <TextBlock Text="{Binding Status}"/>
             </DataTemplate>
             <DataTemplate x:Key="Operates">
-                <StackPanel>
-                    <Button Style="{StaticResource SimpleButton}"/>
-                    <Button Style="{StaticResource SimpleButton}"/>
-                    <Button Style="{StaticResource SimpleButton}"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource ButtonBasicDesign}" Background="White" Margin="2" Width="24" Height="24">
+                        <Button.ContextMenu>
+                            <metro:MetroContextMenu>
+                                <MenuItem Header="打开项目">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Resources/Grey/SelectBasic.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="打开位置">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Resources/Grey/Function.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </metro:MetroContextMenu>
+                        </Button.ContextMenu>
+                        <Image Width="16" Source="/FlyingPiggyCloud;component/Resources/Grey/More.png"/>
+                    </Button>
                 </StackPanel>
             </DataTemplate>
             
@@ -49,22 +64,16 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
-        <Grid Background="#FFF5F5F5" Height="60" Margin="0" VerticalAlignment="Top">
-            <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="10,0,0,0">
-                <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/last.png" Stretch="Fill"/>
-            </Button>
-            <Button Width="32" Height="25" Background="White" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="45,0,0,0">
-                <Image Width="12" Height="16" Source="/FlyingPiggyCloud;component/Resources/next.png" Stretch="Fill"/>
-            </Button>
-            <Button Width="111" Height="25" Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#FFB9B9B9" Style="{StaticResource ButtonBasicDesign}" Margin="97,0,0,0" Background="#FFFFFF">
+        <Grid Background="White" Height="60" Margin="0" VerticalAlignment="Top">
+            <Button Width="111" Height="25" Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="97,0,0,0" Background="#FFFFFF" Click="UploadButton_Click">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/正在下载.png"/>
-                    <TextBlock Text="全部开始" Foreground="#5A5A5A"/>
+                    <Image Height="16" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/Grey/Clean.png"/>
+                    <TextBlock Text="清除记录" Foreground="#FF5A5A5A"/>
                 </StackPanel>
             </Button>
         </Grid>
 
-        <ListView Background="#FFF5F5F5"  ItemContainerStyle="{StaticResource alternatingStyle}" Name="CompletedList" Margin="0,60,0,0">
+        <ListView Background="White"  ItemContainerStyle="{StaticResource alternatingStyle}" Name="CompletedList" Margin="0,60,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ElementName=WidthHelperFileName ,Path=ActualWidth}" CellTemplate="{StaticResource FileName}" Header="文件名"/>

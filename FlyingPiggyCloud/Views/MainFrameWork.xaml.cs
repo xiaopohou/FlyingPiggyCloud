@@ -147,7 +147,7 @@ namespace FlyingPiggyCloud.Views
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             Controllers.RegistryManager.IsAutoLogin = false;
-            Controllers.RegistryManager.Token = null;
+            Controllers.RegistryManager.Token = "";
             Application.Current.Shutdown();
         }
     }
