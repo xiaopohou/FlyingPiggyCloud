@@ -18,8 +18,6 @@ namespace FlyingPiggyCloud.Models
 
         public TaskTypeEnum TaskType => TaskTypeEnum.Download;
 
-        public string FilePath { get; set; }
-
         public new async Task RefreshStatus()
         {
             await base.RefreshStatus();
@@ -38,8 +36,9 @@ namespace FlyingPiggyCloud.Models
                 NewFilePath = Path.GetDirectoryName(KnownFolders.Downloads.Path + "\\" + fileMetaData.Name) + "\\" + Path.GetFileNameWithoutExtension(KnownFolders.Downloads.Path + "\\" + fileMetaData.Name) + string.Format("({0})",index) + Path.GetExtension(KnownFolders.Downloads.Path + "\\" + fileMetaData.Name);
                 index++;
             }
-
+            
             File.Move(await e.GetFilePath(), NewFilePath);
+            e.FilePath = NewFilePath;
         })
         {
             this.fileMetaData = fileMetaData;

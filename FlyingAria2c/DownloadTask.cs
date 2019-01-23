@@ -86,6 +86,8 @@ namespace FlyingAria2c
         }
         private long downloadSpeed = 0;
 
+        public string FilePath { get; set; }
+
         protected async Task RefreshStatus()
         {
             System.Collections.Generic.Dictionary<string, string> x = await Aria2Methords.TellStatus(Downloader.RpcConnection, Gid);

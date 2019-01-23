@@ -212,9 +212,9 @@
                     </Border>
 
                     <!--底部不知道干什么区域-->
-                    <Grid Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                    <!--<Grid Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
                         <TextBlock Foreground="{StaticResource MainFocusColorBrush}" Text="底部不知道干什么区域"/>
-                    </Grid>
+                    </Grid>-->
                 </Grid>
             </Border>
         </Grid>
