@@ -110,6 +110,7 @@
                                     <Setter Property="Opacity" TargetName="border" Value="0.56"/>
                                 </Trigger>
                                 <Trigger Property="IsKeyboardFocused" Value="true">
+                                    <Setter Property="Width" Value="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}"/>
                                     <Setter Property="Background" Value="White"/>
                                     <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
                                 </Trigger>
@@ -141,6 +142,10 @@
                             <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/quxiao.png"/>
                         </Button>
                     </StackPanel>
+
+                    <Rectangle Name="Mask" Width="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Right" Fill="#00000000"/>
+
+
                     <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="MoreBotton" Style="{StaticResource ButtonBasicDesign}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
                         <Button.ContextMenu>
                             <metro:MetroContextMenu x:Name="MoreButtonMenu" Background="{StaticResource MainFocusColorBrush}" Foreground="White">
@@ -170,7 +175,8 @@
                     </Button>
 
                     <Button Background="White" Width="24" Visibility="Collapsed" Height="24" x:Name="DownloadBotton" Style="{StaticResource ButtonBasicDesign}" Click="DownloadBotton_Click" HorizontalAlignment="Right" Margin="0,0,64,0" VerticalAlignment="Center">
-                        <Image Width="16" Source="/FlyingPiggyCloud;component/Resources/Grey/Download.png" />
+                        <!--<Image Width="16" Source="/FlyingPiggyCloud;component/Resources/Grey/Download.png" />-->
+                        <TextBlock Style="{StaticResource IconTextBlock}" Text="arrow-down"/>
                     </Button>
                 </Grid>
                 <DataTemplate.Triggers>
@@ -187,6 +193,23 @@
                             <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
                         </MultiDataTrigger.Conditions>
                         <Setter TargetName="MoreBotton" Property="Visibility" Value="Visible"/>
+                        <Setter TargetName="Mask" Property="Width" Value="{Binding ActualWidth, ElementName=WidthHelperFlieName,Mode=OneWay}"/>
+                        <Setter TargetName="Mask" Property="Fill">
+                            <Setter.Value>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                            <RotateTransform Angle="-90" CenterY="0.5" CenterX="0.5"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                    <GradientStop Color="#0061BF83" Offset="0.5"/>
+                                    <GradientStop Color="#FF61BF83" Offset="0.7"/>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
                     </MultiDataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
@@ -275,6 +298,7 @@
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/jinru.png" Stretch="Fill"/>
             </Button>
         </Grid>
+        
         <!--地址栏-->
         <ListBox x:Name="AddressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top" SelectionChanged="AddressBar_SelectionChanged" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource AddressBarItemStyle}">
             <ListBox.ItemsPanel>
@@ -305,14 +329,16 @@
         <!--这个Grid用于帮助GridView自动校正分栏宽度-->
         <Grid Visibility="Hidden">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="16*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="6*"/>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="6*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" x:Name="WidthHelperFlieName"/>
-            <Grid Grid.Column="1" x:Name="WidthHelperFileSize"/>
-            <Grid Grid.Column="2" x:Name="WidthHelperMTime"/>
+            <Grid Grid.Column="0" Grid.ColumnSpan="2" x:Name="WidthHelperFlieName"/>
+            <Grid Grid.Column="0" x:Name="WidthHelperRenameTextBox"/>
+            <Grid Grid.Column="2" x:Name="WidthHelperFileSize"/>
+            <Grid Grid.Column="3" x:Name="WidthHelperMTime"/>
         </Grid>
     </Grid>
 </Page>

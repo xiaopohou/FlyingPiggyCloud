@@ -34,8 +34,12 @@
 
             <DataTemplate x:Key="Operates">
                 <StackPanel Orientation="Horizontal">
-                    <Button Margin="5,0" x:Name="Stop" Height="18" Width="18" Style="{StaticResource CircleButton}" Click="Stop_Click" Background="DarkRed"/>
-                    <Button Margin="5,0" x:Name="Pause" Height="18" Width="18" Style="{StaticResource CircleButton}" Click="Pause_Click"/>
+                    <Button Background="White" Margin="5,0" x:Name="Stop" Height="24" Width="24" Style="{StaticResource ButtonBasicDesign}" Click="Stop_Click">
+                        <Image Height="16" Source="/Resources/Grey/Delete.png"/>
+                    </Button>
+                    <Button Background="White" Margin="5,0" x:Name="Pause" Height="24" Width="24" Style="{StaticResource ButtonBasicDesign}" Click="Pause_Click">
+                        <Image Height="16" Source="/Resources/Grey/Pause.png"/>
+                    </Button>
                 </StackPanel>
             </DataTemplate>
 

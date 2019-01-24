@@ -117,7 +117,7 @@
             <metro:MetroTitleMenuItem Icon="/Resources/Green/More.png" Foreground="{StaticResource MainFocusColorBrush}">
                 <metro:MetroTitleMenuItem x:Name="Settings" Icon="/Resources/Green/Set.png" Header="功能设置" Foreground="{StaticResource MainFocusColorBrush}" Click="Settings_Click"/>
                 <!--<metro:MetroTitleMenuItem Header="退出登陆" Foreground="{StaticResource MainFocusColorBrush}"/>-->
-                <metro:MetroTitleMenuItem Header="关于6盘" Foreground="{StaticResource MainFocusColorBrush}"/>
+                <metro:MetroTitleMenuItem x:Name="About" Icon="/Resources/Green/About.png" Header="关于6盘" Foreground="{StaticResource MainFocusColorBrush}"/>
                 <metro:MetroTitleMenuItem x:Name="Logout" Header="退出登陆" Foreground="{StaticResource MainFocusColorBrush}" Click="Logout_Click"/>
             </metro:MetroTitleMenuItem>
         </metro:MetroTitleMenu>
@@ -184,21 +184,21 @@
                                 <TextBlock Text="我的文件" Margin="10" Foreground="#FF919191"/>
                                 <RadioButton x:Name="radioButton" IsChecked="{Binding CurrentPage, ConverterParameter=0, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                        <Image Height="16" Margin="0,0,5,0" Source="{Binding IsChecked, ConverterParameter=Function.png, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton, Mode=OneWay}" Stretch="Fill"/>
+                                        <Image Height="16" Margin="0,0,5,0" Source="{Binding IsChecked, ConverterParameter=Home.png, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton, Mode=OneWay}" Stretch="Fill"/>
                                         <TextBlock TextWrapping="Wrap" Text="{Binding Text, ElementName=textBlock, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{Binding IsChecked, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton, Mode=OneWay}"/>
                                     </StackPanel>
                                 </RadioButton>
 
                                 <RadioButton x:Name="radioButton1" IsChecked="{Binding CurrentPage, ConverterParameter=1, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                        <Image Height="16" Margin="0,0,5,0" Source="{Binding IsChecked, ConverterParameter=Function.png, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton1,Mode=OneWay}" Stretch="Fill"/>
+                                        <Image Height="16" Margin="0,0,5,0" Source="{Binding IsChecked, ConverterParameter=Camera.png, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton1,Mode=OneWay}" Stretch="Fill"/>
                                         <TextBlock TextWrapping="Wrap" Text="图片" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{Binding IsChecked, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton1, Mode=OneWay}"/>
                                     </StackPanel>
                                 </RadioButton>
 
                                 <RadioButton x:Name="radioButton2" IsChecked="{Binding CurrentPage, ConverterParameter=2, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                        <Image Height="16" Margin="0,0,5,0" Source="{Binding IsChecked, ConverterParameter=Function.png, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton2, Mode=OneWay}" Stretch="Fill"/>
+                                        <Image Height="16" Margin="0,0,5,0" Source="{Binding IsChecked, ConverterParameter=Movie.png, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton2, Mode=OneWay}" Stretch="Fill"/>
                                         <TextBlock TextWrapping="Wrap" Text="视频" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{Binding IsChecked, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton2}"/>
                                     </StackPanel>
                                 </RadioButton>

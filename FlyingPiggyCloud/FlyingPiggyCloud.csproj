@@ -242,6 +242,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\Fonts\Font Awesome 5 Free-Regular-400.otf" />
+    <Resource Include="Resources\Fonts\Font Awesome 5 Free-Solid-900.otf" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\BasicLogo.png" />
@@ -468,6 +470,39 @@
     <Resource Include="Resources\White\Stick.png" />
     <Resource Include="Resources\White\Upload.png" />
     <Resource Include="Resources\White\UploadText.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Grey\About.png" />
+    <Resource Include="Resources\Grey\Camera.png" />
+    <Resource Include="Resources\Grey\Delete.png" />
+    <Resource Include="Resources\Grey\Heart.png" />
+    <Resource Include="Resources\Grey\Home.png" />
+    <Resource Include="Resources\Grey\Movie.png" />
+    <Resource Include="Resources\Grey\Pause.png" />
+    <Resource Include="Resources\Grey\Refresh.png" />
+    <Resource Include="Resources\Grey\Star.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\White\About.png" />
+    <Resource Include="Resources\White\Camera.png" />
+    <Resource Include="Resources\White\Delete.png" />
+    <Resource Include="Resources\White\Heart.png" />
+    <Resource Include="Resources\White\Home.png" />
+    <Resource Include="Resources\White\Movie.png" />
+    <Resource Include="Resources\White\Pause.png" />
+    <Resource Include="Resources\White\Refresh.png" />
+    <Resource Include="Resources\White\Star.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Green\About.png" />
+    <Resource Include="Resources\Green\Camera.png" />
+    <Resource Include="Resources\Green\Delete.png" />
+    <Resource Include="Resources\Green\Heart.png" />
+    <Resource Include="Resources\Green\Home.png" />
+    <Resource Include="Resources\Green\Movie.png" />
+    <Resource Include="Resources\Green\Pause.png" />
+    <Resource Include="Resources\Green\Refresh.png" />
+    <Resource Include="Resources\Green\Star.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
