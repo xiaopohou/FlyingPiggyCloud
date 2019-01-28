@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +18,19 @@ namespace FlyingPiggyCloud.Views
     {
         private FileList fileList;
 
+        /// <summary>
+        /// 地址栏
+        /// </summary>
         private List<string> pathArray;
+
+        private static List<FileListItem> Move = new List<FileListItem>();
+
+        /// <summary>
+        /// 指示Move列表中的项目需要复制还是剪切
+        /// </summary>
+        private static bool IsCopy;
+
+        public bool IsStickButtonEnable => Move.Count == 0 ? false : true;
 
         /// <summary>
         /// 为后退按钮保存历史路径
@@ -41,6 +54,7 @@ namespace FlyingPiggyCloud.Views
             CreatePathArray(path);
             previousPath = new Stack<string>();
             nextPath = new Stack<string>();
+            Stick.IsEnabled = IsStickButtonEnable;
         }
 
         private void CreatePathArray(string path)
@@ -72,6 +86,11 @@ namespace FlyingPiggyCloud.Views
                     MessageBox.Show("这个项目被远程服务器锁定（可能的原因：正在被删除，或者其他客户端正在修改该项目）");
                     fileList.Refresh(this, new EventArgs());
                 }
+            }
+            else if (a.Preview==1000)
+            {
+                PreviewWindow previewWindow = new PreviewWindow(a);
+                previewWindow.Show();
             }
             
         }
@@ -230,6 +249,69 @@ namespace FlyingPiggyCloud.Views
                         success = false;
                     }
                 } while (!success && nextPath.Count != 0);
+            }
+        }
+
+        private void Copy_Click(object sender, RoutedEventArgs e)
+        {
+            Move?.Clear();
+            var list = FileListView.SelectedItems;
+            if(list!=null)
+            {
+                lock(Move)
+                {
+                    foreach (FileListItem item in list)
+                    {
+                        Move.Add(item);
+                    }
+                    IsCopy = true;
+                    Stick.IsEnabled = IsStickButtonEnable;
+                }
+            }
+        }
+
+        private void Cut_Click(object sender, RoutedEventArgs e)
+        {
+            Move?.Clear();
+            var list = FileListView.SelectedItems;
+            if (list != null)
+            {
+                lock (Move)
+                {
+                    foreach (FileListItem item in list)
+                    {
+                        Move.Add(item);
+                    }
+                    IsCopy = false;
+                }
+                Stick.IsEnabled = IsStickButtonEnable;
+            }
+        }
+
+        private void Stick_Click(object sender, RoutedEventArgs e)
+        {
+            lock(Move)
+            {
+                if(Move.Count!=0)
+                {
+                    foreach (FileListItem item in Move)
+                    {
+                        if (IsCopy)
+                        {
+                            item.Copy(fileList.CurrentUUID);
+                        }
+                        else
+                        {
+                            item.Cut(fileList.CurrentUUID);
+                        }
+                        //if(!fileList.Contains(item))
+                        //{
+                        //    fileList.Add(item);
+                        //}
+                    }
+                    Move.Clear();
+                }
+                Stick.IsEnabled = IsStickButtonEnable;
             }
         }
     }

@@ -152,6 +152,8 @@ namespace FlyingPiggyCloud.Models
 
         public int Type => MetaData.Type;
 
+        public int Preview => MetaData.Preview;
+
         public bool IsChecked { get; set; }
 
         public async Task<bool> Remove()
@@ -172,6 +174,19 @@ namespace FlyingPiggyCloud.Models
             OnPropertyChanged("Name");
             return MetaData;
         }
+
+        public async void Copy(string newParentUUID)
+        {
+            Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
+            await fileSystemMethods.Copy(MetaData, newParentUUID);
+        }
+
+        public async void Cut(string newParentUUID)
+        {
+            Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
+            await fileSystemMethods.Move(MetaData, newParentUUID);
+        }
+
 
         private string UnixTimeStampConverter(long UnixTimeStamp)
         {

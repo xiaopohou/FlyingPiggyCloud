@@ -100,12 +100,12 @@ namespace FlyingPiggyCloud.Controllers
         /// <param name="SourceMeta">被移动的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public async Task<ResponesResult<bool>> Move(FileMetaData SourceMeta, FileMetaData TargetDirectory)
+        public async Task<ResponesResult<bool>> Move(FileMetaData SourceMeta, string TargetDirectoryUUID)
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "uuid", SourceMeta.UUID },
-                { "parent", TargetDirectory.UUID }
+                { "parent", TargetDirectoryUUID }
             };
             if (Token == null)
             {
@@ -124,12 +124,12 @@ namespace FlyingPiggyCloud.Controllers
         /// <param name="SourceMeta">被复制的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public async Task<ResponesResult<bool>> Copy(FileMetaData SourceMeta, FileMetaData TargetDirectory)
+        public async Task<ResponesResult<bool>> Copy(FileMetaData SourceMeta, string TargetDirectoryUUID)
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "uuid", SourceMeta.UUID },
-                { "parent", TargetDirectory.UUID }
+                { "parent", TargetDirectoryUUID }
             };
             if (Token == null)
             {
@@ -187,6 +187,14 @@ namespace FlyingPiggyCloud.Controllers
             Token = x["token"];
         }
 
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        /// <param name="Name">FileMeta的文件名</param>
+        /// <param name="Parent">上传到哪个文件夹</param>
+        /// <param name="Hash">哈希</param>
+        /// <param name="OriginalFilename">保存的源信息的文件名</param>
+        /// <returns></returns>
         public async Task<ResponesResult<UploadResponseResult>> UploadFile(string Name, string Parent, string Hash=null, string OriginalFilename=null)
         {
             if (Token == null)
@@ -209,6 +217,11 @@ namespace FlyingPiggyCloud.Controllers
             return x;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="UUID"></param>
+        /// <returns></returns>
         public async Task<ResponesResult<FileMetaData>> GetDetailsByUUID(string UUID)
         {
             if (Token == null)
@@ -225,6 +238,24 @@ namespace FlyingPiggyCloud.Controllers
             Token = x.Token;
             return x;
 
+        }
+
+        public async Task<PreviewVideo.PreviewVideoInformation>VideoPreview(string UUID)
+        {
+            if (Token == null)
+            {
+                var GetToken = new Views.LoginWindow();
+                GetToken.ShowDialog();
+            }
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "uuid", UUID },
+                { "token", Token }
+            };
+            //这里偷懒用了动态类型= =
+            var x = await PostAsync<ResponesResult<PreviewVideo.PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "v1/preview/media");
+            Token = x.Token;
+            return x.Result;
         }
     }
 }

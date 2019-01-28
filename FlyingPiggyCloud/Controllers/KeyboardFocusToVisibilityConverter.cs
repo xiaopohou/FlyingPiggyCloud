@@ -8,8 +8,18 @@ namespace FlyingPiggyCloud.Controllers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var isKeyboardFocus = (bool)value;
-            return isKeyboardFocus ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; 
+            string p = (string)parameter;
+            if(p=="Mask")
+            {
+                var isKeyboardFocus = (bool)value;
+                return !isKeyboardFocus ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+            }
+            else
+            {
+                var isKeyboardFocus = (bool)value;
+                return isKeyboardFocus ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

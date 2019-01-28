@@ -143,23 +143,23 @@
                         </Button>
                     </StackPanel>
 
-                    <Rectangle Name="Mask" Width="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Right" Fill="#00000000"/>
+                    <Rectangle Visibility="{Binding IsKeyboardFocused, ConverterParameter=Mask, Converter={StaticResource KeyboardFocusToVisibilityConverter}, ElementName=Name, Mode=OneWay}" Name="Mask" Width="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Right" Fill="#00000000"/>
 
 
                     <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="MoreBotton" Style="{StaticResource ButtonBasicDesign}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
                         <Button.ContextMenu>
                             <metro:MetroContextMenu x:Name="MoreButtonMenu" Background="{StaticResource MainFocusColorBrush}" Foreground="White">
-                                <MenuItem Header="移动">
+                                <MenuItem x:Name="Cut" Header="剪切" Click="Cut_Click">
                                     <MenuItem.Icon>
                                         <Image Source="/FlyingPiggyCloud;component/Resources/White/Cut.png"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="复制">
+                                <MenuItem x:Name="Copy" Header="复制" Click="Copy_Click">
                                     <MenuItem.Icon>
                                         <Image Source="/FlyingPiggyCloud;component/Resources/White/Copy.png"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <!--<MenuItem Header="重命名" Click="MenuItem_Click">
+                                <!--<MenuItem Header="重命名">
                                     <MenuItem.Icon>
                                         <Image Source="/FlyingPiggyCloud;component/Resources/White/Rename.png"/>
                                     </MenuItem.Icon>
@@ -175,12 +175,12 @@
                     </Button>
 
                     <Button Background="White" Width="24" Visibility="Collapsed" Height="24" x:Name="DownloadBotton" Style="{StaticResource ButtonBasicDesign}" Click="DownloadBotton_Click" HorizontalAlignment="Right" Margin="0,0,64,0" VerticalAlignment="Center">
-                        <!--<Image Width="16" Source="/FlyingPiggyCloud;component/Resources/Grey/Download.png" />-->
-                        <TextBlock Style="{StaticResource IconTextBlock}" Text="arrow-down"/>
+                        <Image Width="16" Source="/FlyingPiggyCloud;component/Resources/Grey/Download.png" />
+                        <!--<TextBlock Style="{StaticResource IconTextBlock}" Text="arrow-down"/>-->
                     </Button>
                 </Grid>
                 <DataTemplate.Triggers>
-                    <!--鼠标移过时显示附加按钮-->
+                    <!--选中时显示附加按钮-->
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
                             <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
@@ -279,6 +279,24 @@
     <Grid>
         <!--上方栏-->
         <Grid Background="White" Height="60" Margin="0" VerticalAlignment="Top">
+            <Button x:Name="Stick" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="600,0,0,0" Background="#FFFFFFFF" Click="Stick_Click">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/Grey/Stick.png"/>
+                    <TextBlock Text="粘贴" Foreground="#FF5A5A5A"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="Copy" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="463,0,0,0" Background="#FFFFFFFF" Click="Copy_Click">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/Grey/Copy.png"/>
+                    <TextBlock Text="复制" Foreground="#FF5A5A5A"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="Cut" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="326,0,0,0" Background="#FFFFFFFF" Click="Cut_Click">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/Grey/Cut.png"/>
+                    <TextBlock Text="剪切" Foreground="#FF5A5A5A"/>
+                </StackPanel>
+            </Button>
             <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Style="{StaticResource ButtonBasicDesign}" Margin="189,0,0,0" Background="#FFFFFFFF" Click="NewFolderButton_Click">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Image Height="15" Margin="0,0,5,0" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/tianjiashangpin.png"/>

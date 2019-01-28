@@ -102,6 +102,8 @@
     <Compile Include="Controllers\DownloadTaskPropertyConverter.cs" />
     <Compile Include="Controllers\FileSystemMethods.cs" />
     <Compile Include="Controllers\KeyboardFocusToVisibilityConverter.cs" />
+    <Compile Include="Controllers\Preview.cs" />
+    <Compile Include="Controllers\PreviewVideo.cs" />
     <Compile Include="Controllers\QingzhenyunLogicalProgress.cs" />
     <Compile Include="Controllers\QingzhenyunRequestBase.cs" />
     <Compile Include="Controllers\RegistryManager.cs" />
@@ -140,6 +142,9 @@
     </Compile>
     <Compile Include="Views\MetroLikeMainWindow2.xaml.cs">
       <DependentUpon>MetroLikeMainWindow2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PreviewWindow.xaml.cs">
+      <DependentUpon>PreviewWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RecoveryBoxPage.xaml.cs">
       <DependentUpon>RecoveryBoxPage.xaml</DependentUpon>
@@ -201,6 +206,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MetroLikeMainWindow2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PreviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
