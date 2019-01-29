@@ -1,13 +1,14 @@
-﻿<Window x:Class="FlyingPiggyCloud.Views.PreviewWindow"
+﻿<Window xmlns:Controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
+        x:Class="FlyingPiggyCloud.Views.PreviewWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
         mc:Ignorable="d"
-        Title="PreviewWindow" Height="450" Width="800">
-    <Grid>
-        <Image x:Name="MainImage" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" Source="https://raw.githubusercontent.com/Cdorey/ezAria2/master/Pictures/20180521165256.png"/>
-        <MediaElement x:Name="MainMedia" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"/>
+        Title="PreviewWindow">
+    <Grid Background="Black">
+        <Controls:WebView x:Name="MainMedia"/>
+        <Image x:Name="MainImage" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
+        <!--<MediaElement x:Name="MainMedia" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"/>-->
     </Grid>
 </Window>

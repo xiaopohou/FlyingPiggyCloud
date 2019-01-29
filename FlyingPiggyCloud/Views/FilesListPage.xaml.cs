@@ -87,15 +87,31 @@ namespace FlyingPiggyCloud.Views
                     fileList.Refresh(this, new EventArgs());
                 }
             }
+            //1000表示这是一个可以预览的视频
             else if (a.Preview==1000)
             {
-                PreviewWindow previewWindow = new PreviewWindow(a);
-                previewWindow.Show();
+                try
+                {
+                    PreviewWindow previewWindow = new PreviewWindow(a);
+                    previewWindow.ShowDialog();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("预览请求失败：" + ex.Message);
+                }
             }
+            //300表示这是一个可以预览的图片
             else if(a.Preview==300)
             {
-                PreviewWindow previewWindow = new PreviewWindow(a);
-                previewWindow.Show();
+                try
+                {
+                    PreviewWindow previewWindow = new PreviewWindow(a);
+                    previewWindow.ShowDialog();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("预览请求失败：" + ex.Message);
+                }
             }
             
         }

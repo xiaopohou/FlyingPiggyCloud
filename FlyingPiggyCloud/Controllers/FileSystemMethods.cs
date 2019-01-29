@@ -240,7 +240,7 @@ namespace FlyingPiggyCloud.Controllers
 
         }
 
-        public async Task<PreviewVideo.PreviewVideoInformation> VideoPreview(string UUID)
+        public async Task<ResponesResult<PreviewVideo.PreviewVideoInformation>> VideoPreview(string UUID)
         {
             if (Token == null)
             {
@@ -254,7 +254,7 @@ namespace FlyingPiggyCloud.Controllers
             };
             var x = await PostAsync<ResponesResult<PreviewVideo.PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "v1/preview/media");
             Token = x.Token;
-            return x.Result;
+            return x;
         }
 
         public async Task<PreviewImage.PreviewImageInformation> ImagePreview(string UUID)

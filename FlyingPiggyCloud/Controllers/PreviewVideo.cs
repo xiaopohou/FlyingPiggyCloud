@@ -22,32 +22,35 @@ namespace FlyingPiggyCloud.Controllers
         public class PreviewVideoInformation
         {
             [JsonProperty(PropertyName = "clearTexts")]
-            public string[] ClearTexts { get; }
+            public string[] ClearTexts { get; set; }
 
             [JsonProperty(PropertyName = "clears")]
-            public int[] Clears { get; }
+            public int[] Clears { get; set; }
 
             [JsonProperty(PropertyName = "encodeKey")]
-            public string EncodeKey { get; }
+            public string EncodeKey { get; set; }
 
             [JsonProperty(PropertyName = "preview")]
-            public ObservableCollection<Dictionary<string, string>> Preview { get; private set; }
+            public ObservableCollection<Dictionary<string, string>> Preview { get; set; }
         }
 
-        public PreviewVideoInformation VideoSources { get; private set; }
+        public PreviewVideoInformation VideoSources { get; set; }
 
-        private async void LoadPreviewAddress()
+        public string CurrentToken { get; private set; }
+
+        public async void LoadPreviewAddress(Action action)
         {
             FileSystemMethods fileSystemMethods = new FileSystemMethods(Properties.Settings.Default.BaseUri);
-            VideoSources = await fileSystemMethods.VideoPreview(UUID);
-            
+            var x = await fileSystemMethods.VideoPreview(UUID);
+            VideoSources = x.Result;
+            CurrentToken = x.Token;
+            action?.Invoke();
             OnPropertyChanged("VideoSources");
         }
 
         public PreviewVideo(string uuid):base(PreviewTask.Video)
         {
             UUID = uuid;
-            LoadPreviewAddress();
         }
     }
 

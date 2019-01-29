@@ -59,5 +59,33 @@ namespace FlyingPiggyCloud.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找类似 &lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&quot;zh-cn&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot;&gt;
+        ///    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
+        ///&lt;/head&gt;
+        ///&lt;body style=&quot;margin:0;background:#000000&quot;&gt;
+        ///    &lt;video style=&quot;clear:both;display:block;margin:auto&quot; autoplay controls src=&quot;{{uri}}&quot;&gt;&lt;/video&gt;
+        ///  &lt;style&gt;
+        ///  video {
+        ///  display: flex;
+        ///  display: -webkit-flex;
+        ///  position: absolute;
+        ///  left: 0;
+        ///  top: 0;
+        ///  flex-direction: column;
+        ///  justify-content: center;
+        ///  width: 100%;
+        ///  height: 100%;
+        ///  visibility:  [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string PreviewContainer {
+            get {
+                return ResourceManager.GetString("PreviewContainer", resourceCulture);
+            }
+        }
     }
 }
