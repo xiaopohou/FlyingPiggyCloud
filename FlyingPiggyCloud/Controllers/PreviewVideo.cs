@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlyingPiggyCloud.Controllers.Results.FileSystem;
+using Newtonsoft.Json;
 
 namespace FlyingPiggyCloud.Controllers
 {
@@ -20,12 +21,16 @@ namespace FlyingPiggyCloud.Controllers
 
         public class PreviewVideoInformation
         {
+            [JsonProperty(PropertyName = "clearTexts")]
             public string[] ClearTexts { get; }
 
+            [JsonProperty(PropertyName = "clears")]
             public int[] Clears { get; }
 
+            [JsonProperty(PropertyName = "encodeKey")]
             public string EncodeKey { get; }
 
+            [JsonProperty(PropertyName = "preview")]
             public ObservableCollection<Dictionary<string, string>> Preview { get; private set; }
         }
 

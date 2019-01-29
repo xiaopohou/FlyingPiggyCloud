@@ -24,19 +24,25 @@ namespace FlyingPiggyCloud.Views
     {
         internal PreviewWindow(FileListItem e)
         {
-            Preview p;
+            InitializeComponent();
             if(e.Preview==1000)
             {
-                p = new PreviewVideo(e.UUID);
+                var p = new PreviewVideo(e.UUID);
+                MainMedia.Source = new Uri(p.VideoSources.Preview[0]["url"]);
+            }
+            else if (e.Preview==300)
+            {
+                var p = new PreviewImage(e.UUID);
+                p.LoadPreviewAddress(()=>
+                {
+                    MainImage.Source = new BitmapImage(new Uri(p.ImageSources.Address));
+                });
             }
             else
             {
                 throw new Exception();
             }
-            InitializeComponent();
-            var a = p as PreviewVideo;
-            MainMedia.Source = new Uri(a.VideoSources.Preview[0]["url"]);
-            MainMedia.Play();
+            Topmost = true;
         }
     }
 }

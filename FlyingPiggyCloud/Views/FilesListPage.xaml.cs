@@ -92,6 +92,11 @@ namespace FlyingPiggyCloud.Views
                 PreviewWindow previewWindow = new PreviewWindow(a);
                 previewWindow.Show();
             }
+            else if(a.Preview==300)
+            {
+                PreviewWindow previewWindow = new PreviewWindow(a);
+                previewWindow.Show();
+            }
             
         }
 

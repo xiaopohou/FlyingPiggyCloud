@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="PreviewWindow" Height="450" Width="800">
     <Grid>
+        <Image x:Name="MainImage" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" Source="https://raw.githubusercontent.com/Cdorey/ezAria2/master/Pictures/20180521165256.png"/>
         <MediaElement x:Name="MainMedia" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"/>
-
     </Grid>
 </Window>

@@ -103,6 +103,7 @@
     <Compile Include="Controllers\FileSystemMethods.cs" />
     <Compile Include="Controllers\KeyboardFocusToVisibilityConverter.cs" />
     <Compile Include="Controllers\Preview.cs" />
+    <Compile Include="Controllers\PreviewImage.cs" />
     <Compile Include="Controllers\PreviewVideo.cs" />
     <Compile Include="Controllers\QingzhenyunLogicalProgress.cs" />
     <Compile Include="Controllers\QingzhenyunRequestBase.cs" />
@@ -136,12 +137,6 @@
     </Compile>
     <Compile Include="Views\MainFrameWork.xaml.cs">
       <DependentUpon>MainFrameWork.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MetroLikeMainWindow.xaml.cs">
-      <DependentUpon>MetroLikeMainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MetroLikeMainWindow2.xaml.cs">
-      <DependentUpon>MetroLikeMainWindow2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PreviewWindow.xaml.cs">
       <DependentUpon>PreviewWindow.xaml</DependentUpon>
@@ -198,14 +193,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainFrameWork.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MetroLikeMainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MetroLikeMainWindow2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

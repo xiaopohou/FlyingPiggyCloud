@@ -240,7 +240,24 @@ namespace FlyingPiggyCloud.Controllers
 
         }
 
-        public async Task<PreviewVideo.PreviewVideoInformation>VideoPreview(string UUID)
+        public async Task<PreviewVideo.PreviewVideoInformation> VideoPreview(string UUID)
+        {
+            if (Token == null)
+            {
+                var GetToken = new Views.LoginWindow();
+                GetToken.ShowDialog();
+            }
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "uuid", UUID },
+                { "token", Token }
+            };
+            var x = await PostAsync<ResponesResult<PreviewVideo.PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "v1/preview/media");
+            Token = x.Token;
+            return x.Result;
+        }
+
+        public async Task<PreviewImage.PreviewImageInformation> ImagePreview(string UUID)
         {
             if (Token == null)
             {
@@ -253,7 +270,7 @@ namespace FlyingPiggyCloud.Controllers
                 { "token", Token }
             };
             //这里偷懒用了动态类型= =
-            var x = await PostAsync<ResponesResult<PreviewVideo.PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "v1/preview/media");
+            var x = await PostAsync<ResponesResult<PreviewImage.PreviewImageInformation>>(JsonConvert.SerializeObject(data), "v1/preview/image");
             Token = x.Token;
             return x.Result;
         }
