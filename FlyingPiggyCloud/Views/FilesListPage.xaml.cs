@@ -55,6 +55,7 @@ namespace FlyingPiggyCloud.Views
             previousPath = new Stack<string>();
             nextPath = new Stack<string>();
             Stick.IsEnabled = IsStickButtonEnable;
+            LazyLoadEventHandler = LazyLoad;
         }
 
         private void CreatePathArray(string path)
@@ -334,6 +335,31 @@ namespace FlyingPiggyCloud.Views
                 }
                 Stick.IsEnabled = IsStickButtonEnable;
             }
+        }
+
+        private void FileListView_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (e.OriginalSource is ScrollViewer viewer)
+            {
+                double bottomOffset = viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight;
+                if (viewer.VerticalOffset > 0 && bottomOffset == 0)
+                {
+                    LazyLoadEventHandler?.Invoke(sender, e);
+                }
+            }
+        }
+
+        private ScrollChangedEventHandler LazyLoadEventHandler;
+
+        private async void LazyLoad(object sender, ScrollChangedEventArgs e)
+        {
+            lock(LazyLoadEventHandler)
+            {
+                LazyLoadEventHandler = null;
+            }
+            //懒加载的业务代码
+            await fileList.Lazyload();
+            LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
         }
     }
 }

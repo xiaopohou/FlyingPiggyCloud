@@ -16,6 +16,8 @@ namespace FlyingPiggyCloud.Models
         /// </summary>
         public string CurrentUUID { get; private set; }
 
+        private int currentPage;
+
         /// <summary>
         /// 当前路径
         /// </summary>
@@ -25,7 +27,7 @@ namespace FlyingPiggyCloud.Models
         /// 把指定UUID的目录加载到当前列表
         /// </summary>
         /// <param name="UUID"></param>
-        public async Task GetDirectoryByUUID(string UUID)
+        public async Task GetDirectoryByUUID(string UUID, bool isLazyLoad=true)
         {
             Clear();
             List<FileMetaData> items = new List<FileMetaData>();
@@ -37,10 +39,10 @@ namespace FlyingPiggyCloud.Models
                 {
                     throw new Exception(x.Message);
                 }
-
                 CurrentUUID = x.Result.DictionaryInformation.UUID;
                 CurrentPath = x.Result.DictionaryInformation.Path;
                 OnPropertyChanged(new PropertyChangedEventArgs("CurrentPath"));
+                currentPage = Page;
                 if (Page == x.Result.TotalPage)
                 {
                     Page = 0;
@@ -50,9 +52,29 @@ namespace FlyingPiggyCloud.Models
                     Page++;
                 }
                 items.AddRange(x.Result.List);
-            } while (Page != 0);
+            } while ((!isLazyLoad)&&(Page != 0));
 
             foreach (FileMetaData a in items)
+            {
+                Add(new FileListItem(a));
+            }
+        }
+
+        /// <summary>
+        /// 继续加载当前目录的下一页
+        /// </summary>
+        /// <returns></returns>
+        public async Task Lazyload()
+        {
+            PageResponseResult x = await FileSystemMethods.GetDirectory(CurrentUUID, "", ++currentPage);
+            if (!x.Success)
+            {
+                throw new Exception(x.Message);
+            }
+            CurrentUUID = x.Result.DictionaryInformation.UUID;
+            CurrentPath = x.Result.DictionaryInformation.Path;
+            OnPropertyChanged(new PropertyChangedEventArgs("CurrentPath"));
+            foreach (FileMetaData a in x.Result.List)
             {
                 Add(new FileListItem(a));
             }
@@ -63,7 +85,7 @@ namespace FlyingPiggyCloud.Models
         /// </summary>
         /// <param name="Path"></param>
         /// <param name="IsAutoCreating">当路径不存在时是否自动新建该文件夹</param>
-        public async Task GetDirectoryByPath(string Path, bool IsAutoCreating = false)
+        public async Task GetDirectoryByPath(string Path, bool IsAutoCreating = false, bool isLazyLoad = true)
         {
             Clear();
             List<FileMetaData> items = new List<FileMetaData>();
@@ -79,12 +101,17 @@ namespace FlyingPiggyCloud.Models
                 {
                     await FileSystemMethods.CreatDirectory("", "", Path);
                     x = await FileSystemMethods.GetDirectory("", Path, Page);
+                    CurrentUUID = x.Result.DictionaryInformation.UUID;
+                    CurrentPath = x.Result.DictionaryInformation.Path;
+                    OnPropertyChanged(new PropertyChangedEventArgs("CurrentPath"));
+                    currentPage = Page;
                 }
                 else if (x.Success)
                 {
                     CurrentUUID = x.Result.DictionaryInformation.UUID;
                     CurrentPath = x.Result.DictionaryInformation.Path;
                     OnPropertyChanged(new PropertyChangedEventArgs("CurrentPath"));
+                    currentPage = Page;
                     if (Page == x.Result.TotalPage)
                     {
                         Page = 0;
@@ -95,7 +122,7 @@ namespace FlyingPiggyCloud.Models
                     }
                     items.AddRange(x.Result.List);
                 }
-            } while (Page != 0);
+            } while ((!isLazyLoad) && (Page != 0));
 
             foreach (FileMetaData a in items)
             {

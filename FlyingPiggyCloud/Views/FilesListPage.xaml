@@ -134,7 +134,7 @@
                     <Image Width="24" Margin="4" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <!--<TextBox Name="Name" Style="{StaticResource NameTextBox}" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center"/>-->
                     <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center">
-                        <TextBox x:Name="Name" Style="{StaticResource NameTextBox}" Text="{Binding Name, Mode=OneTime}" GotKeyboardFocus="Name_GotKeyboardFocus" LostKeyboardFocus="Name_LostKeyboardFocus"/>
+                        <TextBox x:Name="Name" MinWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" Style="{StaticResource NameTextBox}" Text="{Binding Name, Mode=OneTime}" GotKeyboardFocus="Name_GotKeyboardFocus" LostKeyboardFocus="Name_LostKeyboardFocus"/>
                         <Button Style="{StaticResource ButtonBasicDesign}" Background="#FF2EC17C" Margin="2" Visibility="Collapsed" x:Name="Confirm" Click="Confirm_Click">
                             <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/xuanze.png" />
                         </Button>
@@ -334,7 +334,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ListView Background="White" x:Name="FileListView" Margin="0,84,0,0" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
+        <ListView ScrollViewer.ScrollChanged="FileListView_ScrollChanged" Background="White" x:Name="FileListView" Margin="0,84,0,0" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName,Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />

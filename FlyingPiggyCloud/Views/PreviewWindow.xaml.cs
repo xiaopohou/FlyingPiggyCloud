@@ -22,6 +22,7 @@ namespace FlyingPiggyCloud.Views
                     string u = p.VideoSources.Preview[0]["url"] + "?token=" + p.CurrentToken;
                     string c = Properties.Resources.PreviewContainer.Replace("{{uri}}", u);
                     MainMedia.NavigateToString(c);
+                    MainMedia.Visibility = Visibility.Visible;
                 });
             }
             else if (e.Preview == 300)
@@ -30,6 +31,7 @@ namespace FlyingPiggyCloud.Views
                 p.LoadPreviewAddress(() =>
                 {
                     MainImage.Source = new BitmapImage(new Uri(p.ImageSources.Address));
+                    MainImage.Visibility = Visibility.Visible;
                 });
             }
             else

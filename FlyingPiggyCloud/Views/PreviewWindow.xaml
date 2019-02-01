@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="PreviewWindow">
     <Grid Background="Black">
-        <Controls:WebView x:Name="MainMedia"/>
-        <Image x:Name="MainImage" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
+        <Controls:WebView x:Name="MainMedia" Visibility="Collapsed"/>
+        <Image x:Name="MainImage" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Visibility="Collapsed"/>
         <!--<MediaElement x:Name="MainMedia" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"/>-->
     </Grid>
 </Window>
