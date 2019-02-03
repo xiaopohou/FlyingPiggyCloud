@@ -72,49 +72,61 @@ namespace FlyingPiggyCloud.Views
 
         private async void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            FileListItem a = (FileListItem)((ListViewItem)sender).DataContext;
-            if (a.Type == 1)
+            if(sender is ListViewItem listViewItem && listViewItem.DataContext is FileListItem a)
             {
-                if (a.IsEnable)
+                if (a.Type == 1)
                 {
-                    previousPath.Push(fileList.CurrentPath);
-                    nextPath.Clear();
-                    await fileList.GetDirectoryByUUID(((FileListItem)((ListViewItem)sender).DataContext).UUID);
-                    CreatePathArray(a.Path);
+                    if (a.IsEnable)
+                    {
+                        previousPath.Push(fileList.CurrentPath);
+                        nextPath.Clear();
+                        try
+                        {
+                            await fileList.GetDirectoryByUUID(a.UUID);
+                            
+                        }
+                        catch(Exception ex)
+                        {
+                            MessageBox.Show(string.Format("打开失败，原因{0}", ex.Message));
+                        }
+                        finally
+                        {
+                            CreatePathArray(fileList.CurrentPath);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("这个项目被远程服务器锁定（可能的原因：正在被删除，或者其他客户端正在修改该项目）");
+                        fileList.Refresh(this, new EventArgs());
+                    }
                 }
-                else
+                //1000表示这是一个可以预览的视频
+                else if (a.Preview == 1000)
                 {
-                    MessageBox.Show("这个项目被远程服务器锁定（可能的原因：正在被删除，或者其他客户端正在修改该项目）");
-                    fileList.Refresh(this, new EventArgs());
+                    try
+                    {
+                        PreviewWindow previewWindow = new PreviewWindow(a);
+                        previewWindow.ShowDialog();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("预览请求失败：" + ex.Message);
+                    }
+                }
+                //300表示这是一个可以预览的图片
+                else if (a.Preview == 300)
+                {
+                    try
+                    {
+                        PreviewWindow previewWindow = new PreviewWindow(a);
+                        previewWindow.ShowDialog();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("预览请求失败：" + ex.Message);
+                    }
                 }
             }
-            //1000表示这是一个可以预览的视频
-            else if (a.Preview==1000)
-            {
-                try
-                {
-                    PreviewWindow previewWindow = new PreviewWindow(a);
-                    previewWindow.ShowDialog();
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show("预览请求失败：" + ex.Message);
-                }
-            }
-            //300表示这是一个可以预览的图片
-            else if(a.Preview==300)
-            {
-                try
-                {
-                    PreviewWindow previewWindow = new PreviewWindow(a);
-                    previewWindow.ShowDialog();
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show("预览请求失败：" + ex.Message);
-                }
-            }
-            
         }
 
         private async void NewFolderButton_Click(object sender, RoutedEventArgs e)
@@ -206,25 +218,37 @@ namespace FlyingPiggyCloud.Views
 
         private async void AddressBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var index = ((ListBox)sender).SelectedIndex;
-            if(index!=-1)
+            if(sender is ListBox listBox)
             {
-                ((ListBox)sender).SelectedIndex = -1;
-                string path = "";
-                if (pathArray[0] == "root")
-                    path = "/";
-                else
+                var index = listBox.SelectedIndex;
+                if (index != -1)
                 {
-                    for (int i = 1; i <= index; i++)
+                    listBox.SelectedIndex = -1;
+                    string path = "";
+                    if (pathArray[0] == "root")
+                        path = "/";
+                    else
                     {
-                        path = path + "/" + pathArray[i];
+                        for (int i = 1; i <= index; i++)
+                        {
+                            path = path + "/" + pathArray[i];
+                        }
                     }
+                    previousPath.Push(fileList.CurrentPath);
+                    nextPath.Clear();
+                    try
+                    {
+                        await fileList.GetDirectoryByPath(path);
+                    }
+                    catch (System.IO.DirectoryNotFoundException ex)
+                    {
+                        MessageBox.Show(string.Format("打开{0}文件夹失败，原因是：", pathArray[index], ex.Message));
+                        await fileList.GetDirectoryByPath("/");
+                    }
+                    CreatePathArray(fileList.CurrentPath);
                 }
-                previousPath.Push(fileList.CurrentPath);
-                nextPath.Clear();
-                await fileList.GetDirectoryByPath(path);
-                CreatePathArray(path);
             }
+            
         }
 
         private async void Previous_Click(object sender, RoutedEventArgs e)
@@ -337,6 +361,7 @@ namespace FlyingPiggyCloud.Views
             }
         }
 
+        #region 懒加载相关
         private void FileListView_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             if (e.OriginalSource is ScrollViewer viewer)
@@ -361,5 +386,6 @@ namespace FlyingPiggyCloud.Views
             await fileList.Lazyload();
             LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
         }
+        #endregion
     }
 }
