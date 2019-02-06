@@ -64,10 +64,11 @@ namespace FlyingPiggyCloud.Views
                             }
                         });
                         CompletedListPage.CompletedTasksAddRange(Completed);
+                        OnListCountChanged?.Invoke(DownloadTasks, new EventArgs());
                     }
                 }
             }
-            catch (System.Exception)
+            catch (Exception)
             {
 
             }
@@ -79,7 +80,12 @@ namespace FlyingPiggyCloud.Views
 
         public static void NewDownloadTask(FileMetaData fileMetaData)
         {
-            DownloadTask downloadTask = new DownloadTask(fileMetaData);
+            NewDownloadTask(fileMetaData, null);
+        }
+
+        public static void NewDownloadTask(FileMetaData fileMetaData, string downloadPath)
+        {
+            DownloadTask downloadTask = new DownloadTask(fileMetaData, downloadPath);
             App.Current.Dispatcher.Invoke(() =>
             {
                 lock (DownloadTasks)

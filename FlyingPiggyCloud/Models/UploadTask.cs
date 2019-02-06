@@ -79,6 +79,7 @@ namespace FlyingPiggyCloud.Models
                     Status = "上传成功";
                     OnPropertyChanged("Status");
                     OnTaskCompleted?.Invoke(this, new EventArgs());
+                    
                 }
                 catch (Exception ex)
                 {

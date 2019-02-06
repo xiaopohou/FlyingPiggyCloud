@@ -27,9 +27,13 @@ namespace FlyingPiggyCloud.Models
             System.Threading.Thread.Sleep(500);
         }
 
-        public DownloadTask(FileMetaData fileMetaData) : base(fileMetaData.DownloadAddress, async (e) =>
+        public DownloadTask(FileMetaData fileMetaData, string downloadPath=null) : base(fileMetaData.DownloadAddress, async (e) =>
         {
-            string NewFilePath = KnownFolders.Downloads.Path + "\\" + fileMetaData.Name;
+            if(downloadPath==null)
+            {
+                downloadPath = KnownFolders.Downloads.Path;
+            }
+            string NewFilePath = downloadPath + "\\" + fileMetaData.Name;
             int index = 1;
             while (File.Exists(NewFilePath))
             {

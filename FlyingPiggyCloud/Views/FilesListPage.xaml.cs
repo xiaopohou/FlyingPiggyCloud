@@ -140,10 +140,14 @@ namespace FlyingPiggyCloud.Views
         {
             if (((FileListItem)((Button)sender).DataContext).Type == 0)
             {
+                var downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog();
+                downloadPathDialog.Description = "请选择下载文件夹";
+                downloadPathDialog.SelectedPath = Syroot.Windows.IO.KnownFolders.Downloads.Path;
+                downloadPathDialog.ShowDialog();
                 string uuid = ((FileListItem)((Button)sender).DataContext).UUID;
                 Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
                 Controllers.Results.ResponesResult<Controllers.Results.FileSystem.FileMetaData> x = await fileSystemMethods.GetDetailsByUUID(uuid);
-                DownloadingListPage.NewDownloadTask(x.Result);
+                DownloadingListPage.NewDownloadTask(x.Result,downloadPathDialog.SelectedPath);
             }
         }
 
