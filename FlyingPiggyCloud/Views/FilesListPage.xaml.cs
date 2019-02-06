@@ -103,9 +103,9 @@ namespace FlyingPiggyCloud.Views
                 //1000表示这是一个可以预览的视频
                 else if (a.Preview == 1000)
                 {
+                    PreviewWindow previewWindow = new PreviewWindow(a);
                     try
                     {
-                        PreviewWindow previewWindow = new PreviewWindow(a);
                         previewWindow.ShowDialog();
                     }
                     catch (Exception ex)
@@ -116,14 +116,15 @@ namespace FlyingPiggyCloud.Views
                 //300表示这是一个可以预览的图片
                 else if (a.Preview == 300)
                 {
+                    PreviewWindow previewWindow = new PreviewWindow(a);
                     try
                     {
-                        PreviewWindow previewWindow = new PreviewWindow(a);
                         previewWindow.ShowDialog();
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show("预览请求失败：" + ex.Message);
+                        previewWindow.Close();
                     }
                 }
             }

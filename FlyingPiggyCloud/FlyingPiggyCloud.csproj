@@ -131,6 +131,12 @@
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\UploadTask.cs" />
     <Compile Include="Models\UserInformationModel.cs" />
+    <Compile Include="UserControls\RenamableTextBox.xaml.cs">
+      <DependentUpon>RenamableTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TestContainer.xaml.cs">
+      <DependentUpon>TestContainer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CompletedListPage.xaml.cs">
       <DependentUpon>CompletedListPage.xaml</DependentUpon>
     </Compile>
@@ -162,6 +168,14 @@
     <Compile Include="Views\UploadingListPage.xaml.cs">
       <DependentUpon>UploadingListPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="UserControls\RenamableTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\TestContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -34,12 +34,8 @@ namespace FlyingPiggyCloud.Views
                     MainImage.Visibility = Visibility.Visible;
                 });
             }
-            else
-            {
-                throw new Exception("这不是一个支持预览的项目");
-            }
             Title = e.Name;
-            Closing += (sender,ags) => MainMedia.Close();
+            Closing += (sender, ags) => MainMedia.Close();
         }
     }
 }
