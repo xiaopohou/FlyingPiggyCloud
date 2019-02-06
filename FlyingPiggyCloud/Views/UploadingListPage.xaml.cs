@@ -23,6 +23,10 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class UploadingListPage : Page
     {
+        public static string LabelName => string.Format($"正在上传 （{UploadTasks.Count}）");
+
+        public static event EventHandler OnListCountChanged;
+
         /// <summary>
         /// 上传列表，对该对象的写操作务必在主线程执行
         /// </summary>
@@ -35,6 +39,7 @@ namespace FlyingPiggyCloud.Views
                 lock (UploadTasks)
                 {
                     UploadTasks.Add(uploadTask);
+                    OnListCountChanged?.Invoke(UploadTasks, new EventArgs());
                 }
             });
             await uploadTask.StartTaskAsync(parentUUID);

@@ -154,14 +154,14 @@
                                 <RadioButton x:Name="radioButton3" IsChecked="{Binding CurrentPage, ConverterParameter=3, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                                         <Image Height="16" Margin="0,0,5,0" Source="{Binding IsChecked, ConverterParameter=Upload.png, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton3, Mode=OneWay}" Stretch="Fill"/>
-                                        <TextBlock TextWrapping="Wrap" Text="正在上传" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{Binding IsChecked, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton3, Mode=OneWay}"/>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding UploadLabel,Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{Binding IsChecked, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton3, Mode=OneWay}"/>
                                     </StackPanel>
                                 </RadioButton>
 
                                 <RadioButton x:Name="radioButton4" IsChecked="{Binding CurrentPage, ConverterParameter=4, Converter={StaticResource LeftRadioIsCheckdConvert}, Mode=TwoWay}">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                                         <Image Height="16" Margin="0,0,5,0" Source="{Binding IsChecked, ConverterParameter=Download.png, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton4, Mode=OneWay}" Stretch="Fill"/>
-                                        <TextBlock TextWrapping="Wrap" Text="正在下载" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{Binding IsChecked, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton4, Mode=OneWay}"/>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding DownloadLabel,Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{Binding IsChecked, Converter={StaticResource LeftRadioButtonIcon}, ElementName=radioButton4, Mode=OneWay}"/>
                                     </StackPanel>
                                 </RadioButton>
 

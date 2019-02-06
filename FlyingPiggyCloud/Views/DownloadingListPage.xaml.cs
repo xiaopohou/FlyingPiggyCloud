@@ -1,5 +1,6 @@
 ﻿using FlyingPiggyCloud.Controllers.Results.FileSystem;
 using FlyingPiggyCloud.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -13,10 +14,14 @@ namespace FlyingPiggyCloud.Views
     /// </summary>
     public partial class DownloadingListPage : Page
     {
+        public static string LabelName => string.Format($"正在下载 （{DownloadTasks.Count}）");
+
+        public static event EventHandler OnListCountChanged;
+
         /// <summary>
         /// 下载列表，对该对象的写操作务必在主线程执行
         /// </summary>
-        private static ObservableCollection<DownloadTask> DownloadTasks = new ObservableCollection<Models.DownloadTask>();
+        private static ObservableCollection<DownloadTask> DownloadTasks = new ObservableCollection<DownloadTask>();
 
         private static System.Timers.Timer refreshTimer = new System.Timers.Timer(500d);
 
@@ -81,6 +86,7 @@ namespace FlyingPiggyCloud.Views
                 {
                     DownloadTasks.Add(downloadTask);
                 }
+                OnListCountChanged?.Invoke(DownloadTasks, new EventArgs());
             });
         }
 

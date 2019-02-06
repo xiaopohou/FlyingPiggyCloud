@@ -33,12 +33,18 @@ namespace FlyingPiggyCloud.Views
                 Path = new PropertyPath("Page"),
                 Mode = BindingMode.TwoWay
             });
+            DownloadingListPage.OnListCountChanged += (sender, e) => OnPropertyChanged("DownloadLabel");
+            UploadingListPage.OnListCountChanged += (sender, e) => OnPropertyChanged("UploadLabel");
         }
 
         ~MainFrameWork()
         {
             Controllers.RegistryManager.DefaultPage = CurrentPage;
         }
+
+        public string UploadLabel => UploadingListPage.LabelName;
+
+        public string DownloadLabel => DownloadingListPage.LabelName;
 
         /// <summary>
         /// 与左边栏绑定
