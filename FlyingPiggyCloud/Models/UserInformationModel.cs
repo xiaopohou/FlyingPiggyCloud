@@ -12,6 +12,9 @@ namespace FlyingPiggyCloud.Models
         [Newtonsoft.Json.JsonIgnore]
         public double Progress => SpaceUsed * 100 / SpaceCapacity;
 
+        [Newtonsoft.Json.JsonIgnore]
+        public string FrendlySpaceCapacity => Controllers.Calculators.SizeCalculator(SpaceCapacity);
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string PropertyName)

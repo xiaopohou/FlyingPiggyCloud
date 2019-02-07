@@ -328,7 +328,7 @@
             
             <!--LightButtonDesign-->
             <Style x:Key="LightButtonDesign" TargetType="Button">
-                <Setter Property="Foreground" Value="{StaticResource MainFocusColorBrush}"/>
+                <Setter Property="Foreground" Value="#FF5A5A5A"/>
                 <Setter Property="Background" Value="{x:Null}"/>
                 <Setter Property="BorderBrush" Value="{x:Null}"/>
                 <Setter Property="FontSize" Value="16"/>
@@ -339,7 +339,7 @@
                             <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource Button.MouseOver.Background}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource MainFocusColorBrush}"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
                                     <Setter Property="Foreground" Value="{StaticResource Button.Pressed.Background}"/>

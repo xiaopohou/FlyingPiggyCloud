@@ -67,8 +67,8 @@
                 <Grid>
                     <Image Width="24" Margin="4" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <uc:RenamableTextBox TextAreaMaxWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" IsInputing="{Binding IsRename,Mode=TwoWay}" HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" Text="{Binding Name, Mode=OneTime}" Cancel="RenamableTextBox_Cancel" Confirm="RenamableTextBox_Confirm"/>
-                    <Button Content="download" FontSize="20" Visibility="Collapsed" x:Name="DownloadBotton" Style="{StaticResource LightButtonDesign}" Click="DownloadBotton_Click" HorizontalAlignment="Right" Margin="0,0,64,0" VerticalAlignment="Center"/>
-                    <Button Content="bars" FontSize="20" Visibility="Collapsed" x:Name="MoreBotton" Style="{StaticResource LightButtonDesign}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
+                    <Button Content="&#xf063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" Style="{StaticResource LightButtonDesign}" Click="DownloadBotton_Click" HorizontalAlignment="Right" Margin="0,0,38,0" VerticalAlignment="Center"/>
+                    <Button Content="&#xf141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" Style="{StaticResource LightButtonDesign}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
                         <Button.ContextMenu>
                             <metro:MetroContextMenu x:Name="MoreButtonMenu" Background="{StaticResource MainFocusColorBrush}" Foreground="White">
                                 <MenuItem x:Name="Cut" Header="剪切" Click="Cut_Click">

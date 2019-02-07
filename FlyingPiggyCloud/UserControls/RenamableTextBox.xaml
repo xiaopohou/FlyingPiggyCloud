@@ -11,12 +11,7 @@
             <Setter Property="Background" Value="{x:Null}"/>
             <Setter Property="BorderBrush" Value="{x:Null}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="AllowDrop" Value="true"/>
-            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
-            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
@@ -24,9 +19,6 @@
                             <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
-                            </Trigger>
                             <Trigger Property="IsMouseOver" Value="true">
                                 <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
                             </Trigger>
@@ -50,7 +42,7 @@
         </Style>
     </UserControl.Resources>
     <StackPanel Orientation="Horizontal">
-        <TextBox IsEnabled="False" Foreground="{Binding Path=Foreground,ElementName=MainContainer}" FontSize="{Binding Path=FontSize,ElementName=MainContainer}" x:Name="TextArea" Text="{Binding Path=Text,ElementName=MainContainer}" Style="{DynamicResource TextAreaStyle}"/>
+        <TextBox IsEnabled="False" Foreground="#FF5A5A5A" FontSize="{Binding Path=FontSize,ElementName=MainContainer}" x:Name="TextArea" Text="{Binding Path=Text,ElementName=MainContainer}" Style="{DynamicResource TextAreaStyle}"/>
         <Button Style="{StaticResource ButtonBasicDesign}" Background="#FF2EC17C" Margin="2" Visibility="Collapsed" x:Name="ConfirmButton" Click="ConfirmButton_Click">
             <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/xuanze.png" />
         </Button>
