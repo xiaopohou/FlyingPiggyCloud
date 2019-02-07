@@ -20,29 +20,47 @@ namespace FlyingPiggyCloud.UserControls
     /// </summary>
     public partial class RenamableTextBox : UserControl
     {
+        #region TextProperty
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(RenamableTextBox), new PropertyMetadata(""));
         public string Text
         {
             get => (string)GetValue(TextProperty);
             set => SetValue(TextProperty, value);
         }
+        #endregion
 
-        private bool isInputable;
-        public bool IsInputable
+        #region IsInputingProperty
+        public static readonly DependencyProperty IsInputingProperty = DependencyProperty.Register("IsInputing", typeof(bool), typeof(RenamableTextBox), new PropertyMetadata(false,OnInputingChanged));
+        private static void OnInputingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get => isInputable;
-            set
+            var value = (bool)e.NewValue;
+            if(d is RenamableTextBox r)
             {
-                isInputable = value;
-                TextArea.IsEnabled = value;
-                ConfirmButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                CancelButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                if(value)
+                r.TextArea.IsEnabled = value;
+                r.ConfirmButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                r.CancelButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                if (value)
                 {
-                    Keyboard.Focus(TextArea);
+                    Keyboard.Focus(r.TextArea);
+                    r.TextArea.Width = r.TextAreaMaxWidth;
+                }
+                else
+                {
+                    r.TextArea.Width = Double.NaN;
                 }
             }
         }
+        public bool IsInputing
+        {
+            get => (bool)GetValue(IsInputingProperty);
+            set => SetValue(IsInputingProperty, value);
+        }
+        #endregion
+
+        #region TextAreaMaxWidthProperty
+        public static DependencyProperty TextAreaMaxWidthProperty = DependencyProperty.Register("TextAreaMaxWidth", typeof(double), typeof(RenamableTextBox), new PropertyMetadata(Double.NaN));
+        public double TextAreaMaxWidth { get => (double)GetValue(TextAreaMaxWidthProperty); set => SetValue(TextAreaMaxWidthProperty, value); }
+        #endregion
 
         #region ConfirmEvent
         public static readonly RoutedEvent ConfirmEvent = EventManager.RegisterRoutedEvent("Confirm", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RenamableTextBox));
@@ -92,13 +110,13 @@ namespace FlyingPiggyCloud.UserControls
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             OnConfirm();
-            IsInputable = false;
+            IsInputing = false;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             OnCancel();
-            IsInputable = false;
+            IsInputing = false;
         }
     }
 }

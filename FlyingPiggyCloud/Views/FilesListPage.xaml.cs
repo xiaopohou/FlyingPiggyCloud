@@ -1,4 +1,5 @@
 ﻿using FlyingPiggyCloud.Models;
+using FlyingPiggyCloud.UserControls;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -141,14 +142,18 @@ namespace FlyingPiggyCloud.Views
         {
             if (((FileListItem)((Button)sender).DataContext).Type == 0)
             {
-                var downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog();
-                downloadPathDialog.Description = "请选择下载文件夹";
-                downloadPathDialog.SelectedPath = Syroot.Windows.IO.KnownFolders.Downloads.Path;
-                downloadPathDialog.ShowDialog();
-                string uuid = ((FileListItem)((Button)sender).DataContext).UUID;
-                Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
-                Controllers.Results.ResponesResult<Controllers.Results.FileSystem.FileMetaData> x = await fileSystemMethods.GetDetailsByUUID(uuid);
-                DownloadingListPage.NewDownloadTask(x.Result,downloadPathDialog.SelectedPath);
+                var downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
+                {
+                    Description = "请选择下载文件夹",
+                    SelectedPath = Syroot.Windows.IO.KnownFolders.Downloads.Path
+                };
+                if(downloadPathDialog.ShowDialog()==System.Windows.Forms.DialogResult.OK)
+                {
+                    string uuid = ((FileListItem)((Button)sender).DataContext).UUID;
+                    Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
+                    Controllers.Results.ResponesResult<Controllers.Results.FileSystem.FileMetaData> x = await fileSystemMethods.GetDetailsByUUID(uuid);
+                    DownloadingListPage.NewDownloadTask(x.Result, downloadPathDialog.SelectedPath);
+                }
             }
         }
 
@@ -178,47 +183,6 @@ namespace FlyingPiggyCloud.Views
             {
                 UploadingListPage.NewUploadTask(openFileDialog, fileList.CurrentUUID);
             }
-        }
-
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Input.Keyboard.ClearFocus();
-            var btn = (Button)sender;
-            var tbx = (TextBox)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent(btn), 0);
-            tbx.Text = ((FileListItem)tbx.DataContext).Name;
-            btn.Visibility = Visibility.Collapsed;
-            ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent(btn), 1)).Visibility = Visibility.Collapsed;
-
-        }
-
-        private void Name_GotKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
-        {
-            ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent((DependencyObject)sender), 1)).Visibility = Visibility.Visible;
-            ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent((DependencyObject)sender), 2)).Visibility = Visibility.Visible;
-        }
-
-        private async void Confirm_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Input.Keyboard.ClearFocus();
-            var btn = (Button)sender;
-            var tbx = (TextBox)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent(btn), 0);
-            await ((FileListItem)tbx.DataContext).Rename(tbx.Text);
-            btn.Visibility = Visibility.Collapsed;
-            ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent(btn), 2)).Visibility = Visibility.Collapsed;
-        }
-
-        private void Name_LostKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
-        {
-            //失去键盘焦点后延迟250ms隐藏按钮，应当有更好的解决办法
-            Task.Run(()=>
-            {
-                System.Threading.Thread.Sleep(250);
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent((DependencyObject)sender), 1)).Visibility = Visibility.Collapsed;
-                    ((Button)VisualTreeHelper.GetChild(VisualTreeHelper.GetParent((DependencyObject)sender), 2)).Visibility = Visibility.Collapsed;
-                });
-            });
         }
 
         private async void AddressBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -392,5 +356,46 @@ namespace FlyingPiggyCloud.Views
             LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
         }
         #endregion
+
+        private void RenamableTextBox_Cancel(object sender, RoutedEventArgs e)
+        {
+            if(sender is RenamableTextBox renameableTextBox)
+            {
+                if(renameableTextBox.DataContext is FileListItem fileListItem)
+                {
+                    renameableTextBox.Text = fileListItem.Name;
+                }
+            }
+        }
+
+        private void Rename_Click(object sender, RoutedEventArgs e)
+        {
+            var x = sender as MenuItem;
+            if(x?.DataContext is FileListItem fileListItem)
+            {
+                fileListItem.IsRename = true;
+            }
+        }
+
+        private void ListViewItem_Unselected(object sender, RoutedEventArgs e)
+        {
+            if(sender is ListViewItem listViewItem)
+            {
+                var f = listViewItem.DataContext as FileListItem;
+                f.IsRename = false;
+            }
+        }
+
+        private async void RenamableTextBox_Confirm(object sender, RoutedEventArgs e)
+        {
+            if(sender is RenamableTextBox renamableTextBox)
+            {
+                if(renamableTextBox.DataContext is FileListItem fileListItem)
+                {
+                    await fileListItem.Rename(renamableTextBox.Text);
+                    fileListItem.IsRename = false;
+                }
+            }
+        }
     }
 }

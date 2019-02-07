@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="TestContainer" Height="450" Width="800">
     <Grid>
-        <local:RenamableTextBox Text="hello world" Width="650" Height="20" Margin="71,244.359,71,154.64"/>
+        <TextBlock FontSize="50" Text="&#xf381;" FontFamily="/FlyingPiggyCloud;component/Resources/Fonts/#Font Awesome 5 Free Solid"/>
     </Grid>
 </Window>

@@ -52,8 +52,11 @@ namespace FlyingPiggyCloud.Controllers
         {
             FileSystemMethods fileSystemMethods = new FileSystemMethods(Properties.Settings.Default.BaseUri);
             ImageSources = await fileSystemMethods.ImagePreview(UUID);
-            e?.Invoke();
-            OnPropertyChanged("ImageSources");
+            if(ImageSources.Address!=null)
+            {
+                e?.Invoke();
+                OnPropertyChanged("ImageSources");
+            }
         }
 
         public PreviewImage(string uuid) : base(PreviewTask.Video)

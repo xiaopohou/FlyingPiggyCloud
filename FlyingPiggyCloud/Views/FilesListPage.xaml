@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
       xmlns:Controllers="clr-namespace:FlyingPiggyCloud.Controllers"
       xmlns:metro="clr-namespace:Arthas.Controls.Metro;assembly=Arthas"
+      xmlns:uc="clr-namespace:FlyingPiggyCloud.UserControls"
       x:Name="page"
       x:Class="FlyingPiggyCloud.Views.FilesListPage"
       mc:Ignorable="d" 
@@ -26,55 +27,23 @@
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Setter Property="Margin" Value="0"/>
                 <Setter Property="Height" Value="36"/>
+                <Setter Property="BorderThickness" Value="0"/>
                 <EventSetter Event="Control.MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                <EventSetter Event="Unselected" Handler="ListViewItem_Unselected"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListViewItem}">
-                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="2" SnapsToDevicePixels="true">
-                                <Border x:Name="InnerBorder" BorderThickness="1" CornerRadius="1">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                <Border x:Name="InnerBorder" CornerRadius="1">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition MaxHeight="11"/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <!--<Rectangle x:Name="UpperHighlight" Fill="#75FFFFFF" Visibility="Collapsed"/>-->
                                         <GridViewRowPresenter Grid.RowSpan="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                                     </Grid>
                                 </Border>
                             </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="true">
-                                    <!--<Setter Property="Background" Value="{StaticResource ListItemHoverFill}"/>-->
-                                    <Setter Property="BorderBrush" Value="#FF2EC17C"/>
-                                    <!--<Setter Property="Visibility" TargetName="UpperHighlight" Value="Visible"/>-->
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="true">
-                                    <!--<Setter Property="Background" Value="{StaticResource ListItemSelectedFill}"/>-->
-                                    <Setter Property="BorderBrush" Value="#FF2EC17C"/>
-                                    <Setter Property="BorderBrush" TargetName="InnerBorder" Value="#80FFFFFF"/>
-                                    <!--<Setter Property="Visibility" TargetName="UpperHighlight" Value="Visible"/>
-                                    <Setter Property="Fill" TargetName="UpperHighlight" Value="#40FFFFFF"/>-->
-                                </Trigger>
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="true"/>
-                                        <Condition Property="Selector.IsSelectionActive" Value="false"/>
-                                    </MultiTrigger.Conditions>
-                                    <!--<Setter Property="Background" Value="{StaticResource ListItemSelectedInactiveFill}"/>-->
-                                    <Setter Property="BorderBrush" Value="#FFCFCFCF"/>
-                                </MultiTrigger>
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="true"/>
-                                        <Condition Property="IsMouseOver" Value="true"/>
-                                    </MultiTrigger.Conditions>
-                                    <!--<Setter Property="Background" Value="{StaticResource ListItemSelectedHoverFill}"/>-->
-                                    <Setter Property="BorderBrush" Value="#FF98DDFB"/>
-                                </MultiTrigger>
-                                <Trigger Property="IsEnabled" Value="false">
-                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -85,70 +54,21 @@
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                         <Setter Property="Background" Value="#FFFFFFFF"/>
                     </Trigger>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="#FF2EC17C"/>
-                    </Trigger>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <!--<Setter Property="Background" Value="Black"/>-->
+                        <Setter Property="Background" Value="#FFE3E4E8"/>
                     </Trigger>
-                </Style.Triggers>
-            </Style>
-
-            <!--Name框的点击自动变化-->
-            <Style x:Key="NameTextBox" TargetType="{x:Type TextBox}">
-                <Setter Property="Foreground" Value="#FF5A5A5A"/>
-                <Setter Property="FontSize" Value="16"/>
-                <Setter Property="Background" Value="{x:Null}"/>
-                <Setter Property="BorderBrush" Value="{x:Null}"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type TextBox}">
-                            <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                                <ScrollViewer VerticalAlignment="Center" x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
-
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsEnabled" Value="false">
-                                    <Setter Property="Opacity" TargetName="border" Value="0.56"/>
-                                </Trigger>
-                                <Trigger Property="IsKeyboardFocused" Value="true">
-                                    <Setter Property="Width" Value="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}"/>
-                                    <Setter Property="Background" Value="White"/>
-                                    <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <MultiTrigger>
-                        <MultiTrigger.Conditions>
-                            <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
-                            <Condition Property="IsSelectionActive" Value="false"/>
-                        </MultiTrigger.Conditions>
-                        <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
-                    </MultiTrigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FFE3E4E8"/>
+                    </Trigger>
                 </Style.Triggers>
             </Style>
 
             <DataTemplate x:Key="MetaName">
                 <Grid>
                     <Image Width="24" Margin="4" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <!--<TextBox Name="Name" Style="{StaticResource NameTextBox}" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center"/>-->
-                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center">
-                        <TextBox x:Name="Name" MinWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" Style="{StaticResource NameTextBox}" Text="{Binding Name, Mode=OneTime}" GotKeyboardFocus="Name_GotKeyboardFocus" LostKeyboardFocus="Name_LostKeyboardFocus"/>
-                        <Button Style="{StaticResource ButtonBasicDesign}" Background="#FF2EC17C" Margin="2" Visibility="Collapsed" x:Name="Confirm" Click="Confirm_Click">
-                            <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/xuanze.png" />
-                        </Button>
-                        <Button Style="{StaticResource ButtonBasicDesign}" Background="White" Margin="2" Visibility="Collapsed" Click="Cancel_Click">
-                            <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/quxiao.png"/>
-                        </Button>
-                    </StackPanel>
-
-                    <Rectangle Visibility="{Binding IsKeyboardFocused, ConverterParameter=Mask, Converter={StaticResource KeyboardFocusToVisibilityConverter}, ElementName=Name, Mode=OneWay}" Name="Mask" Width="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Right" Fill="#00000000"/>
-
-
-                    <Button Width="24" Visibility="Collapsed" Height="24" Background="White" x:Name="MoreBotton" Style="{StaticResource ButtonBasicDesign}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
+                    <uc:RenamableTextBox TextAreaMaxWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" IsInputing="{Binding IsRename,Mode=TwoWay}" HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" Text="{Binding Name, Mode=OneTime}" Cancel="RenamableTextBox_Cancel" Confirm="RenamableTextBox_Confirm"/>
+                    <Button Content="download" FontSize="20" Visibility="Collapsed" x:Name="DownloadBotton" Style="{StaticResource LightButtonDesign}" Click="DownloadBotton_Click" HorizontalAlignment="Right" Margin="0,0,64,0" VerticalAlignment="Center"/>
+                    <Button Content="bars" FontSize="20" Visibility="Collapsed" x:Name="MoreBotton" Style="{StaticResource LightButtonDesign}" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Click="MoreBotton_Click">
                         <Button.ContextMenu>
                             <metro:MetroContextMenu x:Name="MoreButtonMenu" Background="{StaticResource MainFocusColorBrush}" Foreground="White">
                                 <MenuItem x:Name="Cut" Header="剪切" Click="Cut_Click">
@@ -161,11 +81,11 @@
                                         <Image Source="/FlyingPiggyCloud;component/Resources/White/Copy.png"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <!--<MenuItem Header="重命名">
+                                <MenuItem x:Name="Rename" Header="重命名" Click="Rename_Click">
                                     <MenuItem.Icon>
                                         <Image Source="/FlyingPiggyCloud;component/Resources/White/Rename.png"/>
                                     </MenuItem.Icon>
-                                </MenuItem>-->
+                                </MenuItem>
                                 <MenuItem x:Name="Delete" Header="删除" Click="Delete_Click">
                                     <MenuItem.Icon>
                                         <Image Source="/FlyingPiggyCloud;component/Resources/White/Clean.png"/>
@@ -173,12 +93,6 @@
                                 </MenuItem>
                             </metro:MetroContextMenu>
                         </Button.ContextMenu>
-                        <Image Width="16" Source="/FlyingPiggyCloud;component/Resources/Grey/More.png" />
-                    </Button>
-
-                    <Button Background="White" Width="24" Visibility="Collapsed" Height="24" x:Name="DownloadBotton" Style="{StaticResource ButtonBasicDesign}" Click="DownloadBotton_Click" HorizontalAlignment="Right" Margin="0,0,64,0" VerticalAlignment="Center">
-                        <Image Width="16" Source="/FlyingPiggyCloud;component/Resources/Grey/Download.png" />
-                        <!--<TextBlock Style="{StaticResource IconTextBlock}" Text="arrow-down"/>-->
                     </Button>
                 </Grid>
                 <DataTemplate.Triggers>
@@ -195,23 +109,6 @@
                             <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
                         </MultiDataTrigger.Conditions>
                         <Setter TargetName="MoreBotton" Property="Visibility" Value="Visible"/>
-                        <Setter TargetName="Mask" Property="Width" Value="{Binding ActualWidth, ElementName=WidthHelperFlieName,Mode=OneWay}"/>
-                        <Setter TargetName="Mask" Property="Fill">
-                            <Setter.Value>
-                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                                    <LinearGradientBrush.RelativeTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
-                                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
-                                            <RotateTransform Angle="-90" CenterY="0.5" CenterX="0.5"/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </LinearGradientBrush.RelativeTransform>
-                                    <GradientStop Color="#0061BF83" Offset="0.5"/>
-                                    <GradientStop Color="#FF61BF83" Offset="0.7"/>
-                                </LinearGradientBrush>
-                            </Setter.Value>
-                        </Setter>
                     </MultiDataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
@@ -227,7 +124,7 @@
                     <TextBlock Foreground="#FF5A5A5A" Text="{Binding MTime}"/>
                 </StackPanel>
             </DataTemplate>
-            
+
             <Style x:Key="AddressBarItemStyle" TargetType="{x:Type ListBoxItem}">
                 <Setter Property="SnapsToDevicePixels" Value="True"/>
                 <Setter Property="Padding" Value="4,1"/>
@@ -318,7 +215,7 @@
                 <Image Margin="3" Source="/FlyingPiggyCloud;component/Resources/BasicIcons/jinru.png" Stretch="Fill"/>
             </Button>
         </Grid>
-        
+
         <!--地址栏-->
         <ListBox x:Name="AddressBar" Margin="0,60,0,0" Height="24" VerticalAlignment="Top" SelectionChanged="AddressBar_SelectionChanged" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource AddressBarItemStyle}">
             <ListBox.ItemsPanel>
@@ -345,12 +242,12 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
+        
         <!--这个Grid用于帮助GridView自动校正分栏宽度-->
         <Grid Visibility="Hidden">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="8*"/>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="6*"/>
                 <ColumnDefinition Width="1*"/>

@@ -148,6 +148,17 @@ namespace FlyingPiggyCloud.Models
 
         public string Path => MetaData.Path;
 
+        private bool isRename = false;
+        public bool IsRename
+        {
+            get => isRename;
+            set
+            {
+                isRename = value;
+                OnPropertyChanged("IsRename");
+            }
+        }
+
         public string UUID => MetaData.UUID;
 
         public int Type => MetaData.Type;

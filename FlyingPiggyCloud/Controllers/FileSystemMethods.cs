@@ -269,7 +269,6 @@ namespace FlyingPiggyCloud.Controllers
                 { "uuid", UUID },
                 { "token", Token }
             };
-            //这里偷懒用了动态类型= =
             var x = await PostAsync<ResponesResult<PreviewImage.PreviewImageInformation>>(JsonConvert.SerializeObject(data), "v1/preview/image");
             Token = x.Token;
             return x.Result;
