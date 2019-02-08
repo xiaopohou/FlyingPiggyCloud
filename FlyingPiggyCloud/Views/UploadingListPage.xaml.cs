@@ -30,9 +30,9 @@ namespace FlyingPiggyCloud.Views
         /// <summary>
         /// 上传列表，对该对象的写操作务必在主线程执行
         /// </summary>
-        private static ObservableCollection<UploadTask> UploadTasks = new ObservableCollection<UploadTask>();
+        private static ObservableCollection<IUploadTask> UploadTasks = new ObservableCollection<IUploadTask>();
 
-        public static async void NewUploadTask(UploadTask uploadTask,string parentUUID)
+        public static async void NewUploadTask(SingleFileUploadTask uploadTask,string parentUUID)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
@@ -47,7 +47,10 @@ namespace FlyingPiggyCloud.Views
 
         public static void NewUploadTask(Microsoft.Win32.OpenFileDialog openFileDialog, string parrentUUID)
         {
-            NewUploadTask(new UploadTask(openFileDialog.FileName, openFileDialog.SafeFileName), parrentUUID);
+            foreach(string path in openFileDialog.FileNames)
+            {
+                NewUploadTask(new SingleFileUploadTask(path, openFileDialog.SafeFileName), parrentUUID);
+            }
         }
 
         public UploadingListPage()
@@ -59,13 +62,13 @@ namespace FlyingPiggyCloud.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var s = (Button)sender;
-            var t = (UploadTask)s.DataContext;
+            var t = (IUploadTask)s.DataContext;
             t.Cancel();
         }
 
         private void CancelAll_Click(object sender, RoutedEventArgs e)
         {
-            foreach(UploadTask a in UploadTasks)
+            foreach(IUploadTask a in UploadTasks)
             {
                 a.Cancel();
             }

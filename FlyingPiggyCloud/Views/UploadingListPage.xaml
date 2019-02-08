@@ -22,11 +22,11 @@
             </DataTemplate>
 
             <DataTemplate x:Key="Size">
-                <TextBlock Text="{Binding TotalBytes, Converter={StaticResource SizeCalculatorConverter}, Mode=OneWay}"/>
+                <TextBlock Text="{Binding Total, Mode=OneWay}"/>
             </DataTemplate>
 
             <DataTemplate x:Key="Uploaded">
-                <TextBlock Text="{Binding UploadedBytes, Converter={StaticResource SizeCalculatorConverter}, Mode=OneWay}"/>
+                <TextBlock Text="{Binding Uploaded, Mode=OneWay}"/>
             </DataTemplate>
 
             <DataTemplate x:Key="Progress">
@@ -35,9 +35,8 @@
 
             <DataTemplate x:Key="Operates">
                 <StackPanel Orientation="Horizontal">
-                    <Button Margin="5,0" Background="DarkRed" Height="18" Width="18" Style="{StaticResource CircleButton}" ToolTip="这个按钮可以帮你取消上传任务" Click="Button_Click">
-                        <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/quxiao.png"/>
-                    </Button>
+                    <Button Margin="5,0" Content="&#xf05e;" FontSize="18" Style="{StaticResource LightButtonDesign}" ToolTip="这个按钮可以帮你取消上传任务" Click="Button_Click" BorderBrush="DarkRed"/>
+
                 </StackPanel>
             </DataTemplate>
 
@@ -126,7 +125,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileName}" CellTemplate="{StaticResource FileName}" Header="文件名"/>
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperSize}" CellTemplate="{StaticResource Size}" Header="文件大小"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperSize}" CellTemplate="{StaticResource Size}" Header="总尺寸"/>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperStatus}" CellTemplate="{StaticResource Uploaded}" Header="已完成"/>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperPrograss}" CellTemplate="{StaticResource Progress}" Header="进度"/>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperOperator}" CellTemplate="{StaticResource Operates}" Header="操作"/>

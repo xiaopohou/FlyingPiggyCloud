@@ -10,7 +10,7 @@ using WcsLib.Core;
 
 namespace FlyingPiggyCloud.Models
 {
-    public class UploadTask:INotifyPropertyChanged
+    public class SingleFileUploadTask:INotifyPropertyChanged,IUploadTask
     {
         private static readonly FileSystemMethods fileSystemMethods = new FileSystemMethods(Properties.Settings.Default.BaseUri);
 
@@ -29,11 +29,14 @@ namespace FlyingPiggyCloud.Models
         /// </summary>
         public long UploadedBytes { get; private set; }
 
+        public string Uploaded => Calculators.SizeCalculator(UploadedBytes);
+
         /// <summary>
         /// 文件的总字节数
         /// </summary>
         public long TotalBytes { get; private set; }
 
+        public string Total => Calculators.SizeCalculator(TotalBytes);
 
         /// <summary>
         /// 上传进度
@@ -57,9 +60,9 @@ namespace FlyingPiggyCloud.Models
         /// 异步开始上传任务
         /// </summary>
         /// <param name="parentUUID">目标目录的UUID</param>
-        public async Task StartTaskAsync(string parentUUID)
+        public async Task StartTaskAsync(string parentUUID=null,string parentPath=null)
         {
-            Controllers.Results.ResponesResult<Controllers.Results.FileSystem.UploadResponseResult> x = await fileSystemMethods.UploadFile(FileName, parentUUID, OriginalFilename: FileName);
+            Controllers.Results.ResponesResult<Controllers.Results.FileSystem.UploadResponseResult> x = await fileSystemMethods.UploadFile(FileName, parentUUID,parentPath, OriginalFilename: FileName);
             UploadProgressHandler uploadProgressHandler = new UploadProgressHandler((a, b) =>
               {
                   App.Current.Dispatcher.Invoke(() =>
@@ -113,7 +116,7 @@ namespace FlyingPiggyCloud.Models
         /// </summary>
         /// <param name="fullPath">文件的路径</param>
         /// <param name="FileName">文件名</param>
-        public UploadTask(string fullPath, string FileName)
+        public SingleFileUploadTask(string fullPath, string FileName)
         {
             this.fullPath = fullPath;
             this.FileName = FileName;
@@ -124,9 +127,8 @@ namespace FlyingPiggyCloud.Models
             Status = "新鲜热乎的上传任务";
 #endif
         }
-
-        public delegate void TaskStatuChanged(object sender, EventArgs e);
-        public event TaskStatuChanged OnTaskCompleted;
+        
+        public event TaskStatusChangedEventHandler OnTaskCompleted;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -135,4 +137,5 @@ namespace FlyingPiggyCloud.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
     }
+
 }

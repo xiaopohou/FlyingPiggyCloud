@@ -27,7 +27,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -113,6 +113,7 @@
     <Compile Include="Controllers\ConverterToolKits.cs" />
     <Compile Include="Controllers\DownloadTaskPropertyConverter.cs" />
     <Compile Include="Controllers\FileSystemMethods.cs" />
+    <Compile Include="Controllers\FolderUploadHelper.cs" />
     <Compile Include="Controllers\KeyboardFocusToVisibilityConverter.cs" />
     <Compile Include="Controllers\Preview.cs" />
     <Compile Include="Controllers\PreviewImage.cs" />
@@ -127,9 +128,10 @@
     <Compile Include="Models\FileList.cs" />
     <Compile Include="Models\FileListItem.cs" />
     <Compile Include="Models\ForgotPasswordViewModel.cs" />
+    <Compile Include="Models\IUploadTask.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
-    <Compile Include="Models\UploadTask.cs" />
+    <Compile Include="Models\SingleFileUploadTask.cs" />
     <Compile Include="Models\UserInformationModel.cs" />
     <Compile Include="UserControls\RenamableTextBox.xaml.cs">
       <DependentUpon>RenamableTextBox.xaml</DependentUpon>

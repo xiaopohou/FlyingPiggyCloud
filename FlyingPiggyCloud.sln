@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyingPiggyCloud", "FlyingPiggyCloud\FlyingPiggyCloud.csproj", "{D81EB20A-8A35-48EA-B1FB-5EFF3BD8D67A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "测试单元", "测试单元\测试单元.csproj", "{D413F3F3-E2D0-481B-AB16-C31E1CA4D07D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyingAria2c", "FlyingAria2c\FlyingAria2c.csproj", "{25677591-187D-4D06-9712-D8DBE4A6C450}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcsLib", "WcsLib\WcsLib.csproj", "{4D3D362C-9AB8-4962-A74F-C429407FAF85}"
@@ -23,10 +21,6 @@ Global
 		{D81EB20A-8A35-48EA-B1FB-5EFF3BD8D67A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D81EB20A-8A35-48EA-B1FB-5EFF3BD8D67A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D81EB20A-8A35-48EA-B1FB-5EFF3BD8D67A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D413F3F3-E2D0-481B-AB16-C31E1CA4D07D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D413F3F3-E2D0-481B-AB16-C31E1CA4D07D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D413F3F3-E2D0-481B-AB16-C31E1CA4D07D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D413F3F3-E2D0-481B-AB16-C31E1CA4D07D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{25677591-187D-4D06-9712-D8DBE4A6C450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{25677591-187D-4D06-9712-D8DBE4A6C450}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25677591-187D-4D06-9712-D8DBE4A6C450}.Release|Any CPU.ActiveCfg = Release|Any CPU

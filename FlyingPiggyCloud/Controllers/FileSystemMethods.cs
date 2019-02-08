@@ -191,11 +191,11 @@ namespace FlyingPiggyCloud.Controllers
         /// 上传文件
         /// </summary>
         /// <param name="Name">FileMeta的文件名</param>
-        /// <param name="Parent">上传到哪个文件夹</param>
+        /// <param name="parentUUID">上传到哪个文件夹</param>
         /// <param name="Hash">哈希</param>
         /// <param name="OriginalFilename">保存的源信息的文件名</param>
         /// <returns></returns>
-        public async Task<ResponesResult<UploadResponseResult>> UploadFile(string Name, string Parent, string Hash=null, string OriginalFilename=null)
+        public async Task<ResponesResult<UploadResponseResult>> UploadFile(string Name, string parentUUID=null,string parentPath=null, string Hash=null, string OriginalFilename=null)
         {
             if (Token == null)
             {
@@ -205,9 +205,14 @@ namespace FlyingPiggyCloud.Controllers
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "name", Name},
-                { "parent", Parent },
                 { "token", Token }
             };
+            if (parentUUID != null)
+                data.Add("parent", parentUUID);
+            else if (parentPath != null)
+                data.Add("path", parentPath);
+            else
+                data.Add("path", "/");
             if (Hash != null)
                 data.Add("hash", Hash);
             if (OriginalFilename != null)
