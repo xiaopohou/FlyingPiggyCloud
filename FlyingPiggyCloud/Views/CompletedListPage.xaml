@@ -24,7 +24,7 @@
             </DataTemplate>
             <DataTemplate x:Key="Operates">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="More" Style="{StaticResource ButtonBasicDesign}" Background="White" Margin="2" Width="24" Height="24" Click="More_Click">
+                    <Button x:Name="More" Content="&#xf141;" Style="{StaticResource LightButtonDesign}" Margin="2" Width="24" Height="24" Click="More_Click">
                         <Button.ContextMenu>
                             <metro:MetroContextMenu Background="White">
                                 <MenuItem Foreground="#FF5A5A5A" Header="打开项目" Click="MenuItem_Click">
@@ -39,28 +39,9 @@
                                 </MenuItem>
                             </metro:MetroContextMenu>
                         </Button.ContextMenu>
-                        <Image Width="16" Source="/FlyingPiggyCloud;component/Resources/Grey/More.png"/>
                     </Button>
                 </StackPanel>
             </DataTemplate>
-            
-            <Style x:Key="alternatingStyle" TargetType="ListViewItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                <Setter Property="Margin" Value="0"/>
-                <Setter Property="Height" Value="36"/>
-                <!--<EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>-->
-                <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                        <Setter Property="Background" Value="#FFF5F5F5"/>
-                    </Trigger>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="#FFFFFFFF"/>
-                    </Trigger>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="#FF2EC17C"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
         </ResourceDictionary>
     </Page.Resources>
     <Grid>

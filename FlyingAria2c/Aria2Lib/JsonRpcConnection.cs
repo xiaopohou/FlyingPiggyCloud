@@ -16,7 +16,6 @@ namespace FlyingAria2c.Aria2Lib
                 {
                     throw new System.ArgumentNullException(nameof(aria2CProgressHandle));
                 }
-
                 WebSocket = new WebSocket(string.Format("ws://127.0.0.1:{0}/jsonrpc", aria2CProgressHandle.Port));
                 WebSocket.Connect();
                 Idlist = 1;

@@ -31,6 +31,11 @@ namespace FlyingPiggyCloud.Views
             }
         }
 
+        internal static void CompletedTasksAdd(ICompletedTask completedTask)
+        {
+            CompletedTasks.Add(completedTask);
+        }
+
         public CompletedListPage()
         {
             InitializeComponent();
@@ -51,16 +56,21 @@ namespace FlyingPiggyCloud.Views
 
         private void MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ICompletedTask completedTask = (ICompletedTask)((MenuItem)sender).DataContext;
-            System.Diagnostics.Process.Start(completedTask.FilePath);
+            if (sender is DownloadTask downloadTask)
+            {
+                System.Diagnostics.Process.Start(downloadTask.FilePath);
+            }
         }
 
         private void MenuItem_Click_1(object sender, System.Windows.RoutedEventArgs e)
         {
-            ICompletedTask completedTask = (ICompletedTask)((MenuItem)sender).DataContext;
-            System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("Explorer.exe");
-            psi.Arguments = "/e,/select," + completedTask.FilePath;
-            System.Diagnostics.Process.Start(psi);
+            if(sender is DownloadTask downloadTask)
+            {
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("Explorer.exe");
+                psi.Arguments = "/e,/select," + downloadTask.FilePath;
+                System.Diagnostics.Process.Start(psi);
+            }
+            
         }
     }
 }

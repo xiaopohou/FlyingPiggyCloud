@@ -8,9 +8,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Simple Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
+
             <SolidColorBrush x:Key="MainFocusColorBrush" Color="#FF61BF83"/>
-            
+
             <!--Mac OS X风格的文本框-->
             <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
             <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
@@ -231,7 +231,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <!--ListViewHeaderStyle-->
             <Style TargetType="{x:Type GridViewColumnHeader}">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -247,7 +247,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <Style TargetType="ListView">
                 <Setter Property="BorderThickness" Value="0"/>
             </Style>
@@ -325,7 +325,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <!--LightButtonDesign-->
             <Style x:Key="LightButtonDesign" TargetType="Button">
                 <Setter Property="Foreground" Value="#FF5A5A5A"/>
@@ -348,6 +348,45 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            <!--斑马纹列表-->
+            <Style x:Key="alternatingStyle" TargetType="{x:Type ListViewItem}">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="Height" Value="36"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                <Border x:Name="InnerBorder" CornerRadius="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="11"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <GridViewRowPresenter Grid.RowSpan="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Grid>
+                                </Border>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#FFF5F5F5"/>
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                        <Setter Property="Background" Value="#FFFFFFFF"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#FFE3E4E8"/>
+                    </Trigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FFE3E4E8"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
         </ResourceDictionary>

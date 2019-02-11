@@ -1,6 +1,6 @@
 ﻿namespace FlyingPiggyCloud.Controllers
 {
-    internal interface ICompletedTask
+    public interface ICompletedTask
     {
         string FileName { get; }
 
@@ -12,7 +12,7 @@
 
     }
 
-    internal enum TaskTypeEnum
+    public enum TaskTypeEnum
     {
         Upload,
         Download

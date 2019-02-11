@@ -1,4 +1,5 @@
-﻿using FlyingPiggyCloud.Controllers.Results.FileSystem;
+﻿using FlyingPiggyCloud.Controllers;
+using FlyingPiggyCloud.Controllers.Results.FileSystem;
 using FlyingPiggyCloud.Models;
 using System;
 using System.Collections.Generic;
@@ -40,9 +41,25 @@ namespace FlyingPiggyCloud.Views
                 lock (UploadTasks)
                 {
                     UploadTasks.Add(uploadTask);
-                    OnListCountChanged?.Invoke(UploadTasks, new EventArgs());
+                    //OnListCountChanged?.Invoke(UploadTasks, new EventArgs());
                 }
             });
+            uploadTask.OnTaskCompleted += (sender, e) =>
+            {
+                if(sender is IUploadTask task)
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        UploadTasks.Remove(task);
+                        CompletedListPage.CompletedTasksAdd(new UploadedTask
+                        {
+                            FileName = task.FileName,
+                            FilePath = "",
+                            Size = task.Total
+                        });
+                    });
+                }
+            };
             await uploadTask.StartTask(parentUUID);
         }
 
@@ -70,7 +87,10 @@ namespace FlyingPiggyCloud.Views
 
         static UploadingListPage()
         {
-
+            UploadTasks.CollectionChanged += (sender, e) =>
+            {
+                OnListCountChanged(sender, e);
+            };
         }
 
         public UploadingListPage()
@@ -94,5 +114,16 @@ namespace FlyingPiggyCloud.Views
             }
             UploadTasks.Clear();
         }
+    }
+
+    public class UploadedTask : ICompletedTask
+    {
+        public string FileName { get; set; }
+
+        public TaskTypeEnum TaskType => TaskTypeEnum.Upload;
+
+        public string FilePath { get; set; }
+
+        public string Size { get; set; }
     }
 }

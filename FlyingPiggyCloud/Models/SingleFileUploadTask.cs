@@ -69,8 +69,8 @@ namespace FlyingPiggyCloud.Models
                   {
                       UploadedBytes = a;
                       TotalBytes = b;
-                      OnPropertyChanged("UploadedBytes");
-                      OnPropertyChanged("TotalBytes");
+                      OnPropertyChanged("Uploaded");
+                      OnPropertyChanged("Total");
                       OnPropertyChanged("Progress");
                   });
               });
@@ -89,26 +89,13 @@ namespace FlyingPiggyCloud.Models
                     Status = ex.Message;
                     //这里应该修改其他属性，暂时先这么解决
                     UploadedBytes = TotalBytes;
-                    OnPropertyChanged("UploadedBytes");
-                    OnPropertyChanged("TotalBytes");
+                    OnPropertyChanged("Uploaded");
+                    OnPropertyChanged("Total");
                     OnPropertyChanged("Progress");
                     OnPropertyChanged("Status");
                 }
             });
         }
-
-        /// <summary>
-        /// 异步开始上传任务，由此方法开启的上传任务最多只有10个同时进行
-        /// </summary>
-        /// <param name="parentUUID"></param>
-        /// <param name="parentPath"></param>
-        //public void StartTaskAsync(string parentUUID=null,string parentPath=null)
-        //{
-        //    MultThreadHelper.NewTask(new Task(async () =>
-        //    {
-        //        await StartTask(parentUUID, parentPath);
-        //    }));
-        //}
 
         private readonly UploadTaskOperator uploadTaskOperator;
 

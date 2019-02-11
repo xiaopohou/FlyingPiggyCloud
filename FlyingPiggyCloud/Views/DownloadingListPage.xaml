@@ -34,32 +34,10 @@
 
             <DataTemplate x:Key="Operates">
                 <StackPanel Orientation="Horizontal">
-                    <Button Background="White" Margin="5,0" x:Name="Stop" Height="24" Width="24" Style="{StaticResource ButtonBasicDesign}" Click="Stop_Click">
-                        <Image Height="16" Source="/Resources/Grey/Delete.png"/>
-                    </Button>
-                    <Button Background="White" Margin="5,0" x:Name="Pause" Height="24" Width="24" Style="{StaticResource ButtonBasicDesign}" Click="Pause_Click">
-                        <Image Height="16" Source="/Resources/Grey/Pause.png"/>
-                    </Button>
+                    <Button Margin="5,0" Content="&#xf2ed;" BorderBrush="DarkRed" x:Name="Stop" Height="24" Width="24" Style="{StaticResource LightButtonDesign}" Click="Stop_Click"/>
+                    <Button Margin="5,0" Content="&#xf28b;" BorderBrush="LightGreen" x:Name="Pause" Height="24" Width="24" Style="{StaticResource LightButtonDesign}" Click="Pause_Click"/>
                 </StackPanel>
             </DataTemplate>
-
-            <Style x:Key="alternatingStyle" TargetType="{x:Type ListViewItem}">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                <Setter Property="Margin" Value="0"/>
-                <Setter Property="Height" Value="36"/>
-                <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                        <Setter Property="Background" Value="#FFF5F5F5"/>
-                    </Trigger>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="#FFFFFFFF"/>
-                    </Trigger>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="#FF2EC17C"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-
         </ResourceDictionary>
     </Page.Resources>
     
