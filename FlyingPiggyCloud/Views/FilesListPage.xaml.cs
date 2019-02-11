@@ -398,7 +398,7 @@ namespace FlyingPiggyCloud.Views
             }
         }
 
-        private async void UploadFolderButton_Click(object sender, RoutedEventArgs e)
+        private void UploadFolderButton_Click(object sender, RoutedEventArgs e)
         {
             var uploadPathDialog = new System.Windows.Forms.FolderBrowserDialog
             {
@@ -407,11 +407,8 @@ namespace FlyingPiggyCloud.Views
             };
             if (uploadPathDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                string path = fileList.CurrentPath;
-                Controllers.FolderUploadHelper folderUpload = new Controllers.FolderUploadHelper(new System.IO.DirectoryInfo(uploadPathDialog.SelectedPath));
-                await folderUpload.UploadFolder(path);
+                UploadingListPage.NewUploadTask(uploadPathDialog, fileList.CurrentPath);
             }
-
         }
     }
 }

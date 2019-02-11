@@ -8,13 +8,15 @@ using FlyingPiggyCloud.Models;
 
 namespace FlyingPiggyCloud.Controllers
 {
-    internal class FolderUploadHelper
+    public abstract class FolderUploadHelper
     {
-        private DirectoryInfo UploadingDirectory;
+        protected readonly DirectoryInfo UploadingDirectory;
 
-        public List<SingleFileUploadTask> UploadTasks { get; private set; }
+        public int TotalFileCount { get; private set; }
 
-        private readonly FileSystemMethods FileSystemMethods = new FileSystemMethods(Properties.Settings.Default.BaseUri);
+        public int UploadedFileCount { get; private set; }
+
+        protected readonly FileSystemMethods FileSystemMethods = new FileSystemMethods(Properties.Settings.Default.BaseUri);
 
         private async Task Upload(DirectoryInfo uploadingDirectory, string parentPathInQingzhenyun)
         {
@@ -29,12 +31,21 @@ namespace FlyingPiggyCloud.Controllers
             var fs = uploadingDirectory.GetFiles();
             if(fs.Length!=0)
             {
-                foreach (FileInfo f in fs)
+                TotalFileCount += fs.Length;
+                OnNewTaskAdded?.Invoke(this, new EventArgs());
+                MultThreadHelper.NewTask(new Task(async () =>
                 {
-                    SingleFileUploadTask uploadTask = new SingleFileUploadTask(f.FullName, f.Name);
-                    UploadTasks.Add(uploadTask);
-                    await uploadTask.StartTaskAsync(parentPath: creator.Result.Path);
-                }
+                    foreach (FileInfo f in fs)
+                    {
+                        SingleFileUploadTask uploadTask = new SingleFileUploadTask(f.FullName, f.Name);
+                        uploadTask.OnTaskCompleted += (sender, e) =>
+                        {
+                            UploadedFileCount++;
+                            OnSingleFileUploaded?.Invoke(this, new EventArgs());
+                        };
+                        await uploadTask.StartTask(parentPath: creator.Result.Path);
+                    }
+                }));
             }
             var ds = uploadingDirectory.GetDirectories();
             if(ds.Length!=0)
@@ -59,7 +70,12 @@ namespace FlyingPiggyCloud.Controllers
         public FolderUploadHelper(DirectoryInfo directoryInfo)
         {
             UploadingDirectory = directoryInfo;
-            UploadTasks = new List<SingleFileUploadTask>();
+            UploadedFileCount = 0;
+            TotalFileCount = 0;
         }
+
+        protected event TaskStatusChangedEventHandler OnNewTaskAdded;
+
+        protected event TaskStatusChangedEventHandler OnSingleFileUploaded;
     }
 }

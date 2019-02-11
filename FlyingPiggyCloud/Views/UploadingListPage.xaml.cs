@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -42,7 +43,7 @@ namespace FlyingPiggyCloud.Views
                     OnListCountChanged?.Invoke(UploadTasks, new EventArgs());
                 }
             });
-            await uploadTask.StartTaskAsync(parentUUID);
+            await uploadTask.StartTask(parentUUID);
         }
 
         public static void NewUploadTask(Microsoft.Win32.OpenFileDialog openFileDialog, string parrentUUID)
@@ -53,6 +54,25 @@ namespace FlyingPiggyCloud.Views
             }
         }
 
+        public async static void NewUploadTask(FolderBrowserDialog folderBrowserDialog, string parrentPath)
+        {
+            var folderUpload = new FolderUploadTask(new System.IO.DirectoryInfo(folderBrowserDialog.SelectedPath));
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                lock (UploadTasks)
+                {
+                    UploadTasks.Add(folderUpload);
+                    OnListCountChanged?.Invoke(UploadTasks, new EventArgs());
+                }
+            });
+            await folderUpload.UploadFolder(parrentPath);
+        }
+
+        static UploadingListPage()
+        {
+
+        }
+
         public UploadingListPage()
         {
             InitializeComponent();
@@ -61,7 +81,7 @@ namespace FlyingPiggyCloud.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var s = (Button)sender;
+            var s = (System.Windows.Controls.Button)sender;
             var t = (IUploadTask)s.DataContext;
             t.Cancel();
         }

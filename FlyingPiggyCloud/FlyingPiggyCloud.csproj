@@ -115,6 +115,7 @@
     <Compile Include="Controllers\FileSystemMethods.cs" />
     <Compile Include="Controllers\FolderUploadHelper.cs" />
     <Compile Include="Controllers\KeyboardFocusToVisibilityConverter.cs" />
+    <Compile Include="Controllers\MultThreadHelper.cs" />
     <Compile Include="Controllers\Preview.cs" />
     <Compile Include="Controllers\PreviewImage.cs" />
     <Compile Include="Controllers\PreviewVideo.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Models\DownloadTask.cs" />
     <Compile Include="Models\FileList.cs" />
     <Compile Include="Models\FileListItem.cs" />
+    <Compile Include="Models\FolderUploadTask.cs" />
     <Compile Include="Models\ForgotPasswordViewModel.cs" />
     <Compile Include="Models\IUploadTask.cs" />
     <Compile Include="Models\LoginViewModel.cs" />

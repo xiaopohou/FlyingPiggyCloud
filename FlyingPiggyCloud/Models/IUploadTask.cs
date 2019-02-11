@@ -17,7 +17,7 @@ namespace FlyingPiggyCloud.Models
 
         void Cancel();
 
-        Task StartTaskAsync(string parentUUID=null, string parentPath=null);
+        Task StartTask(string parentUUID=null, string parentPath=null);
 
         string Status { get; }
 

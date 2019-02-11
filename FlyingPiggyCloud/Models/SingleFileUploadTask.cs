@@ -57,10 +57,10 @@ namespace FlyingPiggyCloud.Models
         }
 
         /// <summary>
-        /// 异步开始上传任务
+        /// 开始上传任务
         /// </summary>
         /// <param name="parentUUID">目标目录的UUID</param>
-        public async Task StartTaskAsync(string parentUUID=null,string parentPath=null)
+        public async Task StartTask(string parentUUID=null,string parentPath=null)
         {
             Controllers.Results.ResponesResult<Controllers.Results.FileSystem.UploadResponseResult> x = await fileSystemMethods.UploadFile(FileName, parentUUID,parentPath, OriginalFilename: FileName);
             UploadProgressHandler uploadProgressHandler = new UploadProgressHandler((a, b) =>
@@ -96,6 +96,19 @@ namespace FlyingPiggyCloud.Models
                 }
             });
         }
+
+        /// <summary>
+        /// 异步开始上传任务，由此方法开启的上传任务最多只有10个同时进行
+        /// </summary>
+        /// <param name="parentUUID"></param>
+        /// <param name="parentPath"></param>
+        //public void StartTaskAsync(string parentUUID=null,string parentPath=null)
+        //{
+        //    MultThreadHelper.NewTask(new Task(async () =>
+        //    {
+        //        await StartTask(parentUUID, parentPath);
+        //    }));
+        //}
 
         private readonly UploadTaskOperator uploadTaskOperator;
 
