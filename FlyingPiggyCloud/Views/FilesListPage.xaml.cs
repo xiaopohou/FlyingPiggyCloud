@@ -3,12 +3,8 @@ using FlyingPiggyCloud.UserControls;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using Wangsu.WcsLib.Core;
 
 namespace FlyingPiggyCloud.Views
 {
@@ -62,18 +58,23 @@ namespace FlyingPiggyCloud.Views
         private void CreatePathArray(string path)
         {
             if (path == "/")
+            {
                 pathArray = new List<string>(new string[]
                 {
                     "root"
                 });
+            }
             else
+            {
                 pathArray = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace));
+            }
+
             AddressBar.ItemsSource = pathArray;
         }
 
         private async void ListViewItem_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            if(sender is ListViewItem listViewItem && listViewItem.DataContext is FileListItem a)
+            if (sender is ListViewItem listViewItem && listViewItem.DataContext is FileListItem a)
             {
                 if (a.Type == 1)
                 {
@@ -84,9 +85,9 @@ namespace FlyingPiggyCloud.Views
                         try
                         {
                             await fileList.GetDirectoryByUUID(a.UUID);
-                            
+
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             MessageBox.Show(string.Format("打开失败，原因{0}", ex.Message));
                         }
@@ -142,12 +143,12 @@ namespace FlyingPiggyCloud.Views
         {
             if (((FileListItem)((Button)sender).DataContext).Type == 0)
             {
-                var downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
+                System.Windows.Forms.FolderBrowserDialog downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
                 {
                     Description = "请选择下载文件夹",
                     SelectedPath = Syroot.Windows.IO.KnownFolders.Downloads.Path
                 };
-                if(downloadPathDialog.ShowDialog()==System.Windows.Forms.DialogResult.OK)
+                if (downloadPathDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     string uuid = ((FileListItem)((Button)sender).DataContext).UUID;
                     Controllers.FileSystemMethods fileSystemMethods = new Controllers.FileSystemMethods(Properties.Settings.Default.BaseUri);
@@ -187,15 +188,17 @@ namespace FlyingPiggyCloud.Views
 
         private async void AddressBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(sender is ListBox listBox)
+            if (sender is ListBox listBox)
             {
-                var index = listBox.SelectedIndex;
+                int index = listBox.SelectedIndex;
                 if (index != -1)
                 {
                     listBox.SelectedIndex = -1;
                     string path = "";
                     if (pathArray[0] == "root")
+                    {
                         path = "/";
+                    }
                     else
                     {
                         for (int i = 1; i <= index; i++)
@@ -217,13 +220,13 @@ namespace FlyingPiggyCloud.Views
                     CreatePathArray(fileList.CurrentPath);
                 }
             }
-            
+
         }
 
         private async void Previous_Click(object sender, RoutedEventArgs e)
         {
             nextPath.Push(fileList.CurrentPath);
-            if(previousPath.Count>0)
+            if (previousPath.Count > 0)
             {
                 bool success;
                 do
@@ -241,13 +244,13 @@ namespace FlyingPiggyCloud.Views
                     }
                 } while (!success && previousPath.Count != 0);
             }
-            
+
         }
 
         private async void Next_Click(object sender, RoutedEventArgs e)
         {
             previousPath.Push(fileList.CurrentPath);
-            if(nextPath.Count>0)
+            if (nextPath.Count > 0)
             {
                 bool success;
                 do
@@ -270,10 +273,10 @@ namespace FlyingPiggyCloud.Views
         private void Copy_Click(object sender, RoutedEventArgs e)
         {
             Move?.Clear();
-            var list = FileListView.SelectedItems;
-            if(list!=null)
+            System.Collections.IList list = FileListView.SelectedItems;
+            if (list != null)
             {
-                lock(Move)
+                lock (Move)
                 {
                     foreach (FileListItem item in list)
                     {
@@ -288,7 +291,7 @@ namespace FlyingPiggyCloud.Views
         private void Cut_Click(object sender, RoutedEventArgs e)
         {
             Move?.Clear();
-            var list = FileListView.SelectedItems;
+            System.Collections.IList list = FileListView.SelectedItems;
             if (list != null)
             {
                 lock (Move)
@@ -305,9 +308,9 @@ namespace FlyingPiggyCloud.Views
 
         private void Stick_Click(object sender, RoutedEventArgs e)
         {
-            lock(Move)
+            lock (Move)
             {
-                if(Move.Count!=0)
+                if (Move.Count != 0)
                 {
                     foreach (FileListItem item in Move)
                     {
@@ -335,8 +338,8 @@ namespace FlyingPiggyCloud.Views
         {
             if (e.OriginalSource is ScrollViewer viewer)
             {
-                double bottomOffset = viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight;
-                if (viewer.VerticalOffset > 0 && bottomOffset == 0)
+                double bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
+                if (viewer.VerticalOffset > 0 && bottomOffset < 0.3)
                 {
                     LazyLoadEventHandler?.Invoke(sender, e);
                 }
@@ -347,7 +350,7 @@ namespace FlyingPiggyCloud.Views
 
         private async void LazyLoad(object sender, ScrollChangedEventArgs e)
         {
-            lock(LazyLoadEventHandler)
+            lock (LazyLoadEventHandler)
             {
                 LazyLoadEventHandler = null;
             }
@@ -359,9 +362,9 @@ namespace FlyingPiggyCloud.Views
 
         private void RenamableTextBox_Cancel(object sender, RoutedEventArgs e)
         {
-            if(sender is RenamableTextBox renameableTextBox)
+            if (sender is RenamableTextBox renameableTextBox)
             {
-                if(renameableTextBox.DataContext is FileListItem fileListItem)
+                if (renameableTextBox.DataContext is FileListItem fileListItem)
                 {
                     renameableTextBox.Text = fileListItem.Name;
                 }
@@ -370,8 +373,8 @@ namespace FlyingPiggyCloud.Views
 
         private void Rename_Click(object sender, RoutedEventArgs e)
         {
-            var x = sender as MenuItem;
-            if(x?.DataContext is FileListItem fileListItem)
+            MenuItem x = sender as MenuItem;
+            if (x?.DataContext is FileListItem fileListItem)
             {
                 fileListItem.IsRename = true;
             }
@@ -379,18 +382,18 @@ namespace FlyingPiggyCloud.Views
 
         private void ListViewItem_Unselected(object sender, RoutedEventArgs e)
         {
-            if(sender is ListViewItem listViewItem)
+            if (sender is ListViewItem listViewItem)
             {
-                var f = listViewItem.DataContext as FileListItem;
+                FileListItem f = listViewItem.DataContext as FileListItem;
                 f.IsRename = false;
             }
         }
 
         private async void RenamableTextBox_Confirm(object sender, RoutedEventArgs e)
         {
-            if(sender is RenamableTextBox renamableTextBox)
+            if (sender is RenamableTextBox renamableTextBox)
             {
-                if(renamableTextBox.DataContext is FileListItem fileListItem)
+                if (renamableTextBox.DataContext is FileListItem fileListItem)
                 {
                     await fileListItem.Rename(renamableTextBox.Text);
                     fileListItem.IsRename = false;
@@ -400,7 +403,7 @@ namespace FlyingPiggyCloud.Views
 
         private void UploadFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var uploadPathDialog = new System.Windows.Forms.FolderBrowserDialog
+            System.Windows.Forms.FolderBrowserDialog uploadPathDialog = new System.Windows.Forms.FolderBrowserDialog
             {
                 Description = "请选择上传文件夹",
                 SelectedPath = Syroot.Windows.IO.KnownFolders.Desktop.Path
