@@ -18,7 +18,7 @@ namespace FlyingPiggyCloud.Controllers
 
         protected readonly FileSystemMethods FileSystemMethods = new FileSystemMethods(Properties.Settings.Default.BaseUri);
 
-        private async Task Upload(DirectoryInfo uploadingDirectory, string parentPathInQingzhenyun)
+        private async Task Upload(DirectoryInfo uploadingDirectory, string parentPathInQingzhenyun, Action UploadingCompletedCallback = null)
         {
             var creator = await FileSystemMethods.CreatDirectory(uploadingDirectory.Name, Path:parentPathInQingzhenyun);
             bool created = false;
@@ -45,6 +45,10 @@ namespace FlyingPiggyCloud.Controllers
                         };
                         await uploadTask.StartTask(parentPath: creator.Result.Path);
                     }
+                    if(UploadedFileCount==TotalFileCount)
+                    {
+                        UploadingCompletedCallback?.Invoke();
+                    }
                 }));
             }
             var ds = uploadingDirectory.GetDirectories();
@@ -58,12 +62,11 @@ namespace FlyingPiggyCloud.Controllers
             
         }
 
-        public async Task UploadFolder(string parentPathInQingzhenyun,Action UploadingCompletedCallback=null)
+        protected async Task UploadFolder(string parentPathInQingzhenyun,Action UploadingCompletedCallback=null)
         {
             await Task.Run(async () =>
             {
-                await Upload(UploadingDirectory, parentPathInQingzhenyun);
-                UploadingCompletedCallback?.Invoke();
+                await Upload(UploadingDirectory, parentPathInQingzhenyun,UploadingCompletedCallback);
             });
         }
 

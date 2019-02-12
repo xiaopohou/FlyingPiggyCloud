@@ -82,7 +82,23 @@ namespace FlyingPiggyCloud.Views
                     OnListCountChanged?.Invoke(UploadTasks, new EventArgs());
                 }
             });
-            await folderUpload.UploadFolder(parrentPath);
+            folderUpload.OnTaskCompleted += (sender, e) =>
+            {
+                if (sender is IUploadTask task)
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        UploadTasks.Remove(task);
+                        CompletedListPage.CompletedTasksAdd(new UploadedTask
+                        {
+                            FileName = task.FileName,
+                            FilePath = "",
+                            Size = task.Total
+                        });
+                    });
+                }
+            };
+            await folderUpload.StartTask(parrentPath);
         }
 
         static UploadingListPage()

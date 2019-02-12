@@ -3,7 +3,6 @@ using FlyingPiggyCloud.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace FlyingPiggyCloud.Views
 {
@@ -49,14 +48,19 @@ namespace FlyingPiggyCloud.Views
 
         private void More_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Button btn = (Button)sender;
-            btn.ContextMenu.DataContext = btn.DataContext;
-            btn.ContextMenu.IsOpen = true;
+            Button btn = sender as Button;
+            ICompletedTask task = btn.DataContext as ICompletedTask;
+            if (task.TaskType == TaskTypeEnum.Download)
+            {
+                btn.ContextMenu.DataContext = btn.DataContext;
+                btn.ContextMenu.IsOpen = true;
+            }
         }
 
         private void MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (sender is DownloadTask downloadTask)
+            var menuItem = sender as MenuItem;
+            if (menuItem.DataContext is DownloadTask downloadTask)
             {
                 System.Diagnostics.Process.Start(downloadTask.FilePath);
             }
@@ -64,13 +68,16 @@ namespace FlyingPiggyCloud.Views
 
         private void MenuItem_Click_1(object sender, System.Windows.RoutedEventArgs e)
         {
-            if(sender is DownloadTask downloadTask)
+            var menuItem = sender as MenuItem;
+            if (menuItem.DataContext is DownloadTask downloadTask)
             {
-                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("Explorer.exe");
-                psi.Arguments = "/e,/select," + downloadTask.FilePath;
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("Explorer.exe")
+                {
+                    Arguments = "/e,/select," + downloadTask.FilePath
+                };
                 System.Diagnostics.Process.Start(psi);
             }
-            
+
         }
     }
 }
