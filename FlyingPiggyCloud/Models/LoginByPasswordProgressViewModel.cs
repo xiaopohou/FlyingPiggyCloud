@@ -33,6 +33,8 @@ namespace FlyingPiggyCloud.Models
         }
         private string password;
 
+        public bool IsLoginError { get; set; }
+
         public bool IsAutoLogin
         {
             get => Controllers.RegistryManager.IsAutoLogin;
@@ -63,6 +65,8 @@ namespace FlyingPiggyCloud.Models
             }
             else
             {
+                IsLoginError = true;
+                OnPropertyChanged("IsLoginError");
             }
         }
 
@@ -80,6 +84,7 @@ namespace FlyingPiggyCloud.Models
               {
                   Controllers.RegistryManager.CurrentUserInformation = Newtonsoft.Json.JsonConvert.SerializeObject(userInformation);
               };
+            IsLoginError = false;
         }
 
         ~LoginByPasswordProgressViewModel()
@@ -97,5 +102,7 @@ namespace FlyingPiggyCloud.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        
     }
 }

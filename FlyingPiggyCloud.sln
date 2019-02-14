@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arthas", "Arthas\Arthas.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyingPiggyCloudUWP", "FlyingPiggyCloudUWP\FlyingPiggyCloudUWP.csproj", "{186A0446-B896-47B5-9EC0-78BEB122364D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "6pan", "6pan\6pan.csproj", "{8084FCD7-F5D6-46C1-B333-07C0FD486D67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,26 @@ Global
 		{186A0446-B896-47B5-9EC0-78BEB122364D}.Release|x86.ActiveCfg = Release|x86
 		{186A0446-B896-47B5-9EC0-78BEB122364D}.Release|x86.Build.0 = Release|x86
 		{186A0446-B896-47B5-9EC0-78BEB122364D}.Release|x86.Deploy.0 = Release|x86
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|ARM.Build.0 = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|x64.Build.0 = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Debug|x86.Build.0 = Debug|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|ARM.ActiveCfg = Release|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|ARM.Build.0 = Release|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|ARM64.Build.0 = Release|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|x64.ActiveCfg = Release|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|x64.Build.0 = Release|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|x86.ActiveCfg = Release|Any CPU
+		{8084FCD7-F5D6-46C1-B333-07C0FD486D67}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

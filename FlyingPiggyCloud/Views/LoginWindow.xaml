@@ -4,18 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlyingPiggyCloud.Views"
+        xmlns:models="clr-namespace:FlyingPiggyCloud.Models"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" Style="{StaticResource WindowBasicDesign}" Background="White" Width="340" Height="512" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FlyingPiggyCloud;component/Resources/ControlStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <models:LoginErrorMessageConverter x:Key="LoginErrorMessage"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Button x:Name="CancelButton" Style="{StaticResource ButtonBasicDesign}" Height="15" Width="15" Margin="311,4,4,483" BorderBrush="{x:Null}" Background="#FF2EC17C" Click="CancelButton_Click">
-            <Image Source="/FlyingPiggyCloud;component/Resources/BasicIcons/quxiao.png"/>
-        </Button>
+        <Button x:Name="CancelButton" Content="&#xf00d;" Style="{StaticResource LightButtonDesign}" Height="15" Width="15" Margin="311,4,4,483" Click="CancelButton_Click"/>
+
         <StackPanel Margin="0,40,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
             <Image Height="115" Source="/Resources/BasicLogo.png"  HorizontalAlignment="Center"/>
             <TextBox Text="{Binding UserName}" Style="{DynamicResource TextBoxWithClearButton}" Margin="0,47,0,0" Width="205" Height="25" BorderBrush="{x:Null}"/>
@@ -29,6 +30,7 @@
                 </StackPanel>
                 <Button Name="SendMessage" BorderBrush="{x:Null}" Background="#FF2EC17C" Foreground="White" Content="获取验证码" Style="{DynamicResource ButtonBasicDesign}"/>
             </StackPanel>
+            <TextBlock Text="账号或密码验证失败，请检查输入" Foreground="DarkRed" Margin="5" Visibility="{Binding IsLoginError, Converter={StaticResource LoginErrorMessage}}"/>
             <TextBlock Visibility="Collapsed" Margin="0,8,0,14" Text="您已输入五次错误密码，请输入验证码" Foreground="#FFE53935"/>
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding IsSavedPassword,Mode=TwoWay}" Margin="0,0,107,10" Content="记住密码" Style="{DynamicResource CheckBasicDesign}" BorderBrush="#FF2EC17C"/>

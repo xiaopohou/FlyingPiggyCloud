@@ -45,14 +45,21 @@ namespace FlyingPiggyCloud.Views
         /// <param name="path"></param>
         public FilesListPage(string path)
         {
-            fileList = new FileList("", path, true);
-            InitializeComponent();
-            FileListView.ItemsSource = fileList;
-            CreatePathArray(path);
-            previousPath = new Stack<string>();
-            nextPath = new Stack<string>();
-            Stick.IsEnabled = IsStickButtonEnable;
-            LazyLoadEventHandler = LazyLoad;
+            try
+            {
+                fileList = new FileList("", path, true);
+                InitializeComponent();
+                FileListView.ItemsSource = fileList;
+                CreatePathArray(path);
+                previousPath = new Stack<string>();
+                nextPath = new Stack<string>();
+                Stick.IsEnabled = IsStickButtonEnable;
+                LazyLoadEventHandler = LazyLoad;
+            }
+            catch(InvalidOperationException)
+            {
+
+            }
         }
 
         private void CreatePathArray(string path)
