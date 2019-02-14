@@ -1,7 +1,7 @@
-﻿<Application x:Class="_6pan.App"
+﻿<Application x:Class="LiuPan.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:_6pan"
+             xmlns:local="clr-namespace:LiuPan"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

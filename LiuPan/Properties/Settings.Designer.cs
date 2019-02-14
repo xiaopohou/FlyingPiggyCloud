@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace _6pan.Properties
+namespace LiuPan.Properties
 {
 
 
