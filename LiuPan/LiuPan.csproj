@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Views\PageNavigate.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -87,7 +88,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\FileListPage.cs" />
     <Compile Include="Models\FileMetaData.cs" />
+    <Compile Include="Models\GenericResult.cs" />
+    <Compile Include="Models\LocalProperties.cs" />
+    <Compile Include="Models\ResultBase.cs" />
+    <Compile Include="Models\UploadToken.cs" />
     <Compile Include="Models\UserInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -131,7 +137,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="UserControls\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
