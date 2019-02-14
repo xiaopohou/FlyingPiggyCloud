@@ -127,6 +127,7 @@
     <Compile Include="Controllers\RegistryManager.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\SizeCalculatorConverter.cs" />
+    <Compile Include="Controllers\TaskBarButton.cs" />
     <Compile Include="Controllers\UserCenterMethods.cs" />
     <Compile Include="Models\DownloadTask.cs" />
     <Compile Include="Models\FileList.cs" />

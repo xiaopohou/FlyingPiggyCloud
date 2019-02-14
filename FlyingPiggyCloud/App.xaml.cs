@@ -12,6 +12,12 @@ namespace FlyingPiggyCloud
     /// </summary>
     public partial class App : Application
     {
+        Controllers.TaskBarButton TaskBarButton { get; set; }
 
+        public App()
+        {
+            TaskBarButton = new Controllers.TaskBarButton();
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+        }
     }
 }
