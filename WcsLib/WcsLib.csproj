@@ -55,7 +55,6 @@
     <Compile Include="Exception\OperatingAbortedException.cs" />
     <Compile Include="HTTP\HttpManager.cs" />
     <Compile Include="HTTP\HttpResult.cs" />
-    <Compile Include="Utility\AssemblyInfo.cs" />
     <Compile Include="Utility\Base64.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ETag.cs" />

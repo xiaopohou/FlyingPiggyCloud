@@ -21,38 +21,7 @@ namespace Wangsu.WcsLib.HTTP
         public HttpManager(bool allowAutoRedirect = false)
         {
             this.allowAutoRedirect = allowAutoRedirect;
-            userAgent = GetDefaultUserAgent();
-        }
-
-        /// <summary>
-        /// UserAgent 属性
-        /// </summary>
-        public string UserAgent
-        {
-            get => userAgent;
-
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentNullException("value");
-                }
-                userAgent = value;
-            }
-        }
-
-        /// <summary>
-        /// 获取默认 UserAgent
-        /// </summary>
-        /// <returns>默认 UserAgent</returns>
-        public static string GetDefaultUserAgent()
-        {
-            // UMU:
-            // GetCallingAssembly() -> EXE
-            // GetExecutingAssembly() -> WcsLib
-            AssemblyInfo info = new AssemblyInfo(Assembly.GetExecutingAssembly());
-            return string.Format("WCS-C#-SDK-{0}(https://wcs.chinanetcenter.com)", info.Version);
-            //return string.Format("{0}/{1} ({2}; {3}; {4})", info.Product, info.Version, info.Title, Environment.OSVersion.Platform, Environment.OSVersion.Version);
+            //userAgent = GetDefaultUserAgent();
         }
 
         /// <summary>
@@ -440,6 +409,6 @@ namespace Wangsu.WcsLib.HTTP
         }
 
         private readonly bool allowAutoRedirect;
-        private string userAgent;
+        private const string userAgent = "ezWcsSDK";
     }
 }
