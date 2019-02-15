@@ -17,17 +17,13 @@ namespace Wangsu.WcsLib.Core
     /// </summary>
     internal class SimpleUpload
     {
-        public SimpleUpload(Auth auth, Config config)
+        public SimpleUpload(string token, Config config)
         {
-            this.auth = auth;
+            this.token = token;
             this.config = config;
             //this.url = url;
             httpManager = new HttpManager();
         }
-
-        //public SimpleUpload(Mac mac, Config config) : this(new Auth(mac), config)
-        //{
-        //}
 
         /// <summary>
         /// 上传数据
@@ -61,7 +57,7 @@ namespace Wangsu.WcsLib.Core
             // write token
             bodyBuilder.Append("--" + boundary + "\r\n"
                 + "Content-Disposition: form-data; name=\"token\"\r\n\r\n"
-                + auth.CreateUploadToken() + "\r\n");
+                + token + "\r\n");
 
             // write extra params
             if (null != putExtra.Params && putExtra.Params.Count > 0)
@@ -182,7 +178,7 @@ namespace Wangsu.WcsLib.Core
             return UploadStream(fs, key, putExtra);
         }
 
-        private Auth auth;
+        private string token;
         private Config config;
         private HttpManager httpManager;
         //private string url;

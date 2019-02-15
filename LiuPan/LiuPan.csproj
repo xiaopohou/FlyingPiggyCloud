@@ -73,6 +73,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controllers\WcsUploader\Uploader.cs" />
+    <Compile Include="Models\RecoverableUploadTaskArchive.cs" />
+    <Compile Include="Models\SingleFileUploadTask.cs" />
+    <Compile Include="Models\UploadTask.cs" />
     <Compile Include="Views\PageNavigate.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -134,7 +138,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="UserControls\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>

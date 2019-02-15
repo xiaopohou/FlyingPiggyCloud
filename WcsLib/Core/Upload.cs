@@ -123,7 +123,7 @@ namespace Wangsu.WcsLib.Core
 
         private static async Task<HttpResult> SimpleUploadAsync(string FilePath, string Token, string UploadUrl)
         {
-            SimpleUpload simpleUpload = new SimpleUpload(new Auth(Token), new Config(UploadUrl));
+            SimpleUpload simpleUpload = new SimpleUpload(Token, new Config(UploadUrl));
             HttpResult x = await Task.Run(() =>
             {
                 return simpleUpload.UploadFile(FilePath);
@@ -134,7 +134,7 @@ namespace Wangsu.WcsLib.Core
 
         private static HttpResult SimpleUpload(string FilePath, string Token, string UploadUrl)
         {
-            SimpleUpload simpleUpload = new SimpleUpload(new Auth(Token), new Config(UploadUrl));
+            SimpleUpload simpleUpload = new SimpleUpload(Token, new Config(UploadUrl));
             return simpleUpload.UploadFile(FilePath);
         }
     }

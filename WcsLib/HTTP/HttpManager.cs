@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Wangsu.WcsLib.Utility;
 
 namespace Wangsu.WcsLib.HTTP
@@ -31,10 +29,7 @@ namespace Wangsu.WcsLib.HTTP
         /// </summary>
         public string UserAgent
         {
-            get
-            {
-                return userAgent;
-            }
+            get => userAgent;
 
             set
             {
@@ -189,7 +184,7 @@ namespace Wangsu.WcsLib.HTTP
                 {
                     webRequest.ContentType = mimeType;
                 }
-                
+
                 webRequest.UserAgent = userAgent;
                 webRequest.AllowAutoRedirect = allowAutoRedirect;
                 webRequest.ServicePoint.Expect100Continue = false;
@@ -201,7 +196,7 @@ namespace Wangsu.WcsLib.HTTP
 
                 if (null != customHeaders)
                 {
-                    foreach (var header in customHeaders)
+                    foreach (KeyValuePair<string, string> header in customHeaders)
                     {
                         webRequest.Headers.Add(header.Key, header.Value);
                     }
@@ -433,10 +428,10 @@ namespace Wangsu.WcsLib.HTTP
 
                 result.ResponseHeaders.Add("ContentLength", webResponse.ContentLength.ToString());
 
-                var headers = webResponse.Headers;
+                WebHeaderCollection headers = webResponse.Headers;
                 if (null != headers && headers.Count > 0)
                 {
-                    foreach (var key in headers.AllKeys)
+                    foreach (string key in headers.AllKeys)
                     {
                         result.ResponseHeaders.Add(key, headers[key]);
                     }
@@ -444,7 +439,7 @@ namespace Wangsu.WcsLib.HTTP
             }
         }
 
-        private bool allowAutoRedirect;
+        private readonly bool allowAutoRedirect;
         private string userAgent;
     }
 }
