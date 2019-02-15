@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Wangsu.WcsLib.HTTP;
-using Wangsu.WcsLib.Utility;
-using WcsLib.Utility;
 
 // ChangeLog:
 // UMU @ 2017/12/19, Fix bug on MAC, AppendLine -> Append + "\r\n"
@@ -34,12 +32,12 @@ namespace Wangsu.WcsLib.Core
         /// <returns>上传数据后的返回结果</returns>
         public HttpResult UploadData(byte[] data, string key = null, PutExtra putExtra = null)
         {
-//#if DEBUG
-//            if (null == putPolicy)
-//            {
-//                throw new ArgumentNullException("putPolicy");
-//            }
-//#endif
+            //#if DEBUG
+            //            if (null == putPolicy)
+            //            {
+            //                throw new ArgumentNullException("putPolicy");
+            //            }
+            //#endif
             if (putExtra == null)
             {
                 putExtra = new PutExtra();
@@ -145,12 +143,12 @@ namespace Wangsu.WcsLib.Core
         /// <returns>上传数据流后的返回结果</returns>
         public HttpResult UploadStream(Stream stream, string key = null, PutExtra putExtra = null)
         {
-//#if DEBUG
-//            if (null == putPolicy)
-//            {
-//                throw new ArgumentNullException("putPolicy");
-//            }
-//#endif
+            //#if DEBUG
+            //            if (null == putPolicy)
+            //            {
+            //                throw new ArgumentNullException("putPolicy");
+            //            }
+            //#endif
             int bufferSize = 4 * 1024 * 1024;
             byte[] buffer = new byte[bufferSize];
             int bytesRead = 0;
@@ -178,7 +176,7 @@ namespace Wangsu.WcsLib.Core
             return UploadStream(fs, key, putExtra);
         }
 
-        private string token;
+        private readonly string token;
         private Config config;
         private HttpManager httpManager;
         //private string url;

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Wangsu.WcsLib.HTTP;
 using Wangsu.WcsLib.Utility;
-using WcsLib.Utility;
 
 namespace Wangsu.WcsLib.Core
 {
@@ -20,7 +16,7 @@ namespace Wangsu.WcsLib.Core
         {
             //this.auth = auth;
             this.config = config;
-            this.httpManager = new HttpManager();
+            httpManager = new HttpManager();
             uploadBatch = Guid.NewGuid().ToString();
         }
 
@@ -88,7 +84,7 @@ namespace Wangsu.WcsLib.Core
             url.Append(config.GetUploadUrlPrefix() + "/mkfile/" + size.ToString());
             if (null != putExtra && null != putExtra.Params && putExtra.Params.Count > 0)
             {
-                foreach (var p in putExtra.Params)
+                foreach (KeyValuePair<string, string> p in putExtra.Params)
                 {
                     if (p.Key.StartsWith("x:"))
                     {
@@ -98,7 +94,7 @@ namespace Wangsu.WcsLib.Core
             }
 
             StringBuilder ctxList = new StringBuilder();
-            foreach(var ctx in contexts)
+            foreach (string ctx in contexts)
             {
                 ctxList.Append(ctx + ",");
             }

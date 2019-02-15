@@ -56,9 +56,7 @@
     <Compile Include="HTTP\HttpManager.cs" />
     <Compile Include="HTTP\HttpResult.cs" />
     <Compile Include="Utility\AssemblyInfo.cs" />
-    <Compile Include="Utility\Auth.cs" />
     <Compile Include="Utility\Base64.cs" />
-    <Compile Include="Utility\CRC32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ETag.cs" />
     <Compile Include="Utility\Hash.cs" />
