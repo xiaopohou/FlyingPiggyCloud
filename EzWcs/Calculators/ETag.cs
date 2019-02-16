@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 
-namespace Wangsu.WcsLib.Utility
+namespace EzWcs.Calculators
 {
     /// <summary>
     /// HTTP 协议：ETag == URL 的 Entity Tag，用于标示 URL 对象是否改变，区分不同语言和 Session 等等。
     /// </summary>
-    public sealed class ETag
+    internal sealed class ETag
     {
         public static string ComputeEtag(string filePath)
         {
@@ -25,7 +25,6 @@ namespace Wangsu.WcsLib.Utility
                         byte[] sha1 = Hash.ComputeSha1(block, 0, readBytes);
 
                         tag[0] = 0x16;
-                        //Array.Copy(sha1, 0, tag, 1, sha1.Length);
                         Buffer.BlockCopy(sha1, 0, tag, 1, sha1.Length);
                     }
                     else
@@ -90,4 +89,5 @@ namespace Wangsu.WcsLib.Utility
 
         private const int SHA1_VALUE_SIZE = 20;
     }
+
 }

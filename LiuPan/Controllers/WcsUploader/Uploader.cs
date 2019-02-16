@@ -1,11 +1,7 @@
 ﻿using LiuPan.Models;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace LiuPan.Controllers.WcsUploader
 {
@@ -19,7 +15,7 @@ namespace LiuPan.Controllers.WcsUploader
 
         private static ConcurrentQueue<IUploadTask> waittingTasks = new ConcurrentQueue<IUploadTask>();
 
-        private static bool isCheck = true;
+        private static readonly bool isCheck = true;
 
         private static void Start()
         {

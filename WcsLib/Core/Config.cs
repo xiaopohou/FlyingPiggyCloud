@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wangsu.WcsLib.Utility;
-
-namespace Wangsu.WcsLib.Core
+﻿namespace Wangsu.WcsLib.Core
 {
     internal class Config
     {

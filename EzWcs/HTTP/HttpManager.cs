@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace Wangsu.WcsLib.HTTP
+namespace EzWcs.HTTP
 {
     /// <summary>
     /// HttpManager for .NET
