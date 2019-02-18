@@ -1,9 +1,13 @@
 ﻿using EzWcs.Calculators;
 using EzWcs.HTTP;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Text;
+using System.Threading;
 
 namespace EzWcs
 {
@@ -12,30 +16,250 @@ namespace EzWcs
     /// </summary>
     internal class SliceUploadWorker
     {
-        private ConcurrentQueue<IUploadTask> workbook = new ConcurrentQueue<IUploadTask>();
+        public const int BLOCKSIZE = 4 * 1024 * 1024;
 
-        private IUploadTask currentTask;
+        private const int FIRSTCHUNKSIZE = 1024;
 
-        private Config config;
+        private ConcurrentQueue<SliceUploadTask> workbook = new ConcurrentQueue<SliceUploadTask>();
+
+        private SliceUploadTask currentTask;
 
         private HttpManager httpManager;
 
-        private string uploadBatch;
-
-        private void StartTask()
+        /// <summary>
+        /// 从等待队列拉取一个激活态的任务
+        /// </summary>
+        private void PullTask()
         {
             bool isSuccess = false;
+            int waitingTaskCount = 0;
             do
             {
-                isSuccess = workbook.TryDequeue(out currentTask);
-            } while (!isSuccess);
+                isSuccess = workbook.TryDequeue(out SliceUploadTask nextUploadTask);
+                if (isSuccess)
+                {
+                    switch (nextUploadTask.UploadTaskStatus)
+                    {
+                        case UploadTaskStatus.Abort:
+                        case UploadTaskStatus.Completed:
+                        case UploadTaskStatus.Error:
+                            isSuccess = false;
+                            break;
+                        case UploadTaskStatus.Pause:
+                            isSuccess = false;
+                            waitingTaskCount++;
+                            workbook.Enqueue(nextUploadTask);
+                            break;
+                        case UploadTaskStatus.Active:
+                            currentTask = nextUploadTask;
+                            break;
+                    }
+                }
+            } while (!isSuccess || workbook.Count <= waitingTaskCount);
+            if (currentTask.UploadTaskStatus == UploadTaskStatus.Completed || currentTask.UploadTaskStatus == UploadTaskStatus.Abort || currentTask.UploadTaskStatus == UploadTaskStatus.Error)
+            {
+                currentTask = null;
+            }
         }
 
+        /// <summary>
+        /// 检查当前任务状态并更新
+        /// </summary>
         private void Check()
         {
-            if (currentTask.IsCompleted)
+            if (currentTask.UploadTaskStatus != UploadTaskStatus.Active)
             {
-                StartTask();
+                switch (currentTask.UploadTaskStatus)
+                {
+                    case UploadTaskStatus.Abort:
+                    case UploadTaskStatus.Completed:
+                    case UploadTaskStatus.Error:
+                        PullTask();
+                        return;
+                    case UploadTaskStatus.Pause:
+                        workbook.Enqueue(currentTask);
+                        PullTask();
+                        return;
+                }
+            }
+        }
+
+        private class JobInformation
+        {
+            public long BlockIndex { get; set; }
+
+            public byte[] Data { get; set; }
+
+            public SliceUploadTask UploadTask { get; set; }
+
+        }
+
+        private IEnumerable<JobInformation> GetJobInformation()
+        {
+            if (currentTask != null && File.Exists(currentTask.FilePath))
+            {
+                SliceUploadTask task = currentTask;
+                FileStream fileStream = new FileStream(task.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                BinaryReader binaryReader = new BinaryReader(fileStream);
+                try
+                {
+                    long blockIndex = 0;
+                    do
+                    {
+                        byte[] data = binaryReader.ReadBytes(BLOCKSIZE);
+                        if ((task.TotalContents[blockIndex] == null || task.TotalContents[blockIndex] == "") && task.UploadTaskStatus == UploadTaskStatus.Active)
+                        {
+                            yield return new JobInformation
+                            {
+                                BlockIndex = blockIndex,
+                                Data = data,
+                                UploadTask = task
+                            };
+                        }
+                        else if (task.UploadTaskStatus != UploadTaskStatus.Active)
+                        {
+                            yield break;
+                        }
+                        blockIndex++;
+                    } while (blockIndex < task.TotalBlockCount - 1);
+                }
+                finally
+                {
+                    binaryReader.Close();
+                }
+            }
+            else
+            {
+                yield break;
+            }
+            yield break;
+        }
+
+        private void CarryOn()
+        {
+            foreach (JobInformation jobs in GetJobInformation())
+            {
+                try
+                {
+                    if (jobs.BlockIndex == 0)
+                    {
+                        jobs.UploadTask.TotalContents[jobs.BlockIndex] = UploadFirstBlock(jobs.Data, jobs.BlockIndex, jobs.UploadTask.Token, jobs.UploadTask.Address, jobs.UploadTask.UploadBatch, Path.GetFileName(jobs.UploadTask.FilePath));
+                        jobs.UploadTask.CompletedBlockCount++;
+                    }
+                    else
+                    {
+                        jobs.UploadTask.TotalContents[jobs.BlockIndex] = UploadBlock(jobs.Data, jobs.BlockIndex, jobs.UploadTask.Token, jobs.UploadTask.Address, jobs.UploadTask.UploadBatch, Path.GetFileName(jobs.UploadTask.FilePath));
+                        jobs.UploadTask.CompletedBlockCount++;
+                    }
+                }
+                catch (Exception)
+                {
+                    jobs.UploadTask.UploadTaskStatus = UploadTaskStatus.Pause;
+                }
+            }
+            SliceUploadTask task = currentTask;
+            if (task.CompletedBlockCount == task.TotalBlockCount)
+            {
+                foreach (string content in task.TotalContents)
+                {
+                    if (content == null || content == "")
+                    {
+                        return;
+                    }
+                }
+                HttpResult result = MakeFile(new FileInfo(task.FilePath).Length, Path.GetFileName(task.FilePath), task.TotalContents, task.Token, task.UploadUrl, task.UploadBatch);
+                JObject jo = JObject.Parse(result.Text);
+                if (jo["hash"].ToString() != ETag.ComputeEtag(task.FilePath))
+                {
+                    task.UploadTaskStatus = UploadTaskStatus.Error;
+                }
+            }
+            if (task.CompletedBlockCount >= task.TotalBlockCount)
+            {
+                task.UploadTaskStatus = UploadTaskStatus.Error;
+            }
+        }
+
+        private void StartWork()
+        {
+            ThreadPool.QueueUserWorkItem((status) =>
+            {
+                while (true)
+                {
+                    if (workbook.Count == 0)
+                    {
+                        Thread.Sleep(500);
+                    }
+                    else
+                    {
+                        Check();
+                        CarryOn();
+                        Thread.Sleep(10);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// 上传第一个块
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="Index"></param>
+        /// <param name="su"></param>
+        /// <param name="uploadToken"></param>
+        /// <param name="Key"></param>
+        /// <returns></returns>
+        private string UploadFirstBlock(byte[] data, long Index, string uploadToken, string uploadUrl, string uploadBatch, string Key)
+        {
+            if (data.Length != BLOCKSIZE)
+            {
+                throw new Exception("文件不足4MB，请使用普通方式上传");
+            }
+
+            HttpResult result = MakeBlock(BLOCKSIZE, Index, data, 0, FIRSTCHUNKSIZE, uploadToken, uploadUrl, uploadBatch, Key);
+            if ((int)HttpStatusCode.OK == result.Code)
+            {
+                JObject jo = JObject.Parse(result.Text);
+                string ctx = jo["ctx"].ToString();
+                // 上传第 1 个 block 剩下的数据
+                result = Bput(ctx, FIRSTCHUNKSIZE, data, FIRSTCHUNKSIZE, BLOCKSIZE - FIRSTCHUNKSIZE, uploadToken, uploadUrl, uploadBatch, Key);
+                if ((int)HttpStatusCode.OK == result.Code)
+                {
+                    jo = JObject.Parse(result.Text);
+                    return jo["ctx"].ToString();
+                }
+                else
+                {
+                    throw new Exception(result.Data.ToString());
+                }
+            }
+            else
+            {
+                throw new Exception(result.Data.ToString());
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="Index"></param>
+        /// <param name="su"></param>
+        /// <param name="uploadToken"></param>
+        /// <param name="Key"></param>
+        /// <returns></returns>
+        private string UploadBlock(byte[] data, long Index, string uploadToken, string uploadUrl, string uploadBatch, string Key)
+        {
+            HttpResult result = MakeBlock(data.Length, Index, data, 0, data.Length, uploadToken, uploadUrl, uploadBatch, Key);
+            if ((int)HttpStatusCode.OK == result.Code)
+            {
+                JObject jo = JObject.Parse(result.Text);
+                return jo["ctx"].ToString();
+            }
+            else
+            {
+                throw new Exception("Exit with error");
             }
         }
 
@@ -49,9 +273,9 @@ namespace EzWcs
         /// <param name="chunkSize">分片大小，一个块可以被分为若干片依次上传然后拼接或者不分片直接上传整块</param>
         /// <param name="uploadToken">上传凭证</param>
         /// <returns>此操作执行后的返回结果</returns>
-        private HttpResult MakeBlock(long blockSize, long blockOrder, byte[] chunk, int chunkOffset, int chunkSize, string uploadToken, string key = null)
+        private HttpResult MakeBlock(long blockSize, long blockOrder, byte[] chunk, int chunkOffset, int chunkSize, string uploadToken, string uploadUrl, string uploadBatch, string key = null)
         {
-            string url = config.GetUploadUrlPrefix() + "/mkblk/" + blockSize.ToString() + "/" + blockOrder.ToString();
+            string url = uploadUrl + "/mkblk/" + blockSize.ToString() + "/" + blockOrder.ToString();
             Dictionary<string, string> customHeaders = new Dictionary<string, string>
             {
                 { "UploadBatch", uploadBatch }
@@ -73,9 +297,9 @@ namespace EzWcs
         /// <param name="context">承接前一片数据用到的Context</param>
         /// <param name="uploadToken">上传凭证</param>
         /// <returns>此操作执行后的返回结果</returns>
-        private HttpResult Bput(string context, long offset, byte[] chunk, int chunkOffset, int chunkSize, string uploadToken, string key = null)
+        private HttpResult Bput(string context, long offset, byte[] chunk, int chunkOffset, int chunkSize, string uploadToken, string uploadUrl, string uploadBatch, string key = null)
         {
-            string url = config.GetUploadUrlPrefix() + "/bput/" + context + "/" + offset.ToString();
+            string url = uploadUrl + "/bput/" + context + "/" + offset.ToString();
             Dictionary<string, string> customHeaders = new Dictionary<string, string>
             {
                 { "UploadBatch", uploadBatch }
@@ -97,10 +321,10 @@ namespace EzWcs
         /// <param name="uploadToken">上传凭证</param>
         /// <param name="putExtra">用户指定的额外参数</param>
         /// <returns>此操作执行后的返回结果</returns>
-        private HttpResult MakeFile(long size, string key, string[] contexts, string uploadToken, PutExtra putExtra = null)
+        private HttpResult MakeFile(long size, string key, string[] contexts, string uploadToken, string uploadUrl, string uploadBatch, PutExtra putExtra = null)
         {
             StringBuilder url = new StringBuilder();
-            url.Append(config.GetUploadUrlPrefix() + "/mkfile/" + size.ToString());
+            url.Append(uploadUrl + "/mkfile/" + size.ToString());
             if (null != putExtra && null != putExtra.Params && putExtra.Params.Count > 0)
             {
                 foreach (KeyValuePair<string, string> p in putExtra.Params)
@@ -136,31 +360,15 @@ namespace EzWcs
             return httpManager.Post(url.ToString(), Encoding.UTF8.GetBytes(ctxList.ToString(0, ctxList.Length - 1)), uploadToken, "text/plain;charset=UTF-8", customHeaders);
         }
 
-        public SliceUploadWorker(Config config)
+        public SliceUploadWorker()
         {
-            this.config = config;
             httpManager = new HttpManager();
-            uploadBatch = Guid.NewGuid().ToString();
+            StartWork();
         }
 
-        public void AddTask(IUploadTask uploadTask)
+        public void AddTask(SliceUploadTask uploadTask)
         {
             workbook.Enqueue(uploadTask);
         }
-    }
-
-    internal class SliceUploadTask : IUploadTask
-    {
-        public string FilePath { get; private set; }
-
-        public string Token { get; private set; }
-
-        public string Address { get; private set; }
-
-        public bool IsCompleted { get; set; }
-
-        public bool IsActive { get; set; }
-
-        public bool IsAbort { get; set; }
     }
 }

@@ -17,6 +17,15 @@
         /// </summary>
         string Address { get; }
 
-        bool IsCompleted { get; }
+        UploadTaskStatus UploadTaskStatus { get; }
+    }
+
+    public enum UploadTaskStatus
+    {
+        Active,
+        Pause,
+        Abort,
+        Completed,
+        Error
     }
 }
