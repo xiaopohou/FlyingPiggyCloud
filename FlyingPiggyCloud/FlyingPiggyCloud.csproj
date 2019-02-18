@@ -313,6 +313,10 @@
       <Project>{f5dbbc65-f7d3-4a0d-8a9f-3dafd3deb7ed}</Project>
       <Name>Arthas</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EzWcs\EzWcs.csproj">
+      <Project>{763a07ac-1da1-44a2-873e-d72de4b73e2d}</Project>
+      <Name>EzWcs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FlyingAria2c\FlyingAria2c.csproj">
       <Project>{25677591-187d-4d06-9712-d8dbe4a6c450}</Project>
       <Name>FlyingAria2c</Name>

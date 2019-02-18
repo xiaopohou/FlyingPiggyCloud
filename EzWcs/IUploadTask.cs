@@ -17,7 +17,11 @@
         /// </summary>
         string Address { get; }
 
-        UploadTaskStatus UploadTaskStatus { get; }
+        long CompletedBytes { get; }
+
+        long TotalBytes { get; }
+
+        UploadTaskStatus UploadTaskStatus { get; set; }
     }
 
     public enum UploadTaskStatus

@@ -78,7 +78,11 @@ namespace FlyingPiggyCloud.Models
             {
                 try
                 {
+#if DEBUG
+                    EzWcs.EzWcs.NewTask(fullPath, x.Result.Token, x.Result.UploadUrl);
+#else
                     Upload.Start(x.Result.Token, fullPath, x.Result.UploadUrl, FileName, uploadProgressHandler: uploadProgressHandler, userCommand: uploadTaskOperator);
+#endif
                     Status = "上传成功";
                     OnPropertyChanged("Status");
                     OnTaskCompleted?.Invoke(this, new EventArgs());

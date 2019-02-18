@@ -14,7 +14,7 @@ namespace EzWcs
     /// <summary>
     /// 这个工人处理分片上传的任务
     /// </summary>
-    internal class SliceUploadWorker
+    internal sealed class SliceUploadWorker
     {
         public const int BLOCKSIZE = 4 * 1024 * 1024;
 
@@ -55,7 +55,7 @@ namespace EzWcs
                             break;
                     }
                 }
-            } while (!isSuccess || workbook.Count <= waitingTaskCount);
+            } while (!isSuccess && workbook.Count >= waitingTaskCount);
             if (currentTask.UploadTaskStatus == UploadTaskStatus.Completed || currentTask.UploadTaskStatus == UploadTaskStatus.Abort || currentTask.UploadTaskStatus == UploadTaskStatus.Error)
             {
                 currentTask = null;
@@ -67,7 +67,11 @@ namespace EzWcs
         /// </summary>
         private void Check()
         {
-            if (currentTask.UploadTaskStatus != UploadTaskStatus.Active)
+            if (currentTask == null)
+            {
+                PullTask();
+            }
+            else if (currentTask.UploadTaskStatus != UploadTaskStatus.Active)
             {
                 switch (currentTask.UploadTaskStatus)
                 {
@@ -121,7 +125,7 @@ namespace EzWcs
                             yield break;
                         }
                         blockIndex++;
-                    } while (blockIndex < task.TotalBlockCount - 1);
+                    } while (blockIndex < task.TotalBlockCount);
                 }
                 finally
                 {
@@ -145,11 +149,17 @@ namespace EzWcs
                     {
                         jobs.UploadTask.TotalContents[jobs.BlockIndex] = UploadFirstBlock(jobs.Data, jobs.BlockIndex, jobs.UploadTask.Token, jobs.UploadTask.Address, jobs.UploadTask.UploadBatch, Path.GetFileName(jobs.UploadTask.FilePath));
                         jobs.UploadTask.CompletedBlockCount++;
+#if DEBUG
+                        Console.WriteLine("成功上传首个片");
+#endif
                     }
                     else
                     {
                         jobs.UploadTask.TotalContents[jobs.BlockIndex] = UploadBlock(jobs.Data, jobs.BlockIndex, jobs.UploadTask.Token, jobs.UploadTask.Address, jobs.UploadTask.UploadBatch, Path.GetFileName(jobs.UploadTask.FilePath));
                         jobs.UploadTask.CompletedBlockCount++;
+#if DEBUG
+                        Console.WriteLine($"成功上传第{jobs.BlockIndex}个片");
+#endif
                     }
                 }
                 catch (Exception)
@@ -167,11 +177,17 @@ namespace EzWcs
                         return;
                     }
                 }
-                HttpResult result = MakeFile(new FileInfo(task.FilePath).Length, Path.GetFileName(task.FilePath), task.TotalContents, task.Token, task.UploadUrl, task.UploadBatch);
+                HttpResult result = MakeFile(new FileInfo(task.FilePath).Length, Path.GetFileName(task.FilePath), task.TotalContents, task.Token, task.Address, task.UploadBatch);
+#if DEBUG
+                Console.WriteLine($"成功合成文件{task.FilePath}");
+#endif
                 JObject jo = JObject.Parse(result.Text);
                 if (jo["hash"].ToString() != ETag.ComputeEtag(task.FilePath))
                 {
                     task.UploadTaskStatus = UploadTaskStatus.Error;
+#if DEBUG
+                    Console.WriteLine("上传校验失败");
+#endif
                 }
             }
             if (task.CompletedBlockCount >= task.TotalBlockCount)
@@ -186,7 +202,7 @@ namespace EzWcs
             {
                 while (true)
                 {
-                    if (workbook.Count == 0)
+                    if (workbook.Count == 0 && currentTask != null)
                     {
                         Thread.Sleep(500);
                     }
@@ -368,6 +384,7 @@ namespace EzWcs
 
         public void AddTask(SliceUploadTask uploadTask)
         {
+            uploadTask.UploadTaskStatus = UploadTaskStatus.Active;
             workbook.Enqueue(uploadTask);
         }
     }
