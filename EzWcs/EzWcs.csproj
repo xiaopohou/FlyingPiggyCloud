@@ -44,10 +44,13 @@
     <Compile Include="Calculators\Base64.cs" />
     <Compile Include="Calculators\ETag.cs" />
     <Compile Include="Calculators\Hash.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="HTTP\HttpManager.cs" />
     <Compile Include="HTTP\HttpResult.cs" />
     <Compile Include="IUploadTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PutExtra.cs" />
+    <Compile Include="SliceUploadWorker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,7 +5,7 @@
         /// <summary>
         /// 请求上传的文件路径
         /// </summary>
-        string[] FilesPath { get; }
+        string FilePath { get; }
 
         /// <summary>
         /// 请求的Token
@@ -16,5 +16,7 @@
         /// 地址
         /// </summary>
         string Address { get; }
+
+        bool IsCompleted { get; }
     }
 }
