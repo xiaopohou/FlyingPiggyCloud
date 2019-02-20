@@ -1,4 +1,4 @@
-﻿namespace LiuPan.Models
+﻿namespace SixCloud.Models
 {
     public abstract class RecoverableUploadTaskArchive
     {

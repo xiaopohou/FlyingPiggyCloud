@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arthas", "Arthas\Arthas.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyingPiggyCloudUWP", "FlyingPiggyCloudUWP\FlyingPiggyCloudUWP.csproj", "{186A0446-B896-47B5-9EC0-78BEB122364D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiuPan", "LiuPan\LiuPan.csproj", "{AB8A8657-5DE8-413F-961E-5D7BDA47D871}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SixCloud", "LiuPan\SixCloud.csproj", "{AB8A8657-5DE8-413F-961E-5D7BDA47D871}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EzWcs", "EzWcs\EzWcs.csproj", "{763A07AC-1DA1-44A2-873E-D72DE4B73E2D}"
 EndProject

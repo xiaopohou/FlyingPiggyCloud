@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace LiuPan.Models
+namespace SixCloud.Models
 {
     internal class LocalProperties
     {

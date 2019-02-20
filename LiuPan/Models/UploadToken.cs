@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LiuPan.Models
+namespace SixCloud.Models
 {
     public class UploadToken
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LiuPan.Models
+namespace SixCloud.Models
 {
     public class SingleFileUploadTask : IUploadTask
     {

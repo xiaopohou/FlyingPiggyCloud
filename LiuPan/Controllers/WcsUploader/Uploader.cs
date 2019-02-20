@@ -1,9 +1,9 @@
-﻿using LiuPan.Models;
+﻿using SixCloud.Models;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace LiuPan.Controllers.WcsUploader
+namespace SixCloud.Controllers.WcsUploader
 {
     public class Uploader
     {
