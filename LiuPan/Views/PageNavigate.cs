@@ -1,4 +1,4 @@
-﻿namespace Views
+﻿namespace SixCloud.Views
 {
     public enum PageNavigate
     {

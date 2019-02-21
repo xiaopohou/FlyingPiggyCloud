@@ -1,0 +1,63 @@
+﻿<Window x:Class="SixCloud.Views.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SixCloud.Views"
+        xmlns:controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
+        xmlns:usercontrols="clr-namespace:SixCloud.UserControls"
+        mc:Ignorable="d"
+        Title="LoginView" Height="321" Width="430" x:Name="OwnerWindow" WindowStyle="None" ResizeMode="CanMinimize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen">
+    <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}">
+        <TabItem x:Name="SignInTabItem"
+                 IsSelected="True"
+                 Header="登陆"
+                 Background="{x:Null}"
+                 BorderBrush="{x:Null}">
+            <usercontrols:SignInView x:Name="SignIn" Margin="0 16 0 0" OpacityMask="White"/>
+            <TabItem.Triggers>
+                <EventTrigger RoutedEvent="Selector.Selected">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="384" To="321">
+                                <DoubleAnimation.EasingFunction>
+                                    <BackEase  EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.500"
+                                             Storyboard.TargetName="SignIn"
+                                             Storyboard.TargetProperty="OpacityMask.Opacity"
+                                             From="0"
+                                             To="1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TabItem.Triggers>
+        </TabItem>
+        <TabItem Header="注册"
+                 Background="{x:Null}"
+                 BorderBrush="{x:Null}">
+            <usercontrols:SignUpView x:Name="SignUp" Margin="0 16 0 0" OpacityMask="White"/>
+            <TabItem.Triggers>
+                <EventTrigger RoutedEvent="Selector.Selected">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}"  Storyboard.TargetProperty="Height" From="321" To="384">
+                                <DoubleAnimation.EasingFunction>
+                                    <BackEase  EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.500"
+                                             Storyboard.TargetName="SignUp"
+                                             Storyboard.TargetProperty="OpacityMask.Opacity"
+                                             From="0"
+                                             To="1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TabItem.Triggers>
+        </TabItem>
+    </TabControl>
+</Window>

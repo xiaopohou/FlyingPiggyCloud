@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SixCloud", "LiuPan\SixCloud
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EzWcs", "EzWcs\EzWcs.csproj", "{763A07AC-1DA1-44A2-873E-D72DE4B73E2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SixCloudCustomControlLibrary", "SixCloudCustomControlLibrary\SixCloudCustomControlLibrary.csproj", "{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -177,6 +179,26 @@ Global
 		{763A07AC-1DA1-44A2-873E-D72DE4B73E2D}.Release|x64.Build.0 = Release|Any CPU
 		{763A07AC-1DA1-44A2-873E-D72DE4B73E2D}.Release|x86.ActiveCfg = Release|Any CPU
 		{763A07AC-1DA1-44A2-873E-D72DE4B73E2D}.Release|x86.Build.0 = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|ARM.Build.0 = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|ARM.ActiveCfg = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|ARM.Build.0 = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|ARM64.Build.0 = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|x64.Build.0 = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E0BF3C0-11B0-4CF6-825E-CA33F4AD8501}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
