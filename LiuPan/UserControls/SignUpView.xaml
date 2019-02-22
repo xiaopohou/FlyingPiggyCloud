@@ -32,26 +32,22 @@
                      materialDesign:HintAssist.Hint="邮箱地址"
                      Text="{Binding EmailAddress, UpdateSourceTrigger=PropertyChanged}"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                     CaretBrush="{StaticResource MainFocusColor}"
                      IsEnabled="False"/>
 
             <materialDesign:PackIcon Grid.Column="0" Grid.Row="2" Kind="Account" VerticalAlignment="Bottom" Margin="6"/>
             <TextBox Grid.Column="1" Grid.Row="2" 
                      materialDesign:HintAssist.Hint="用户名"
                      Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                     CaretBrush="{StaticResource MainFocusColor}"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"/>
 
             <materialDesign:PackIcon Grid.Column="0" Grid.Row="4" Kind="Key" VerticalAlignment="Bottom" Margin="6"/>
             <PasswordBox Name="PasswordBox" Grid.Column="1" Grid.Row="4" 
                          materialDesign:HintAssist.Hint="密码"
-                         CaretBrush="{StaticResource MainFocusColor}"
                          Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"/>
 
             <materialDesign:PackIcon Grid.Column="0" Grid.Row="6" Kind="Check" VerticalAlignment="Bottom" Margin="6"/>
             <TextBox Grid.Column="1" Grid.Row="6"
                      materialDesign:HintAssist.Hint="验证码"
-                     CaretBrush="{StaticResource MainFocusColor}"
                      Text="{Binding VerificationCode, UpdateSourceTrigger=PropertyChanged}"
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 
@@ -64,8 +60,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Button Command="{Binding SendVerificationCodeCommand}"
-                    Foreground="{StaticResource MainFocusColor}">
+            <Button Command="{Binding SendVerificationCodeCommand}">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
                         <Setter Property="Content" Value="发送验证码" />
@@ -88,8 +83,6 @@
             <Button Grid.Column="2"
                     IsDefault="True"
                     Style="{DynamicResource MaterialDesignFlatButton}"
-                    Foreground="{StaticResource MainFocusColor
-}"
                     Command="{Binding SignUpCommand}" 
                     CommandParameter="{Binding ElementName=PasswordBox}" 
                     Content="确认"/>

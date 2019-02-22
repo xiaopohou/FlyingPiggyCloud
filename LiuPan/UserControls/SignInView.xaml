@@ -26,7 +26,6 @@
             <TextBox Grid.Row="0" Grid.Column="1" 
                      Text="{Binding Email}"
                      materialDesign:HintAssist.Hint="用户名" 
-                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      FontFamily="Microsoft Yahei Regular"/>
             <materialDesign:PackIcon Grid.Column="0" Grid.Row="2" Kind="Key" VerticalAlignment="Bottom" Margin="6"/>
             <PasswordBox Name="PasswordBox" Grid.Column="1" Grid.Row="2" 
@@ -35,12 +34,12 @@
                          FontFamily="Microsoft Yahei Regular"/>
         </Grid>
         <StackPanel Grid.Row="2" Margin="6 0" Orientation="Horizontal">
-            <CheckBox IsChecked="{Binding IsRememberPassword}" Focusable="False" Background="{StaticResource MainFocusColor}" BorderBrush="{StaticResource MainFocusColor}"
+            <CheckBox IsChecked="{Binding IsRememberPassword}" Focusable="False"
                       Content="记住密码"/>
-            <CheckBox IsChecked="{Binding IsAutoSignIn}" Focusable="False" Margin="16 0 0 0" Background="{StaticResource MainFocusColor}" BorderBrush="{StaticResource MainFocusColor}"
+            <CheckBox IsChecked="{Binding IsAutoSignIn}" Focusable="False" Margin="16 0 0 0"
                       Content="自动登录"/>
         </StackPanel>
-        <Button Grid.Row="4" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Foreground="{StaticResource MainFocusColor}"
+        <Button Grid.Row="4" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
                 Command="{Binding SignInCommand}" 
                 CommandParameter="{Binding ElementName=PasswordBox}"
                 Margin="28 0" 

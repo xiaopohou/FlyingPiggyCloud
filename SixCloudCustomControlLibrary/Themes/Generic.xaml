@@ -4,6 +4,7 @@
     xmlns:local="clr-namespace:SixCloudCustomControlLibrary">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/LightButton.xaml"/>
+        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroWindow.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <SolidColorBrush x:Key="MainFocusColorBrush" Color="#FF61BF83"/>
 </ResourceDictionary>
