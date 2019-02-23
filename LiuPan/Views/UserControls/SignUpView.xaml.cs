@@ -1,4 +1,4 @@
-﻿namespace SixCloud.UserControls
+﻿namespace SixCloud.Views.UserControls
 {
     /// <summary>
     /// Interaction logic for SignUpView.xaml
