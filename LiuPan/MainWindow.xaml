@@ -8,7 +8,7 @@
         xmlns:ctl="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
         xmlns:usercontrols="clr-namespace:SixCloud.UserControls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" MetroWindowLayout="WideAngle">
     <Grid>
         <Button Click="Button_Click"/>
     </Grid>
