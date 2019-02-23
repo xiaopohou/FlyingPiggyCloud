@@ -11,5 +11,6 @@
         Title="MainWindow" Height="450" Width="800" MetroWindowLayout="WideAngle">
     <Grid>
         <Button Click="Button_Click"/>
+        <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="50" Width="100" Height="100" Background="Black"/>
     </Grid>
 </ctl:MetroWindow>
