@@ -60,6 +60,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Themes\MetroScrollViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\MetroWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -67,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\LightButton.cs" />
+    <Compile Include="Controls\MetroScrollViewer.cs" />
     <Compile Include="Controls\MetroWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

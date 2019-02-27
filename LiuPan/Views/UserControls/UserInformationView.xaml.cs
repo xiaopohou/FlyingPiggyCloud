@@ -18,9 +18,9 @@ namespace SixCloud.Views.UserControls
     /// <summary>
     /// UserInformation.xaml 的交互逻辑
     /// </summary>
-    public partial class UserInformation : UserControl
+    public partial class UserInformationView : UserControl
     {
-        public UserInformation()
+        public UserInformationView()
         {
             InitializeComponent();
         }

@@ -5,9 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SixCloud.Views"
         xmlns:metro="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
-        mc:Ignorable="d"
+                   xmlns:usercontrols="clr-namespace:SixCloud.Views.UserControls"
+                   mc:Ignorable="d"
         Title="MainFrame" Height="450" Width="800" MetroWindowLayout="WideAngle">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Background="#FFE3E4E8">
+            <usercontrols:UserInformationView Margin="0,32,0,0"/>
+            <Expander Background="Transparent">
+                <Expander.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="Hello world"/>
+                    </StackPanel>
+                </Expander.Header>
+            </Expander>
+        </StackPanel>
+        <UserControl Name="MainContainer"/>
     </Grid>
 </metro:MetroWindow>

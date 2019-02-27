@@ -28,7 +28,7 @@ namespace SixCloud
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            new Views.LoginView().Show();
+            new Views.MainFrame().Show();
         }
     }
 }
