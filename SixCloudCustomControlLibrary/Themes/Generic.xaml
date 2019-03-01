@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:SixCloudCustomControlLibrary">
@@ -6,8 +6,8 @@
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/LightButton.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroWindow.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroScrollViewer.xaml"/>
+        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/FontIcon.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <!--<SolidColorBrush x:Key="MainFocusColorBrush" Color="#FF61BF83"/>-->
     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FF61BF83"/>
-
 </ResourceDictionary>

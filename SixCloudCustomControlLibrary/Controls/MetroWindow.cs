@@ -8,13 +8,11 @@ namespace SixCloudCustomControlLibrary.Controls
     public class MetroWindow : Window
     {
         public static readonly DependencyProperty IsSubWindowShowProperty = DependencyProperty.Register("IsSubWindowShow", typeof(bool), typeof(MetroWindow), new PropertyMetadata(false));
-        //public static readonly DependencyProperty MenuProperty = DependencyProperty.Register("Menu", typeof(object), typeof(MetroWindow), new PropertyMetadata(null));
         public static new readonly DependencyProperty BorderBrushProperty = DependencyProperty.Register("BorderBrush", typeof(Brush), typeof(MetroWindow));
         public static readonly DependencyProperty TitleForegroundProperty = DependencyProperty.Register("TitleForeground", typeof(Brush), typeof(MetroWindow));
         public static readonly DependencyProperty MetroWindowLayoutProperty = DependencyProperty.Register("MetroWindowLayout", typeof(MetroWindowLayout), typeof(MetroWindow), new PropertyMetadata(MetroWindowLayout.Normal));
 
         public bool IsSubWindowShow { get => (bool)GetValue(IsSubWindowShowProperty); set => SetValue(IsSubWindowShowProperty, value); }
-        //public object Menu { get => GetValue(MenuProperty); set => SetValue(MenuProperty, value); }
         public new Brush BorderBrush { get => (Brush)GetValue(BorderBrushProperty); set => SetValue(BorderBrushProperty, value); }
         public Brush TitleForeground { get => (Brush)GetValue(TitleForegroundProperty); set => SetValue(TitleForegroundProperty, value); }
         public MetroWindowLayout MetroWindowLayout { get => (MetroWindowLayout)GetValue(MetroWindowLayoutProperty); set => SetValue(MetroWindowLayoutProperty, value); }
@@ -36,7 +34,6 @@ namespace SixCloudCustomControlLibrary.Controls
 
         public MetroWindow()
         {
-            // 修复WindowChrome导致的窗口大小错误
             SizeToContent sizeToContent = SizeToContent.Manual;
             Loaded += (ss, ee) =>
             {

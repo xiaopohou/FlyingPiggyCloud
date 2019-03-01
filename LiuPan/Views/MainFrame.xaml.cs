@@ -15,14 +15,30 @@ using System.Windows.Shapes;
 
 namespace SixCloud.Views
 {
+
     /// <summary>
     /// MainFrame.xaml 的交互逻辑
     /// </summary>
     public partial class MainFrame : MetroWindow
     {
+        public static readonly DependencyProperty PageNavigateProperty = DependencyProperty.Register("PageNavigate", typeof(PageNavigate), typeof(MainFrame), new PropertyMetadata((sender, e) =>
+        {
+            if(sender is MainFrame mainFrame)
+            {
+                //    switch(mainFrame.PageNavigate)
+                //    {
+                //        case PageNavigate.Completed:
+                //            mainFrame.MainContainer
+                //    }
+            }
+        }));
+        public PageNavigate PageNavigate { get => (PageNavigate)GetValue(PageNavigateProperty); set => SetValue(PageNavigateProperty, value); }
+
+
         public MainFrame()
         {
             InitializeComponent();
+            MainContainer.Children.Add(new UserControls.FileListView());
         }
     }
 }
