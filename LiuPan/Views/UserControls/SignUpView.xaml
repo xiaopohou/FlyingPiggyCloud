@@ -27,12 +27,11 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <materialDesign:PackIcon Kind="Email" VerticalAlignment="Bottom" Margin="6"/>
+            <materialDesign:PackIcon Kind="Phone" VerticalAlignment="Bottom" Margin="6"/>
             <TextBox Grid.Column="1" Grid.Row="0" 
-                     materialDesign:HintAssist.Hint="邮箱地址"
-                     Text="{Binding EmailAddress, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                     IsEnabled="False"/>
+                     materialDesign:HintAssist.Hint="手机号码"
+                     Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"/>
 
             <materialDesign:PackIcon Grid.Column="0" Grid.Row="2" Kind="Account" VerticalAlignment="Bottom" Margin="6"/>
             <TextBox Grid.Column="1" Grid.Row="2" 

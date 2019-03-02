@@ -85,6 +85,8 @@
     <Compile Include="Models\RecoverableUploadTaskArchive.cs" />
     <Compile Include="Models\SingleFileUploadTask.cs" />
     <Compile Include="Models\UploadTask.cs" />
+    <Compile Include="ViewModels\AuthenticationViewModel.cs" />
+    <Compile Include="ViewModels\DependencyCommand.cs" />
     <Compile Include="Views\UserControls\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
     </Compile>
@@ -187,9 +189,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\EzWcs\EzWcs.csproj">
       <Project>{763a07ac-1da1-44a2-873e-d72de4b73e2d}</Project>

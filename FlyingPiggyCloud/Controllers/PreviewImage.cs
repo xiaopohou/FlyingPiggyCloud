@@ -64,5 +64,4 @@ namespace FlyingPiggyCloud.Controllers
             UUID = uuid;
         }
     }
-
 }
