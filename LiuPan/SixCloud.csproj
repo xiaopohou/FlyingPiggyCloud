@@ -79,6 +79,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controllers\Authentication.cs" />
+    <Compile Include="Controllers\RestClient.cs" />
+    <Compile Include="Controllers\SixCloudMethordBase.cs" />
     <Compile Include="Models\RecoverableUploadTaskArchive.cs" />
     <Compile Include="Models\SingleFileUploadTask.cs" />
     <Compile Include="Models\UploadTask.cs" />
@@ -185,7 +188,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>

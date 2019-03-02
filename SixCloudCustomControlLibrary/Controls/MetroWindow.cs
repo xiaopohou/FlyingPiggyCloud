@@ -34,6 +34,7 @@ namespace SixCloudCustomControlLibrary.Controls
 
         public MetroWindow()
         {
+            // 修复WindowChrome导致的窗口大小错误
             SizeToContent sizeToContent = SizeToContent.Manual;
             Loaded += (ss, ee) =>
             {

@@ -18,6 +18,7 @@ namespace SixCloud.Models
             this.fullPath = fullPath ?? throw new ArgumentNullException(nameof(fullPath));
             this.parentPath = parentPath;
             this.parentUUID = parentUUID;
+            System.Reflection.MemberInfo info = typeof(SingleFileUploadTask);
         }
 
         /// <summary>

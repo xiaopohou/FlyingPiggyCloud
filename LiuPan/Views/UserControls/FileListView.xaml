@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <Style TargetType="controls:FontIcon">
             <Setter Property="IconSize" Value="14"/>
+            <Setter Property="Margin" Value="5,0"/>
         </Style>
         <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
@@ -25,23 +26,23 @@
                         <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="White">
                             <MenuItem x:Name="Cut" Header="剪切">
                                 <MenuItem.Icon>
-                                    <controls:FontIcon/>
+                                    <controls:FontIcon Icon="&#xf0c4;"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem x:Name="Copy" Header="复制">
-                                <!--<MenuItem.Icon>
-                                    <Image Source="/FlyingPiggyCloud;component/Resources/White/Copy.png"/>
-                                </MenuItem.Icon>-->
+                                <MenuItem.Icon>
+                                    <controls:FontIcon Icon="&#xf0c5;"/>
+                                </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem x:Name="Rename" Header="重命名">
-                                <!--<MenuItem.Icon>
-                                    <Image Source="/FlyingPiggyCloud;component/Resources/White/Rename.png"/>
-                                </MenuItem.Icon>-->
+                                <MenuItem.Icon>
+                                    <controls:FontIcon Icon="&#xf079;"/>
+                                </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem x:Name="Delete" Header="删除">
-                                <!--<MenuItem.Icon>
-                                    <Image Source="/FlyingPiggyCloud;component/Resources/White/Clean.png"/>
-                                </MenuItem.Icon>-->
+                                <MenuItem.Icon>
+                                    <controls:FontIcon Icon="&#xf1f8;"/>
+                                </MenuItem.Icon>
                             </MenuItem>
                         </ContextMenu>
                     </Button.ContextMenu>
@@ -83,45 +84,49 @@
         <Grid Height="60" Margin="0,32,0,0" VerticalAlignment="Top">
 
             <controls:LightButton FontIcon="&#xf053;" Margin="10,0,0,0" FontSize="25" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}" x:Name="Previous"/>
-            
+
             <controls:LightButton FontIcon="&#xf054;" Margin="30,0,0,0" FontSize="25" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}" x:Name="Next_Click"/>
 
-            <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="96,0,0,0">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <controls:FontIcon/>
-                    <TextBlock Text="上传文件" Foreground="#FFFFFFFF"/>
-                </StackPanel>
-            </Button>
-            <Button x:Name="UploadFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="125" Margin="233,0,0,0">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <controls:FontIcon/>
-                    <TextBlock Text="上传文件夹" Foreground="#FFFFFFFF"/>
-                </StackPanel>
-            </Button>
-            <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Margin="370,0,0,0" Background="#FFFFFFFF">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <controls:FontIcon/>
-                    <TextBlock Text="新建文件夹" Foreground="#FF5A5A5A"/>
-                </StackPanel>
-            </Button>
-            <Button x:Name="Cut" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="507,0,0,0" Background="#FFFFFFFF">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <controls:FontIcon/>
-                    <TextBlock Text="剪切" Foreground="#FF5A5A5A"/>
-                </StackPanel>
-            </Button>
-            <Button x:Name="Stick" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="600,0,0,0" Background="#FFFFFFFF">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <controls:FontIcon/>
-                    <TextBlock Text="粘贴" Foreground="#FF5A5A5A"/>
-                </StackPanel>
-            </Button>
-            <Button x:Name="Copy" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="693,0,0,0" Background="#FFFFFFFF">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <controls:FontIcon/>
-                    <TextBlock Text="复制" Foreground="#FF5A5A5A"/>
-                </StackPanel>
-            </Button>
+            <StackPanel Orientation="Horizontal" Margin="96,0,0,0">
+                <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xf574;" Foreground="White"/>
+                        <TextBlock Text="上传文件" Foreground="#FFFFFFFF" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="UploadFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="125" Margin="5,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xf093;" Foreground="White"/>
+                        <TextBlock Text="上传文件夹" Foreground="#FFFFFFFF"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xf65e;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="新建文件夹" Foreground="#FF5A5A5A"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="Cut" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xf0c4;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="剪切" Foreground="#FF5A5A5A"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="Stick" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xf46c;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="粘贴" Foreground="#FF5A5A5A"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="Copy" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xf0c5;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="复制" Foreground="#FF5A5A5A"/>
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+
         </Grid>
 
         <!--地址栏-->
@@ -141,7 +146,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ListView Background="White" x:Name="FileList" Margin="0,116,0,0" AlternationCount="2">
+        <ListView x:Name="FileList" Margin="0,116,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName,Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
@@ -149,6 +154,7 @@
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" CellTemplate="{StaticResource MetaMTime}" Header="修改时间"/>
                 </GridView>
             </ListView.View>
+            <!--<ListViewItem Content="Hello World"/>-->
         </ListView>
 
         <!--这个Grid用于帮助GridView自动校正分栏宽度-->
