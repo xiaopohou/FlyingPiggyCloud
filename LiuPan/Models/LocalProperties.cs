@@ -1,10 +1,11 @@
 ﻿using Microsoft.Win32;
+using SixCloud.Views;
 
 namespace SixCloud.Models
 {
     internal class LocalProperties
     {
-        private const string DomainSubKey = @"Software\EzSuit\LiuPan";
+        private const string DomainSubKey = @"Software\EzSuit\SixCloud";
 
         public static RegistryKey ApplicationDictionary { get; } = Registry.CurrentUser.CreateSubKey(DomainSubKey);
 
@@ -41,9 +42,9 @@ namespace SixCloud.Models
             set => ApplicationDictionary.SetValue("IsAutoLogin", value);
         }
 
-        public static Views.PageNavigate DefaultPage
+        public static PageNavigate DefaultPage
         {
-            get => ApplicationDictionary.GetValue("DefaultPage") == null ? Views.PageNavigate.Root : (Views.PageNavigate)System.Enum.Parse(typeof(Views.PageNavigate), (string)ApplicationDictionary.GetValue("DefaultPage"));
+            get => ApplicationDictionary.GetValue("DefaultPage") == null ? PageNavigate.Root : (PageNavigate)System.Enum.Parse(typeof(PageNavigate), (string)ApplicationDictionary.GetValue("DefaultPage"));
             set => ApplicationDictionary.SetValue("DefaultPage", value);
         }
 

@@ -30,12 +30,12 @@ namespace SixCloud.ViewModels
                     new MainFrame().Show();
                     if (IsRememberPassword)
                     {
+                        LocalProperties.UserName = PhoneNumber;
                         LocalProperties.Password = authentication.UserMd5(passwordBox.Password);
                     }
                     else
                     {
                         LocalProperties.Password = "";
-
                     }
                 }
                 else
@@ -51,12 +51,15 @@ namespace SixCloud.ViewModels
                 });
                 if (x.Success)
                 {
+                    LocalProperties.UserName = PhoneNumber;
                     System.Windows.Window.GetWindow(param as PasswordBox).Close();
                     new MainFrame().Show();
                 }
                 else
                 {
                     System.Windows.MessageBox.Show(x.Message, "登陆失败");
+                    LocalProperties.Password = "";
+                    OnPropertyChanged("PasswordBoxHint");
                 }
             }
             else
@@ -149,6 +152,11 @@ namespace SixCloud.ViewModels
             SignInCommand = new DependencyCommand(SignIn, CanSignIn);
             SignUpCommand = new DependencyCommand(SignUp, CanSignUp);
             SendVerificationCodeCommand = new DependencyCommand(SendVerificationCode, CanSendVerificationCode);
+            if (IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.UserName))
+            {
+                PhoneNumber = LocalProperties.UserName;
+                OnPropertyChanged("PhoneNumber");
+            }
         }
 
         public DependencyCommand SignInCommand { get; private set; }
