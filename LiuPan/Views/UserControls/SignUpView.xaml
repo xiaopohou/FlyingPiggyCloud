@@ -86,7 +86,7 @@
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
                         <Setter Property="Content" Value="发送验证码" />
-                        <Style.Triggers>
+                        <!--<Style.Triggers>
                             <DataTrigger Binding="{Binding IsLocked}" Value="True">
                                 <Setter Property="Content">
                                     <Setter.Value>
@@ -97,7 +97,7 @@
                                     </Setter.Value>
                                 </Setter>
                             </DataTrigger>
-                        </Style.Triggers>
+                        </Style.Triggers>-->
                     </Style>
                 </Button.Style>
             </Button>

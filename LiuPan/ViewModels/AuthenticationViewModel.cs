@@ -35,7 +35,12 @@ namespace SixCloud.ViewModels
                     else
                     {
                         LocalProperties.Password = "";
+
                     }
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show(x.Message, "登陆失败");
                 }
             }
             else if (IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
@@ -48,6 +53,10 @@ namespace SixCloud.ViewModels
                 {
                     System.Windows.Window.GetWindow(param as PasswordBox).Close();
                     new MainFrame().Show();
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show(x.Message, "登陆失败");
                 }
             }
             else
@@ -81,12 +90,16 @@ namespace SixCloud.ViewModels
                     System.Windows.Window.GetWindow(passwordBox).Close();
                     new MainFrame().Show();
                 }
+                else
+                {
+                    System.Windows.MessageBox.Show(x.Message, "注册失败");
+                }
             }
         }
 
         private bool CanSignUp(object paramObj)
         {
-            if (string.IsNullOrEmpty(PhoneNumber) || string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(VerificationCode))
+            if (string.IsNullOrEmpty(PhoneNumber) || string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(VerificationCode) || string.IsNullOrEmpty(PhoneInfo))
             {
                 return false;
             }
@@ -105,6 +118,10 @@ namespace SixCloud.ViewModels
             if (x.Success)
             {
                 PhoneInfo = x.Result;
+            }
+            else
+            {
+                System.Windows.MessageBox.Show(x.Message, "发送验证码失败");
             }
         }
 
@@ -146,7 +163,7 @@ namespace SixCloud.ViewModels
             set
             {
                 LocalProperties.IsSavedPassword = value;
-                if(!value)
+                if (!value)
                 {
                     LocalProperties.Password = "";
                     OnPropertyChanged("PasswordBoxHint");
