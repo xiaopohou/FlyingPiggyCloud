@@ -40,7 +40,10 @@ namespace SixCloud.Controllers
                 {"phoneInfo", phoneInfo }
             };
             GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v1/user/register");
-            Token = x.Token;
+            if (string.IsNullOrEmpty(x.Token))
+            {
+                Token = x.Token;
+            }
             return x;
         }
 
@@ -128,7 +131,7 @@ namespace SixCloud.Controllers
                 {"newPassword", newPasswordMD5 },
                 {"code",code },
             };
-            var x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v1/user/changePasswordByMessage2");
+            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v1/user/changePasswordByMessage2");
             //Token = x.Token;
             return x;
         }

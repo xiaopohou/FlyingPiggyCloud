@@ -1,4 +1,5 @@
 ﻿using SixCloudCustomControlLibrary.Controls;
+using SixCloud.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace SixCloud.Views
     {
         public LoginView()
         {
+            DataContext = new AuthenticationViewModel();
             InitializeComponent();
         }
     }

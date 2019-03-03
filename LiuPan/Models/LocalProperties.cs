@@ -14,6 +14,9 @@ namespace SixCloud.Models
             set => ApplicationDictionary.SetValue("UserName", value);
         }
 
+        /// <summary>
+        /// 只保存PassWordMD5
+        /// </summary>
         public static string Password
         {
             get => (string)ApplicationDictionary.GetValue("Password");

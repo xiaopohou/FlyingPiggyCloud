@@ -7,18 +7,7 @@ namespace SixCloud.Controllers
     /// </summary>
     internal abstract class SixCloudMethordBase
     {
-        protected static string Token
-        {
-            get => token;
-            set
-            {
-                lock (token)
-                {
-                    token = value;
-                }
-            }
-        }
-        private static string token;
+        protected static string Token { get; set; }
 
         protected T Post<T>(string data, string uri)
         {

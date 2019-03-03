@@ -8,13 +8,13 @@ namespace SixCloud.ViewModels
     /// </summary>
     /// <typeparam name="T1">Command Parameter Type</typeparam>
     /// <typeparam name="T2">CanExecute Parameter Type</typeparam>
-    public class DependencyCommand<T1, T2> : ICommand where T1 : class where T2 : class
+    public class DependencyCommand : ICommand
     {
-        private readonly Action<T1> ExecuteAction;
+        private readonly Action<object> ExecuteAction;
 
-        private readonly Func<T2, bool> CanExecuteAction;
+        private readonly Func<object, bool> CanExecuteAction;
 
-        public DependencyCommand(Action<T1> executeAction, Func<T2, bool> canExecuteAction)
+        public DependencyCommand(Action<object> executeAction, Func<object, bool> canExecuteAction)
         {
             ExecuteAction = executeAction;
             CanExecuteAction = canExecuteAction;
@@ -24,7 +24,7 @@ namespace SixCloud.ViewModels
 
         public bool CanExecute(object parameter)
         {
-            bool? x = CanExecuteAction?.Invoke(parameter as T2);
+            bool? x = CanExecuteAction?.Invoke(parameter);
             if (x != null)
             {
                 return x.Value;
@@ -37,8 +37,12 @@ namespace SixCloud.ViewModels
 
         public void Execute(object parameter)
         {
-            ExecuteAction?.Invoke(parameter as T1);
+            ExecuteAction?.Invoke(parameter);
+        }
+
+        public void OnCanExecutedChanged(object sender, EventArgs e)
+        {
+            CanExecuteChanged?.Invoke(sender,e);
         }
     }
-
 }

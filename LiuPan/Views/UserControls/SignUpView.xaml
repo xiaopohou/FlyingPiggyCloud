@@ -4,6 +4,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:validationrules="clr-namespace:SixCloud.ViewModels.ValidationRules"
              mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -30,14 +31,29 @@
             <materialDesign:PackIcon Kind="Phone" VerticalAlignment="Bottom" Margin="6"/>
             <TextBox Grid.Column="1" Grid.Row="0" 
                      materialDesign:HintAssist.Hint="手机号码"
-                     Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"/>
+                     
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <TextBox.Text>
+                    <Binding Path="PhoneNumber" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validationrules:PhoneNumber/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
 
             <materialDesign:PackIcon Grid.Column="0" Grid.Row="2" Kind="Account" VerticalAlignment="Bottom" Margin="6"/>
             <TextBox Grid.Column="1" Grid.Row="2" 
                      materialDesign:HintAssist.Hint="用户名"
-                     Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"/>
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <TextBox.Text>
+                    <Binding Path="Username" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validationrules:RejectNullOrEmptyString/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
 
             <materialDesign:PackIcon Grid.Column="0" Grid.Row="4" Kind="Key" VerticalAlignment="Bottom" Margin="6"/>
             <PasswordBox Name="PasswordBox" Grid.Column="1" Grid.Row="4" 
@@ -47,8 +63,15 @@
             <materialDesign:PackIcon Grid.Column="0" Grid.Row="6" Kind="Check" VerticalAlignment="Bottom" Margin="6"/>
             <TextBox Grid.Column="1" Grid.Row="6"
                      materialDesign:HintAssist.Hint="验证码"
-                     Text="{Binding VerificationCode, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <TextBox.Text>
+                    <Binding Path="VerificationCode" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validationrules:RejectNullOrEmptyString/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
 
         </Grid>
 

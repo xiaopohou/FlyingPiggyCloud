@@ -4,32 +4,96 @@ using SixCloud.Views;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace SixCloud.ViewModels
 {
     internal class AuthenticationViewModel : INotifyPropertyChanged
     {
         private readonly Authentication authentication = new Authentication();
+        private string _phoneNumber;
+        private string _username;
+        private string _verificationCode;
 
         private string PhoneInfo { get; set; }
 
-        private async void SignUp(PasswordBox passwordBox)
+        private async void SignIn(object param)
         {
-            GenericResult<UserInformation> x = await Task.Run(() =>
+            if (param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
             {
-                return authentication.Register(Username, authentication.UserMd5(passwordBox.Password), VerificationCode, PhoneInfo);
-            });
-            if (x.Success)
+                GenericResult<UserInformation> x = await Task.Run(() =>
+                {
+                    return authentication.LoginByPassword(PhoneNumber, authentication.UserMd5(passwordBox.Password));
+                });
+                if (x.Success)
+                {
+                    System.Windows.Window.GetWindow(passwordBox).Close();
+                    new MainFrame().Show();
+                    if (IsRememberPassword)
+                    {
+                        LocalProperties.Password = authentication.UserMd5(passwordBox.Password);
+                    }
+                    else
+                    {
+                        LocalProperties.Password = "";
+                    }
+                }
+            }
+            else if (IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
             {
-                System.Windows.Window.GetWindow(passwordBox).Close();
-                new MainFrame().Show();
+                GenericResult<UserInformation> x = await Task.Run(() =>
+                {
+                    return authentication.LoginByPassword(PhoneNumber, LocalProperties.Password);
+                });
+                if (x.Success)
+                {
+                    System.Windows.Window.GetWindow(param as PasswordBox).Close();
+                    new MainFrame().Show();
+                }
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("要登陆，请输入密码");
+            }
+        }
+
+        private bool CanSignIn(object paramObj)
+        {
+            if (string.IsNullOrEmpty(PhoneNumber))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private async void SignUp(object param)
+        {
+            if (param is PasswordBox passwordBox)
+            {
+                GenericResult<UserInformation> x = await Task.Run(() =>
+                            {
+                                return authentication.Register(Username, authentication.UserMd5(passwordBox.Password), VerificationCode, PhoneInfo);
+                            });
+                if (x.Success)
+                {
+                    System.Windows.Window.GetWindow(passwordBox).Close();
+                    new MainFrame().Show();
+                }
             }
         }
 
         private bool CanSignUp(object paramObj)
         {
-            return true;
+            if (string.IsNullOrEmpty(PhoneNumber) || string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(VerificationCode))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         private async void SendVerificationCode(object paramObj)
@@ -46,7 +110,14 @@ namespace SixCloud.ViewModels
 
         private bool CanSendVerificationCode(object paramObj)
         {
-            return true;
+            if (string.IsNullOrEmpty(PhoneNumber))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -58,25 +129,44 @@ namespace SixCloud.ViewModels
 
         public AuthenticationViewModel()
         {
-            //SignInCommand = new DependencyCommand<PasswordBox, object>((passwordBox) =>
-            //  {
-
-            //  }, (param) =>
-            // {
-            //     return true;
-            // });
+            SignInCommand = new DependencyCommand(SignIn, CanSignIn);
+            SignUpCommand = new DependencyCommand(SignUp, CanSignUp);
+            SendVerificationCodeCommand = new DependencyCommand(SendVerificationCode, CanSendVerificationCode);
         }
 
-        public ICommand SignInCommand { get; private set; }
+        public DependencyCommand SignInCommand { get; private set; }
 
-        public ICommand SignUpCommand { get; private set; }
+        public DependencyCommand SignUpCommand { get; private set; }
 
-        public ICommand SendVerificationCodeCommand { get; private set; }
+        public DependencyCommand SendVerificationCodeCommand { get; private set; }
 
         public bool IsRememberPassword
         {
             get => LocalProperties.IsSavedPassword;
-            set => LocalProperties.IsSavedPassword = value;
+            set
+            {
+                LocalProperties.IsSavedPassword = value;
+                if(!value)
+                {
+                    LocalProperties.Password = "";
+                    OnPropertyChanged("PasswordBoxHint");
+                }
+            }
+        }
+
+        public string PasswordBoxHint
+        {
+            get
+            {
+                if (IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
+                {
+                    return "[要更改已保存的密码，请点击这里]";
+                }
+                else
+                {
+                    return "密码";
+                }
+            }
         }
 
         public bool IsAutoSignIn
@@ -85,11 +175,11 @@ namespace SixCloud.ViewModels
             set => LocalProperties.IsAutoLogin = value;
         }
 
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get => _phoneNumber; set { _phoneNumber = value; SendVerificationCodeCommand.OnCanExecutedChanged(this, null); SignUpCommand.OnCanExecutedChanged(this, null); SignInCommand.OnCanExecutedChanged(this, null); OnPropertyChanged("PhoneNumber"); } }
 
-        public string Username { get; set; }
+        public string Username { get => _username; set { _username = value; SignUpCommand.OnCanExecutedChanged(this, null); } }
 
-        public string VerificationCode { get; set; }
+        public string VerificationCode { get => _verificationCode; set { _verificationCode = value; SignUpCommand.OnCanExecutedChanged(this, null); } }
 
         public bool IsLocked { get; set; }
 
