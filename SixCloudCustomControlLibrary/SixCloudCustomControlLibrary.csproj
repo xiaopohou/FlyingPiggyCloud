@@ -64,6 +64,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Themes\MetroFocusButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroMenuTabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroMenuTabItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\MetroScrollViewer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -74,10 +86,18 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ElementBase.cs" />
     <Compile Include="Controls\FontIcon.cs" />
     <Compile Include="Controls\LightButton.cs" />
+    <Compile Include="Controls\MetroMenuTabControl.cs" />
+    <Compile Include="Controls\MetroMenuTabItem.cs" />
     <Compile Include="Controls\MetroScrollViewer.cs" />
     <Compile Include="Controls\MetroWindow.cs" />
+    <Compile Include="Converters\CornerRadiusToDouble.cs" />
+    <Compile Include="Converters\DoubleFactor.cs" />
+    <Compile Include="Converters\DoubleToCornerRadius.cs" />
+    <Compile Include="Converters\DoubleToThickness.cs" />
+    <Compile Include="Converters\StringToVisibility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

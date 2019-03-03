@@ -6,6 +6,9 @@
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/LightButton.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroWindow.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroScrollViewer.xaml"/>
+        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroMenuTabControl.xaml"/>
+        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroMenuTabItem.xaml"/>
+        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroFocusButton.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/FontIcon.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <!--<SolidColorBrush x:Key="MainFocusColorBrush" Color="#FF61BF83"/>-->
