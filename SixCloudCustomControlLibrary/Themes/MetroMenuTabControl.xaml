@@ -10,7 +10,7 @@
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         
         <Setter Property="TabStripPlacement" Value="Left"/>
-        <Setter Property="BorderBrush" Value="{StaticResource Brush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="SelectedIndex" Value="0"/>
         <Setter Property="Template">
