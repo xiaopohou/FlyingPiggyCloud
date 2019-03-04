@@ -10,10 +10,6 @@
         MinHeight="450" Height="450" Width="800" MetroWindowLayout="WideAngle">
     <Grid>
         <Button Content="HelloWorld" Click="Button_Click" Style="{StaticResource MaterialDesignFlatAccentButton}" FocusVisualStyle="{x:Null}"/>
-        <ctl:MetroMenuTabControl IconMode="True">
-            <ctl:MetroMenuTabItem Icon="&#xf021;" IconMove="&#xf021;" Header="hello world"/>
-            <ctl:MetroMenuTabItem/>
-            <ctl:MetroMenuTabItem/>
-        </ctl:MetroMenuTabControl>
+        
     </Grid>
 </ctl:MetroWindow>

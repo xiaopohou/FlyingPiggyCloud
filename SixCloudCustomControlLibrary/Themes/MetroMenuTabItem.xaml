@@ -33,8 +33,10 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Rectangle x:Name="back" Grid.ColumnSpan="2" Fill="#f3f3f3" Opacity="0"/>
-                        <Metro:FontIcon x:Name="iconMove" Foreground="{DynamicResource PrimaryHueMidBrush}" IconSize="24" Margin="10,8" Icon="{TemplateBinding IconMove}" Opacity="0"/>
-                        <Metro:FontIcon x:Name="icon" Foreground="#f3f3f3" IconSize="24" Margin="10,8" Icon="{TemplateBinding Icon}"/>
+                        <Grid Height="24" Width="24"  Margin="10,8" >
+                            <Metro:FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" IconSize="16" Icon="{TemplateBinding IconMove}" x:Name="iconMove" Foreground="{DynamicResource PrimaryHueMidBrush}" Opacity="0"/>
+                            <Metro:FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" IconSize="16" Icon="{TemplateBinding Icon}" x:Name="icon" Foreground="#f3f3f3" />
+                        </Grid>
                         <!--<Image x:Name="icon" Width="24" Height="24" Margin="10,8" Source="{TemplateBinding Icon}"/>-->
                         <TextBlock x:Name="title" Grid.Column="1" Text="{TemplateBinding Header}" Foreground="#E5FFFFFF" Margin="0,0,15,0" VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding TextHorizontalAlignment}"/>
                     </Grid>

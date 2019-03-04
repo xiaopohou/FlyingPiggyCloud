@@ -7,58 +7,91 @@
         xmlns:metro="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
                    xmlns:usercontrols="clr-namespace:SixCloud.Views.UserControls"
                    mc:Ignorable="d"
-        Title="祝你越来越6" MinHeight="720" MinWidth="1080" MetroWindowLayout="WideAngle">
+        MinHeight="720" MinWidth="1080" MetroWindowLayout="WideAngle">
     <metro:MetroWindow.Resources>
         <Style TargetType="{x:Type RadioButton}">
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Foreground" Value="#FF5A5A5A"/>
-            <Setter Property="Margin" Value="10,0,5,0"/>
+            <Setter Property="Margin" Value="10,5,5,0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RadioButton}">
                         <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True">
-                            <Border CornerRadius="5" x:Name="CheckedMask" Opacity="0"/>
-                            <ContentPresenter Margin="5,5" x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <Border CornerRadius="3" x:Name="CheckedMask" Opacity="0"/>
+                            <ContentPresenter Margin="5,5" x:Name="contentPresenter" Focusable="False" HorizontalAlignment="Center" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Grid>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="HasContent" Value="true">
+                            <!--<Trigger Property="HasContent" Value="true">
                                 <Setter Property="FocusVisualStyle" Value="{StaticResource OptionMarkFocusVisual}"/>
                                 <Setter Property="Padding" Value="4,-1,0,0"/>
-                            </Trigger>
+                            </Trigger>-->
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Opacity" TargetName="CheckedMask" Value="1"/>
+                                <Setter Property="Opacity" TargetName="CheckedMask" Value="0.7"/>
+                                <Setter Property="Background" TargetName="CheckedMask" Value="#FF61BF82"/>
+                                <Setter Property="Foreground" Value="White"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Foreground" Value="Red"/>
                             </Trigger>
-                            <Trigger Property="IsPressed" Value="true"/>
+                            <!--<Trigger Property="IsPressed" Value="true"/>-->
                             <Trigger Property="IsChecked" Value="true">
                                 <Setter Property="Opacity" TargetName="CheckedMask" Value="1"/>
                                 <Setter Property="Background" TargetName="CheckedMask" Value="#FF61BF82"/>
+                                <Setter Property="Foreground" Value="White"/>
                             </Trigger>
-                            <Trigger Property="IsChecked" Value="{x:Null}"/>
+                            <!--<Trigger Property="IsChecked" Value="{x:Null}"/>-->
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <!--<Style.Triggers>
+                <EventTrigger RoutedEvent="Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation From="0" To="1" Duration="00:00:00.500" Storyboard.TargetName="MainContainer" Storyboard.TargetProperty="Opacity"/>
+                            <DoubleAnimation From="100" To="0" Duration="00:00:00.500" Storyboard.TargetName="MainContainerTransform" Storyboard.TargetProperty="X" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>-->
         </Style>
 
     </metro:MetroWindow.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="160"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="105"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-        <usercontrols:UserInformationView  Background="#FFE3E4E8"/>
-        <StackPanel Grid.Row="1" Background="#FFE3E4E8">
-            <RadioButton Content="Hello world"/>
-        </StackPanel>
-        <Grid Grid.Column="1" Grid.RowSpan="2" Name="MainContainer"/>
+        <metro:MetroMenuTabControl IconMode="True" SelectedIndex="1">
+            <metro:MetroMenuTabItem Icon="&#xf360;" IconMove="&#xf021;" Header="传输列表">
+
+            </metro:MetroMenuTabItem>
+            <metro:MetroMenuTabItem Icon="&#xf07b;" IconMove="&#xf07c;" Header="我的文件">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="105"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <usercontrols:UserInformationView/>
+                    <StackPanel Grid.Row="1">
+                        <RadioButton Content="全部文件"/>
+                        <RadioButton Content="图片收藏"/>
+                        <RadioButton Content="视频收藏"/>
+                        <RadioButton Content="音乐收藏"/>
+                        <RadioButton Content="文档收藏"/>
+                        <RadioButton Content="垃圾回收"/>
+                    </StackPanel>
+                    <Grid Grid.Column="1" Grid.RowSpan="2" Name="MainContainer">
+                        <Grid.RenderTransform>
+                            <TranslateTransform x:Name="MainContainerTransform"/>
+                        </Grid.RenderTransform>
+                    </Grid>
+                </Grid>
+            </metro:MetroMenuTabItem>
+            <metro:MetroMenuTabItem Icon="&#xf1e0;" IconMove="&#xf1e1;" Header="分享设置"/>
+        </metro:MetroMenuTabControl>
+        
     </Grid>
 </metro:MetroWindow>

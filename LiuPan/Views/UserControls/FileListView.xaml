@@ -12,9 +12,59 @@
             <Setter Property="IconSize" Value="14"/>
             <Setter Property="Margin" Value="5,0"/>
         </Style>
+        
         <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
         </Style>
+
+        <Style x:Key="AddressBarItemStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Padding" Value="4,1"/>
+            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd" Value="#3DDADADA"/>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FFDADADA"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd" Value="#3D61BF83"/>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FF61BF83"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
 
         <DataTemplate x:Key="MetaName">
             <Grid>
@@ -80,8 +130,27 @@
 
     </UserControl.Resources>
     <Grid>
+        <!--地址栏-->
+        <ListBox x:Name="AddressBar" Margin="0,10,0,0" Height="24" VerticalAlignment="Top" BorderBrush="Black" >
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#FF5A5A5A" Text="{Binding Content}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBoxItem Content="HelloWorld"/>
+            <ListBoxItem Content="HelloWorld"/>
+            <ListBoxItem Content="HelloWorld"/>
+        </ListBox>
+
         <!--上方栏-->
-        <Grid Height="60" Margin="0,32,0,0" VerticalAlignment="Top">
+        <Grid Height="60" Margin="0,34,0,0" VerticalAlignment="Top">
 
             <controls:LightButton FontIcon="&#xf053;" Margin="10,0,0,0" FontSize="25" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}" x:Name="Previous"/>
 
@@ -128,25 +197,7 @@
             </StackPanel>
 
         </Grid>
-
-        <!--地址栏-->
-        <ListBox x:Name="AddressBar" Margin="0,92,0,0" Height="24" VerticalAlignment="Top" BorderBrush="Black" >
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Foreground="#FF5A5A5A" Text="{Binding }"/>
-                        <!--<Image Height="11" Source="/Resources/next.png"/>-->
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
-        <ListView x:Name="FileList" Margin="0,116,0,0">
+        <ListView x:Name="FileList" Margin="0,94,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName,Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
