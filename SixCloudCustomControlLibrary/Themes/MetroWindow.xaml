@@ -186,7 +186,6 @@
                         <Trigger Property="MetroWindowLayout" Value="WideAngle">
                             <Setter TargetName="windowContent" Property="Grid.Row" Value="0"/>
                             <Setter TargetName="windowContent" Property="Grid.RowSpan" Value="2"/>
-                            <!--<Setter Property="TitleForeground" Value="{DynamicResource MainFocusBrush}"/>-->
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

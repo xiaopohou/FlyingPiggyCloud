@@ -38,7 +38,10 @@ namespace SixCloud.Views
         public MainFrame()
         {
             InitializeComponent();
-            MainContainer.Children.Add(new UserControls.FileListView());
+        }
+
+        private void Test_Click(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
