@@ -12,7 +12,7 @@
         MinHeight="720" MinWidth="1080" MetroWindowLayout="WideAngle">
     <metro:MetroWindow.Resources>
         <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>
-        
+
         <Style TargetType="{x:Type RadioButton}">
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
@@ -42,7 +42,7 @@
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Foreground" Value="Red"/>
                             </Trigger>
-                            
+
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsMouseOver" Value="True"/>
@@ -84,17 +84,6 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <!--<EventTrigger RoutedEvent="MouseEnter">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimation Storyboard.TargetName="CheckedMask" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="Gray" Duration="00:00:00.100"/>
-                            --><!--<DoubleAnimation From="0" To="1" Duration="00:00:00.500" Storyboard.TargetName="MainContainer" Storyboard.TargetProperty="Opacity"/>
-                            <DoubleAnimation From="100" To="0" Duration="00:00:00.500" Storyboard.TargetName="MainContainerTransform" Storyboard.TargetProperty="X" />--><!--
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>-->
-            </Style.Triggers>
         </Style>
 
     </metro:MetroWindow.Resources>
@@ -115,7 +104,6 @@
                     </Grid.RowDefinitions>
                     <usercontrols:UserInformationView/>
                     <StackPanel Grid.Row="1">
-                        <Button Content="Test" x:Name="Test" Click="Test_Click"/>
                         <RadioButton Content="全部文件" Command="{Binding PathNavigate}" CommandParameter="Root"/>
                         <RadioButton Content="图片收藏" Command="{Binding PathNavigate}" CommandParameter="Picture"/>
                         <RadioButton Content="视频收藏" Command="{Binding PathNavigate}" CommandParameter="Video"/>
@@ -124,18 +112,7 @@
                         <RadioButton Content="垃圾回收" Command="{Binding PathNavigate}" CommandParameter="Recovery"/>
                     </StackPanel>
                     <Grid Grid.Column="1" Grid.RowSpan="2">
-                        <usercontrols:FileListView Grid.Column="1" Grid.RowSpan="2" x:Name="MainContainer" DataContext="{Binding FileList}">
-                            <usercontrols:FileListView.Triggers>
-                                <EventTrigger RoutedEvent="usercontrols:FileListView.MouseEnter">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="MainContainer" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="00:00:00.500"/>
-                                            <DoubleAnimation Storyboard.TargetName="MainContainerTransform" Storyboard.TargetProperty="X" From="100" To="0" Duration="00:00:00.500"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </usercontrols:FileListView.Triggers>
-                        </usercontrols:FileListView>
+                        <usercontrols:FileListView Grid.Column="1" Grid.RowSpan="2" x:Name="MainContainer" DataContext="{Binding FileList}" DataContextChanged="MainContainer_DataContextChanged"/>
                         <Grid.RenderTransform>
                             <TranslateTransform x:Name="MainContainerTransform"/>
                         </Grid.RenderTransform>

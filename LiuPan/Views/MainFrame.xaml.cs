@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -40,8 +41,22 @@ namespace SixCloud.Views
             InitializeComponent();
         }
 
-        private void Test_Click(object sender, RoutedEventArgs e)
+        private void MainContainer_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            DoubleAnimation appearAnimation = new DoubleAnimation
+            {
+                From = 0d,
+                To = 1d,
+                Duration = new Duration(TimeSpan.FromMilliseconds(500))
+            };
+            DoubleAnimation moveAnimation = new DoubleAnimation
+            {
+                From = 100,
+                To = 0d,
+                Duration = new Duration(TimeSpan.FromMilliseconds(500))
+            };
+            MainContainer.BeginAnimation(OpacityProperty, appearAnimation);
+            MainContainerTransform.BeginAnimation(TranslateTransform.XProperty, moveAnimation);
         }
     }
 }

@@ -10,6 +10,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>
+
         <Style TargetType="{x:Type controls:FontIcon}">
             <Setter Property="IconSize" Value="14"/>
             <Setter Property="Margin" Value="5,0"/>
@@ -130,20 +132,12 @@
                             <Grid>
                                 <Border x:Name="MouseOverBorder" Opacity="0">
                                     <Border.Background>
-                                        <TemplateBinding Property="Foreground">
-                                            <TemplateBinding.Converter>
-                                                <Converters:BrushRoundConverter HighValue="White" LowValue="Black"/>
-                                            </TemplateBinding.Converter>
-                                        </TemplateBinding>
+                                        <TemplateBinding Property="Foreground" Converter="{StaticResource BrushRoundConverter}"/>
                                     </Border.Background>
                                 </Border>
                                 <Border x:Name="SelectedBorder" Opacity="0" RenderTransformOrigin="0.5,0.5">
                                     <Border.Background>
-                                        <TemplateBinding Property="Foreground">
-                                            <TemplateBinding.Converter>
-                                                <Converters:BrushRoundConverter HighValue="White" LowValue="Black"/>
-                                            </TemplateBinding.Converter>
-                                        </TemplateBinding>
+                                        <TemplateBinding Property="Foreground" Converter="{StaticResource BrushRoundConverter}"/>
                                     </Border.Background>
                                     <Border.RenderTransform>
                                         <ScaleTransform ScaleX="1"/>
@@ -151,11 +145,7 @@
                                 </Border>
                                 <materialDesign:Ripple ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Focusable="False" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
                                     <materialDesign:Ripple.Feedback>
-                                        <TemplateBinding Property="Foreground">
-                                            <TemplateBinding.Converter>
-                                                <Converters:BrushRoundConverter HighValue="White" LowValue="Black"/>
-                                            </TemplateBinding.Converter>
-                                        </TemplateBinding>
+                                        <TemplateBinding Property="Foreground" Converter="{StaticResource BrushRoundConverter}"/>
                                     </materialDesign:Ripple.Feedback>
                                 </materialDesign:Ripple>
                             </Grid>
