@@ -120,4 +120,5 @@ namespace SixCloud.Models
         public string DownloadAddress { get; set; }
 
     }
+
 }

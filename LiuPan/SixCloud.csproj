@@ -80,13 +80,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controllers\Authentication.cs" />
+    <Compile Include="Controllers\FileSystem.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\SixCloudMethordBase.cs" />
+    <Compile Include="Models\PreviewImageInformation.cs" />
+    <Compile Include="Models\PreviewVideoInformation.cs" />
     <Compile Include="Models\RecoverableUploadTaskArchive.cs" />
     <Compile Include="Models\SingleFileUploadTask.cs" />
     <Compile Include="Models\UploadTask.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
     <Compile Include="ViewModels\DependencyCommand.cs" />
+    <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\ValidationRules\PhoneNumber.cs" />
     <Compile Include="Views\UserControls\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
