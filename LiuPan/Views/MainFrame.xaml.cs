@@ -1,4 +1,5 @@
-﻿using SixCloudCustomControlLibrary.Controls;
+﻿using SixCloud.ViewModels;
+using SixCloudCustomControlLibrary.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,9 @@ namespace SixCloud.Views
         public MainFrame()
         {
             InitializeComponent();
+            FileListViewModel fileListViewModel = new FileListViewModel();
+            fileListViewModel.GetFileListByPath("/");
+            MainContainer.DataContext = fileListViewModel;
         }
 
         private void MainContainer_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

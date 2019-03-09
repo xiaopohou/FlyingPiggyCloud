@@ -25,26 +25,26 @@
             <Grid>
                 <Image Width="24" Margin="4" Source="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <!--<uc:RenamableTextBox TextAreaMaxWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" IsInputing="{Binding IsRename,Mode=TwoWay}" HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" Text="{Binding Name, Mode=OneTime}" Cancel="RenamableTextBox_Cancel" Confirm="RenamableTextBox_Confirm"/>-->
-                <Button Content="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Right" Margin="0,0,38,0" VerticalAlignment="Center"/>
-                <Button Content="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center">
+                <Button Content="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Right" Margin="0,0,38,0" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
+                <Button Content="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding ElementName=MoreButton}">
                     <Button.ContextMenu>
                         <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="White">
-                            <MenuItem x:Name="Cut" Header="剪切">
+                            <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}" CommandParameter="{Binding ElementName=FileList,Path=DataContext}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF0C4;"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem x:Name="Copy" Header="复制">
+                            <MenuItem x:Name="Copy" Header="复制" Command="{Binding CopyCommand}"  CommandParameter="{Binding ElementName=FileList,Path=DataContext}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF0C5;"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem x:Name="Rename" Header="重命名">
+                            <MenuItem x:Name="Rename" Header="重命名" Command="{Binding RenameCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF079;"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem x:Name="Delete" Header="删除">
+                            <MenuItem x:Name="Delete" Header="删除" Command="{Binding DeleteCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF1F8;"/>
                                 </MenuItem.Icon>

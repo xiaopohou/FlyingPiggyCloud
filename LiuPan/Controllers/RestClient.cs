@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace SixCloud.Controllers

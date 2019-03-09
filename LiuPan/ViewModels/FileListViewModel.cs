@@ -1,23 +1,25 @@
-﻿using SixCloud.Controllers;
-using SixCloud.Models;
+﻿using SixCloud.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace SixCloud.ViewModels
 {
-    internal class FileListViewModel : INotifyPropertyChanged
+    internal class FileListViewModel : AFileSystemVIewModel
     {
-        private readonly FileSystem fileSystem = new FileSystem();
+        public string[] CopyList { get; set; }
 
-        public List<string> PathArray { get; set; }
+        public string[] CutList { get; set; }
 
-        public ObservableCollection<FileListItemViewModel> FileList { get; set; }
+        public List<string> PathArray { get; set; } = new List<string>();
+
+        public ObservableCollection<FileListItemViewModel> FileList { get; set; } = new ObservableCollection<FileListItemViewModel>();
 
         public string CurrentPath { get; set; }
+
+        public string CurrentUUID { get; set; }
 
         #region FileListViewModelFunctions
         /// <summary>
@@ -25,7 +27,7 @@ namespace SixCloud.ViewModels
         /// </summary>
         private IEnumerator<FileMetaData[]> fileMetaDataEnumerator;
 
-        private void GetFileList(string path)
+        public void GetFileListByPath(string path)
         {
             IEnumerable<FileMetaData[]> GetFileList()
             {
@@ -47,17 +49,56 @@ namespace SixCloud.ViewModels
                 } while (currentPage < totalPage);
                 yield break;
             }
-            fileMetaDataEnumerator = GetFileList().GetEnumerator();
-            App.Current.Dispatcher.Invoke(() =>
+            void callback()
             {
+                fileMetaDataEnumerator.MoveNext();
                 foreach (FileMetaData a in fileMetaDataEnumerator.Current)
                 {
                     FileList.Add(new FileListItemViewModel(a));
                 }
-            });
+            }
+
+            FileList.Clear();
+            fileMetaDataEnumerator = GetFileList().GetEnumerator();
+            App.Current.Dispatcher.Invoke(callback);
         }
 
-        private void LazyLoad()
+        public void GetFileListByUUID(string uuid)
+        {
+            IEnumerable<FileMetaData[]> GetFileList()
+            {
+                int currentPage;
+                int totalPage;
+                do
+                {
+                    GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid);
+                    if (x.Success)
+                    {
+                        currentPage = x.Result.Page;
+                        totalPage = x.Result.TotalPage;
+                        yield return x.Result.List;
+                    }
+                    else
+                    {
+                        throw new DirectoryNotFoundException(x.Message);
+                    }
+                } while (currentPage < totalPage);
+                yield break;
+            }
+            void callback()
+            {
+                fileMetaDataEnumerator.MoveNext();
+                foreach (FileMetaData a in fileMetaDataEnumerator.Current)
+                {
+                    FileList.Add(new FileListItemViewModel(a));
+                }
+            }
+            FileList.Clear();
+            fileMetaDataEnumerator = GetFileList().GetEnumerator();
+            App.Current.Dispatcher.Invoke(callback);
+        }
+
+        public void LazyLoad()
         {
             if (fileMetaDataEnumerator != null)
             {
@@ -106,6 +147,7 @@ namespace SixCloud.ViewModels
 
         #region PreviousNavigate
         public DependencyCommand PreviousNavigateCommand { get; private set; }
+
         private async void PreviousNavigate(object parameter)
         {
             nextPath.Push(CurrentPath);
@@ -119,7 +161,7 @@ namespace SixCloud.ViewModels
                         string path = previousPath.Pop();
                         await Task.Run(() =>
                         {
-                            GetFileList(path);
+                            GetFileListByPath(path);
                         });
                         success = true;
                         CreatePathArray(path);
@@ -133,18 +175,21 @@ namespace SixCloud.ViewModels
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
             NextNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
         }
+
         private bool CanPreviousNavigate(object parameter)
         {
             return previousPath.Count != 0 ? true : false;
         }
+
         /// <summary>
         /// 为后退按钮保存历史路径
         /// </summary>
-        private Stack<string> previousPath;
+        private Stack<string> previousPath = new Stack<string>();
         #endregion
 
         #region NextNavigate
         public DependencyCommand NextNavigateCommand { get; private set; }
+
         private async void NextNavigate(object parameter)
         {
             previousPath.Push(CurrentPath);
@@ -158,7 +203,7 @@ namespace SixCloud.ViewModels
                         string path = nextPath.Pop();
                         await Task.Run(() =>
                         {
-                            GetFileList(path);
+                            GetFileListByPath(path);
                         });
                         success = true;
                         CreatePathArray(path);
@@ -172,35 +217,78 @@ namespace SixCloud.ViewModels
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
             NextNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
         }
+
         private bool CanNextNavigate(object parameter)
         {
             return nextPath.Count != 0 ? true : false;
         }
+
         /// <summary>
         /// 为前进按钮保存历史路径
         /// </summary>
-        private Stack<string> nextPath;
+        private Stack<string> nextPath = new Stack<string>();
+        #endregion
+
+        #region Stick
+        public DependencyCommand StickCommand { get; private set; }
+
+        private async void Stick(object parameter)
+        {
+            await Task.Run(new Action(callback));
+
+            void callback()
+            {
+                if (CopyList != null && CopyList.Length > 0)
+                {
+                    string[] copyList = CopyList;
+                    CopyList = null;
+                    StickCommand.OnCanExecutedChanged(this, new EventArgs());
+                    foreach (string a in copyList)
+                    {
+                        fileSystem.Copy(a, CurrentUUID);
+                    }
+                }
+                else if (CutList != null && CutList.Length > 0)
+                {
+                    string[] cutList = CutList;
+                    CutList = null;
+                    StickCommand.OnCanExecutedChanged(this, new EventArgs());
+                    foreach (string a in cutList)
+                    {
+                        fileSystem.Move(a, CurrentUUID);
+                    }
+                }
+                else
+                {
+                    CutList = null;
+                    CopyList = null;
+                    StickCommand.OnCanExecutedChanged(this, new EventArgs());
+                }
+            }
+
+        }
+
+        private bool CanStick(object parameter)
+        {
+            if ((CopyList != null && CopyList.Length > 0) || (CutList != null && CutList.Length > 0))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         #endregion
 
         public FileListViewModel()
         {
+            //previousPath = new Stack<string>();
+            //nextPath = new Stack<string>();
+            //FileList = new ObservableCollection<FileListItemViewModel>();
             NextNavigateCommand = new DependencyCommand(NextNavigate, CanNextNavigate);
             PreviousNavigateCommand = new DependencyCommand(PreviousNavigate, CanPreviousNavigate);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    internal class FileListItemViewModel
-    {
-        public FileListItemViewModel(FileMetaData fileMetaData)
-        {
-
+            StickCommand = new DependencyCommand(Stick, CanStick);
         }
     }
 }

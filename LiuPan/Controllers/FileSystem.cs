@@ -94,12 +94,12 @@ namespace SixCloud.Controllers
         /// <param name="SourceMeta">被移动的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public GenericResult<bool> Move(FileMetaData SourceMeta, string TargetDirectoryUUID)
+        public GenericResult<bool> Move(string sourceUUID, string targetDirectoryUUID)
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
-                { "uuid", SourceMeta.UUID },
-                { "parent", TargetDirectoryUUID }
+                { "uuid", sourceUUID },
+                { "parent", targetDirectoryUUID }
             };
             while (string.IsNullOrWhiteSpace(Token))
             {
@@ -118,12 +118,12 @@ namespace SixCloud.Controllers
         /// <param name="SourceMeta">被复制的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public GenericResult<bool> Copy(FileMetaData SourceMeta, string TargetDirectoryUUID)
+        public GenericResult<bool> Copy(string sourceUUID, string targetDirectoryUUID)
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
-                { "uuid", SourceMeta.UUID },
-                { "parent", TargetDirectoryUUID }
+                { "uuid", sourceUUID },
+                { "parent", targetDirectoryUUID }
             };
             while (string.IsNullOrWhiteSpace(Token))
             {
