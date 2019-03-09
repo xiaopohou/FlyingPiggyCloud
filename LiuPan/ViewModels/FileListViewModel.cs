@@ -1,5 +1,6 @@
 ﻿using SixCloud.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -142,8 +143,9 @@ namespace SixCloud.ViewModels
             }
             OnPropertyChanged("PathArray");
         }
-
         #endregion
+
+        #region NavigationCommand
 
         #region PreviousNavigate
         public DependencyCommand PreviousNavigateCommand { get; private set; }
@@ -228,7 +230,9 @@ namespace SixCloud.ViewModels
         /// </summary>
         private Stack<string> nextPath = new Stack<string>();
         #endregion
+        #endregion
 
+        #region FileOperationCommand
         #region Stick
         public DependencyCommand StickCommand { get; private set; }
 
@@ -281,14 +285,64 @@ namespace SixCloud.ViewModels
         }
         #endregion
 
+        #region Cut
+        public DependencyCommand CutCommand { get; private set; }
+
+        private void Cut(object parameter)
+        {
+            if (parameter is IList selectedItems)
+            {
+                List<string> list = new List<string>(selectedItems.Count);
+                foreach (FileListItemViewModel a in selectedItems)
+                {
+                    list.Add(a.UUID);
+                }
+                CutList = list.ToArray();
+                CopyList = null;
+                StickCommand.OnCanExecutedChanged(this, new EventArgs());
+            }
+        }
+
+        private bool CanCut(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
+        #region Copy
+        public DependencyCommand CopyCommand { get; private set; }
+
+        private void Copy(object parameter)
+        {
+            if (parameter is IList selectedItems)
+            {
+                List<string> list = new List<string>(selectedItems.Count);
+                foreach (FileListItemViewModel a in selectedItems)
+                {
+                    list.Add(a.UUID);
+                }
+                CopyList = list.ToArray();
+                CutList = null;
+                StickCommand.OnCanExecutedChanged(this, new EventArgs());
+            }
+        }
+
+        private bool CanCopy(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
+
+        #endregion
+
         public FileListViewModel()
         {
-            //previousPath = new Stack<string>();
-            //nextPath = new Stack<string>();
-            //FileList = new ObservableCollection<FileListItemViewModel>();
             NextNavigateCommand = new DependencyCommand(NextNavigate, CanNextNavigate);
             PreviousNavigateCommand = new DependencyCommand(PreviousNavigate, CanPreviousNavigate);
             StickCommand = new DependencyCommand(Stick, CanStick);
+            CutCommand = new DependencyCommand(Cut, CanCut);
+            CopyCommand = new DependencyCommand(Copy, CanCopy);
         }
     }
 }
