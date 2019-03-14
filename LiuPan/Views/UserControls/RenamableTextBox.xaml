@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="SixCloud.Views.UserControls.RenamableTextBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SixCloud.Views.UserControls"
+             xmlns:controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
+             mc:Ignorable="d" 
+             d:DesignHeight="24" d:DesignWidth="200" Name="MainContainer">
+    <Grid>
+        <TextBlock Text="{Binding ElementName=MainContainer,Path=CurrentName}"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBox Text="{Binding ElementName=MainContainer,Path=CurrentName}"/>
+            <controls:LightButton Margin="5,0" FontIcon="&#xf058;"/>
+            <controls:LightButton Margin="5,0" FontIcon="&#xf057;"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
