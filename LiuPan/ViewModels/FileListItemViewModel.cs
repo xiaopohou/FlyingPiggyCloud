@@ -3,7 +3,8 @@ using SixCloud.Models;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace SixCloud.ViewModels
 {
@@ -12,6 +13,19 @@ namespace SixCloud.ViewModels
         public string Name { get; set; }
 
         public string MTime { get; set; }
+
+        public string ATime { get; set; }
+
+        public string CTime { get; set; }
+
+        public bool Locking { get; set; }
+
+        public int Preview { get; set; }
+
+        /// <summary>
+        /// 0为文件，1为目录
+        /// </summary>
+        public int Type { get; set; }
 
         public string Size { get; set; }
 
@@ -25,6 +39,8 @@ namespace SixCloud.ViewModels
         {
             return true;
         }
+
+        private readonly FileListViewModel Parent;
 
         #region Copy
         public DependencyCommand CopyCommand { get; private set; }
@@ -103,12 +119,12 @@ namespace SixCloud.ViewModels
 
         private void Download(object parameter)
         {
-            FolderBrowserDialog downloadPathDialog = new FolderBrowserDialog
+            System.Windows.Forms.FolderBrowserDialog downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
             {
                 Description = "请选择下载文件夹",
                 SelectedPath = KnownFolders.Downloads.Path
             };
-            if (downloadPathDialog.ShowDialog() == DialogResult.OK)
+            if (downloadPathDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 GenericResult<FileMetaData> x = fileSystem.GetDetailsByUUID(UUID);
                 if (!string.IsNullOrWhiteSpace(x.Result.DownloadAddress))
@@ -117,9 +133,25 @@ namespace SixCloud.ViewModels
                 }
             }
         }
+
+        private bool CanDownload(object parameter)
+        {
+            return Type == 0 ? true : false;
+        }
         #endregion
 
+        #region MoreCommand
         public DependencyCommand MoreCommand { get; private set; }
+
+        private void More(object parameter)
+        {
+            if (parameter is ButtonBase btn)
+            {
+                btn.ContextMenu.DataContext = btn.DataContext;
+                btn.ContextMenu.IsOpen = true;
+            }
+        }
+        #endregion
 
         static FileListItemViewModel()
         {
@@ -133,7 +165,21 @@ namespace SixCloud.ViewModels
         {
             Name = fileMetaData.Name;
             MTime = Calculators.UnixTimeStampConverter(fileMetaData.Mtime);
+            ATime = Calculators.UnixTimeStampConverter(fileMetaData.Atime);
+            CTime = Calculators.UnixTimeStampConverter(fileMetaData.Ctime);
+            Locking = fileMetaData.Locking;
+            Preview = fileMetaData.Preview;
+            Type = fileMetaData.Type;
             Size = Calculators.SizeCalculator(fileMetaData.Size);
+            UUID = fileMetaData.UUID;
+
+            CopyCommand = new DependencyCommand(Copy, AlwaysCan);
+            CutCommand = new DependencyCommand(Cut, AlwaysCan);
+            DeleteCommand = new DependencyCommand(Delete, AlwaysCan);
+            RenameCommand = new DependencyCommand(Rename, AlwaysCan);
+            ConfirmCommand = new DependencyCommand(Confirm, CanConfirm);
+            DownloadCommand = new DependencyCommand(Download, CanDownload);
+            MoreCommand = new DependencyCommand(More, AlwaysCan);
         }
     }
 }

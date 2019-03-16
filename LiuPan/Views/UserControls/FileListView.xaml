@@ -22,19 +22,19 @@
         </Style>
 
         <DataTemplate x:Key="MetaName">
-            <Grid>
-                <controls:FontIcon FontSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Grid x:Name="MetaNameContainer">
+                <controls:FontIcon IconSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <controls:RenamableTextBox HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
                 <controls:LightButton FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Right" Margin="0,0,38,0" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
-                <controls:LightButton FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding ElementName=MoreButton}">
+                <controls:LightButton FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
                     <controls:LightButton.ContextMenu>
                         <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="White">
-                            <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}" CommandParameter="{Binding ElementName=FileList,Path=DataContext}">
+                            <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF0C4;"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem x:Name="Copy" Header="复制" Command="{Binding CopyCommand}"  CommandParameter="{Binding ElementName=FileList,Path=DataContext}">
+                            <MenuItem x:Name="Copy" Header="复制" Command="{Binding CopyCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF0C5;"/>
                                 </MenuItem.Icon>
