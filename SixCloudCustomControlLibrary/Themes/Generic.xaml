@@ -10,7 +10,7 @@
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroMenuTabItem.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroFocusButton.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/FontIcon.xaml"/>
+        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/RenamableTextBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-    <!--<SolidColorBrush x:Key="MainFocusColorBrush" Color="#FF61BF83"/>-->
     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FF61BF83"/>
 </ResourceDictionary>

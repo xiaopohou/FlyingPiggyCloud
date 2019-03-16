@@ -84,6 +84,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Themes\RenamableTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\ElementBase.cs" />
@@ -93,6 +97,7 @@
     <Compile Include="Controls\MetroMenuTabItem.cs" />
     <Compile Include="Controls\MetroScrollViewer.cs" />
     <Compile Include="Controls\MetroWindow.cs" />
+    <Compile Include="Controls\RenamableTextBox.cs" />
     <Compile Include="Converters\CornerRadiusToDouble.cs" />
     <Compile Include="Converters\DoubleFactor.cs" />
     <Compile Include="Converters\DoubleToCornerRadius.cs" />
