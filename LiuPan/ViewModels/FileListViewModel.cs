@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SixCloud.ViewModels
 {
-    internal class FileListViewModel : AFileSystemVIewModel
+    internal class FileListViewModel : FileSystemVIewModel
     {
         public string[] CopyList { get; set; }
 

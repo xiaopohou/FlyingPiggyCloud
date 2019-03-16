@@ -139,9 +139,9 @@ namespace SixCloud.Controllers
         /// <summary>
         /// 删除文件夹或文件
         /// </summary>
-        /// <param name="SourceMeta">被删除的项目</param>
+        /// <param name="uuid">被删除的项目</param>
         /// <returns></returns>
-        public GenericResult<bool> Remove(FileMetaData SourceMeta)
+        public GenericResult<bool> Remove(string uuid)
         {
             while (string.IsNullOrWhiteSpace(Token))
             {
@@ -150,7 +150,7 @@ namespace SixCloud.Controllers
             }
             Dictionary<string, string> data = new Dictionary<string, string>
             {
-                { "uuid", SourceMeta.UUID }
+                { "uuid", uuid }
             };
             data.Add("token", Token);
             GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v1/files/remove");
@@ -162,9 +162,9 @@ namespace SixCloud.Controllers
         /// 重命名文件夹或文件
         /// </summary>
         /// <param name="SourceMeta">被重命名的项目</param>
-        /// <param name="NewName">新名称</param>
+        /// <param name="newName">新名称</param>
         /// <returns></returns>
-        public void Rename(FileMetaData SourceMeta, string NewName)
+        public void Rename(string uuid, string newName)
         {
             while (string.IsNullOrWhiteSpace(Token))
             {
@@ -173,8 +173,8 @@ namespace SixCloud.Controllers
             }
             Dictionary<string, string> data = new Dictionary<string, string>
             {
-                { "uuid", SourceMeta.UUID },
-                { "name", NewName },
+                { "uuid", uuid },
+                { "name", newName },
                 { "token", Token }
             };
             Dictionary<string, string> x = Post<Dictionary<string, string>>(JsonConvert.SerializeObject(data), "v1/files/rename");

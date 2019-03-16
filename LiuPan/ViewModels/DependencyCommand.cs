@@ -10,9 +10,9 @@ namespace SixCloud.ViewModels
     /// <typeparam name="T2">CanExecute Parameter Type</typeparam>
     public class DependencyCommand : ICommand
     {
-        private readonly Action<object> ExecuteAction;
+        protected readonly Action<object> ExecuteAction;
 
-        private readonly Func<object, bool> CanExecuteAction;
+        protected readonly Func<object, bool> CanExecuteAction;
 
         public DependencyCommand(Action<object> executeAction, Func<object, bool> canExecuteAction)
         {
@@ -35,14 +35,14 @@ namespace SixCloud.ViewModels
             }
         }
 
-        public void Execute(object parameter)
+        public virtual void Execute(object parameter)
         {
             ExecuteAction?.Invoke(parameter);
         }
 
         public void OnCanExecutedChanged(object sender, EventArgs e)
         {
-            CanExecuteChanged?.Invoke(sender,e);
+            CanExecuteChanged?.Invoke(sender, e);
         }
     }
 }
