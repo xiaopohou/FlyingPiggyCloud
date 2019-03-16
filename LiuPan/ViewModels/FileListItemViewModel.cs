@@ -3,7 +3,6 @@ using SixCloud.Models;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace SixCloud.ViewModels
@@ -47,15 +46,12 @@ namespace SixCloud.ViewModels
 
         private void Copy(object parameter)
         {
-            if (parameter is FileListViewModel fileListViewModel)
+            Parent.CopyList = new string[]
             {
-                fileListViewModel.CopyList = new string[]
-                {
                     UUID
-                };
-                fileListViewModel.CutList = null;
-                fileListViewModel.StickCommand.OnCanExecutedChanged(this, new EventArgs());
-            }
+            };
+            Parent.CutList = null;
+            Parent.StickCommand.OnCanExecutedChanged(this, new EventArgs());
         }
         #endregion
 
@@ -64,15 +60,12 @@ namespace SixCloud.ViewModels
 
         private void Cut(object parameter)
         {
-            if (parameter is FileListViewModel fileListViewModel)
+            Parent.CutList = new string[]
             {
-                fileListViewModel.CutList = new string[]
-                {
                     UUID
-                };
-                fileListViewModel.CopyList = null;
-                fileListViewModel.StickCommand.OnCanExecutedChanged(this, new EventArgs());
-            }
+            };
+            Parent.CopyList = null;
+            Parent.StickCommand.OnCanExecutedChanged(this, new EventArgs());
         }
         #endregion
 
@@ -161,8 +154,9 @@ namespace SixCloud.ViewModels
             };
         }
 
-        public FileListItemViewModel(FileMetaData fileMetaData)
+        public FileListItemViewModel(FileListViewModel parent,FileMetaData fileMetaData)
         {
+            Parent = parent;
             Name = fileMetaData.Name;
             MTime = Calculators.UnixTimeStampConverter(fileMetaData.Mtime);
             ATime = Calculators.UnixTimeStampConverter(fileMetaData.Atime);

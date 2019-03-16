@@ -55,7 +55,7 @@ namespace SixCloud.ViewModels
                 fileMetaDataEnumerator.MoveNext();
                 foreach (FileMetaData a in fileMetaDataEnumerator.Current)
                 {
-                    FileList.Add(new FileListItemViewModel(a));
+                    FileList.Add(new FileListItemViewModel(this, a));
                 }
             }
 
@@ -91,7 +91,7 @@ namespace SixCloud.ViewModels
                 fileMetaDataEnumerator.MoveNext();
                 foreach (FileMetaData a in fileMetaDataEnumerator.Current)
                 {
-                    FileList.Add(new FileListItemViewModel(a));
+                    FileList.Add(new FileListItemViewModel(this, a));
                 }
             }
             FileList.Clear();
@@ -111,7 +111,7 @@ namespace SixCloud.ViewModels
                         {
                             foreach (FileMetaData a in fileMetaDataEnumerator.Current)
                             {
-                                FileList.Add(new FileListItemViewModel(a));
+                                FileList.Add(new FileListItemViewModel(this, a));
                             }
                         });
                     }

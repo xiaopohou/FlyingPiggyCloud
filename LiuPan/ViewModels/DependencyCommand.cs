@@ -42,7 +42,7 @@ namespace SixCloud.ViewModels
 
         public void OnCanExecutedChanged(object sender, EventArgs e)
         {
-            CanExecuteChanged?.Invoke(sender, e);
+            App.Current.Dispatcher.Invoke(() => CanExecuteChanged?.Invoke(sender, e));
         }
     }
 }
