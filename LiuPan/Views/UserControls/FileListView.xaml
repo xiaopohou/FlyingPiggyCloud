@@ -23,7 +23,7 @@
 
         <DataTemplate x:Key="MetaName">
             <Grid x:Name="MetaNameContainer">
-                <controls:FontIcon IconSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <controls:FontIcon Foreground="{DynamicResource PrimaryHueMidBrush}" IconSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <controls:RenamableTextBox HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
                 <controls:LightButton FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Right" Margin="0,0,38,0" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
                 <controls:LightButton FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
