@@ -32,14 +32,13 @@ namespace SixCloud.ViewModels
         {
             IEnumerable<FileMetaData[]> GetFileList()
             {
-                int currentPage;
+                int currentPage = 0;
                 int totalPage;
                 do
                 {
-                    GenericResult<FileListPage> x = fileSystem.GetDirectory("", path);
+                    GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage);
                     if (x.Success)
                     {
-                        currentPage = x.Result.Page;
                         totalPage = x.Result.TotalPage;
                         yield return x.Result.List;
                     }
@@ -50,6 +49,7 @@ namespace SixCloud.ViewModels
                 } while (currentPage < totalPage);
                 yield break;
             }
+
             void callback()
             {
                 fileMetaDataEnumerator.MoveNext();
@@ -68,14 +68,13 @@ namespace SixCloud.ViewModels
         {
             IEnumerable<FileMetaData[]> GetFileList()
             {
-                int currentPage;
+                int currentPage = 0;
                 int totalPage;
                 do
                 {
-                    GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid);
+                    GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage);
                     if (x.Success)
                     {
-                        currentPage = x.Result.Page;
                         totalPage = x.Result.TotalPage;
                         yield return x.Result.List;
                     }
@@ -86,6 +85,7 @@ namespace SixCloud.ViewModels
                 } while (currentPage < totalPage);
                 yield break;
             }
+
             void callback()
             {
                 fileMetaDataEnumerator.MoveNext();

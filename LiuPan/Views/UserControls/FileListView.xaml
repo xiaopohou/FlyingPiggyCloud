@@ -20,7 +20,7 @@
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
         </Style>
-
+        
         <DataTemplate x:Key="MetaName">
             <Grid x:Name="MetaNameContainer">
                 <controls:FontIcon Foreground="{DynamicResource PrimaryHueMidBrush}" IconSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -227,7 +227,7 @@
             </StackPanel>
 
         </Grid>
-        <ListView x:Name="FileList" Margin="0,94,0,0" ItemsSource="{Binding FileList}">
+        <ListView ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" Margin="0,94,0,0" ItemsSource="{Binding FileList}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName, Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
@@ -235,7 +235,11 @@
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" CellTemplate="{StaticResource MetaMTime}" Header="修改时间"/>
                 </GridView>
             </ListView.View>
-            <!--<ListViewItem Content="Hello World"/>-->
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
 
         <!--这个Grid用于帮助GridView自动校正分栏宽度-->
