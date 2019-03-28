@@ -21,7 +21,8 @@ namespace SixCloud.Views.UserControls
             {
                 if (lvItem.DataContext is FileListItemViewModel fileListItem)
                 {
-                    ((FileListViewModel)DataContext).GetFileListByUUID(fileListItem.UUID);
+                    var dataContext = DataContext as FileListViewModel;
+                    dataContext?.Navigate(fileListItem.UUID);
                 }
             }
         }

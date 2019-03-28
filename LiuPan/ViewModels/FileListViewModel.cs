@@ -4,7 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SixCloud.ViewModels
 {
@@ -28,6 +30,13 @@ namespace SixCloud.ViewModels
         /// </summary>
         private IEnumerator<FileMetaData[]> fileMetaDataEnumerator;
 
+        public void Navigate(string uuid)
+        {
+            previousPath.Push(CurrentPath);
+            PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+            GetFileListByUUID(uuid);
+        }
+
         public void GetFileListByPath(string path)
         {
             IEnumerable<FileMetaData[]> GetFileList()
@@ -40,6 +49,8 @@ namespace SixCloud.ViewModels
                     if (x.Success)
                     {
                         totalPage = x.Result.TotalPage;
+                        CurrentPath = x.Result.DictionaryInformation.Path;
+                        CurrentUUID = x.Result.DictionaryInformation.UUID;
                         yield return x.Result.List;
                     }
                     else
@@ -59,7 +70,7 @@ namespace SixCloud.ViewModels
                 }
             }
 
-            FileList.Clear();
+            App.Current.Dispatcher.Invoke(() => FileList.Clear());
             fileMetaDataEnumerator = GetFileList().GetEnumerator();
             App.Current.Dispatcher.Invoke(callback);
         }
@@ -76,6 +87,8 @@ namespace SixCloud.ViewModels
                     if (x.Success)
                     {
                         totalPage = x.Result.TotalPage;
+                        CurrentPath = x.Result.DictionaryInformation.Path;
+                        CurrentUUID = x.Result.DictionaryInformation.UUID;
                         yield return x.Result.List;
                     }
                     else
@@ -94,7 +107,7 @@ namespace SixCloud.ViewModels
                     FileList.Add(new FileListItemViewModel(this, a));
                 }
             }
-            FileList.Clear();
+            App.Current.Dispatcher.Invoke(() => FileList.Clear());
             fileMetaDataEnumerator = GetFileList().GetEnumerator();
             App.Current.Dispatcher.Invoke(callback);
         }
@@ -238,9 +251,7 @@ namespace SixCloud.ViewModels
 
         private async void Stick(object parameter)
         {
-            await Task.Run(new Action(callback));
-
-            void callback()
+            await Task.Run(()=>
             {
                 if (CopyList != null && CopyList.Length > 0)
                 {
@@ -268,7 +279,9 @@ namespace SixCloud.ViewModels
                     CopyList = null;
                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
                 }
-            }
+                MessageBox.Show("由于复制和剪切属于异步操作，您可能需要等待几秒钟才能看到结果", "粘贴中");
+                GetFileListByPath(CurrentPath);
+            });
 
         }
 
