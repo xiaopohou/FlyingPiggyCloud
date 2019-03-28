@@ -7,7 +7,7 @@ using System.Windows.Controls.Primitives;
 
 namespace SixCloud.ViewModels
 {
-    internal class FileListItemViewModel : FileSystemVIewModel
+    internal class FileListItemViewModel : FileSystemViewModel
     {
         public string Name { get; set; }
 
