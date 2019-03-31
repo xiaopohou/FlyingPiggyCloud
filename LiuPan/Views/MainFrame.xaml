@@ -90,7 +90,7 @@
     <Grid>
         <metro:MetroMenuTabControl IconMode="True" SelectedIndex="1">
             <metro:MetroMenuTabItem Icon="&#xf360;" IconMove="&#xf021;" Header="传输列表">
-
+                <usercontrols:TransferListView/>
             </metro:MetroMenuTabItem>
             
             <!--文件列表-->
