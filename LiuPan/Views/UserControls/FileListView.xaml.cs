@@ -1,4 +1,5 @@
 ﻿using SixCloud.ViewModels;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -21,8 +22,8 @@ namespace SixCloud.Views.UserControls
             {
                 if (lvItem.DataContext is FileListItemViewModel fileListItem)
                 {
-                    var dataContext = DataContext as FileListViewModel;
-                    dataContext?.Navigate(fileListItem.UUID);
+                    FileListViewModel dataContext = DataContext as FileListViewModel;
+                    dataContext?.NavigateByUUID(fileListItem.UUID);
                 }
             }
         }
@@ -51,6 +52,31 @@ namespace SixCloud.Views.UserControls
             FileListViewModel vm = DataContext as FileListViewModel;
             await Task.Run(() => vm.LazyLoad());
             LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
+        }
+
+        private void AddressBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ListBox listBox && DataContext is FileListViewModel viewmodel)
+            {
+                int i = listBox.SelectedIndex;
+                if (i == 0)
+                {
+                    viewmodel.NavigateByPath("/");
+                }
+                else if (i != -1)
+                {
+                    string[] pathArray = new string[i];
+                    viewmodel.PathArray.CopyTo(1, pathArray, 0, i);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    foreach (string path in pathArray)
+                    {
+                        stringBuilder.Append("/");
+                        stringBuilder.Append(path);
+                    }
+                    viewmodel.NavigateByPath(stringBuilder.ToString());
+                }
+                listBox.SelectedIndex = -1;
+            }
         }
     }
 }

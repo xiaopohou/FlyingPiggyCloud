@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -30,11 +29,18 @@ namespace SixCloud.ViewModels
         /// </summary>
         private IEnumerator<FileMetaData[]> fileMetaDataEnumerator;
 
-        public void Navigate(string uuid)
+        public void NavigateByUUID(string uuid)
         {
             previousPath.Push(CurrentPath);
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
             GetFileListByUUID(uuid);
+        }
+
+        public void NavigateByPath(string path)
+        {
+            previousPath.Push(CurrentPath);
+            PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+            GetFileListByPath(path);
         }
 
         public void GetFileListByPath(string path)
@@ -51,6 +57,7 @@ namespace SixCloud.ViewModels
                         totalPage = x.Result.TotalPage;
                         CurrentPath = x.Result.DictionaryInformation.Path;
                         CurrentUUID = x.Result.DictionaryInformation.UUID;
+                        CreatePathArray(CurrentPath);
                         yield return x.Result.List;
                     }
                     else
@@ -89,6 +96,7 @@ namespace SixCloud.ViewModels
                         totalPage = x.Result.TotalPage;
                         CurrentPath = x.Result.DictionaryInformation.Path;
                         CurrentUUID = x.Result.DictionaryInformation.UUID;
+                        CreatePathArray(CurrentPath);
                         yield return x.Result.List;
                     }
                     else
@@ -147,12 +155,15 @@ namespace SixCloud.ViewModels
             {
                 PathArray = new List<string>(new string[]
                 {
-                    "root"
+                    "home"
                 });
             }
             else
             {
-                PathArray = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace));
+                List<string> array = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace));
+                //array.Insert(0, "home");
+                array[0] = "home";
+                PathArray = array;
             }
             OnPropertyChanged("PathArray");
         }
@@ -179,7 +190,7 @@ namespace SixCloud.ViewModels
                             GetFileListByPath(path);
                         });
                         success = true;
-                        CreatePathArray(path);
+                        //CreatePathArray(path);
                     }
                     catch (DirectoryNotFoundException)
                     {
@@ -221,7 +232,7 @@ namespace SixCloud.ViewModels
                             GetFileListByPath(path);
                         });
                         success = true;
-                        CreatePathArray(path);
+                        //CreatePathArray(path);
                     }
                     catch (DirectoryNotFoundException)
                     {
@@ -251,7 +262,7 @@ namespace SixCloud.ViewModels
 
         private async void Stick(object parameter)
         {
-            await Task.Run(()=>
+            await Task.Run(() =>
             {
                 if (CopyList != null && CopyList.Length > 0)
                 {
