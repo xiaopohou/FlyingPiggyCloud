@@ -11,6 +11,16 @@ namespace SixCloud.Views
 
         private string _userInput;
 
+        public static bool Show(out string UserInput, string hintText,string title)
+        {
+            TextInputDialog textInputDialog = new TextInputDialog();
+            textInputDialog.Title = title;
+            textInputDialog.HintAssistant.Text = hintText;
+            textInputDialog.ShowDialog();
+            UserInput = textInputDialog._userInput;
+            return textInputDialog._result;
+        }
+
         public static bool Show(out string UserInput,string hintText)
         {
             TextInputDialog textInputDialog = new TextInputDialog();

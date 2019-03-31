@@ -280,9 +280,13 @@ namespace SixCloud.ViewModels
 
         private void NewFolder(object parameter)
         {
-            if (TextInputDialog.Show(out string FolderName, "请输入新文件夹的名字") && !FolderName.Contains("/"))
+            if (TextInputDialog.Show(out string FolderName, "请输入新文件夹的名字", "新建文件夹") && !FolderName.Contains("/"))
             {
-                fileSystem.CreatDirectory(FolderName, CurrentUUID);
+                GenericResult<FileMetaData> x = fileSystem.CreatDirectory(FolderName, CurrentUUID);
+                if (!x.Success)
+                {
+                    MessageBox.Show("创建失败：" + x.Message);
+                }
             }
         }
 

@@ -9,7 +9,7 @@
     xmlns:mt="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     BorderBrush="{DynamicResource PrimaryHueMidBrush}"
-    Title="" Height="200" Width="350">
+    Title="" Height="170" Width="350" WindowStyle="ToolWindow">
     <StackPanel Margin="15">
         <!--<TextBlock Name="Message" Text="请输入文本" VerticalAlignment="Top"/>-->
         <TextBlock Name="HintAssistant" Text="请输入文本" Visibility="Collapsed"/>

@@ -111,7 +111,7 @@
                         <RadioButton Content="视频收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Videos"/>
                         <RadioButton Content="音乐收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Musics"/>
                         <RadioButton Content="文档收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Documents"/>
-                        <RadioButton Content="垃圾回收" Command="{Binding PathNavigateCommand}" CommandParameter="Recovery"/>
+                        <!--<RadioButton Content="垃圾回收" Command="{Binding PathNavigateCommand}" CommandParameter="Recovery"/>-->
                     </StackPanel>
                     <!--主文件列表窗格-->
                     <Grid Grid.Column="1" Grid.RowSpan="2">
