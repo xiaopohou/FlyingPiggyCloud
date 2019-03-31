@@ -8,7 +8,6 @@
     <Style TargetType="{x:Type Metro:MetroMenuTabControl}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
-        
         <Setter Property="TabStripPlacement" Value="Left"/>
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}"/>
         <Setter Property="Padding" Value="0"/>
@@ -139,7 +138,8 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Rectangle Fill="#000000" Grid.RowSpan="2" Opacity="0.06"/>
+                            <!--<Rectangle Fill="#000000" Grid.RowSpan="2" Opacity="0.06"/>-->
+                            <!--IconModeButton-->
                             <Metro:MetroFocusButton Visibility="{TemplateBinding IconModeButtonVisibility}" BorderThickness="0" MouseMoveBorderThickness="0" Command="Metro:MetroMenuTabControl.IconModeClickCommand"/>
                             <Grid Visibility="{TemplateBinding IconModeButtonVisibility}" Width="44" Height="40" HorizontalAlignment="Left" IsHitTestVisible="False">
                                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="23" Height="23" Opacity="0.9">
@@ -160,6 +160,7 @@
                                     </Rectangle>
                                 </Grid>
                             </Grid>
+                            
                             <Metro:MetroScrollViewer Grid.Row="1" BorderBrush="White" VerticalAlignment="{TemplateBinding TabPanelVerticalAlignment}" Margin="{TemplateBinding Padding}">
                                 <Canvas x:Name="canvas" Height="{Binding ActualHeight,ElementName=tabWidth}">
                                     <Grid x:Name="tabWidth">
@@ -168,7 +169,8 @@
                                 </Canvas>
                             </Metro:MetroScrollViewer>
                         </Grid>
-                        <Border x:Name="contentPanel" Background="#f3f3f3" Grid.Column="1" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local">
+                        
+                        <Border x:Name="contentPanel" Background="#FFF1F2F4" Grid.Column="1" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local">
                             <ContentPresenter x:Name="content" ContentSource="SelectedContent"/>
                         </Border>
                     </Grid>

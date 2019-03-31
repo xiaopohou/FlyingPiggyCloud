@@ -7,59 +7,76 @@
              xmlns:Controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary" x:Class="SixCloud.Views.UserControls.TransferListView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Controls:MetroMenuTabControl BorderBrush="DarkGray" IconModeButtonVisibility="Hidden">
-            <Controls:MetroMenuTabItem Icon="&#xf103;" IconMove="&#xf103;" Header="正在下载">
-                <Grid Background="White" Margin="30,40,15,15">
-                    <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
-                        <Button HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}" VerticalAlignment="Center" Margin="5,0" Command="{Binding PauseCommand}" CommandTarget="{Binding DataContext, ElementName=DownloadingList}">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                                <TextBlock Text="暂停任务" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}" VerticalAlignment="Center" Margin="5,0" Command="{Binding PauseCommand}"  CommandTarget="{Binding DataContext, ElementName=DownloadingList}">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                                <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <ListBox Name="DownloadingList" ItemsSource="{Binding DownloadingList}" Background="White" Margin="0,42,0,0">
-                        <ListBox.CommandBindings>
-                            <CommandBinding Command="Pause"/>
-                            <CommandBinding Command="Stop"/>
-                        </ListBox.CommandBindings>
-                    </ListBox>
-                </Grid>
-            </Controls:MetroMenuTabItem>
-            <Controls:MetroMenuTabItem Icon="&#xf560;" IconMove="&#xf560;" Header="下载完成"/>
-            <Controls:MetroMenuTabItem Icon="&#xf381;" IconMove="&#xf381;" Header="离线任务"/>
-            <Controls:MetroMenuTabItem Icon="&#xf102;" IconMove="&#xf102;" Header="正在上传">
-                <Grid Background="White" Margin="30,40,15,15">
-                    <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
-                        <Button HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}" VerticalAlignment="Center" Margin="5,0" Command="{Binding PauseCommand}" CommandTarget="{Binding DataContext, ElementName=UploadingList}">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                                <TextBlock Text="暂停任务" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}" VerticalAlignment="Center" Margin="5,0" Command="{Binding PauseCommand}"  CommandTarget="{Binding DataContext, ElementName=UploadingList}">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                                <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <ListBox Name="UploadingList" ItemsSource="{Binding UploadingList}" Background="White" Margin="0,42,0,0">
-                        <ListBox.CommandBindings>
-                            <CommandBinding Command="Pause"/>
-                            <CommandBinding Command="Stop"/>
-                        </ListBox.CommandBindings>
-                    </ListBox>
-                </Grid>
-            </Controls:MetroMenuTabItem>
-            <Controls:MetroMenuTabItem Icon="&#xf560;" IconMove="&#xf560;" Header="上传完成"/>
-        </Controls:MetroMenuTabControl>
-    </Grid>
+    <Controls:MetroMenuTabControl BorderBrush="White" IconModeButtonVisibility="Hidden">
+
+        <!--下载列表-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xf103;" IconMove="&#xf103;" Header="正在下载">
+            <Grid Background="White" Margin="30,40,15,15">
+                <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
+                    <Button HorizontalAlignment="Left"
+                            Style="{DynamicResource MaterialDesignFlatButton}"
+                            VerticalAlignment="Center" Margin="5,0"
+                            Command="{Binding PauseCommand}"
+                            CommandTarget="{Binding DataContext, ElementName=DownloadingList}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                            <TextBlock Text="暂停任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button HorizontalAlignment="Left" 
+                            Style="{DynamicResource MaterialDesignFlatButton}" 
+                            VerticalAlignment="Center" Margin="5,0" 
+                            Command="{Binding PauseCommand}"
+                            CommandTarget="{Binding DataContext, ElementName=DownloadingList}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                            <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ListBox Name="DownloadingList" ItemsSource="{Binding DownloadingList}" Background="White" Margin="0,42,0,0">
+                    <ListBox.CommandBindings>
+                        <CommandBinding Command="Pause"/>
+                        <CommandBinding Command="Stop"/>
+                    </ListBox.CommandBindings>
+                </ListBox>
+            </Grid>
+        </Controls:MetroMenuTabItem>
+
+        <!--下载完成-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xf560;" IconMove="&#xf560;" Header="下载完成"/>
+
+        <!--离线下载列表-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xf381;" IconMove="&#xf381;" Header="离线任务"/>
+
+        <!--上传列表-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xf102;" IconMove="&#xf102;" Header="正在上传">
+            <Grid Background="White" Margin="30,40,15,15">
+                <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
+                    <Button HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}" VerticalAlignment="Center" Margin="5,0" Command="{Binding PauseCommand}" CommandTarget="{Binding DataContext, ElementName=UploadingList}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                            <TextBlock Text="暂停任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}" VerticalAlignment="Center" Margin="5,0" Command="{Binding PauseCommand}"  CommandTarget="{Binding DataContext, ElementName=UploadingList}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                            <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ListBox Name="UploadingList" ItemsSource="{Binding UploadingList}" Background="White" Margin="0,42,0,0">
+                    <ListBox.CommandBindings>
+                        <CommandBinding Command="Pause"/>
+                        <CommandBinding Command="Stop"/>
+                    </ListBox.CommandBindings>
+                </ListBox>
+            </Grid>
+        </Controls:MetroMenuTabItem>
+
+        <!--上传完成-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xf560;" IconMove="&#xf560;" Header="上传完成"/>
+
+    </Controls:MetroMenuTabControl>
 </UserControl>
