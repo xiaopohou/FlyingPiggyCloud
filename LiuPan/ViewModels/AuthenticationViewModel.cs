@@ -27,7 +27,7 @@ namespace SixCloud.ViewModels
                 if (x.Success)
                 {
                     System.Windows.Window.GetWindow(passwordBox).Close();
-                    new MainFrame().Show();
+                    new MainFrame(x.Result).Show();
                     if (IsRememberPassword)
                     {
                         LocalProperties.UserName = PhoneNumber;
@@ -53,7 +53,7 @@ namespace SixCloud.ViewModels
                 {
                     LocalProperties.UserName = PhoneNumber;
                     System.Windows.Window.GetWindow(param as PasswordBox).Close();
-                    new MainFrame().Show();
+                    new MainFrame(x.Result).Show();
                 }
                 else
                 {
@@ -91,7 +91,7 @@ namespace SixCloud.ViewModels
                 if (x.Success)
                 {
                     System.Windows.Window.GetWindow(passwordBox).Close();
-                    new MainFrame().Show();
+                    new MainFrame(x.Result).Show();
                 }
                 else
                 {

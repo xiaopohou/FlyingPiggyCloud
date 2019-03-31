@@ -1,19 +1,10 @@
-﻿using SixCloud.ViewModels;
+﻿using SixCloud.Models;
+using SixCloud.ViewModels;
 using SixCloudCustomControlLibrary.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SixCloud.Views
 {
@@ -25,24 +16,18 @@ namespace SixCloud.Views
     {
         public static readonly DependencyProperty PageNavigateProperty = DependencyProperty.Register("PageNavigate", typeof(PageNavigate), typeof(MainFrame), new PropertyMetadata((sender, e) =>
         {
-            if(sender is MainFrame mainFrame)
+            if (sender is MainFrame mainFrame)
             {
-                //    switch(mainFrame.PageNavigate)
-                //    {
-                //        case PageNavigate.Completed:
-                //            mainFrame.MainContainer
-                //    }
+
             }
         }));
         public PageNavigate PageNavigate { get => (PageNavigate)GetValue(PageNavigateProperty); set => SetValue(PageNavigateProperty, value); }
 
 
-        public MainFrame()
+        public MainFrame(UserInformation currentUser)
         {
             InitializeComponent();
-            FileListViewModel fileListViewModel = new FileListViewModel();
-            fileListViewModel.GetFileListByPath("/");
-            MainContainer.DataContext = fileListViewModel;
+            DataContext = new MainFrameViewModel(currentUser);
         }
 
         private void MainContainer_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

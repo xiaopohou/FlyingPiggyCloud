@@ -16,7 +16,7 @@
                 <ImageBrush ImageSource="{Binding Icon}" Stretch="UniformToFill"/>
             </Border.Background>
         </Border>
-        <ProgressBar ToolTip="{Binding FrendlySpaceCapacity}" Value="{Binding Progress}" Margin="0,30,0,0" VerticalAlignment="Top" Width="50" Height="50" Style="{StaticResource MaterialDesignCircularProgressBar}"/>
+        <ProgressBar ToolTip="{Binding FrendlySpaceCapacity}" Value="{Binding AvailableRate}" Margin="0,30,0,0" VerticalAlignment="Top" Width="50" Height="50" Style="{StaticResource MaterialDesignCircularProgressBar}"/>
         <!--用户名-->
         <TextBlock x:Name="textBlock" Text="{Binding Name,Mode=OneTime}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,90,0,0" Foreground="#FF5A5A5A"/>
     </Grid>

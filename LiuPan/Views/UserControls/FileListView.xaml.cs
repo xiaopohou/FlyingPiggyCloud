@@ -20,10 +20,12 @@ namespace SixCloud.Views.UserControls
         {
             if (sender is ListViewItem lvItem)
             {
-                if (lvItem.DataContext is FileListItemViewModel fileListItem)
+                if (lvItem.DataContext is FileListItemViewModel fileListItem && DataContext is FileListViewModel dataContext)
                 {
-                    FileListViewModel dataContext = DataContext as FileListViewModel;
-                    dataContext?.NavigateByUUID(fileListItem.UUID);
+                    if (fileListItem.Type == 1)
+                    {
+                        dataContext.NavigateByUUID(fileListItem.UUID);
+                    }
                 }
             }
         }

@@ -102,15 +102,18 @@
                         <RowDefinition Height="105"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <usercontrols:UserInformationView/>
+                    <!--用户信息窗格-->
+                    <usercontrols:UserInformationView DataContext="{Binding UserInformation}"/>
+                    <!--NavigateBar窗格-->
                     <StackPanel Grid.Row="1">
-                        <RadioButton Content="全部文件" Command="{Binding PathNavigate}" CommandParameter="Root"/>
-                        <RadioButton Content="图片收藏" Command="{Binding PathNavigate}" CommandParameter="Picture"/>
-                        <RadioButton Content="视频收藏" Command="{Binding PathNavigate}" CommandParameter="Video"/>
-                        <RadioButton Content="音乐收藏" Command="{Binding PathNavigate}" CommandParameter="Music"/>
-                        <RadioButton Content="文档收藏" Command="{Binding PathNavigate}" CommandParameter="Documents"/>
-                        <RadioButton Content="垃圾回收" Command="{Binding PathNavigate}" CommandParameter="Recovery"/>
+                        <RadioButton Content="全部文件" Command="{Binding PathNavigateCommand}" CommandParameter=""/>
+                        <RadioButton Content="图片收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Picture"/>
+                        <RadioButton Content="视频收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Video"/>
+                        <RadioButton Content="音乐收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Music"/>
+                        <RadioButton Content="文档收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Documents"/>
+                        <RadioButton Content="垃圾回收" Command="{Binding PathNavigateCommand}" CommandParameter="Recovery"/>
                     </StackPanel>
+                    <!--主文件列表窗格-->
                     <Grid Grid.Column="1" Grid.RowSpan="2">
                         <usercontrols:FileListView Grid.Column="1" Grid.RowSpan="2" x:Name="MainContainer" DataContext="{Binding FileList}" DataContextChanged="MainContainer_DataContextChanged"/>
                         <Grid.RenderTransform>

@@ -99,6 +99,8 @@
     <Compile Include="ViewModels\FileListItemViewModel.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\FileSystemVIewModel.cs" />
+    <Compile Include="ViewModels\MainFrameViewModel.cs" />
+    <Compile Include="ViewModels\UserInformationVIewModel.cs" />
     <Compile Include="ViewModels\ValidationRules\PhoneNumber.cs" />
     <Compile Include="Views\UserControls\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
