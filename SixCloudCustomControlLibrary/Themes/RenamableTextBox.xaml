@@ -6,9 +6,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:RenamableTextBox}">
                     <Grid>
-                        <TextBlock x:Name="MainTextBlock" Text="{TemplateBinding CurrentName}" VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="Visible"/>
+                        <TextBlock Width="{TemplateBinding TextAreaWidth}" x:Name="MainTextBlock" Text="{TemplateBinding CurrentName}" VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="Visible"/>
                         <StackPanel x:Name="RenameControls" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed">
-                            <TextBox x:Name="InputBox" Text="{TemplateBinding CurrentName}"/>
+                            <TextBox Width="{TemplateBinding TextAreaWidth}"  x:Name="InputBox" Text="{TemplateBinding CurrentName}"/>
                             <local:LightButton x:Name="ConfirmButton" Margin="5,0" FontIcon="&#xf058;"/>
                             <local:LightButton x:Name="CancelButton" Margin="5,0" FontIcon="&#xf057;"/>
                         </StackPanel>

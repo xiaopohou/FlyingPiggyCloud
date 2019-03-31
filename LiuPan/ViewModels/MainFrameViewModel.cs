@@ -13,7 +13,15 @@ namespace SixCloud.ViewModels
         private void PathNavigate(object parameter)
         {
             FileList = new FileListViewModel();
-            FileList.GetFileListByPath("/" + parameter as string);
+            string path = parameter as string;
+            if (path == "Recovery")
+            {
+#warning 这里的代码还没有写完
+            }
+            else
+            {
+                FileList.NavigateByPath("/" + path, true);
+            }
             OnPropertyChanged("FileList");
         }
         private bool CanPathNavigate(object parameter)
@@ -26,7 +34,7 @@ namespace SixCloud.ViewModels
             PathNavigateCommand = new AsyncCommand(PathNavigate, CanPathNavigate);
             UserInformation = new UserInformationViewModel(currentUser);
             FileList = new FileListViewModel();
-            FileList.GetFileListByPath("/");
+            FileList.NavigateByPath("/");
         }
     }
 }

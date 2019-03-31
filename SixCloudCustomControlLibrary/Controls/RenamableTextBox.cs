@@ -44,6 +44,10 @@ namespace SixCloudCustomControlLibrary.Controls
 
         public bool IsRenamable { get => (bool)GetValue(IsRenamableProperty); set => SetValue(IsRenamableProperty, value); }
 
+        public static readonly DependencyProperty TextAreaWidthProperty = DependencyProperty.Register("TextAreaWidth", typeof(double), typeof(RenamableTextBox), new PropertyMetadata(double.NaN));
+
+        public double TextAreaWidth { get => (double)GetValue(TextAreaWidthProperty); set => SetValue(TextAreaWidthProperty, value); }
+
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", typeof(ICommand), typeof(RenamableTextBox), new PropertyMetadata(null, new PropertyChangedCallback(CommandChanged)));
 
         public ICommand Command { get => (ICommand)GetValue(CommandProperty); set => SetValue(CommandProperty, value); }

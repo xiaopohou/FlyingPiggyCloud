@@ -107,9 +107,9 @@
                     <!--NavigateBar窗格-->
                     <StackPanel Grid.Row="1">
                         <RadioButton Content="全部文件" Command="{Binding PathNavigateCommand}" CommandParameter=""/>
-                        <RadioButton Content="图片收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Picture"/>
-                        <RadioButton Content="视频收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Video"/>
-                        <RadioButton Content="音乐收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Music"/>
+                        <RadioButton Content="图片收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Images"/>
+                        <RadioButton Content="视频收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Videos"/>
+                        <RadioButton Content="音乐收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Musics"/>
                         <RadioButton Content="文档收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Documents"/>
                         <RadioButton Content="垃圾回收" Command="{Binding PathNavigateCommand}" CommandParameter="Recovery"/>
                     </StackPanel>

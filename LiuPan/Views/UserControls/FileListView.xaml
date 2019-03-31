@@ -22,11 +22,11 @@
         </Style>
 
         <DataTemplate x:Key="MetaName">
-            <Grid x:Name="MetaNameContainer">
+            <StackPanel Orientation="Horizontal" x:Name="MetaNameContainer">
                 <controls:FontIcon Foreground="{DynamicResource PrimaryHueMidBrush}" IconSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <controls:RenamableTextBox HorizontalAlignment="Left" Margin="34,0,0,0" VerticalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
-                <controls:LightButton FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Right" Margin="0,0,38,0" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
-                <controls:LightButton FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
+                <controls:RenamableTextBox x:Name="NameBox" HorizontalAlignment="Left" VerticalAlignment="Center" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
+                <controls:LightButton Margin="5" FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
+                <controls:LightButton Margin="5" FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
                     <controls:LightButton.ContextMenu>
                         <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="White">
                             <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
@@ -52,7 +52,7 @@
                         </ContextMenu>
                     </controls:LightButton.ContextMenu>
                 </controls:LightButton>
-            </Grid>
+            </StackPanel>
             <DataTemplate.Triggers>
                 <!--选中时显示附加按钮-->
                 <MultiDataTrigger>
@@ -66,6 +66,7 @@
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
                     </MultiDataTrigger.Conditions>
+                    <Setter TargetName="NameBox" Property="TextAreaWidth" Value="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}"/>
                     <Setter TargetName="MoreBotton" Property="Visibility" Value="Visible"/>
                 </MultiDataTrigger>
             </DataTemplate.Triggers>

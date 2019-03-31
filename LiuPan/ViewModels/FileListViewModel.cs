@@ -36,14 +36,29 @@ namespace SixCloud.ViewModels
             GetFileListByUUID(uuid);
         }
 
-        public void NavigateByPath(string path)
+        public void NavigateByPath(string path, bool autoCreate = false)
         {
             previousPath.Push(CurrentPath);
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
-            GetFileListByPath(path);
+            try
+            {
+                GetFileListByPath(path);
+            }
+            catch(DirectoryNotFoundException ex)
+            {
+                if(autoCreate)
+                {
+                    fileSystem.CreatDirectory(Path: path);
+                    GetFileListByPath(path);
+                }
+                else
+                {
+                    MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它找不到这个目录。服务器返回：{ex.Message}", "错误");
+                }
+            }
         }
 
-        public void GetFileListByPath(string path)
+        private void GetFileListByPath(string path)
         {
             IEnumerable<FileMetaData[]> GetFileList()
             {
@@ -82,7 +97,7 @@ namespace SixCloud.ViewModels
             App.Current.Dispatcher.Invoke(callback);
         }
 
-        public void GetFileListByUUID(string uuid)
+        private void GetFileListByUUID(string uuid)
         {
             IEnumerable<FileMetaData[]> GetFileList()
             {
@@ -160,9 +175,11 @@ namespace SixCloud.ViewModels
             }
             else
             {
-                List<string> array = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace));
-                //array.Insert(0, "home");
-                array[0] = "home";
+                List<string> array = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace))
+                {
+                    //array.Insert(0, "home");
+                    [0] = "home"
+                };
                 PathArray = array;
             }
             OnPropertyChanged("PathArray");
