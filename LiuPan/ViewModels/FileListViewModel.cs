@@ -295,6 +295,7 @@ namespace SixCloud.ViewModels
             return true;
         }
         #endregion
+
         #region Stick
         public DependencyCommand StickCommand { get; private set; }
 

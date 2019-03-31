@@ -129,6 +129,9 @@
       <DependentUpon>MainFrame.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PageNavigate.cs" />
+    <Compile Include="Views\UserControls\TransferListView.xaml.cs">
+      <DependentUpon>TransferListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\UserInformationView.xaml.cs">
       <DependentUpon>UserInformationView.xaml</DependentUpon>
     </Compile>
@@ -165,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainFrame.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\TransferListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
