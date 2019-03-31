@@ -1,4 +1,5 @@
 ﻿using SixCloud.Models;
+using SixCloud.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,9 +45,9 @@ namespace SixCloud.ViewModels
             {
                 GetFileListByPath(path);
             }
-            catch(DirectoryNotFoundException ex)
+            catch (DirectoryNotFoundException ex)
             {
-                if(autoCreate)
+                if (autoCreate)
                 {
                     fileSystem.CreatDirectory(Path: path);
                     GetFileListByPath(path);
@@ -274,6 +275,22 @@ namespace SixCloud.ViewModels
         #endregion
 
         #region FileOperationCommand
+        #region NewFolderCommand
+        public DependencyCommand NewFolderCommand { get; private set; }
+
+        private void NewFolder(object parameter)
+        {
+            if (TextInputDialog.Show(out string FolderName, "请输入新文件夹的名字") && !FolderName.Contains("/"))
+            {
+                fileSystem.CreatDirectory(FolderName, CurrentUUID);
+            }
+        }
+
+        private bool CanNewFolder(object parameter)
+        {
+            return true;
+        }
+        #endregion
         #region Stick
         public DependencyCommand StickCommand { get; private set; }
 
@@ -384,6 +401,7 @@ namespace SixCloud.ViewModels
             StickCommand = new DependencyCommand(Stick, CanStick);
             CutCommand = new DependencyCommand(Cut, CanCut);
             CopyCommand = new DependencyCommand(Copy, CanCopy);
+            NewFolderCommand = new DependencyCommand(NewFolder, CanNewFolder);
         }
     }
 }

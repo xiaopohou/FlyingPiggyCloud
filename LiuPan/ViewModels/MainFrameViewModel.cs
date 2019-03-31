@@ -16,7 +16,7 @@ namespace SixCloud.ViewModels
             string path = parameter as string;
             if (path == "Recovery")
             {
-#warning 这里的代码还没有写完
+#warning 这里的代码还没写完
             }
             else
             {

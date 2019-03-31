@@ -13,7 +13,7 @@
                 <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="#FF5A5A5A"/>
             </Border.Effect>
             <Border.Background>
-                <ImageBrush ImageSource="{Binding Icon}" Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="{Binding Icon,Mode=OneTime}" Stretch="UniformToFill"/>
             </Border.Background>
         </Border>
         <ProgressBar ToolTip="{Binding FrendlySpaceCapacity}" Value="{Binding AvailableRate}" Margin="0,30,0,0" VerticalAlignment="Top" Width="50" Height="50" Style="{StaticResource MaterialDesignCircularProgressBar}"/>
