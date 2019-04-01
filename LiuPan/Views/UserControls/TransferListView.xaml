@@ -47,7 +47,7 @@
         <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xf560;" IconMove="&#xf560;" Header="下载完成"/>
 
         <!--离线下载列表-->
-        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xf381;" IconMove="&#xf381;" Header="离线任务"/>
+        <!--<Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xf381;" IconMove="&#xf381;" Header="离线任务"/>-->
 
         <!--上传列表-->
         <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xf102;" IconMove="&#xf102;" Header="正在上传">
