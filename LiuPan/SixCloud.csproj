@@ -96,6 +96,7 @@
     <Compile Include="Controllers\FileSystem.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\SixCloudMethordBase.cs" />
+    <Compile Include="Models\DownloadTask.cs" />
     <Compile Include="Models\PreviewImageInformation.cs" />
     <Compile Include="Models\PreviewVideoInformation.cs" />
     <Compile Include="Models\RecoverableUploadTaskArchive.cs" />

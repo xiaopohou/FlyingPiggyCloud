@@ -4,12 +4,12 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------------
 
+using FileDownloader.Logging;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Threading;
-using FileDownloader.Logging;
 
 namespace FileDownloader
 {
@@ -61,9 +61,9 @@ namespace FileDownloader
             SourceStreamReadTimeout = TimeSpan.FromSeconds(5);
 
             this.downloadCache = downloadCache;
-            this.disposed = false;
+            disposed = false;
 
-            this.attemptTimer.Elapsed += OnDownloadAttemptTimer;
+            attemptTimer.Elapsed += OnDownloadAttemptTimer;
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace FileDownloader
         {
             get
             {
-                return this.downloadCache != null;
+                return downloadCache != null;
             }
         }
 
@@ -149,30 +149,30 @@ namespace FileDownloader
         /// </summary>
         public void CancelDownloadAsync()
         {
-            lock (this.cancelSync)
+            lock (cancelSync)
             {
-                if (this.isCancelled)
+                if (isCancelled)
                 {
                     return;
                 }
-                this.isCancelled = true;
+                isCancelled = true;
             }
 
-            this.logger.Debug("CancelDownloadAsync called.");
-            if (this.worker != null)
+            logger.Debug("CancelDownloadAsync called.");
+            if (worker != null)
             {
-                this.worker.Cancel();
+                worker.Cancel();
             }
 
             TriggerDownloadWebClientCancelAsync();
             DeleteDownloadedFile();  ////todo: maybe this is equal to InvalidateCache? Can we get rid of DeleteDownloadedFile ?
 
-            this.readyToDownload.Set();
+            readyToDownload.Set();
         }
 
         private void DeleteDownloadedFile()
         {
-            FileHelpers.TryFileDelete(this.localFileName);
+            FileHelpers.TryFileDelete(localFileName);
         }
 
         private void InvalidateCache(Uri uri)
@@ -182,8 +182,8 @@ namespace FileDownloader
                 return;
             }
 
-            this.downloadCache.Invalidate(uri);
-            this.logger.Debug("Cached resource was invalidated: {0}", uri);
+            downloadCache.Invalidate(uri);
+            logger.Debug("Cached resource was invalidated: {0}", uri);
         }
 
         private void DownloadFileAsync(Uri source, string destinationPath, bool useServerFileName)
@@ -193,19 +193,19 @@ namespace FileDownloader
                 throw new Exception("Unable to start download because another request is still in progress.");
             }
 
-            this.logger.Debug("DownloadFileAsync({0}, {1}) is called.", source, destinationPath);
+            logger.Debug("DownloadFileAsync({0}, {1}) is called.", source, destinationPath);
 
-            this.useFileNameFromServer = useServerFileName;
-            this.fileSource = source;
+            useFileNameFromServer = useServerFileName;
+            fileSource = source;
             BytesReceived = 0;
-            this.destinationFileName = destinationPath;
-            this.destinationFolder = Path.GetDirectoryName(destinationPath);
-            this.isCancelled = false;
-            this.localFileName = string.Empty;
+            destinationFileName = destinationPath;
+            destinationFolder = Path.GetDirectoryName(destinationPath);
+            isCancelled = false;
+            localFileName = string.Empty;
 
             DownloadStartTime = DateTime.Now;
 
-            this.attemptNumber = 0;
+            attemptNumber = 0;
 
             StartDownload();
         }
@@ -222,9 +222,9 @@ namespace FileDownloader
                 return;
             }
 
-            this.logger.Debug("FileDownloader attempt {0} of {1}.", this.attemptNumber, MaxAttempts);
+            logger.Debug("FileDownloader attempt {0} of {1}.", attemptNumber, MaxAttempts);
 
-            this.localFileName = ComposeLocalFilename();
+            localFileName = ComposeLocalFilename();
 
             if (!UseCaching)
             {
@@ -233,7 +233,7 @@ namespace FileDownloader
             }
 
             TotalBytesToReceive = -1;
-            var headers = GetHttpHeaders(this.fileSource);
+            WebHeaderCollection headers = GetHttpHeaders(fileSource);
             if (headers != null)
             {
                 TotalBytesToReceive = headers.GetContentLength();
@@ -242,7 +242,7 @@ namespace FileDownloader
             if (TotalBytesToReceive == -1)
             {
                 TotalBytesToReceive = 0;
-                this.logger.Warn("Received no Content-Length header from server for {0}. Cache is not used, Resume is not supported", this.fileSource);
+                logger.Warn("Received no Content-Length header from server for {0}. Cache is not used, Resume is not supported", fileSource);
                 TriggerWebClientDownloadFileAsync();
             }
             else
@@ -253,7 +253,7 @@ namespace FileDownloader
 
         private void ResumeDownload(WebHeaderCollection headers)
         {
-            this.isFallback = false;
+            isFallback = false;
 
             string downloadedFileName = GetDestinationFileName(headers);
 
@@ -265,22 +265,22 @@ namespace FileDownloader
 
             if (UseCaching)
             {
-                this.downloadCache.Add(this.fileSource, this.localFileName, headers);
+                downloadCache.Add(fileSource, localFileName, headers);
             }
 
             if (downloadedFileSize > TotalBytesToReceive)
             {
-                InvalidateCache(this.fileSource);
+                InvalidateCache(fileSource);
             }
 
             if (downloadedFileSize != TotalBytesToReceive)
             {
-                if (!FileHelpers.ReplaceFile(downloadedFileName, this.localFileName))
+                if (!FileHelpers.ReplaceFile(downloadedFileName, localFileName))
                 {
-                    InvalidateCache(this.fileSource);
+                    InvalidateCache(fileSource);
                 }
 
-                Download(this.fileSource, this.localFileName, TotalBytesToReceive);
+                Download(fileSource, localFileName, TotalBytesToReceive);
             }
             else
             {
@@ -290,42 +290,42 @@ namespace FileDownloader
 
         private void DownloadFromCache(string cachedResource)
         {
-            this.logger.Debug("Taking file from cache.");
+            logger.Debug("Taking file from cache.");
             OnDownloadProgressChanged(this, new DownloadFileProgressChangedArgs(100, TotalBytesToReceive, TotalBytesToReceive));
             InvokeDownloadCompleted(CompletedState.Succeeded, cachedResource, null, true);
-            this.readyToDownload.Set();
+            readyToDownload.Set();
         }
 
         private void TriggerWebClientDownloadFileAsync()
         {
-            this.logger.Debug("Falling back to legacy DownloadFileAsync.");
+            logger.Debug("Falling back to legacy DownloadFileAsync.");
             try
             {
-                this.isFallback = true;
-                var destinationDirectory = Path.GetDirectoryName(this.localFileName);
+                isFallback = true;
+                string destinationDirectory = Path.GetDirectoryName(localFileName);
                 if (destinationDirectory != null && !Directory.Exists(destinationDirectory))
                 {
                     Directory.CreateDirectory(destinationDirectory);
                 }
                 TryCleanupExistingDownloadWebClient();
 
-                this.downloadWebClient = CreateWebClient();
-                this.downloadWebClient.DownloadFileAsync(this.fileSource, this.localFileName);
-                this.logger.Debug("Download async started. Source: {0} Destination: {1}", this.fileSource, this.localFileName);
+                downloadWebClient = CreateWebClient();
+                downloadWebClient.DownloadFileAsync(fileSource, localFileName);
+                logger.Debug("Download async started. Source: {0} Destination: {1}", fileSource, localFileName);
             }
             catch (Exception ex)
             {
-                this.logger.Warn("Failed to download Source:{0}, Destination:{1}, Error:{2}.", this.fileSource, this.localFileName, ex.Message);
+                logger.Warn("Failed to download Source:{0}, Destination:{1}, Error:{2}.", fileSource, localFileName, ex.Message);
                 if (!AttemptDownload())
                 {
-                    InvokeDownloadCompleted(CompletedState.Failed, this.localFileName, ex);
+                    InvokeDownloadCompleted(CompletedState.Failed, localFileName, ex);
                 }
             }
         }
 
         private DownloadWebClient CreateWebClient()
         {
-            var webClient = new DownloadWebClient();
+            DownloadWebClient webClient = new DownloadWebClient();
             webClient.DownloadFileCompleted += OnDownloadCompleted;
             webClient.DownloadProgressChanged += OnDownloadProgressChanged;
             webClient.OpenReadCompleted += OnOpenReadCompleted;
@@ -334,7 +334,7 @@ namespace FileDownloader
 
         private void TryCleanupExistingDownloadWebClient()
         {
-            if (this.downloadWebClient == null)
+            if (downloadWebClient == null)
             {
                 return;
             }
@@ -342,31 +342,31 @@ namespace FileDownloader
             {
                 lock (this)
                 {
-                    if (this.downloadWebClient != null)
+                    if (downloadWebClient != null)
                     {
-                        this.downloadWebClient.DownloadFileCompleted -= OnDownloadCompleted;
-                        this.downloadWebClient.DownloadProgressChanged -= OnDownloadProgressChanged;
-                        this.downloadWebClient.OpenReadCompleted -= OnOpenReadCompleted;
-                        this.downloadWebClient.CancelAsync();
-                        this.downloadWebClient.Dispose();
-                        this.downloadWebClient = null;
+                        downloadWebClient.DownloadFileCompleted -= OnDownloadCompleted;
+                        downloadWebClient.DownloadProgressChanged -= OnDownloadProgressChanged;
+                        downloadWebClient.OpenReadCompleted -= OnOpenReadCompleted;
+                        downloadWebClient.CancelAsync();
+                        downloadWebClient.Dispose();
+                        downloadWebClient = null;
                     }
                 }
             }
             catch (Exception e)
             {
-                this.logger.Warn("Error while cleaning up web client : {0}", e.Message);
+                logger.Warn("Error while cleaning up web client : {0}", e.Message);
             }
         }
 
         private bool AttemptDownload()
         {
-            if (++this.attemptNumber <= MaxAttempts)
+            if (++attemptNumber <= MaxAttempts)
             {
-                this.attemptTimer.Interval = DelayBetweenAttempts.TotalMilliseconds;
-                this.attemptTimer.AutoReset = false;
-                this.attemptTimer.Start();
-                this.logger.Debug("Downloader scheduled next attempt in {0} seconds.", DelayBetweenAttempts.TotalSeconds);
+                attemptTimer.Interval = DelayBetweenAttempts.TotalMilliseconds;
+                attemptTimer.AutoReset = false;
+                attemptTimer.Start();
+                logger.Debug("Downloader scheduled next attempt in {0} seconds.", DelayBetweenAttempts.TotalSeconds);
                 return true;
             }
 
@@ -378,29 +378,29 @@ namespace FileDownloader
         {
             if (!UseCaching)
             {
-                this.logger.Debug("Not using cache. Source: {0} Destination: {1}", this.fileSource, this.localFileName);
-                return this.localFileName;
+                logger.Debug("Not using cache. Source: {0} Destination: {1}", fileSource, localFileName);
+                return localFileName;
             }
 
-            var cachedDestinationPath = this.downloadCache.Get(this.fileSource, headers);
+            string cachedDestinationPath = downloadCache.Get(fileSource, headers);
             if (cachedDestinationPath == null)
             {
-                this.logger.Debug("No cache item found. Source: {0} Destination: {1}", this.fileSource, this.localFileName);
+                logger.Debug("No cache item found. Source: {0} Destination: {1}", fileSource, localFileName);
                 DeleteDownloadedFile();
-                return this.localFileName;
+                return localFileName;
             }
 
-            this.logger.Debug("Download resource was found in cache. Source: {0} Destination: {1}", this.fileSource, cachedDestinationPath);
+            logger.Debug("Download resource was found in cache. Source: {0} Destination: {1}", fileSource, cachedDestinationPath);
             return cachedDestinationPath;
         }
 
         private string ComposeLocalFilename()
         {
-            if (this.useFileNameFromServer)
+            if (useFileNameFromServer)
             {
-                return Path.Combine(this.destinationFolder, string.Format("{0}.tmp", Guid.NewGuid()));
+                return Path.Combine(destinationFolder, string.Format("{0}.tmp", Guid.NewGuid()));
             }
-            return Path.Combine(this.destinationFolder, this.destinationFileName);
+            return Path.Combine(destinationFolder, destinationFileName);
         }
 
         private void Download(Uri source, string fileDestination, long totalBytesToReceive)
@@ -411,16 +411,16 @@ namespace FileDownloader
                 FileHelpers.TryGetFileSize(fileDestination, out seekPosition);
 
                 TryCleanupExistingDownloadWebClient();
-                this.downloadWebClient = CreateWebClient();
-                this.downloadWebClient.OpenReadAsync(source, seekPosition);
-                this.logger.Debug("Download started. Source: {0} Destination: {1} Size: {2}", source, fileDestination, totalBytesToReceive);
+                downloadWebClient = CreateWebClient();
+                downloadWebClient.OpenReadAsync(source, seekPosition);
+                logger.Debug("Download started. Source: {0} Destination: {1} Size: {2}", source, fileDestination, totalBytesToReceive);
             }
             catch (Exception e)
             {
-                this.logger.Debug("Download failed: {0}", e.Message);
+                logger.Debug("Download failed: {0}", e.Message);
                 if (!AttemptDownload())
                 {
-                    InvokeDownloadCompleted(CompletedState.Failed, this.localFileName, e);
+                    InvokeDownloadCompleted(CompletedState.Failed, localFileName, e);
                 }
             }
         }
@@ -429,24 +429,24 @@ namespace FileDownloader
         {
             try
             {
-                var webRequest = WebRequest.Create(source);
+                WebRequest webRequest = WebRequest.Create(source);
                 webRequest.Method = WebRequestMethods.Http.Head;
 
-                using (var webResponse = webRequest.GetResponse())
+                using (WebResponse webResponse = webRequest.GetResponse())
                 {
                     return webResponse.Headers;
                 }
             }
             catch (Exception e)
             {
-                this.logger.Warn("Unable to read http headers for {0}: {1}; typeof(Exception)={2}", source, e.Message, e.GetType());
+                logger.Warn("Unable to read http headers for {0}: {1}; typeof(Exception)={2}", source, e.Message, e.GetType());
                 return null;
             }
         }
 
         private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs args)
         {
-            var e = new DownloadFileProgressChangedArgs(args.ProgressPercentage, args.BytesReceived, args.TotalBytesToReceive);
+            DownloadFileProgressChangedArgs e = new DownloadFileProgressChangedArgs(args.ProgressPercentage, args.BytesReceived, args.TotalBytesToReceive);
 
             OnDownloadProgressChanged(sender, e);
         }
@@ -456,7 +456,7 @@ namespace FileDownloader
             if (BytesReceived < args.BytesReceived)
             {
                 ////bytes growing? we have connection!
-                this.attemptNumber = 1;
+                attemptNumber = 1;
             }
 
             BytesReceived = args.BytesReceived;
@@ -467,49 +467,49 @@ namespace FileDownloader
 
         private void InvokeDownloadCompleted(CompletedState downloadCompletedState, string fileName, Exception error = null, bool fromCache = false)
         {
-            var downloadTime = fromCache ? TimeSpan.Zero : DateTime.Now.Subtract(DownloadStartTime);
-            if (this.worker != null)
+            TimeSpan downloadTime = fromCache ? TimeSpan.Zero : DateTime.Now.Subtract(DownloadStartTime);
+            if (worker != null)
             {
-                BytesReceived = this.worker.Position;
+                BytesReceived = worker.Position;
             }
 
-            DownloadFileCompleted.SafeInvoke(this, new DownloadFileCompletedArgs(downloadCompletedState, fileName, this.fileSource, downloadTime, TotalBytesToReceive, BytesReceived, error));
+            DownloadFileCompleted.SafeInvoke(this, new DownloadFileCompletedArgs(downloadCompletedState, fileName, fileSource, downloadTime, TotalBytesToReceive, BytesReceived, error));
         }
 
         private void OnOpenReadCompleted(object sender, OpenReadCompletedEventArgs args)
         {
-            var webClient = sender as DownloadWebClient;
+            DownloadWebClient webClient = sender as DownloadWebClient;
             if (webClient == null)
             {
-                this.logger.Warn("Wrong sender in OnOpenReadCompleted: Actual:{0} Expected:{1}", sender.GetType(), typeof(DownloadWebClient));
+                logger.Warn("Wrong sender in OnOpenReadCompleted: Actual:{0} Expected:{1}", sender.GetType(), typeof(DownloadWebClient));
                 return;
             }
 
-            lock (this.cancelSync)
+            lock (cancelSync)
             {
-                if (this.isCancelled)
+                if (isCancelled)
                 {
-                    this.logger.Debug("Download was cancelled.");
+                    logger.Debug("Download was cancelled.");
                     return;
                 }
 
                 if (!webClient.HasResponse)
                 {
-                    this.logger.Debug("DownloadWebClient returned no response.");
+                    logger.Debug("DownloadWebClient returned no response.");
                     TriggerWebClientDownloadFileAsync();
                     return;
                 }
 
                 bool appendExistingChunk = webClient.IsPartialResponse;
-                var destinationStream = CreateDestinationStream(appendExistingChunk);
+                Stream destinationStream = CreateDestinationStream(appendExistingChunk);
                 if (destinationStream != null)
                 {
                     TrySetStreamReadTimeout(args.Result, (int)SourceStreamReadTimeout.TotalMilliseconds);
 
-                    this.worker = new StreamCopyWorker();
-                    this.worker.Completed += OnWorkerCompleted;
-                    this.worker.ProgressChanged += OnWorkerProgressChanged;
-                    this.worker.CopyAsync(args.Result, destinationStream, TotalBytesToReceive);
+                    worker = new StreamCopyWorker();
+                    worker.Completed += OnWorkerCompleted;
+                    worker.ProgressChanged += OnWorkerProgressChanged;
+                    worker.CopyAsync(args.Result, destinationStream, TotalBytesToReceive);
                 }
             }
         }
@@ -523,7 +523,7 @@ namespace FileDownloader
             }
             catch (Exception e)
             {
-                this.logger.Warn("Unable to set read timeout for source stream {0}", e.Message);
+                logger.Warn("Unable to set read timeout for source stream {0}", e.Message);
                 return false;
             }
         }
@@ -533,13 +533,13 @@ namespace FileDownloader
             FileStream destinationStream = null;
             try
             {
-                var destinationDirectory = Path.GetDirectoryName(this.localFileName);
+                string destinationDirectory = Path.GetDirectoryName(localFileName);
                 if (destinationDirectory != null && !Directory.Exists(destinationDirectory))
                 {
                     Directory.CreateDirectory(destinationDirectory);
                 }
 
-                destinationStream = new FileStream(this.localFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+                destinationStream = new FileStream(localFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
                 if (append)
                 {
                     destinationStream.Seek(0, SeekOrigin.End);
@@ -556,14 +556,14 @@ namespace FileDownloader
                     destinationStream.Dispose();
                     destinationStream = null;
                 }
-                OnDownloadCompleted(this.downloadWebClient, new AsyncCompletedEventArgs(ex, false, null));
+                OnDownloadCompleted(downloadWebClient, new AsyncCompletedEventArgs(ex, false, null));
             }
             return destinationStream;
         }
 
         private void OnWorkerProgressChanged(object sender, StreamCopyProgressEventArgs eventArgs)
         {
-            if (this.isCancelled)
+            if (isCancelled)
             {
                 return;
             }
@@ -572,8 +572,8 @@ namespace FileDownloader
             {
                 return;
             }
-            var progress = eventArgs.BytesReceived / TotalBytesToReceive;
-            var progressPercentage = (int)(progress * 100);
+            long progress = eventArgs.BytesReceived / TotalBytesToReceive;
+            int progressPercentage = (int)(progress * 100);
 
             OnDownloadProgressChanged(this, new DownloadFileProgressChangedArgs(progressPercentage, eventArgs.BytesReceived, TotalBytesToReceive));
         }
@@ -582,13 +582,13 @@ namespace FileDownloader
         {
             try
             {
-                OnDownloadCompleted(this.downloadWebClient, new AsyncCompletedEventArgs(eventArgs.Exception, eventArgs.CompleteState == CompletedState.Canceled, null));
+                OnDownloadCompleted(downloadWebClient, new AsyncCompletedEventArgs(eventArgs.Exception, eventArgs.CompleteState == CompletedState.Canceled, null));
             }
             finally
             {
-                this.worker.ProgressChanged -= OnWorkerProgressChanged;
-                this.worker.Completed -= OnWorkerCompleted;
-                this.worker.Dispose();
+                worker.ProgressChanged -= OnWorkerProgressChanged;
+                worker.Completed -= OnWorkerCompleted;
+                worker.Dispose();
             }
         }
 
@@ -599,25 +599,25 @@ namespace FileDownloader
         /// <param name="args">AsyncCompletedEventArgs instance</param>
         protected void OnDownloadCompleted(object sender, AsyncCompletedEventArgs args)
         {
-            var webClient = sender as DownloadWebClient;
+            DownloadWebClient webClient = sender as DownloadWebClient;
             if (webClient == null)
             {
-                this.logger.Warn("Wrong sender in OnDownloadCompleted: Actual:{0} Expected:{1}", sender.GetType(), typeof(DownloadWebClient));
-                InvokeDownloadCompleted(CompletedState.Failed, this.localFileName);
+                logger.Warn("Wrong sender in OnDownloadCompleted: Actual:{0} Expected:{1}", sender.GetType(), typeof(DownloadWebClient));
+                InvokeDownloadCompleted(CompletedState.Failed, localFileName);
                 return;
             }
 
             if (args.Cancelled)
             {
-                this.logger.Debug("Download cancelled. Source: {0} Destination: {1}", this.fileSource, this.localFileName);
+                logger.Debug("Download cancelled. Source: {0} Destination: {1}", fileSource, localFileName);
                 DeleteDownloadedFile();
 
-                InvokeDownloadCompleted(CompletedState.Canceled, this.localFileName);
-                this.readyToDownload.Set();
+                InvokeDownloadCompleted(CompletedState.Canceled, localFileName);
+                readyToDownload.Set();
             }
             else if (args.Error != null)
             {
-                if (this.isFallback)
+                if (isFallback)
                 {
                     DeleteDownloadedFile();
                 }
@@ -625,44 +625,44 @@ namespace FileDownloader
                 ////We may have NameResolutionFailure on internet connectivity problem.
                 ////We don't use DnsFallbackResolver if we successfully started downloading, and then got internet problem.
                 ////If we change [this.fileSource] here - we lose downloaded chunk in Cache (i.e. we create a new Cache item for new [this.fileSource]
-                if (this.attemptNumber == 1 && DnsFallbackResolver != null && IsNameResolutionFailure(args.Error))
+                if (attemptNumber == 1 && DnsFallbackResolver != null && IsNameResolutionFailure(args.Error))
                 {
-                    var newFileSource = DnsFallbackResolver.Resolve(this.fileSource);
+                    Uri newFileSource = DnsFallbackResolver.Resolve(fileSource);
                     if (newFileSource != null)
                     {
-                        this.fileSource = newFileSource;
-                        this.logger.Debug("Download failed in case of DNS resolve error. Retry downloading with new source: {0}.", this.fileSource);
+                        fileSource = newFileSource;
+                        logger.Debug("Download failed in case of DNS resolve error. Retry downloading with new source: {0}.", fileSource);
                         AttemptDownload();
                         return;
                     }
                 }
 
-                this.logger.Debug("Download failed. Source: {0} Destination: {1} Error: {2}", this.fileSource, this.localFileName, args.Error);
+                logger.Debug("Download failed. Source: {0} Destination: {1} Error: {2}", fileSource, localFileName, args.Error);
 
                 if (!AttemptDownload())
                 {
                     InvokeDownloadCompleted(CompletedState.Failed, null, args.Error);
-                    this.readyToDownload.Set();
+                    readyToDownload.Set();
                 }
             }
             else
             {
-                if (this.useFileNameFromServer)
+                if (useFileNameFromServer)
                 {
-                    this.localFileName = ApplyNewFileName(this.localFileName, webClient.GetOriginalFileNameFromDownload());
+                    localFileName = ApplyNewFileName(localFileName, webClient.GetOriginalFileNameFromDownload());
                 }
 
-                this.logger.Debug("Download completed. Source: {0} Destination: {1}", this.fileSource, this.localFileName);
+                logger.Debug("Download completed. Source: {0} Destination: {1}", fileSource, localFileName);
                 if (UseCaching)
                 {
-                    this.downloadCache.Add(this.fileSource, this.localFileName, webClient.ResponseHeaders);
+                    downloadCache.Add(fileSource, localFileName, webClient.ResponseHeaders);
                 }
 
                 ////we may have the destination file not immediately closed after downloading
-                WaitFileClosed(this.localFileName, TimeSpan.FromSeconds(3));
+                WaitFileClosed(localFileName, TimeSpan.FromSeconds(3));
 
-                InvokeDownloadCompleted(CompletedState.Succeeded, this.localFileName, null);
-                this.readyToDownload.Set();
+                InvokeDownloadCompleted(CompletedState.Succeeded, localFileName, null);
+                readyToDownload.Set();
             }
         }
 
@@ -674,15 +674,15 @@ namespace FileDownloader
         /// <returns>Full path to renamed file</returns>
         protected virtual string ApplyNewFileName(string oldFilePath, string newFileName)
         {
-            var downloadedFileName = Path.GetFileName(oldFilePath);
-            var downloadDirectory = Path.GetDirectoryName(oldFilePath);
+            string downloadedFileName = Path.GetFileName(oldFilePath);
+            string downloadDirectory = Path.GetDirectoryName(oldFilePath);
 
             if (newFileName == null || newFileName == downloadedFileName || downloadDirectory == null)
             {
                 return oldFilePath;
             }
 
-            var newFilePath = Path.Combine(downloadDirectory, newFileName);
+            string newFilePath = Path.Combine(downloadDirectory, newFileName);
 
             if (File.Exists(newFilePath))
             {
@@ -707,11 +707,11 @@ namespace FileDownloader
 
         private void TriggerDownloadWebClientCancelAsync()
         {
-            if (this.downloadWebClient != null)
+            if (downloadWebClient != null)
             {
-                this.downloadWebClient.CancelAsync();
-                this.downloadWebClient.OpenReadCompleted -= OnOpenReadCompleted;
-                this.logger.Debug("Successfully cancelled web client.");
+                downloadWebClient.CancelAsync();
+                downloadWebClient.OpenReadCompleted -= OnOpenReadCompleted;
+                logger.Debug("Successfully cancelled web client.");
             }
         }
 
@@ -719,7 +719,7 @@ namespace FileDownloader
         {
             while (true)
             {
-                var folderPath = Path.Combine(rootFolderPath, Path.GetRandomFileName());
+                string folderPath = Path.Combine(rootFolderPath, Path.GetRandomFileName());
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);
@@ -730,30 +730,30 @@ namespace FileDownloader
 
         private bool IsNameResolutionFailure(Exception exception)
         {
-            var webException = exception as WebException;
+            WebException webException = exception as WebException;
             return webException != null && webException.Status == WebExceptionStatus.NameResolutionFailure;
         }
 
         private bool WaitSafeStart()
         {
-            this.logger.Debug("Calling DownloadFileAsync...");
-            if (!this.readyToDownload.WaitOne(SafeWaitTimeout))
+            logger.Debug("Calling DownloadFileAsync...");
+            if (!readyToDownload.WaitOne(SafeWaitTimeout))
             {
-                this.logger.Warn("Failed to call DownloadFileAsync, another request is in progress: Source:{0}, Destination:{1}", this.fileSource, this.localFileName);
+                logger.Warn("Failed to call DownloadFileAsync, another request is in progress: Source:{0}, Destination:{1}", fileSource, localFileName);
                 return false;
             }
-            this.readyToDownload.Reset();
+            readyToDownload.Reset();
             return true;
         }
 
         private void WaitFileClosed(string fileName, TimeSpan waitTimeout)
         {
-            var waitCounter = TimeSpan.Zero;
+            TimeSpan waitCounter = TimeSpan.Zero;
             while (waitCounter < waitTimeout)
             {
                 try
                 {
-                    var fileHandle = File.Open(fileName, FileMode.Open, FileAccess.Read);
+                    FileStream fileHandle = File.Open(fileName, FileMode.Open, FileAccess.Read);
                     fileHandle.Close();
                     fileHandle.Dispose();
                     Thread.Sleep(500);
@@ -769,11 +769,11 @@ namespace FileDownloader
 
         private bool IsCancelled()
         {
-            lock (this.cancelSync)
+            lock (cancelSync)
             {
-                if (this.isCancelled)
+                if (isCancelled)
                 {
-                    this.logger.Debug("Download was cancelled.");
+                    logger.Debug("Download was cancelled.");
                     return true;
                 }
             }
@@ -796,25 +796,25 @@ namespace FileDownloader
         /// <param name="disposing">True if called from Dispose</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
-                    if (this.readyToDownload.WaitOne(TimeSpan.FromMinutes(10)))
+                    if (readyToDownload.WaitOne(TimeSpan.FromMinutes(10)))
                     {
-                        if (this.worker != null)
+                        if (worker != null)
                         {
-                            this.worker.Dispose();
+                            worker.Dispose();
                         }
-                        if (this.downloadWebClient != null)
+                        if (downloadWebClient != null)
                         {
-                            this.downloadWebClient.Dispose();
+                            downloadWebClient.Dispose();
                         }
-                        this.readyToDownload.Close();
-                        this.attemptTimer.Dispose();
+                        readyToDownload.Close();
+                        attemptTimer.Dispose();
                     }
                 }
-                this.disposed = true;
+                disposed = true;
             }
         }
     }
