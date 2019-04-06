@@ -6,7 +6,13 @@ namespace SixCloud.Models
 {
     internal class DownloadTask
     {
-        private readonly IFileDownloader fileDownloader;
+        private IFileDownloader fileDownloader;
+
+        private static Cache Cache = new Cache();
+
+        private readonly Uri downloadResource;
+
+        private readonly string storagePath;
 
         public double DownloadProgress => fileDownloader.BytesReceived * 100 / fileDownloader.TotalBytesToReceive;
 
@@ -14,21 +20,49 @@ namespace SixCloud.Models
 
         public string Total => Calculators.SizeCalculator(fileDownloader.TotalBytesToReceive);
 
-        public string Name { get; private set; }
+        public string Name => fileDownloader?.GetLocakFileName();
 
-        public string Path { get; private set; }
+        public string Path => storagePath.LastIndexOf(@"\") + 1 == storagePath.Length ? storagePath + Name : storagePath + @"\" + Name;
 
-        public event EventHandler<DownloadFileCompletedArgs> OnDownloadFileCompleted;
+        public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
 
-        public event EventHandler<DownloadFileProgressChangedArgs> OnDownloadFileProgressChanged;
+        public event EventHandler<DownloadFileProgressChangedArgs> DownloadFileProgressChanged;
 
-        //public void Pause()=>fileDownloader.
-
-        public DownloadTask(string downloadAdress,string storagePath)
+        public void Start()
         {
-            fileDownloader = new FileDownloader.FileDownloader();
-            fileDownloader.DownloadFileAsyncPreserveServerFileName(new Uri(downloadAdress), storagePath);
+            if(fileDownloader==null)
+            {
+                fileDownloader = new FileDownloader.FileDownloader(Cache);
+                fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
+                fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
+                fileDownloader.DownloadFileAsyncPreserveServerFileName(downloadResource, storagePath);
+            }
+            else
+            {
+                fileDownloader.Dispose();
+                Start();
+            }
+        }
 
+        public void Pause()
+        {
+            if(fileDownloader!=null)
+            {
+                fileDownloader.Dispose();
+            }
+        }
+        public void Stop()
+        {
+            if(fileDownloader!=null)
+            {
+                fileDownloader.CancelDownloadAsync();
+            }
+        }
+
+        public DownloadTask(string downloadAdress, string storagePath)
+        {
+            downloadResource = new Uri(downloadAdress);
+            this.storagePath = storagePath;
         }
     }
 }

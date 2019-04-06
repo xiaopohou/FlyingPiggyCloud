@@ -71,5 +71,7 @@ namespace FileDownloader
         /// Cancel current download
         /// </summary>
         void CancelDownloadAsync();
+
+        string GetLocakFileName();
     }
 }

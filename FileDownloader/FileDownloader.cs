@@ -116,13 +116,12 @@ namespace FileDownloader
         /// </summary>
         public DateTime DownloadStartTime { get; set; }
 
-        private bool UseCaching
+        public string GetLocakFileName()
         {
-            get
-            {
-                return downloadCache != null;
-            }
+            return localFileName;
         }
+
+        private bool UseCaching => downloadCache != null;
 
         /// <summary>
         /// Start async download of source to destinationPath
