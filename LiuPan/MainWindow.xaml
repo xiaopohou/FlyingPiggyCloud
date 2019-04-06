@@ -10,7 +10,8 @@
         MinHeight="450" Height="450" Width="800" MetroWindowLayout="WideAngle">
     <StackPanel>
         <Button Content="HelloWorld" Click="Button_Click" Style="{StaticResource MaterialDesignFlatAccentButton}" FocusVisualStyle="{x:Null}"/>
-        <Button Content="Change Color" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click_1"/>
-        <ctl:RenamableTextBox CurrentName="Hello World" IsRenamable="True"/>
+        <Button Click="Button_Click_2"/>
+        <Button Click="Button_Click_1"/>
+        <Button Click="Button_Click_3"/>
     </StackPanel>
 </ctl:MetroWindow>

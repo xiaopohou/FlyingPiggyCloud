@@ -105,12 +105,14 @@
     <Compile Include="ViewModels\AsyncCommand.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
     <Compile Include="ViewModels\DependencyCommand.cs" />
+    <Compile Include="ViewModels\DownloadingListViewModel.cs" />
     <Compile Include="ViewModels\FileListItemViewModel.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
-    <Compile Include="ViewModels\FileSystemVIewModel.cs" />
+    <Compile Include="ViewModels\FileSystemViewModel.cs" />
     <Compile Include="ViewModels\MainFrameViewModel.cs" />
     <Compile Include="ViewModels\UserInformationVIewModel.cs" />
     <Compile Include="ViewModels\ValidationRules\PhoneNumber.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\TextInputDialog.xaml.cs">
       <DependentUpon>TextInputDialog.xaml</DependentUpon>
     </Compile>

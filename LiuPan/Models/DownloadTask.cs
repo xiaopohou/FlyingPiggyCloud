@@ -1,6 +1,7 @@
 ﻿using FileDownloader;
 using SixCloud.Controllers;
 using System;
+using System.Threading.Tasks;
 
 namespace SixCloud.Models
 {
@@ -8,7 +9,7 @@ namespace SixCloud.Models
     {
         private IFileDownloader fileDownloader;
 
-        private static Cache Cache = new Cache();
+        private static readonly Cache Cache = new Cache();
 
         private readonly Uri downloadResource;
 
@@ -20,9 +21,9 @@ namespace SixCloud.Models
 
         public string Total => Calculators.SizeCalculator(fileDownloader.TotalBytesToReceive);
 
-        public string Name => fileDownloader?.GetLocakFileName();
+        public string Name => System.IO.Path.GetFileName(Path);
 
-        public string Path => storagePath.LastIndexOf(@"\") + 1 == storagePath.Length ? storagePath + Name : storagePath + @"\" + Name;
+        public string Path => fileDownloader?.GetLocalFileName();
 
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
 
@@ -30,30 +31,31 @@ namespace SixCloud.Models
 
         public void Start()
         {
-            if(fileDownloader==null)
+            Task.Run(() =>
             {
-                fileDownloader = new FileDownloader.FileDownloader(Cache);
-                fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
-                fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
+                if (fileDownloader == null)
+                {
+                    fileDownloader = new FileDownloader.FileDownloader(Cache);
+                    fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
+                    fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
+                }
                 fileDownloader.DownloadFileAsyncPreserveServerFileName(downloadResource, storagePath);
-            }
-            else
-            {
-                fileDownloader.Dispose();
-                Start();
-            }
+            });
         }
 
         public void Pause()
         {
-            if(fileDownloader!=null)
+            Task.Run(() =>
             {
-                fileDownloader.Dispose();
-            }
+                fileDownloader.Pause();
+                fileDownloader = null;
+                GC.Collect();
+            });
         }
+
         public void Stop()
         {
-            if(fileDownloader!=null)
+            if (fileDownloader != null)
             {
                 fileDownloader.CancelDownloadAsync();
             }

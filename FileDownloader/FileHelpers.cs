@@ -6,12 +6,15 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using FileDownloader.Logging;
 
 namespace FileDownloader
 {
     internal static class FileHelpers
     {
+        private static ReaderWriterLockSlim readerWriterLockSlim = new ReaderWriterLockSlim();
+
         private static readonly ILogger Logger = LoggerFacade.GetCurrentClassLogger();
 
         public static bool TryGetFileSize(string filename, out long filesize)
@@ -34,12 +37,17 @@ namespace FileDownloader
         {
             try
             {
+                readerWriterLockSlim.EnterWriteLock();
                 File.Delete(filename);
             }
             catch (Exception e)
             {
                 Logger.Debug("Unable to delete file {0}. Exception: {1}", filename, e.Message);
                 return false;
+            }
+            finally
+            {
+                readerWriterLockSlim.ExitWriteLock();
             }
             return true;
         }
@@ -50,6 +58,7 @@ namespace FileDownloader
             {
                 try
                 {
+                    readerWriterLockSlim.EnterWriteLock();
                     File.Delete(destination);
                     File.Move(source, destination);
                 }
@@ -57,6 +66,10 @@ namespace FileDownloader
                 {
                     Logger.Warn("Unable replace local file {0} with cached resource {1}, {2}", destination, source, e.Message);
                     return false;
+                }
+                finally
+                {
+                    readerWriterLockSlim.ExitWriteLock();
                 }
             }
             return true;

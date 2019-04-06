@@ -1,14 +1,14 @@
 //----------------------------------------------------------------------------------------------------
 // <copyright company="Avira Operations GmbH & Co. KG and its licensors">
-// © 2016 Avira Operations GmbH & Co. KG and its licensors.  All rights reserved.
+// ?2016 Avira Operations GmbH & Co. KG and its licensors.  All rights reserved.
 // </copyright>
 //----------------------------------------------------------------------------------------------------
 
+using FileDownloader.Logging;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using FileDownloader.Logging;
 
 namespace FileDownloader
 {
@@ -22,93 +22,90 @@ namespace FileDownloader
 
         private TimeSpan timeout = TimeSpan.FromMinutes(2);
 
-        public bool HasResponse
-        {
-            get { return this.webResponse != null; }
-        }
+        public bool HasResponse => webResponse != null;
 
         public bool IsPartialResponse
         {
             get
             {
-                var response = this.webResponse as HttpWebResponse;
+                HttpWebResponse response = webResponse as HttpWebResponse;
                 return response != null && response.StatusCode == HttpStatusCode.PartialContent;
             }
         }
 
         public void OpenReadAsync(Uri address, long newPosition)
         {
-            this.position = newPosition;
+            position = newPosition;
             OpenReadAsync(address);
         }
 
         public string GetOriginalFileNameFromDownload()
         {
-            if (this.webResponse == null)
+            if (webResponse == null)
             {
                 return null;
             }
 
             try
             {
-                var contentDisposition = this.webResponse.Headers.GetContentDisposition();
+                System.Net.Mime.ContentDisposition contentDisposition = webResponse.Headers.GetContentDisposition();
                 if (contentDisposition != null)
                 {
-                    var filename = contentDisposition.FileName;
+                    string filename = contentDisposition.FileName;
                     if (!string.IsNullOrEmpty(filename))
                     {
                         return Path.GetFileName(filename);
                     }
                 }
-                return Path.GetFileName(this.webResponse.ResponseUri.LocalPath);
+                return Path.GetFileName(webResponse.ResponseUri.LocalPath);
             }
             catch (Exception ex)
             {
-                this.logger.Warn("Can't get the name of the downloading file. Exception: {0}", ex.Message);
+                logger.Warn("Can't get the name of the downloading file. Exception: {0}", ex.Message);
                 return null;
             }
         }
 
         protected override WebResponse GetWebResponse(WebRequest request)
         {
-            var response = base.GetWebResponse(request);
-            this.webResponse = response;
-            this.logger.Debug("Recieved web response for sync call, IsFromCache: {0}, url {1}", response != null && response.IsFromCache, request.RequestUri);
+            WebResponse response = base.GetWebResponse(request);
+            webResponse = response;
+            logger.Debug("Recieved web response for sync call, IsFromCache: {0}, url {1}", response != null && response.IsFromCache, request.RequestUri);
             return response;
         }
 
         protected override WebResponse GetWebResponse(WebRequest request, IAsyncResult result)
         {
-            var response = base.GetWebResponse(request, result);
-            this.webResponse = response;
+            WebResponse response = base.GetWebResponse(request, result);
+            webResponse = response;
 
-            this.logger.Debug("Recieved web response for async call, IsFromCache: {0}, url {1}", response != null && response.IsFromCache, request.RequestUri);
+            logger.Debug("Recieved web response for async call, IsFromCache: {0}, url {1}", response != null && response.IsFromCache, request.RequestUri);
             return response;
         }
 
         protected override WebRequest GetWebRequest(Uri address)
         {
-            var request = base.GetWebRequest(address);
+            WebRequest request = base.GetWebRequest(address);
 
             if (request != null)
             {
-                request.Timeout = (int)this.timeout.TotalMilliseconds;
+                request.Timeout = (int)timeout.TotalMilliseconds;
             }
 
-            var webRequest = request as HttpWebRequest;
+            HttpWebRequest webRequest = request as HttpWebRequest;
             if (webRequest == null)
             {
                 return request;
             }
 
-            webRequest.ReadWriteTimeout = (int)this.timeout.TotalMilliseconds;
-            webRequest.Timeout = (int)this.timeout.TotalMilliseconds;
-            if (this.position != 0)
+            webRequest.ReadWriteTimeout = (int)timeout.TotalMilliseconds;
+            webRequest.Timeout = (int)timeout.TotalMilliseconds;
+            if (position != 0)
             {
-                webRequest.AddRange((int)this.position);
+                webRequest.AddRange((int)position);
                 webRequest.Accept = "*/*";
             }
-            webRequest.CookieContainer = this.cookieContainer;
+            webRequest.CookieContainer = cookieContainer;
             return request;
         }
     }

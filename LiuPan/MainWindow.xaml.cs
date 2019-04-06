@@ -1,4 +1,6 @@
-﻿using SixCloudCustomControlLibrary.Controls;
+﻿using FileDownloader;
+using SixCloud.Models;
+using SixCloudCustomControlLibrary.Controls;
 using System.Windows;
 using System.Windows.Media;
 
@@ -14,14 +16,26 @@ namespace SixCloud
             InitializeComponent();
         }
 
+        private DownloadTask FileDownloader = new DownloadTask("https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-Win.exe", @"C:\Users\Bsens\Downloads");
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             new Views.LoginView().Show();
         }
 
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            FileDownloader.Start();
+        }
+
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            App.Current.Resources["PrimaryHueMidBrush"] = new SolidColorBrush(new Color { A = 255, R = 0, G = 128, B = 128 });
+            FileDownloader.Pause();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            FileDownloader.Stop();
         }
     }
 }

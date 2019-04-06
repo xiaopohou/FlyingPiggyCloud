@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FileDownloader
 {
@@ -28,6 +29,7 @@ namespace FileDownloader
         private bool disposed;
         private bool useFileNameFromServer = true;
         private bool isFallback;
+        private bool isPaused = false;
 
         private int attemptNumber;
 
@@ -116,7 +118,7 @@ namespace FileDownloader
         /// </summary>
         public DateTime DownloadStartTime { get; set; }
 
-        public string GetLocakFileName()
+        public string GetLocalFileName()
         {
             return localFileName;
         }
@@ -187,6 +189,7 @@ namespace FileDownloader
 
         private void DownloadFileAsync(Uri source, string destinationPath, bool useServerFileName)
         {
+            isPaused = false;
             if (!WaitSafeStart())
             {
                 throw new Exception("Unable to start download because another request is still in progress.");
@@ -397,7 +400,7 @@ namespace FileDownloader
         {
             if (useFileNameFromServer)
             {
-                return Path.Combine(destinationFolder, string.Format("{0}.tmp", Guid.NewGuid()));
+                return Path.Combine(destinationFolder, string.Format("{0}.ezdlpart", Guid.NewGuid()));
             }
             return Path.Combine(destinationFolder, destinationFileName);
         }
@@ -609,8 +612,10 @@ namespace FileDownloader
             if (args.Cancelled)
             {
                 logger.Debug("Download cancelled. Source: {0} Destination: {1}", fileSource, localFileName);
-                DeleteDownloadedFile();
-
+                if(!isPaused)
+                {
+                    DeleteDownloadedFile();
+                }
                 InvokeDownloadCompleted(CompletedState.Canceled, localFileName);
                 readyToDownload.Set();
             }
@@ -815,6 +820,32 @@ namespace FileDownloader
                 }
                 disposed = true;
             }
+#if DEBUG
+            Console.WriteLine("Downloader Collected");
+#endif
+        }
+
+        public void Pause()
+        {
+            isPaused = true;
+            lock (cancelSync)
+            {
+                if (isCancelled)
+                {
+                    return;
+                }
+                isCancelled = true;
+            }
+
+            if (worker != null)
+            {
+                worker.Cancel();
+            }
+
+            TriggerDownloadWebClientCancelAsync();
+            //DeleteDownloadedFile();  ////todo: maybe this is equal to InvalidateCache? Can we get rid of DeleteDownloadedFile ?
+
+            readyToDownload.Set();
         }
     }
 }

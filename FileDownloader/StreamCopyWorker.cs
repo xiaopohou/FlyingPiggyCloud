@@ -4,10 +4,10 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------------
 
+using FileDownloader.Logging;
 using System;
 using System.IO;
 using System.Threading;
-using FileDownloader.Logging;
 
 namespace FileDownloader
 {
@@ -38,8 +38,8 @@ namespace FileDownloader
             this.copyBufferSize = copyBufferSize;
             this.safeWaitTimeout = safeWaitTimeout;
 
-            this.progressUpdateTimer = new System.Timers.Timer(progressUpdateInterval.TotalMilliseconds);
-            this.progressUpdateTimer.Elapsed += OnProgressUpdateTimerElapsed;
+            progressUpdateTimer = new System.Timers.Timer(progressUpdateInterval.TotalMilliseconds);
+            progressUpdateTimer.Elapsed += OnProgressUpdateTimerElapsed;
         }
 
         public event EventHandler<StreamCopyCompleteEventArgs> Completed;
@@ -63,9 +63,9 @@ namespace FileDownloader
                 return;
             }
 
-            this.sourceStream = source;
-            this.destinationStream = destination;
-            this.totalBytes = sizeInBytes;
+            sourceStream = source;
+            destinationStream = destination;
+            totalBytes = sizeInBytes;
 
             ThreadPool.QueueUserWorkItem(stateInfo => RunCopyProcess());
         }
@@ -77,19 +77,19 @@ namespace FileDownloader
                 return;
             }
 
-            this.logger.Debug("StreamCopyWorker is finishing background thread...");
-            if (!this.streamCopyFinished.WaitOne(this.safeWaitTimeout))
+            logger.Debug("StreamCopyWorker is finishing background thread...");
+            if (!streamCopyFinished.WaitOne(safeWaitTimeout))
             {
-                this.logger.Warn("StreamCopyWorker failed to finish background thread in timely manner.");
+                logger.Warn("StreamCopyWorker failed to finish background thread in timely manner.");
                 return;
             }
 
             ////We may reach this code when cancel is requested BEFORE the RunCopyProcess
             ////There are moments when worker is not started, but still can be cancelled.
-            FinalizeStream(ref this.destinationStream);
-            FinalizeStream(ref this.sourceStream);
+            FinalizeStream(ref destinationStream);
+            FinalizeStream(ref sourceStream);
 
-            this.logger.Debug("StreamCopyWorker cancelled.");
+            logger.Debug("StreamCopyWorker cancelled.");
         }
 
         private void OnCompleted(StreamCopyCompleteEventArgs args)
@@ -117,8 +117,8 @@ namespace FileDownloader
             }
             catch (Exception ex)
             {
-                this.logger.Warn("StreamCopyWorker caught exception: {0}", ex.Message);
-                this.completedState = CompletedState.Failed;
+                logger.Warn("StreamCopyWorker caught exception: {0}", ex.Message);
+                completedState = CompletedState.Failed;
                 error = ex;
             }
 
@@ -127,43 +127,43 @@ namespace FileDownloader
 
         private bool InitializeCopyProcess()
         {
-            this.logger.Debug("Starting StreamCopyWorker thread...");
+            logger.Debug("Starting StreamCopyWorker thread...");
 
-            if (!this.streamCopyFinished.WaitOne(this.safeWaitTimeout))
+            if (!streamCopyFinished.WaitOne(safeWaitTimeout))
             {
-                this.logger.Error("Failed to start StreamCopyWorker thread.");
+                logger.Error("Failed to start StreamCopyWorker thread.");
                 return false;
             }
-            this.streamCopyFinished.Reset();
-            this.logger.Debug("StreamCopyWorker thread started.");
+            streamCopyFinished.Reset();
+            logger.Debug("StreamCopyWorker thread started.");
 
             Position = 0;
             ChangeState(WorkerState.Started);
 
-            this.progressUpdateTimer.Start();
+            progressUpdateTimer.Start();
             return true;
         }
 
         private void Copy()
         {
-            var buffer = new byte[this.copyBufferSize];
-            using (var binaryWriter = new BinaryWriter(this.destinationStream))
+            byte[] buffer = new byte[copyBufferSize];
+            using (BinaryWriter binaryWriter = new BinaryWriter(destinationStream))
             {
                 int readBytes;
-                while ((readBytes = this.sourceStream.Read(buffer, 0, buffer.Length)) != 0)
+                while ((readBytes = sourceStream.Read(buffer, 0, buffer.Length)) != 0)
                 {
                     binaryWriter.Write(buffer, 0, readBytes);
-                    Position = this.destinationStream.Position;
+                    Position = destinationStream.Position;
 
                     if (GetState() == WorkerState.Canceled || GetState() == WorkerState.Finished)
                     {
-                        this.logger.Debug("StreamCopyWorker cancelled.");
-                        this.completedState = CompletedState.Canceled;
+                        logger.Debug("StreamCopyWorker cancelled.");
+                        completedState = CompletedState.Canceled;
                         return;
                     }
                 }
 
-                this.completedState = CompletedState.Succeeded;
+                completedState = CompletedState.Succeeded;
             }
         }
 
@@ -171,11 +171,11 @@ namespace FileDownloader
         {
             ////the last direct call to deliver most accurate and actual progress without timer
             ////without this we often have not 100% on the end of download
-            if (this.completedState == CompletedState.Succeeded)
+            if (completedState == CompletedState.Succeeded)
             {
-                if (Position != this.totalBytes)
+                if (Position != totalBytes)
                 {
-                    throw new Exception(string.Format("Stream incomplete. Expected size: {0}, actual size {1}", this.totalBytes, Position));
+                    throw new Exception(string.Format("Stream incomplete. Expected size: {0}, actual size {1}", totalBytes, Position));
                 }
 
                 OnProgressChanged(new StreamCopyProgressEventArgs { BytesReceived = Position });
@@ -184,16 +184,16 @@ namespace FileDownloader
 
         private void FinalizeCopyProcess(Exception error)
         {
-            this.progressUpdateTimer.Stop();
+            progressUpdateTimer.Stop();
 
-            FinalizeStream(ref this.sourceStream);
-            FinalizeStream(ref this.destinationStream);
+            FinalizeStream(ref sourceStream);
+            FinalizeStream(ref destinationStream);
 
             ChangeState(WorkerState.Finished);
 
-            this.logger.Debug("StreamCopyWorker Completed.");
-            this.streamCopyFinished.Set();
-            OnCompleted(new StreamCopyCompleteEventArgs { CompleteState = this.completedState, Exception = error });
+            logger.Debug("StreamCopyWorker Completed.");
+            streamCopyFinished.Set();
+            OnCompleted(new StreamCopyCompleteEventArgs { CompleteState = completedState, Exception = error });
         }
 
         private void FinalizeStream(ref Stream stream)
@@ -211,7 +211,7 @@ namespace FileDownloader
             }
             catch (Exception ex)
             {
-                this.logger.Warn("StreamCopyWorker is not able to dispose stream. Exception: {0}", ex.Message);
+                logger.Warn("StreamCopyWorker is not able to dispose stream. Exception: {0}", ex.Message);
             }
         }
 
@@ -222,9 +222,9 @@ namespace FileDownloader
                 return;
             }
 
-            if (Position != this.previousReportedBytesReceived)
+            if (Position != previousReportedBytesReceived)
             {
-                this.previousReportedBytesReceived = Position;
+                previousReportedBytesReceived = Position;
                 OnProgressChanged(new StreamCopyProgressEventArgs { BytesReceived = Position });
             }
         }
@@ -233,15 +233,15 @@ namespace FileDownloader
         {
             if (newState == WorkerState.Finished)
             {
-                Interlocked.Exchange(ref this.workerState, (int)newState);
+                Interlocked.Exchange(ref workerState, (int)newState);
                 return true;
             }
-            return Interlocked.CompareExchange(ref this.workerState, (int)newState, (int)newState - 1) == (int)newState - 1;
+            return Interlocked.CompareExchange(ref workerState, (int)newState, (int)newState - 1) == (int)newState - 1;
         }
 
         private WorkerState GetState()
         {
-            return (WorkerState)this.workerState;
+            return (WorkerState)workerState;
         }
 
         public void Dispose()
@@ -252,17 +252,17 @@ namespace FileDownloader
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
-                    this.progressUpdateTimer.Dispose();
-                    this.streamCopyFinished.Close();
+                    progressUpdateTimer.Dispose();
+                    streamCopyFinished.Close();
                     ChangeState(WorkerState.Finished);
-                    FinalizeStream(ref this.sourceStream);
-                    FinalizeStream(ref this.destinationStream);
+                    FinalizeStream(ref sourceStream);
+                    FinalizeStream(ref destinationStream);
                 }
-                this.disposed = true;
+                disposed = true;
             }
         }
     }

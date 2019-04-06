@@ -72,6 +72,8 @@ namespace FileDownloader
         /// </summary>
         void CancelDownloadAsync();
 
-        string GetLocakFileName();
+        string GetLocalFileName();
+
+        void Pause();
     }
 }
