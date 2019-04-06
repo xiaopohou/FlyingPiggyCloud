@@ -7,8 +7,17 @@ namespace SixCloud.Models
 {
     internal class DownloadTask
     {
-        private IFileDownloader fileDownloader;
+        public enum TaskStatus
+        {
+            Running,
+            Pause,
+            Cancel
+        }
 
+        public TaskStatus Status { get; private set; } = TaskStatus.Pause;
+        private readonly object statusSyncRoot = new object();
+
+        private IFileDownloader fileDownloader;
         private static readonly Cache Cache = new Cache();
 
         private readonly Uri downloadResource;
@@ -33,13 +42,21 @@ namespace SixCloud.Models
         {
             Task.Run(() =>
             {
-                if (fileDownloader == null)
+                lock (statusSyncRoot)
                 {
-                    fileDownloader = new FileDownloader.FileDownloader(Cache);
-                    fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
-                    fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
+                    if (Status != TaskStatus.Pause)
+                    {
+                        return;
+                    }
+                    if (fileDownloader == null)
+                    {
+                        fileDownloader = new FileDownloader.FileDownloader(Cache);
+                        fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
+                        fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
+                    }
+                    fileDownloader.DownloadFileAsyncPreserveServerFileName(downloadResource, storagePath);
+                    Status = TaskStatus.Running;
                 }
-                fileDownloader.DownloadFileAsyncPreserveServerFileName(downloadResource, storagePath);
             });
         }
 
@@ -47,17 +64,25 @@ namespace SixCloud.Models
         {
             Task.Run(() =>
             {
-                fileDownloader.Pause();
-                fileDownloader = null;
-                GC.Collect();
+                lock (statusSyncRoot)
+                {
+                    if (Status != TaskStatus.Running)
+                    {
+                        return;
+                    }
+                    fileDownloader.Pause();
+                    fileDownloader = null;
+                    GC.Collect();
+                    Status = TaskStatus.Pause;
+                }
             });
         }
 
         public void Stop()
         {
-            if (fileDownloader != null)
+            lock (statusSyncRoot)
             {
-                fileDownloader.CancelDownloadAsync();
+                fileDownloader?.CancelDownloadAsync();
             }
         }
 

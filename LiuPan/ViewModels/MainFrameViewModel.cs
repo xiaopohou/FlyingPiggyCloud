@@ -2,7 +2,7 @@
 
 namespace SixCloud.ViewModels
 {
-    internal sealed class MainFrameViewModel : FileSystemViewModel
+    internal sealed class MainFrameViewModel : ViewModelBase
     {
         public AsyncCommand PathNavigateCommand { get; private set; }
 

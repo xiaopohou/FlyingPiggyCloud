@@ -126,7 +126,7 @@ namespace SixCloud.ViewModels
                     GenericResult<FileMetaData> x = fileSystem.GetDetailsByUUID(UUID);
                     if (!string.IsNullOrWhiteSpace(x.Result.DownloadAddress))
                     {
-
+                        DownloadingListViewModel.NewTask(x.Result.DownloadAddress, downloadPathDialog.SelectedPath);
                     }
                 });
                 
