@@ -10,6 +10,8 @@ namespace SixCloud.ViewModels
 
         public FileListViewModel FileList { get; set; }
 
+        public TransferListViewModel TransferList { get; set; } = new TransferListViewModel();
+
         private void PathNavigate(object parameter)
         {
             FileList = new FileListViewModel();

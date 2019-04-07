@@ -24,5 +24,10 @@ namespace SixCloud.Views.UserControls
         {
             InitializeComponent();
         }
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
     }
 }
