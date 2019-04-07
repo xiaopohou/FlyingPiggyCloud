@@ -6,7 +6,7 @@ namespace SixCloud.ViewModels
 {
     internal class DownloadingTaskViewModel : ViewModelBase
     {
-        private readonly DownloadingListViewModel ParentContainer;
+        //private readonly DownloadingListViewModel ParentContainer;
 
         private readonly DownloadTask downloadTask;
 

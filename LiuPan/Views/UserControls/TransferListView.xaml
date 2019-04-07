@@ -7,6 +7,15 @@
              xmlns:Controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary" x:Class="SixCloud.Views.UserControls.TransferListView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignToolToggleListBoxItem}">
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+    </UserControl.Resources>
+
     <Controls:MetroMenuTabControl BorderBrush="White" IconModeButtonVisibility="Hidden">
 
         <!--下载列表-->
@@ -35,7 +44,7 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <ListBox Name="DownloadingList" ItemsSource="{Binding DownloadingList}" Background="White" Margin="0,42,0,0">
+                <ListBox Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -49,12 +58,12 @@
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
-                                <ProgressBar Value="{Binding Progress}" Grid.ColumnSpan="4" Grid.RowSpan="2"/>
-                                <TextBlock Grid.ColumnSpan="4" Text="{Binding Name}"/>
+                                <ProgressBar Value="{Binding Progress,Mode=OneWay}" Grid.ColumnSpan="4" Grid.RowSpan="2"/>
+                                <TextBlock Grid.ColumnSpan="4" Text="{Binding Name,Mode=OneWay}"/>
                                 <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                    <TextBlock Text="{Binding Completed}"/>
+                                    <TextBlock Text="{Binding Completed,Mode=OneWay}"/>
                                     <TextBlock Text="/"/>
-                                    <TextBlock Text="{Binding Total}"/>
+                                    <TextBlock Text="{Binding Total,Mode=OneWay}"/>
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
