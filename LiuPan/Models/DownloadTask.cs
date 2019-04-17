@@ -24,6 +24,8 @@ namespace SixCloud.Models
 
         private readonly string storagePath;
 
+        public string DownloadAddress => downloadResource.ToString();
+
         public double DownloadProgress => fileDownloader.BytesReceived * 100 / fileDownloader.TotalBytesToReceive;
 
         public string Completed => Calculators.SizeCalculator(fileDownloader.BytesReceived);
@@ -32,7 +34,7 @@ namespace SixCloud.Models
 
         public string Name => System.IO.Path.GetFileName(Path);
 
-        public string Path => fileDownloader?.GetLocalFileName();
+        public string Path => storagePath;
 
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
 
@@ -86,9 +88,9 @@ namespace SixCloud.Models
             }
         }
 
-        public DownloadTask(string downloadAdress, string storagePath)
+        public DownloadTask(string downloadAddress, string storagePath)
         {
-            downloadResource = new Uri(downloadAdress);
+            downloadResource = new Uri(downloadAddress);
             this.storagePath = storagePath;
         }
     }

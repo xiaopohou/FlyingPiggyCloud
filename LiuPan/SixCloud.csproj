@@ -114,6 +114,7 @@
     <Compile Include="Controllers\FileSystem.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\SixCloudMethordBase.cs" />
+    <Compile Include="Controllers\SqLiteHelper.cs" />
     <Compile Include="Controllers\TransmissionProgressController.cs" />
     <Compile Include="Models\DownloadTask.cs" />
     <Compile Include="Models\PreviewImageInformation.cs" />

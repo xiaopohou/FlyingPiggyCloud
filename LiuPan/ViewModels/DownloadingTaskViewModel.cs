@@ -1,4 +1,5 @@
-﻿using SixCloud.Models;
+﻿using SixCloud.Controllers;
+using SixCloud.Models;
 using System;
 using System.Windows.Input;
 
@@ -40,6 +41,7 @@ namespace SixCloud.ViewModels
         public DownloadingTaskViewModel(string downloadAddress, string localPath)
         {
             downloadTask = new DownloadTask(downloadAddress, localPath);
+            TransmissionProgressController.DownloadingCache.AddRecord(downloadTask);
             downloadTask.DownloadFileProgressChanged += (sender, e) =>
             {
                 OnPropertyChanged("Completed");
