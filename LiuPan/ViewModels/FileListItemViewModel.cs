@@ -3,7 +3,6 @@ using SixCloud.Models;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 
@@ -126,10 +125,10 @@ namespace SixCloud.ViewModels
                     GenericResult<FileMetaData> x = fileSystem.GetDetailsByUUID(UUID);
                     if (!string.IsNullOrWhiteSpace(x.Result.DownloadAddress))
                     {
-                        DownloadingListViewModel.NewTask(x.Result.DownloadAddress, downloadPathDialog.SelectedPath);
+                        DownloadingListViewModel.NewTask(x.Result.DownloadAddress, downloadPathDialog.SelectedPath, Name);
                     }
                 });
-                
+
             }
         }
 

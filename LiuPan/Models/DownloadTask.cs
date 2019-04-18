@@ -22,8 +22,6 @@ namespace SixCloud.Models
 
         private readonly Uri downloadResource;
 
-        private readonly string storagePath;
-
         public string DownloadAddress => downloadResource.ToString();
 
         public double DownloadProgress => fileDownloader.BytesReceived * 100 / fileDownloader.TotalBytesToReceive;
@@ -32,17 +30,17 @@ namespace SixCloud.Models
 
         public string Total => Calculators.SizeCalculator(fileDownloader.TotalBytesToReceive);
 
-        public string Name => System.IO.Path.GetFileName(Path);
+        public string Name { get; private set; }
 
-        public string Path => storagePath;
+        public string Path { get; }
 
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
 
         public event EventHandler<DownloadFileProgressChangedArgs> DownloadFileProgressChanged;
 
-        public void Start()
+        public async Task Start()
         {
-            Task.Run(() =>
+            await Task.Run(() =>
             {
                 lock (statusSyncRoot)
                 {
@@ -56,15 +54,15 @@ namespace SixCloud.Models
                         fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
                         fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
                     }
-                    fileDownloader.DownloadFileAsyncPreserveServerFileName(downloadResource, storagePath);
+                    fileDownloader.DownloadFileAsyncPreserveServerFileName(downloadResource, Path);
                     Status = TaskStatus.Running;
                 }
             });
         }
 
-        public void Pause()
+        public async Task Pause()
         {
-            Task.Run(() =>
+            await Task.Run(() =>
             {
                 lock (statusSyncRoot)
                 {
@@ -82,16 +80,18 @@ namespace SixCloud.Models
 
         public void Stop()
         {
+            DownloadFileCompleted?.Invoke(this, null);
             lock (statusSyncRoot)
             {
                 fileDownloader?.CancelDownloadAsync();
             }
         }
 
-        public DownloadTask(string downloadAddress, string storagePath)
+        public DownloadTask(string downloadAddress, string storagePath, string name)
         {
             downloadResource = new Uri(downloadAddress);
-            this.storagePath = storagePath;
+            Path = storagePath;
+            Name = name;
         }
     }
 }

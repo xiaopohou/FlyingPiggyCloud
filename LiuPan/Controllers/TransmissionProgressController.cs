@@ -2,10 +2,10 @@
 using SixCloud.Models;
 using Syroot.Windows.IO;
 using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace SixCloud.Controllers
 {
@@ -28,7 +28,7 @@ namespace SixCloud.Controllers
                 Pooling = true
             };
             Helper = new SqLiteHelper(builder.ConnectionString);
-            DownloadingCache.StartUpRecovery();
+            //DownloadingCache.StartUpRecovery();
         }
 
         internal class DownloadingCache : IDownloadCache
@@ -37,37 +37,44 @@ namespace SixCloud.Controllers
             public DownloadingCache()
             {
                 Helper.CreateTable("DownloadCache", new string[] { "uri", "path" }, new string[] { "TEXT", "TEXT" });
-                Helper.CreateTable("DownloadTasksRecord", new string[] { "downloadAddress", "localPath" }, new string[] { "TEXT", "TEXT" });
+                Helper.CreateTable("DownloadTasksRecord", new string[] { "downloadAddress", "localPath", "name" }, new string[] { "TEXT", "TEXT", "TEXT" });
             }
 
             //private List<DownloadTask> DownloadTasksRecord = new List<DownloadTask>();
 
             public static void AddRecord(DownloadTask task)
             {
-                using (var reader = Helper.ReadFullTable("DownloadTasksRecord"))
+                using (SQLiteDataReader reader = Helper.ReadFullTable("DownloadTasksRecord"))
                 {
-                    while(reader.Read())
+                    task.DownloadFileCompleted += (sender, e) =>
                     {
-                        if(reader.GetString(reader.GetOrdinal("downloadAddress"))==task.DownloadAddress&& reader.GetString(reader.GetOrdinal("localPath")) == task.Path)
+                        Task.Run(() =>
+                        {
+                            Helper.DeleteValuesOR("DownloadTasksRecord", new string[] { "downloadAddress", "localPath" }, new string[] { task.DownloadAddress, task.Path }, new string[] { "=", "=" })?.Close();
+                        });
+                    };
+                    while (reader.Read())
+                    {
+                        if (reader.GetString(reader.GetOrdinal("downloadAddress")) == task.DownloadAddress && reader.GetString(reader.GetOrdinal("localPath")) == task.Path)
                         {
                             return;
                         }
                     }
                 }
-                Helper.InsertValues("DownloadTasksRecord", new string[] { task.DownloadAddress, task.Path }).Close();
-                task.DownloadFileCompleted += (sender, e) =>
-                {
-                    Helper.DeleteValuesOR("DownloadTasksRecord", new string[] { "downloadAddress", "localPath" }, new string[] { task.DownloadAddress, task.Path }, new string[] { "=", "=" }).Close();
-                };
+                Helper.InsertValues("DownloadTasksRecord", new string[] { task.DownloadAddress, task.Path, task.Name }).Close();
             }
 
             public static void StartUpRecovery()
             {
-                using (var reader = Helper.ReadFullTable("DownloadTasksRecord"))
+                using (SQLiteDataReader reader = Helper.ReadFullTable("DownloadTasksRecord"))
                 {
+                    if (reader == null)
+                    {
+                        return;
+                    }
                     while (reader.Read())
                     {
-                        ViewModels.DownloadingListViewModel.NewTask(reader.GetString(reader.GetOrdinal("downloadAddress")), reader.GetString(reader.GetOrdinal("localPath")));
+                        ViewModels.DownloadingListViewModel.NewTask(reader.GetString(reader.GetOrdinal("downloadAddress")), reader.GetString(reader.GetOrdinal("localPath")), reader.GetString(reader.GetOrdinal("name")));
                     }
                 }
             }

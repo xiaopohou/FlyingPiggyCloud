@@ -1,7 +1,9 @@
 ﻿using SixCloud.Controllers;
 using SixCloud.Models;
 using System;
-using System.Windows.Input;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
 
 namespace SixCloud.ViewModels
 {
@@ -21,26 +23,30 @@ namespace SixCloud.ViewModels
 
         public DownloadTask.TaskStatus Status => downloadTask.Status;
 
-        public void Start()
+        public async void Start()
         {
-            downloadTask.Start();
+            await downloadTask.Start();
+            OnPropertyChanged("Status");
         }
 
         public void Stop()
         {
+            DownloadCompleted?.Invoke(this, new EventArgs());
             downloadTask.Stop();
+            OnPropertyChanged("Status");
         }
 
-        public void Pause()
+        public async void Pause()
         {
-            downloadTask.Pause();
+            await downloadTask.Pause();
+            OnPropertyChanged("Status");
         }
 
         public event EventHandler<EventArgs> DownloadCompleted;
 
-        public DownloadingTaskViewModel(string downloadAddress, string localPath)
+        public DownloadingTaskViewModel(string downloadAddress, string localPath, string name)
         {
-            downloadTask = new DownloadTask(downloadAddress, localPath);
+            downloadTask = new DownloadTask(downloadAddress, localPath, name);
             TransmissionProgressController.DownloadingCache.AddRecord(downloadTask);
             downloadTask.DownloadFileProgressChanged += (sender, e) =>
             {
@@ -52,10 +58,23 @@ namespace SixCloud.ViewModels
             {
                 if (e.State == FileDownloader.CompletedState.Succeeded)
                 {
-                    DownloadCompleted(this, new EventArgs());
+                    DownloadCompleted?.Invoke(this, new EventArgs());
                 }
             };
         }
 
+    }
+
+    public class StatusToVisibility : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return ((DownloadTask.TaskStatus)value) == DownloadTask.TaskStatus.Running ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

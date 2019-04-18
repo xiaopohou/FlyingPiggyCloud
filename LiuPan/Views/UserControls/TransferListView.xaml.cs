@@ -43,5 +43,23 @@ namespace SixCloud.Views.UserControls
 
             }
         }
+
+        private void CommandBinding_Executed_1(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                IList list = (IList)e.Parameter;
+                IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
+                foreach (DownloadingTaskViewModel t in downloadingTasks)
+                {
+                    t.Stop();
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
     }
 }

@@ -16,7 +16,6 @@ namespace SixCloud
             InitializeComponent();
         }
 
-        private DownloadTask FileDownloader = new DownloadTask("https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-Win.exe", @"C:\Users\Bsens\Downloads");
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -25,17 +24,17 @@ namespace SixCloud
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            FileDownloader.Start();
+            //FileDownloader.Start();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            FileDownloader.Pause();
+            //FileDownloader.Pause();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            FileDownloader.Stop();
+            //FileDownloader.Stop();
         }
     }
 }
