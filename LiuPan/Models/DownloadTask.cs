@@ -34,6 +34,8 @@ namespace SixCloud.Models
 
         public string Path { get; }
 
+        public string CurrentFileFullPath => fileDownloader.GetLocalFileName();
+
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
 
         public event EventHandler<DownloadFileProgressChangedArgs> DownloadFileProgressChanged;

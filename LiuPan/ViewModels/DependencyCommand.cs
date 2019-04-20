@@ -35,6 +35,16 @@ namespace SixCloud.ViewModels
             }
         }
 
+        /// <summary>
+        /// 一个预置方法，使Command总是可用
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public static bool AlwaysCan(object parameter)
+        {
+            return true;
+        }
+
         public virtual void Execute(object parameter)
         {
             ExecuteAction?.Invoke(parameter);

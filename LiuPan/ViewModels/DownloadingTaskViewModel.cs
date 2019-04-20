@@ -13,7 +13,11 @@ namespace SixCloud.ViewModels
 
         private readonly DownloadTask downloadTask;
 
+        public string Icon { get; } = "\uf019";
+
         public string Name => downloadTask.Name;
+
+        public string CurrentFileFullPath => downloadTask.CurrentFileFullPath;
 
         public string Completed => downloadTask.Completed;
 

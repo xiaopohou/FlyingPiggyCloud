@@ -224,7 +224,7 @@ namespace SixCloud.ViewModels
                 {".mpe",'\uf1c8'.ToString() },
                 {".mpeg",'\uf1c8'.ToString() },
                 {".doc",'\uf1c2'.ToString() },
-                {".docx",'\uf1c2'.ToString() },
+                {".docx",'\uf1c2'.ToString() }
             };
         }
 

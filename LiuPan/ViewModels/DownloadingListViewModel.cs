@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace SixCloud.ViewModels
 {
@@ -19,6 +20,10 @@ namespace SixCloud.ViewModels
                     try
                     {
                         _observableCollection.Remove(task);
+                        if (File.Exists(task.CurrentFileFullPath))
+                        {
+                            DownloadedListViewModel.NewCompleted(task);
+                        }
                     }
                     catch (Exception)
                     {
@@ -26,6 +31,11 @@ namespace SixCloud.ViewModels
                     }
                 });
             };
+            Add(isAutoStart, task);
+        }
+
+        private static void Add(bool isAutoStart, DownloadingTaskViewModel task)
+        {
             App.Current.Dispatcher.Invoke(() =>
             {
                 _observableCollection.Add(task);
@@ -35,6 +45,6 @@ namespace SixCloud.ViewModels
                 task.Start();
             }
         }
-
     }
+
 }

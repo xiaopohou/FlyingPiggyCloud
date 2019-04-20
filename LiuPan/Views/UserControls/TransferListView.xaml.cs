@@ -61,5 +61,18 @@ namespace SixCloud.Views.UserControls
 
             }
         }
+
+        private void DownloadedList_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            ListBox list = sender as ListBox;
+            if (list.SelectedItem == null)
+            {
+                e.Handled = true;
+            }
+            else
+            {
+                list.ContextMenu.DataContext = list.SelectedItem;
+            }
+        }
     }
 }

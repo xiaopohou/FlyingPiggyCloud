@@ -125,6 +125,8 @@
     <Compile Include="ViewModels\AsyncCommand.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
     <Compile Include="ViewModels\DependencyCommand.cs" />
+    <Compile Include="ViewModels\DownloadedListViewModel.cs" />
+    <Compile Include="ViewModels\DownloadedTaskViewModel.cs" />
     <Compile Include="ViewModels\DownloadingListViewModel.cs" />
     <Compile Include="ViewModels\DownloadingTaskViewModel.cs" />
     <Compile Include="ViewModels\FileListItemViewModel.cs" />
