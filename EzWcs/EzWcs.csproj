@@ -54,6 +54,7 @@
     <Compile Include="IUploadTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PutExtra.cs" />
+    <Compile Include="SimpleUploadTask.cs" />
     <Compile Include="SimpleUploadWorker.cs" />
     <Compile Include="SliceUploadTask.cs" />
     <Compile Include="SliceUploadWorker.cs" />

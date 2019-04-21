@@ -1,4 +1,5 @@
-﻿using SixCloud.Models;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using SixCloud.Models;
 using SixCloud.Views;
 using System;
 using System.Collections;
@@ -289,11 +290,6 @@ namespace SixCloud.ViewModels
                 }
             }
         }
-
-        private bool CanNewFolder(object parameter)
-        {
-            return true;
-        }
         #endregion
 
         #region Stick
@@ -396,6 +392,29 @@ namespace SixCloud.ViewModels
         }
         #endregion
 
+        #region UploadFileCommand
+        public DependencyCommand UploadFileCommand { get; private set; }
+        public async void UploadFile(object parameter)
+        {
+            using (CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = false,
+                Multiselect = true
+            })
+            {
+                if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    foreach (string p in commonOpenFileDialog.FileNames)
+                    {
+                        if (File.Exists(p))
+                        {
+                            await UploadingListViewModel.NewTask(this, p);
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
 
         #endregion
 
@@ -406,7 +425,8 @@ namespace SixCloud.ViewModels
             StickCommand = new DependencyCommand(Stick, CanStick);
             CutCommand = new DependencyCommand(Cut, CanCut);
             CopyCommand = new DependencyCommand(Copy, CanCopy);
-            NewFolderCommand = new DependencyCommand(NewFolder, CanNewFolder);
+            NewFolderCommand = new DependencyCommand(NewFolder, DependencyCommand.AlwaysCan);
+            UploadFileCommand = new DependencyCommand(UploadFile, DependencyCommand.AlwaysCan);
         }
     }
 }

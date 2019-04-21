@@ -130,6 +130,7 @@ namespace EzWcs
                 finally
                 {
                     binaryReader.Close();
+                    fileStream.Close();
                 }
             }
             else
@@ -168,6 +169,7 @@ namespace EzWcs
                 }
             }
             SliceUploadTask task = currentTask;
+
             if (task.CompletedBlockCount == task.TotalBlockCount)
             {
                 foreach (string content in task.TotalContents)
@@ -178,6 +180,7 @@ namespace EzWcs
                     }
                 }
                 HttpResult result = MakeFile(new FileInfo(task.FilePath).Length, Path.GetFileName(task.FilePath), task.TotalContents, task.Token, task.Address, task.UploadBatch);
+
 #if DEBUG
                 Console.WriteLine($"成功合成文件{task.FilePath}");
 #endif
@@ -189,7 +192,13 @@ namespace EzWcs
                     Console.WriteLine("上传校验失败");
 #endif
                 }
+                else
+                {
+                    task.UploadTaskStatus = UploadTaskStatus.Completed;
+                }
+                return;
             }
+
             if (task.CompletedBlockCount >= task.TotalBlockCount)
             {
                 task.UploadTaskStatus = UploadTaskStatus.Error;

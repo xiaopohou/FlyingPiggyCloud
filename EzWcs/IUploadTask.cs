@@ -21,7 +21,14 @@
 
         long TotalBytes { get; }
 
-        UploadTaskStatus UploadTaskStatus { get; set; }
+        UploadTaskStatus UploadTaskStatus { get; }
+
+        /// <summary>
+        /// 尝试将当前任务变更为指定状态
+        /// </summary>
+        /// <param name="todo">可选的取值：Active/Pause/Abort</param>
+        /// <returns>指示状态变更是否成功</returns>
+        bool TaskOperate(UploadTaskStatus todo);
     }
 
     public enum UploadTaskStatus

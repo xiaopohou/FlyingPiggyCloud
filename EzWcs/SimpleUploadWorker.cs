@@ -29,6 +29,9 @@ namespace EzWcs
             {
                 simpleUploadTask.UploadTaskStatus = UploadTaskStatus.Error;
             }
+            finally
+            {
+            }
         }
 
         /// <summary>
@@ -142,12 +145,6 @@ namespace EzWcs
         /// <returns>上传数据流后的返回结果</returns>
         private HttpResult UploadStream(Stream stream, string token, string uploadUrl, string key = null, PutExtra putExtra = null)
         {
-            //#if DEBUG
-            //            if (null == putPolicy)
-            //            {
-            //                throw new ArgumentNullException("putPolicy");
-            //            }
-            //#endif
             int bufferSize = 4 * 1024 * 1024;
             byte[] buffer = new byte[bufferSize];
             int bytesRead = 0;
@@ -171,8 +168,10 @@ namespace EzWcs
         /// <returns>上传数据流后的返回结果</returns>
         private HttpResult UploadFile(string localFilename, string token, string uploadUrl, string key = null, PutExtra putExtra = null)
         {
-            FileStream fs = new FileStream(localFilename, FileMode.Open);
-            return UploadStream(fs, token, uploadUrl, key, putExtra);
+            using (FileStream fs = new FileStream(localFilename, FileMode.Open))
+            {
+                return UploadStream(fs, token, uploadUrl, key, putExtra);
+            }
         }
 
         private HttpManager httpManager;
@@ -249,64 +248,6 @@ namespace EzWcs
         public void AddTask(SimpleUploadTask simpleUploadTask)
         {
             workbook.Enqueue(simpleUploadTask);
-        }
-    }
-
-    internal class SimpleUploadTask : IUploadTask
-    {
-        public string FilePath { get; protected set; }
-
-        public string Token { get; protected set; }
-
-        public string Address { get; protected set; }
-
-        public long CompletedBytes
-        {
-            get
-            {
-                if (UploadTaskStatus == UploadTaskStatus.Completed)
-                {
-                    return TotalBytes;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-
-        public long TotalBytes { get; protected set; }
-
-        public UploadTaskStatus UploadTaskStatus
-        {
-            get
-            {
-                lock (syncUploadTaskStatusObject)
-                {
-                    return uploadTaskStatus;
-                }
-            }
-            set
-            {
-                lock (syncUploadTaskStatusObject)
-                {
-                    if (uploadTaskStatus != UploadTaskStatus.Completed)
-                    {
-                        uploadTaskStatus = value;
-                    }
-                }
-            }
-        }
-        private UploadTaskStatus uploadTaskStatus;
-        private readonly object syncUploadTaskStatusObject = new object();
-
-        public SimpleUploadTask(string filePath, string token, string uploadUrl)
-        {
-            FilePath = filePath;
-            Token = token;
-            Address = uploadUrl;
-            TotalBytes = new FileInfo(filePath).Length;
-            UploadTaskStatus = UploadTaskStatus.Active;
         }
     }
 }
