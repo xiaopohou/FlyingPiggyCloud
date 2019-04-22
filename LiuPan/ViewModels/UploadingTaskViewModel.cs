@@ -6,11 +6,14 @@ namespace SixCloud.ViewModels
 {
     internal abstract class UploadingTaskViewModel : FileSystemViewModel
     {
-        private static readonly DispatcherTimer timer = new DispatcherTimer();
+        private static DispatcherTimer timer;
 
         static UploadingTaskViewModel()
         {
-            timer.Interval = TimeSpan.FromSeconds(0.5d);
+            timer = new DispatcherTimer(DispatcherPriority.Normal, App.Current.Dispatcher)
+            {
+                Interval = TimeSpan.FromSeconds(0.5d)
+            };
             timer.Start();
         }
 
@@ -18,18 +21,20 @@ namespace SixCloud.ViewModels
         {
             ChangeStatusCommand = new DependencyCommand(ChangeStatus, DependencyCommand.AlwaysCan);
             StopCommand = new DependencyCommand(Stop, DependencyCommand.AlwaysCan);
-            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(timer, nameof(timer.Tick), (sender, e) =>
+            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(timer, nameof(timer.Tick), Callback);
+
+            void Callback(object sender, EventArgs e)
             {
                 OnPropertyChanged(nameof(Name));
                 OnPropertyChanged(nameof(Status));
-                OnPropertyChanged(nameof(Uploaded));
+                //OnPropertyChanged(nameof(Uploaded));
                 OnPropertyChanged(nameof(Total));
                 OnPropertyChanged(nameof(Progress));
                 if (Status == UploadStatus.Completed)
                 {
                     UploadCompleted?.Invoke(this, new EventArgs());
                 }
-            });
+            }
         }
 
         public string Icon { get; protected set; }

@@ -140,6 +140,10 @@
     <Compile Include="ViewModels\FileSystemViewModel.cs" />
     <Compile Include="ViewModels\MainFrameViewModel.cs" />
     <Compile Include="ViewModels\TransferListViewModel.cs" />
+    <Compile Include="ViewModels\UploadedListViewModel.cs" />
+    <Compile Include="ViewModels\UploadedTaskViewModel.cs" />
+    <Compile Include="ViewModels\UploadingFileViewModel.cs" />
+    <Compile Include="ViewModels\UploadingListViewModel.cs" />
     <Compile Include="ViewModels\UploadingTaskViewModel.cs" />
     <Compile Include="ViewModels\UserInformationVIewModel.cs" />
     <Compile Include="ViewModels\ValidationRules\PhoneNumber.cs" />
