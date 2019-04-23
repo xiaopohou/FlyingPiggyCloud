@@ -91,8 +91,58 @@ namespace EzWcs
 
         public bool TaskOperate(UploadTaskStatus todo)
         {
-#warning 这里的逻辑没有写完
-            throw new NotImplementedException();
+            //仅接受todo为active/pause/abort，其余指令将被丢弃
+            lock (syncUploadTaskStatusObject)
+            {
+                if (uploadTaskStatus == todo)
+                {
+                    return true;
+                }
+                switch (todo)
+                {
+                    case UploadTaskStatus.Active:
+                        if (uploadTaskStatus == UploadTaskStatus.Pause)
+                        {
+                            uploadTaskStatus = UploadTaskStatus.Active;
+                            return true;
+                        }
+                        else if (uploadTaskStatus == UploadTaskStatus.Error)
+                        {
+                            UploadBatch = Guid.NewGuid().ToString();
+                            TotalBytes = new FileInfo(FilePath).Length;
+                            TotalBlockCount = (TotalBytes + SliceUploadWorker.BLOCKSIZE - 1) / SliceUploadWorker.BLOCKSIZE;
+                            TotalContents = new string[TotalBlockCount];
+                            UploadTaskStatus = UploadTaskStatus.Active;
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    case UploadTaskStatus.Pause:
+                        if (uploadTaskStatus == UploadTaskStatus.Active)
+                        {
+                            uploadTaskStatus = UploadTaskStatus.Pause;
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    case UploadTaskStatus.Abort:
+                        if (uploadTaskStatus != UploadTaskStatus.Completed)
+                        {
+                            uploadTaskStatus = UploadTaskStatus.Abort;
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    default:
+                        return false;
+                }
+            }
         }
     }
 }

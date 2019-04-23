@@ -29,10 +29,15 @@ namespace SixCloud.ViewModels
                 OnPropertyChanged(nameof(Status));
                 //OnPropertyChanged(nameof(Uploaded));
                 OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(Uploaded));
                 OnPropertyChanged(nameof(Progress));
                 if (Status == UploadStatus.Completed)
                 {
                     UploadCompleted?.Invoke(this, new EventArgs());
+                }
+                else if (Status == UploadStatus.Stop)
+                {
+                    UploadAborted?.Invoke(this, new EventArgs());
                 }
             }
         }
@@ -46,7 +51,7 @@ namespace SixCloud.ViewModels
             Running,
             Pause,
             Stop,
-            Completed
+            Completed,
         }
         public virtual UploadStatus Status { get; }
 
@@ -80,5 +85,6 @@ namespace SixCloud.ViewModels
 
 
         public event EventHandler UploadCompleted;
+        public virtual event EventHandler UploadAborted;
     }
 }

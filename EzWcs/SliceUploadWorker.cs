@@ -40,11 +40,13 @@ namespace EzWcs
                 {
                     switch (nextUploadTask.UploadTaskStatus)
                     {
+                        //丢弃和完成的任务移出队列
                         case UploadTaskStatus.Abort:
                         case UploadTaskStatus.Completed:
-                        case UploadTaskStatus.Error:
                             isSuccess = false;
                             break;
+                        //暂停和失败任务重新移入队列尾
+                        case UploadTaskStatus.Error:
                         case UploadTaskStatus.Pause:
                             isSuccess = false;
                             waitingTaskCount++;
@@ -77,9 +79,9 @@ namespace EzWcs
                 {
                     case UploadTaskStatus.Abort:
                     case UploadTaskStatus.Completed:
-                    case UploadTaskStatus.Error:
                         PullTask();
                         return;
+                    case UploadTaskStatus.Error:
                     case UploadTaskStatus.Pause:
                         workbook.Enqueue(currentTask);
                         PullTask();

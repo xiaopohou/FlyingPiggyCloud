@@ -12,7 +12,7 @@ namespace SixCloud.ViewModels
         public static void NewCompleted(DownloadingTaskViewModel task)
         {
             DownloadedTaskViewModel record = new DownloadedTaskViewModel(task);
-            App.Current.Dispatcher.Invoke(() => _observableCollection.Add(record));
+            App.Current.Dispatcher.Invoke(() => _observableCollection.Insert(0, record));
             record.Deleted += RemoveAfterDeleted;
             void RemoveAfterDeleted(object sender, EventArgs e)
             {

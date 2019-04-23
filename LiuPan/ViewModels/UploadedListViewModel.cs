@@ -15,7 +15,7 @@ namespace SixCloud.ViewModels
                 Name = uploadedTask.Name,
                 CompletedTime = DateTime.Now
             };
-            _observableCollection.Add(task);
+            _observableCollection.Insert(0, task);
         }
     }
 }

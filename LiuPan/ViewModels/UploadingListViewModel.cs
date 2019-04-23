@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,10 +21,18 @@ namespace SixCloud.ViewModels
             {
                 UploadingFileViewModel task = await Task.Run(() => new UploadingFileViewModel(targetList.CurrentUUID, path));
                 _observableCollection.Add(task);
-                task.UploadCompleted += (sender, e) =>
+                task.UploadCompleted += CompletedEventHandler;
+                void CompletedEventHandler(object sender, EventArgs e)
                 {
+                    task.UploadCompleted -= CompletedEventHandler;
                     _observableCollection.Remove(task);
                     UploadedListViewModel.NewTask(task);
+                };
+                task.UploadAborted += AbortedEventHandler;
+                void AbortedEventHandler(object sender, EventArgs e)
+                {
+                    task.UploadAborted -= AbortedEventHandler;
+                    _observableCollection.Remove(task);
                 };
             }
             else

@@ -26,7 +26,7 @@ namespace SixCloud.ViewModels
         {
             get
             {
-                if(task==null)
+                if (task == null)
                 {
                     return UploadStatus.Pause;
                 }
@@ -35,9 +35,9 @@ namespace SixCloud.ViewModels
                     case UploadTaskStatus.Active:
                         return UploadStatus.Running;
                     case UploadTaskStatus.Pause:
+                    case UploadTaskStatus.Error:
                         return UploadStatus.Pause;
                     case UploadTaskStatus.Abort:
-                    case UploadTaskStatus.Error:
                         return UploadStatus.Stop;
                     case UploadTaskStatus.Completed:
                         return UploadStatus.Completed;
@@ -61,11 +61,14 @@ namespace SixCloud.ViewModels
             task.TaskOperate(UploadTaskStatus.Active);
         }
 
+        public override event EventHandler UploadAborted;
+
 #if DEBUG
         ~UploadingFileViewModel()
         {
             Console.WriteLine("已回收");
         }
 #endif
+
     }
 }
