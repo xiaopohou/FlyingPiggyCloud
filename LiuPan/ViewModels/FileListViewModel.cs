@@ -416,6 +416,58 @@ namespace SixCloud.ViewModels
         }
         #endregion
 
+        #region UploadFolderCommand
+        public DependencyCommand UploadFolderCommand { get; private set; }
+        public async void UploadFolder(object parameter)
+        {
+            using (CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                Multiselect = false
+            })
+            {
+                if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    if (Directory.Exists(commonOpenFileDialog.FileName))
+                    {
+                        await FoundFolder(new DirectoryInfo(commonOpenFileDialog.FileName), CurrentUUID);
+                    }
+                }
+            }
+
+            async Task FoundFolder(DirectoryInfo path, string parentUUID)
+            {
+                GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(path.Name, parentUUID));
+                if (path.Exists)
+                {
+                    FileInfo[] list = path.GetFiles();
+                    if (list.Length != 0)
+                    {
+                        foreach (FileInfo a in list)
+                        {
+                            if (a.Exists)
+                            {
+                                await UploadingListViewModel.NewTask(x.Result.UUID, a.FullName);
+                            }
+                        }
+                    }
+                    DirectoryInfo[] directorys = path.GetDirectories();
+                    if (directorys.Length != 0)
+                    {
+                        foreach (DirectoryInfo a in directorys)
+                        {
+                            if (a.Exists)
+                            {
+                                await FoundFolder(a, x.Result.UUID);
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        #endregion
+
         #endregion
 
         public FileListViewModel()
@@ -427,6 +479,7 @@ namespace SixCloud.ViewModels
             CopyCommand = new DependencyCommand(Copy, CanCopy);
             NewFolderCommand = new DependencyCommand(NewFolder, DependencyCommand.AlwaysCan);
             UploadFileCommand = new DependencyCommand(UploadFile, DependencyCommand.AlwaysCan);
+            UploadFolderCommand = new DependencyCommand(UploadFolder, DependencyCommand.AlwaysCan);
         }
     }
 }

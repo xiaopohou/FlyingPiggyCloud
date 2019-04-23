@@ -13,13 +13,18 @@ namespace SixCloud.ViewModels
 
         public static async Task NewTask(FileListViewModel targetList, string path)
         {
+            await NewTask(targetList.CurrentUUID, path);
+        }
+
+        public static async Task NewTask(string targetUUID, string path)
+        {
             if (Directory.Exists(path))
             {
 
             }
             else if (File.Exists(path))
             {
-                UploadingFileViewModel task = await Task.Run(() => new UploadingFileViewModel(targetList.CurrentUUID, path));
+                UploadingFileViewModel task = await Task.Run(() => new UploadingFileViewModel(targetUUID, path));
                 _observableCollection.Add(task);
                 task.UploadCompleted += CompletedEventHandler;
                 void CompletedEventHandler(object sender, EventArgs e)
@@ -40,5 +45,6 @@ namespace SixCloud.ViewModels
                 MessageBox.Show("由于找不到对象，6盘未能创建任务", "失败", MessageBoxButton.OK, MessageBoxImage.Stop);
             }
         }
+
     }
 }
