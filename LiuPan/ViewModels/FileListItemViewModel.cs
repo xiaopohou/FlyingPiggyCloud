@@ -1,5 +1,6 @@
 ﻿using SixCloud.Controllers;
 using SixCloud.Models;
+using SixCloud.Views;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,29 @@ namespace SixCloud.ViewModels
 
         #region Copy
         public DependencyCommand CopyCommand { get; private set; }
+
+        internal async void NewPreView()
+        {
+            if (Preview == 300)
+            {
+                GenericResult<PreviewImageInformation> x = await Task.Run(() =>
+                {
+                    return fileSystem.ImagePreview(UUID);
+                });
+
+                PreView preView = new PreView(PreView.ResourceType.Picture, x.Result.Url, x.Result,x.Token);
+                preView.Show();
+            }
+            if(Preview ==1000)
+            {
+                var x = await Task.Run(() =>
+                {
+                    return fileSystem.VideoPreview(UUID);
+                });
+                PreView preView = new PreView(PreView.ResourceType.Video, x.Result.Preview[0].Url, x.Result,x.Token);
+                preView.Show();
+            }
+        }
 
         private void Copy(object parameter)
         {

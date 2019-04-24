@@ -14,6 +14,19 @@ namespace SixCloud.Views
     /// </summary>
     public partial class MainFrame : MetroWindow
     {
+        private static UserInformation recoveryInfo;
+        public static Window Recovery()
+        {
+            if(recoveryInfo!=null)
+            {
+                return new MainFrame(recoveryInfo);
+            }
+            else
+            {
+                return new LoginView();
+            }
+        }
+
         public static readonly DependencyProperty PageNavigateProperty = DependencyProperty.Register("PageNavigate", typeof(PageNavigate), typeof(MainFrame), new PropertyMetadata((sender, e) =>
         {
             if (sender is MainFrame mainFrame)
@@ -26,6 +39,7 @@ namespace SixCloud.Views
 
         public MainFrame(UserInformation currentUser)
         {
+            recoveryInfo = currentUser;
             InitializeComponent();
             DataContext = new MainFrameViewModel(currentUser);
         }

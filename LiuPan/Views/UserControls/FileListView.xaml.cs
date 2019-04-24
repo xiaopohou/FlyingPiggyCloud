@@ -26,6 +26,10 @@ namespace SixCloud.Views.UserControls
                     {
                         dataContext.NavigateByUUID(fileListItem.UUID);
                     }
+                    else if (fileListItem.Preview == 300 || fileListItem.Preview == 600 || fileListItem.Preview == 1000)
+                    {
+                        fileListItem.NewPreView();
+                    }
                 }
             }
         }

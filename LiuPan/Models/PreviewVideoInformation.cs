@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace SixCloud.Models
 {
@@ -16,7 +14,25 @@ namespace SixCloud.Models
         public string EncodeKey { get; set; }
 
         [JsonProperty(PropertyName = "preview")]
-        public ObservableCollection<Dictionary<string, string>> Preview { get; set; }
+        public ResourceInformation[] Preview { get; set; }
+
+        public class ResourceInformation
+        {
+            [JsonProperty(PropertyName = "clear")]
+            public int Clear { get; set; }
+
+            [JsonProperty(PropertyName = "duration")]
+            public int Duration { get; set; }
+
+            [JsonProperty(PropertyName = "resolution")]
+            public string Resolution { get; set; }
+
+            [JsonProperty(PropertyName = "clearText")]
+            public string ClearText { get; set; }
+
+            [JsonProperty(PropertyName = "url")]
+            public string Url { get; set; }
+        }
     }
 
 }
