@@ -61,7 +61,7 @@ namespace SixCloud.ViewModels
             task.TaskOperate(UploadTaskStatus.Active);
         }
 
-        public override event EventHandler UploadAborted;
+        //public override event EventHandler UploadAborted;
 
 #if DEBUG
         ~UploadingFileViewModel()

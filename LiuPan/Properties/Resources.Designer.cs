@@ -59,5 +59,14 @@ namespace SixCloud.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找类似  的本地化字符串。
+        /// </summary>
+        internal static string PreviewContainer {
+            get {
+                return ResourceManager.GetString("PreviewContainer", resourceCulture);
+            }
+        }
     }
 }

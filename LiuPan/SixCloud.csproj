@@ -148,6 +148,9 @@
     <Compile Include="ViewModels\UserInformationVIewModel.cs" />
     <Compile Include="ViewModels\ValidationRules\PhoneNumber.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\PreView.xaml.cs">
+      <DependentUpon>PreView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TextInputDialog.xaml.cs">
       <DependentUpon>TextInputDialog.xaml</DependentUpon>
     </Compile>
@@ -185,6 +188,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PreView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TextInputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

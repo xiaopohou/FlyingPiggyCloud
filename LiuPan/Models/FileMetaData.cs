@@ -84,7 +84,7 @@ namespace SixCloud.Models
         public int Flag { get; set; }
 
         /// <summary>
-        /// 预览状态
+        /// 预览状态 600=text 300=pic 1000=video
         /// </summary>
         [JsonProperty(PropertyName = "preview")]
         public int Preview { get; set; }
