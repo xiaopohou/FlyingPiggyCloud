@@ -7,63 +7,32 @@ namespace SixCloud.Models
         /// <summary>
         /// 该文件/文件夹的唯一ID
         /// </summary>
-        [JsonProperty(PropertyName = "uuid")]
+        [JsonProperty(PropertyName = "identity")]
         public string UUID { get; set; }
 
         /// <summary>
-        /// 文件名
+        /// 该文件/文件夹的hash
         /// </summary>
-        [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 文件mime，即文件的类型
-        /// </summary>
-        [JsonProperty(PropertyName = "mime")]
-        public string Mime { get; set; }
-
-        /// <summary>
-        /// 0:为文件,1:目录
-        /// </summary>
-        [JsonProperty(PropertyName = "type")]
-        public int Type { get; set; }
-
-        /// <summary>
-        /// 父目录id
-        /// </summary>
-        [JsonProperty(PropertyName = "parent")]
-        public string Parent { get; set; }
-
-        /// <summary>
-        /// 文件创建时间
-        /// </summary>
-        [JsonProperty(PropertyName = "ctime")]
-        public long Ctime { get; set; }
-
-        /// <summary>
-        /// 文件修改时间
-        /// </summary>
-        [JsonProperty(PropertyName = "mtime")]
-        public long Mtime { get; set; }
-
-        /// <summary>
-        /// 文件访问时间
-        /// </summary>
-        [JsonProperty(PropertyName = "atime")]
-        public long Atime { get; set; }
+        [JsonProperty(PropertyName = "hash")]
+        public string Hash { get; set; }
 
         /// <summary>
         /// 用户id
         /// </summary>
-        [JsonProperty(PropertyName = "userId")]
+        [JsonProperty(PropertyName = "userIdentity")]
         public long UserId { get; set; }
-
 
         /// <summary>
         /// 路径
         /// </summary>
         [JsonProperty(PropertyName = "path")]
         public string Path { get; set; }
+
+        /// <summary>
+        /// 文件名
+        /// </summary>
+        [JsonProperty(PropertyName = "name")]
+        public string Name { get; set; }
 
         /// <summary>
         /// 该文件或文件夹的访问路径
@@ -78,22 +47,40 @@ namespace SixCloud.Models
         public long Size { get; set; }
 
         /// <summary>
-        /// 总是 0
+        /// 父目录id
         /// </summary>
-        [JsonProperty(PropertyName = "flag")]
-        public int Flag { get; set; }
+        [JsonProperty(PropertyName = "parent")]
+        public string Parent { get; set; }
 
         /// <summary>
-        /// 预览状态 600=text 300=pic 1000=video
+        /// 0:为文件,1:目录
         /// </summary>
-        [JsonProperty(PropertyName = "preview")]
-        public int Preview { get; set; }
+        [JsonProperty(PropertyName = "type")]
+        public int Type { get; set; }
 
         /// <summary>
-        /// 0:正常文件，1:回收站
+        /// 不知道干什么的
         /// </summary>
-        [JsonProperty(PropertyName = "recycle")]
-        public int Recycle { get; set; }
+        [JsonProperty(PropertyName = "directory")]
+        public bool Directory { get; set; }
+
+        /// <summary>
+        /// 文件访问时间
+        /// </summary>
+        [JsonProperty(PropertyName = "atime")]
+        public long Atime { get; set; }
+
+        /// <summary>
+        /// 文件创建时间
+        /// </summary>
+        [JsonProperty(PropertyName = "ctime")]
+        public long Ctime { get; set; }
+
+        /// <summary>
+        /// 文件修改时间
+        /// </summary>
+        [JsonProperty(PropertyName = "mtime")]
+        public long Mtime { get; set; }
 
         /// <summary>
         /// 文件版本
@@ -110,8 +97,40 @@ namespace SixCloud.Models
         /// <summary>
         /// 如果锁定,文件锁定的情况下，当前后台正进行的操作
         /// </summary>
-        [JsonProperty(PropertyName = "opt")]
+        [JsonProperty(PropertyName = "op")]
         public int Opt { get; set; }
+
+        /// <summary>
+        /// 预览状态 600=text 300=pic 1000=video
+        /// </summary>
+        [JsonProperty(PropertyName = "preview")]
+        public bool Preview { get; set; }
+
+        /// <summary>
+        /// 预览状态 600=text 300=pic 1000=video
+        /// </summary>
+        [JsonProperty(PropertyName = "previewType")]
+        public int PreviewType { get; set; }
+
+        /// <summary>
+        /// 文件mime，即文件的类型
+        /// </summary>
+        [JsonProperty(PropertyName = "mime")]
+        public string Mime { get; set; }
+
+        /// <summary>
+        /// 总是 0
+        /// </summary>
+        [JsonProperty(PropertyName = "flag")]
+        public int Flag { get; set; }
+
+
+        /// <summary>
+        /// 0:正常文件，1:回收站
+        /// </summary>
+        [JsonProperty(PropertyName = "recycle")]
+        public int Recycle { get; set; }
+
 
         /// <summary>
         /// 文件下载地址

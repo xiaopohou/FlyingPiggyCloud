@@ -11,7 +11,7 @@ namespace SixCloud.ViewModels
         {
             Name = Path.GetFileName(filePath);
             Models.GenericResult<Models.UploadToken> x = fileSystem.UploadFile(Name, targetUUID, OriginalFilename: Name);
-            task = EzWcs.EzWcs.NewTask(filePath, x.Result.Token, x.Result.UploadUrl);
+            task = EzWcs.EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
         }
 
         private readonly IUploadTask task;

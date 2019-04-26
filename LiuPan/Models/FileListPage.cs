@@ -37,7 +37,7 @@ namespace SixCloud.Models
         /// <summary>
         /// 当前目录MetaData
         /// </summary>
-        [JsonProperty(PropertyName = "info")]
+        [JsonProperty(PropertyName = "parent")]
         public FileMetaData DictionaryInformation { get; set; }
     }
 }

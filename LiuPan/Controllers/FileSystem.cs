@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using SixCloud.Models;
 using SixCloud.Views;
+using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace SixCloud.Controllers
 {
@@ -17,14 +19,14 @@ namespace SixCloud.Controllers
         /// <param name="OrderBy">排序：0按文件名，1按时间</param>
         /// <param name="Type">文件类型：0显示文件，1显示文件夹，-1显示文件和文件夹(默认)</param>
         /// <returns></returns>
-        public GenericResult<FileListPage> GetDirectory(string parent = "", string path = "", int? page = null, int? pageSize = null, int? OrderBy = null, int? Type = null)
+        public GenericResult<FileListPage> GetDirectory(string parent = "", string path = "", int? page = null, int? pageSize = null)
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
             if (parent != "")
             {
-                data.Add("parent", parent);
+                data.Add("identity", parent);
             }
-            if (path != "")
+            else if (path != "")
             {
                 data.Add("path", path);
             }
@@ -36,22 +38,17 @@ namespace SixCloud.Controllers
             {
                 data.Add("pageSize", pageSize);
             }
-            if (OrderBy != null)
-            {
-                data.Add("orderBy", OrderBy);
-            }
-            if (Type != null)
-            {
-                data.Add("type", Type);
-            }
             while (string.IsNullOrWhiteSpace(Token))
             {
                 LoginView GetToken = new LoginView();
                 GetToken.ShowDialog();
             }
             data.Add("token", Token);
-            GenericResult<FileListPage> x = Post<GenericResult<FileListPage>>(JsonConvert.SerializeObject(data), "v1/files/page");
-            Token = x.Token;
+            GenericResult<FileListPage> x = Post<GenericResult<FileListPage>>(JsonConvert.SerializeObject(data), "v2/files/page", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
 
@@ -83,8 +80,11 @@ namespace SixCloud.Controllers
                 GetToken.ShowDialog();
             }
             data.Add("token", Token);
-            GenericResult<FileMetaData> x = Post<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "v1/files/createDirectory");
-            Token = x.Token;
+            GenericResult<FileMetaData> x = Post<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "v2/files/createDirectory", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
 
@@ -94,21 +94,23 @@ namespace SixCloud.Controllers
         /// <param name="SourceMeta">被移动的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public GenericResult<bool> Move(string sourceUUID, string targetDirectoryUUID)
+        public GenericResult<int> Move(string sourceUUID, string targetDirectoryUUID)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>
+            Dictionary<string, object> data = new Dictionary<string, object>
             {
-                { "uuid", sourceUUID },
-                { "parent", targetDirectoryUUID }
+                { "source",new object[]{ new Dictionary<string, string> { { "identity", sourceUUID } } } },
+                { "destination", new Dictionary<string, string> { { "identity", targetDirectoryUUID } } }
             };
             while (string.IsNullOrWhiteSpace(Token))
             {
                 LoginView GetToken = new LoginView();
                 GetToken.ShowDialog();
             }
-            data.Add("token", Token);
-            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v1/files/move");
-            Token = x.Token;
+            GenericResult<int> x = Post<GenericResult<int>>(JsonConvert.SerializeObject(data), "v2/user/move", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
 
@@ -118,21 +120,23 @@ namespace SixCloud.Controllers
         /// <param name="SourceMeta">被复制的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public GenericResult<bool> Copy(string sourceUUID, string targetDirectoryUUID)
+        public GenericResult<int> Copy(string sourceUUID, string targetDirectoryUUID)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>
+            Dictionary<string, object> data = new Dictionary<string, object>
             {
-                { "uuid", sourceUUID },
-                { "parent", targetDirectoryUUID }
+                { "source",new object[]{ new Dictionary<string, string> { { "identity", sourceUUID } } } },
+                { "destination", new Dictionary<string, string> { { "identity", targetDirectoryUUID } } }
             };
             while (string.IsNullOrWhiteSpace(Token))
             {
                 LoginView GetToken = new LoginView();
                 GetToken.ShowDialog();
             }
-            data.Add("token", Token);
-            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v1/files/copy");
-            Token = x.Token;
+            GenericResult<int> x = Post<GenericResult<int>>(JsonConvert.SerializeObject(data), "v2/user/copy", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
 
@@ -141,20 +145,22 @@ namespace SixCloud.Controllers
         /// </summary>
         /// <param name="uuid">被删除的项目</param>
         /// <returns></returns>
-        public GenericResult<bool> Remove(string uuid)
+        public GenericResult<int> Remove(string uuid)
         {
+            Dictionary<string, object> data = new Dictionary<string, object>
+            {
+                { "source",new object[]{ new Dictionary<string, string> { { "identity", uuid } } } },
+            };
             while (string.IsNullOrWhiteSpace(Token))
             {
                 LoginView GetToken = new LoginView();
                 GetToken.ShowDialog();
             }
-            Dictionary<string, string> data = new Dictionary<string, string>
+            GenericResult<int> x = Post<GenericResult<int>>(JsonConvert.SerializeObject(data), "v2/user/delete", new Dictionary<string, string>
             {
-                { "uuid", uuid }
-            };
-            data.Add("token", Token);
-            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v1/files/remove");
-            Token = x.Token;
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
 
@@ -166,19 +172,20 @@ namespace SixCloud.Controllers
         /// <returns></returns>
         public void Rename(string uuid, string newName)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "uuid", uuid },
-                { "name", newName },
-                { "token", Token }
-            };
-            Dictionary<string, string> x = Post<Dictionary<string, string>>(JsonConvert.SerializeObject(data), "v1/files/rename");
-            Token = x["token"];
+#warning 这里的代码没有完成
+            //while (string.IsNullOrWhiteSpace(Token))
+            //{
+            //    LoginView GetToken = new LoginView();
+            //    GetToken.ShowDialog();
+            //}
+            //Dictionary<string, string> data = new Dictionary<string, string>
+            //{
+            //    { "uuid", uuid },
+            //    { "name", newName },
+            //    { "token", Token }
+            //};
+            //Dictionary<string, string> x = Post<Dictionary<string, string>>(JsonConvert.SerializeObject(data), "v1/files/rename");
+            //Token = x["token"];
         }
 
         /// <summary>
@@ -199,11 +206,10 @@ namespace SixCloud.Controllers
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "name", Name},
-                { "token", Token }
             };
             if (parentUUID != null)
             {
-                data.Add("parent", parentUUID);
+                data.Add("identity", parentUUID);
             }
             else if (parentPath != null)
             {
@@ -219,18 +225,16 @@ namespace SixCloud.Controllers
                 data.Add("hash", Hash);
             }
 
-            if (OriginalFilename != null)
+            GenericResult<UploadToken> x = Post<GenericResult<UploadToken>>(JsonConvert.SerializeObject(data), "v2/upload/token", new Dictionary<string, string>
             {
-                data.Add("originalFilename", OriginalFilename);
-            }
-
-            GenericResult<UploadToken> x = Post<GenericResult<UploadToken>>(JsonConvert.SerializeObject(data), "v1/store/token");
-            Token = x.Token;
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
 
         /// <summary>
-        /// 
+        /// 该方法用于获取下载链接
         /// </summary>
         /// <param name="UUID"></param>
         /// <returns></returns>
@@ -243,47 +247,55 @@ namespace SixCloud.Controllers
             }
             Dictionary<string, string> data = new Dictionary<string, string>
             {
-                { "uuid", UUID },
-                { "token", Token }
+                { "identitiy", UUID },
             };
-            GenericResult<FileMetaData> x = Post<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "v1/files/get");
-            Token = x.Token;
+            GenericResult<FileMetaData> x = Post<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "v2/files/get", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
 
         }
 
         public GenericResult<PreviewVideoInformation> VideoPreview(string UUID)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "uuid", UUID },
-                { "token", Token }
-            };
-            GenericResult<PreviewVideoInformation> x = Post<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "v1/preview/media");
-            Token = x.Token;
-            return x;
+#warning 这里的代码还没有写完
+            throw new Exception();
+            //while (string.IsNullOrWhiteSpace(Token))
+            //{
+            //    LoginView GetToken = new LoginView();
+            //    GetToken.ShowDialog();
+            //}
+            //Dictionary<string, string> data = new Dictionary<string, string>
+            //{
+            //    { "uuid", UUID },
+            //};
+            //GenericResult<PreviewVideoInformation> x = Post<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "v2/preview/media", new Dictionary<string, string>
+            //{
+            //    { "Qingzhen-Token",Token }
+            //}, out WebHeaderCollection webHeaderCollection);
+            //Token = webHeaderCollection.Get("qingzhen-token");
+            //return x;
         }
 
         public GenericResult<PreviewImageInformation> ImagePreview(string UUID)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "uuid", UUID },
-                { "token", Token }
-            };
-            GenericResult<PreviewImageInformation> x = Post<GenericResult<PreviewImageInformation>>(JsonConvert.SerializeObject(data), "v1/preview/image");
-            Token = x.Token;
-            return x;
+            throw new Exception();
+
+            //while (string.IsNullOrWhiteSpace(Token))
+            //{
+            //    LoginView GetToken = new LoginView();
+            //    GetToken.ShowDialog();
+            //}
+            //Dictionary<string, string> data = new Dictionary<string, string>
+            //{
+            //    { "uuid", UUID },
+            //    { "token", Token }
+            //};
+            //GenericResult<PreviewImageInformation> x = Post<GenericResult<PreviewImageInformation>>(JsonConvert.SerializeObject(data), "v1/preview/image");
+            //Token = x.Token;
+            //return x;
         }
     }
 }

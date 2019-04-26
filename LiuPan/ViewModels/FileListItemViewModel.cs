@@ -21,7 +21,7 @@ namespace SixCloud.ViewModels
 
         public bool Locking { get; set; }
 
-        public int Preview { get; set; }
+        public bool Preview { get; set; }
 
         /// <summary>
         /// 0为文件，1为目录
@@ -48,25 +48,26 @@ namespace SixCloud.ViewModels
 
         internal async void NewPreView()
         {
-            if (Preview == 300)
-            {
-                GenericResult<PreviewImageInformation> x = await Task.Run(() =>
-                {
-                    return fileSystem.ImagePreview(UUID);
-                });
+#warning 这里的代码还没有完成
+            //if (Preview == 300)
+            //{
+            //    GenericResult<PreviewImageInformation> x = await Task.Run(() =>
+            //    {
+            //        return fileSystem.ImagePreview(UUID);
+            //    });
 
-                PreView preView = new PreView(PreView.ResourceType.Picture, x.Result.Url, x.Result,x.Token);
-                preView.Show();
-            }
-            if(Preview ==1000)
-            {
-                var x = await Task.Run(() =>
-                {
-                    return fileSystem.VideoPreview(UUID);
-                });
-                PreView preView = new PreView(PreView.ResourceType.Video, x.Result.Preview[0].Url, x.Result,x.Token);
-                preView.Show();
-            }
+            //    PreView preView = new PreView(PreView.ResourceType.Picture, x.Result.Url, x.Result,x.Token);
+            //    preView.Show();
+            //}
+            //if(Preview ==1000)
+            //{
+            //    var x = await Task.Run(() =>
+            //    {
+            //        return fileSystem.VideoPreview(UUID);
+            //    });
+            //    PreView preView = new PreView(PreView.ResourceType.Video, x.Result.Preview[0].Url, x.Result,x.Token);
+            //    preView.Show();
+            //}
         }
 
         private void Copy(object parameter)

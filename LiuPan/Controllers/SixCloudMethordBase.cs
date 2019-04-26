@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Net;
 
 namespace SixCloud.Controllers
 {
@@ -9,15 +11,16 @@ namespace SixCloud.Controllers
     {
         protected static string Token { get; set; }
 
-        protected T Post<T>(string data, string uri)
+        protected T Post<T>(string data, string uri, Dictionary<string, string> requestHeaders, out WebHeaderCollection responseHeaders)
         {
-            return JsonConvert.DeserializeObject<T>(RestClient.Post(data, uri));
+            string p = RestClient.Post(data, uri, requestHeaders, out responseHeaders);
+            return JsonConvert.DeserializeObject<T>(p);
         }
 
-        protected T Get<T>(string uri)
-        {
-            return JsonConvert.DeserializeObject<T>(RestClient.Get(uri));
-        }
+        //protected T Get<T>(string uri)
+        //{
+        //    return JsonConvert.DeserializeObject<T>(RestClient.Get(uri));
+        //}
 
         public SixCloudMethordBase()
         {

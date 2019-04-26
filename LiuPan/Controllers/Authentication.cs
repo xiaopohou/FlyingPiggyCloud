@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SixCloud.Models;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -19,13 +20,13 @@ namespace SixCloud.Controllers
             {
                 { "phone", phoneNumber },
             };
-            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v1/user/sendRegisterMessage");
+            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendRegisterMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
         }
 
         /// <summary>
         /// 发起注册请求
         /// </summary>
-        /// <param name="name">用户名</param>
+        /// <param name="name">用户名：已弃用</param>
         /// <param name="code">手机验证码</param>
         /// <param name="passwordMD5">密码MD5</param>
         /// <param name="phoneInfo">该参数来自验证码请求的返回体</param>
@@ -34,16 +35,16 @@ namespace SixCloud.Controllers
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
-                { "name", name },
+                //{ "name", name },
                 {"password", passwordMD5 },
                 {"code",code },
                 {"phoneInfo", phoneInfo }
             };
-            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v1/user/register");
-            if (string.IsNullOrEmpty(x.Token))
-            {
-                Token = x.Token;
-            }
+            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/register", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            //if (string.IsNullOrEmpty(x.Token))
+            //{
+            //    Token = x.Token;
+            //}
             return x;
         }
 
@@ -60,8 +61,8 @@ namespace SixCloud.Controllers
                 { "value", value },
                 { "password", passwordMD5 }
             };
-            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v1/user/login");
-            Token = x.Token;
+            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/login", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
 
@@ -78,8 +79,8 @@ namespace SixCloud.Controllers
                 { "phoneInfo", phoneInfo },
                 { "code", code }
             };
-            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v1/user/loginByMessage");
-            Token = x.Token;
+            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/loginWithMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
 
@@ -95,10 +96,13 @@ namespace SixCloud.Controllers
             {
                 { "OldPassword", oldPasswordMD5 },
                 {"newPassword", newPasswordMD5 },
-                {"token",Token },
+                //{"token",Token },
             };
-            GenericResult<object> x = Post<GenericResult<object>>(JsonConvert.SerializeObject(data), "v1/user/changePassword");
-            Token = x.Token;
+            GenericResult<object> x = Post<GenericResult<object>>(JsonConvert.SerializeObject(data), "v2/user/changePassword", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x.Success;
         }
 
@@ -113,7 +117,7 @@ namespace SixCloud.Controllers
             {
                 { "phone", phoneNumber },
             };
-            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v1/user/sendChangePasswordMessage2");
+            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendChangePasswordMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
         }
 
         /// <summary>
@@ -128,10 +132,10 @@ namespace SixCloud.Controllers
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "phoneInfo", phoneInfo },
-                {"newPassword", newPasswordMD5 },
+                {"password", newPasswordMD5 },
                 {"code",code },
             };
-            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v1/user/changePasswordByMessage2");
+            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/changePasswordWithMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
             //Token = x.Token;
             return x;
         }
