@@ -133,9 +133,12 @@
     <Compile Include="Controllers\TaskBarButton.cs" />
     <Compile Include="Controllers\TransmissionProgressController.cs" />
     <Compile Include="Models\DownloadTask.cs" />
+    <Compile Include="Models\OnlineClient.cs" />
+    <Compile Include="Models\OnlineDeviceList.cs" />
     <Compile Include="Models\PreviewImageInformation.cs" />
     <Compile Include="Models\PreviewVideoInformation.cs" />
     <Compile Include="Models\RecoverableUploadTaskArchive.cs" />
+    <Compile Include="Models\SelfClient.cs" />
     <Compile Include="Models\SingleFileUploadTask.cs" />
     <Compile Include="Models\UploadTask.cs" />
     <Compile Include="ViewModels\AsyncCommand.cs" />
@@ -158,6 +161,9 @@
     <Compile Include="ViewModels\UserInformationVIewModel.cs" />
     <Compile Include="ViewModels\ValidationRules\PhoneNumber.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\LogoutOthersView.xaml.cs">
+      <DependentUpon>LogoutOthersView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PreView.xaml.cs">
       <DependentUpon>PreView.xaml</DependentUpon>
     </Compile>
@@ -198,6 +204,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\LogoutOthersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PreView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

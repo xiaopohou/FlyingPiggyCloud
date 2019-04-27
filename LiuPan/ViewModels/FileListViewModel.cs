@@ -69,7 +69,7 @@ namespace SixCloud.ViewModels
                 do
                 {
                     GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage);
-                    if (x.Success)
+                    if (x.Success&&x.Result.DictionaryInformation!=null)
                     {
                         totalPage = x.Result.TotalPage;
                         CurrentPath = x.Result.DictionaryInformation.Path;

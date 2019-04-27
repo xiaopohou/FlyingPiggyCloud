@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SixCloud.Models;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography;
@@ -62,6 +63,11 @@ namespace SixCloud.Controllers
                 { "password", passwordMD5 }
             };
             GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/login", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            if (!x.Success && x.Code == "LOGIN_USER_TOO_MUCH")
+            {
+                Token = null;
+                throw new LoginUserTooMuchException(webHeaderCollection.Get("qingzhen-token"), x.Message, x);
+            }
             Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
@@ -80,6 +86,61 @@ namespace SixCloud.Controllers
                 { "code", code }
             };
             GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/loginWithMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            if (!x.Success && x.Code == "LOGIN_USER_TOO_MUCH")
+            {
+                Token = null;
+                throw new LoginUserTooMuchException(webHeaderCollection.Get("qingzhen-token"), x.Message, x);
+            }
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
+
+        /// <summary>
+        /// 获取当前登录的其他设备列表
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public GenericResult<OnlineDeviceList> GetOnlineDeviceList(string token, out string nextToken)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            GenericResult<OnlineDeviceList> x = Post<GenericResult<OnlineDeviceList>>(JsonConvert.SerializeObject(data), "v2/user/online", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",token }
+            }, out WebHeaderCollection webHeaderCollection);
+            nextToken = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
+
+        /// <summary>
+        /// 根据ssid踢掉设备
+        /// </summary>
+        /// <param name="ssidArray"></param>
+        /// <returns></returns>
+        public GenericResult<bool?> LogoutOnlineDevices(string token, string[] ssidArray)
+        {
+            Dictionary<string, string[]> data = new Dictionary<string, string[]>
+            {
+                {"ssid",ssidArray }
+            };
+            GenericResult<bool?> x = Post<GenericResult<bool?>>(JsonConvert.SerializeObject(data), "v2/user/logoutOther", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",token }
+            }, out WebHeaderCollection webHeaderCollection);
+            return x;
+        }
+
+        /// <summary>
+        /// 获取用户信息（用于刷新Token）
+        /// </summary>
+        /// <param name="ssidArray"></param>
+        /// <returns></returns>
+        public GenericResult<UserInformation> GetUserInformation()
+        {
+            Dictionary<string, string[]> data = new Dictionary<string, string[]>();
+            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/info", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
             Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
@@ -162,6 +223,19 @@ namespace SixCloud.Controllers
 
             // Return the hexadecimal string.
             return sBuilder.ToString();
+        }
+
+        public class LoginUserTooMuchException : Exception
+        {
+            public LoginUserTooMuchException(string token, string message, GenericResult<UserInformation> response) : base(message)
+            {
+                Token = token;
+                Response = response;
+            }
+
+            public string Token { get; set; }
+
+            public GenericResult<UserInformation> Response { get; set; }
         }
     }
 }

@@ -3,6 +3,7 @@ using SixCloud.Models;
 using SixCloud.Views;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace SixCloud.ViewModels
@@ -18,15 +19,28 @@ namespace SixCloud.ViewModels
 
         private async void SignIn(object param)
         {
+            //如果允许自动登录，且保存了上一次的Token，则自动登录
+            if (IsAutoSignIn && !string.IsNullOrEmpty(LocalProperties.Token))
+            {
+                Window.GetWindow(param as PasswordBox).Close();
+                GenericResult<UserInformation> x = await Task.Run(() => authentication.GetUserInformation());
+                if (x.Success)
+                {
+                    new MainFrame(x.Result).Show();
+                    return;
+                }
+            }
+            //如果密码框中输入了信息，则使用密码框中的密码登陆
             if (param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
             {
+                string passwordMD5 = authentication.UserMd5(passwordBox.Password);
                 GenericResult<UserInformation> x = await Task.Run(() =>
                 {
-                    return authentication.LoginByPassword(PhoneNumber, authentication.UserMd5(passwordBox.Password));
+                    return LoginOperate(passwordMD5);
                 });
                 if (x.Success)
                 {
-                    System.Windows.Window.GetWindow(passwordBox).Close();
+                    Window.GetWindow(passwordBox).Close();
                     new MainFrame(x.Result).Show();
                     if (IsRememberPassword)
                     {
@@ -40,31 +54,63 @@ namespace SixCloud.ViewModels
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show(x.Message, "登陆失败");
+                    MessageBox.Show(x.Message, "登陆失败");
                 }
             }
+            //如果允许保存密码，且保存了上次登录的密码，且密码框为空，则使用上次保存的密码的md5登陆
             else if (IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
             {
-                GenericResult<UserInformation> x = await Task.Run(() =>
+                string passwordMD5 = LocalProperties.Password;
+                GenericResult<UserInformation> x = await Task.Run(async () =>
                 {
-                    return authentication.LoginByPassword(PhoneNumber, LocalProperties.Password);
+                    return await LoginOperate(passwordMD5);
                 });
+
                 if (x.Success)
                 {
                     LocalProperties.UserName = PhoneNumber;
-                    System.Windows.Window.GetWindow(param as PasswordBox).Close();
+                    Window.GetWindow(param as PasswordBox).Close();
                     new MainFrame(x.Result).Show();
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show(x.Message, "登陆失败");
+                    MessageBox.Show(x.Message, "登陆失败");
                     LocalProperties.Password = "";
                     OnPropertyChanged("PasswordBoxHint");
                 }
             }
             else
             {
-                System.Windows.MessageBox.Show("要登陆，请输入密码");
+                MessageBox.Show("要登陆，请输入密码");
+            }
+
+
+            async Task<GenericResult<UserInformation>> LoginOperate(string passwordMD5)
+            {
+                try
+                {
+                    return authentication.LoginByPassword(PhoneNumber, passwordMD5);
+                }
+                catch (Authentication.LoginUserTooMuchException ex)
+                {
+                    GenericResult<OnlineDeviceList> getOnlineDeviceList = authentication.GetOnlineDeviceList(ex.Token, out string nextToken);
+                    if (getOnlineDeviceList.Success)
+                    {
+                        string[] devicesSSID = await App.Current.Dispatcher.InvokeAsync(() =>
+                        {
+                            LogoutOthersViewModels logoutOthersViewModels = new LogoutOthersViewModels(getOnlineDeviceList);
+                            logoutOthersViewModels.ShowDialog();
+                            string[] list = logoutOthersViewModels.DevicesSSID;
+                            return list;
+                        });
+                        GenericResult<bool?> x = authentication.LogoutOnlineDevices(nextToken, devicesSSID);
+                        if (x.Result == true)
+                        {
+                            return await LoginOperate(passwordMD5);
+                        }
+                    }
+                    return ex.Response;
+                }
             }
         }
 
