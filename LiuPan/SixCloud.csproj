@@ -139,6 +139,7 @@
     <Compile Include="Models\PreviewVideoInformation.cs" />
     <Compile Include="Models\RecoverableUploadTaskArchive.cs" />
     <Compile Include="Models\RecoveryBoxItem.cs" />
+    <Compile Include="Models\RecoveryBoxPage.cs" />
     <Compile Include="Models\SelfClient.cs" />
     <Compile Include="Models\SingleFileUploadTask.cs" />
     <Compile Include="Models\UploadTask.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="ViewModels\FileListItemViewModel.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\FileSystemViewModel.cs" />
+    <Compile Include="ViewModels\LogoutOthersViewModels.cs" />
     <Compile Include="ViewModels\MainFrameViewModel.cs" />
     <Compile Include="ViewModels\TransferListViewModel.cs" />
     <Compile Include="ViewModels\UploadedListViewModel.cs" />
@@ -161,6 +163,7 @@
     <Compile Include="ViewModels\UploadingTaskViewModel.cs" />
     <Compile Include="ViewModels\UserInformationVIewModel.cs" />
     <Compile Include="ViewModels\ValidationRules\PhoneNumber.cs" />
+    <Compile Include="ViewModels\ValidationRules\RejectNullOrEmptyString.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\LogoutOthersView.xaml.cs">
       <DependentUpon>LogoutOthersView.xaml</DependentUpon>

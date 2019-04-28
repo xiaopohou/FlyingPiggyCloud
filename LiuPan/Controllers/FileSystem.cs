@@ -7,7 +7,7 @@ using System.Net;
 
 namespace SixCloud.Controllers
 {
-    internal class FileSystem : SixCloudMethordBase
+    internal sealed class FileSystem : SixCloudMethordBase
     {
         /// <summary>
         /// 请求的时候，如果 name 和 path均为空，则会返回根目录
@@ -261,7 +261,7 @@ namespace SixCloud.Controllers
 
         }
 
-        public GenericResult<RecoveryBoxPage>GetRecoveryBoxPage(int page=1,int pageSize=20)
+        public GenericResult<RecoveryBoxPage> GetRecoveryBoxPage(int page = 1, int pageSize = 20)
         {
             while (string.IsNullOrWhiteSpace(Token))
             {
@@ -321,5 +321,10 @@ namespace SixCloud.Controllers
             //Token = x.Token;
             //return x;
         }
+    }
+
+    internal sealed class OfflineDownloader : SixCloudMethordBase
+    {
+
     }
 }
