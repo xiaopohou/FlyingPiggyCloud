@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SixCloud.Models;
+using SixCloud.Views;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -151,20 +152,24 @@ namespace SixCloud.Controllers
         /// <param name="oldPasswordMD5">旧密码</param>
         /// <param name="newPasswordMD5">新密码</param>
         /// <returns></returns>
-        public bool ChangePasswordByOldPassword(string oldPasswordMD5, string newPasswordMD5)
+        public GenericResult<bool> ChangePasswordByOldPassword(string oldPasswordMD5, string newPasswordMD5)
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "OldPassword", oldPasswordMD5 },
                 {"newPassword", newPasswordMD5 },
-                //{"token",Token },
             };
-            GenericResult<object> x = Post<GenericResult<object>>(JsonConvert.SerializeObject(data), "v2/user/changePassword", new Dictionary<string, string>
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/changePassword", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);
             Token = webHeaderCollection.Get("qingzhen-token");
-            return x.Success;
+            return x;
         }
 
         /// <summary>
@@ -198,6 +203,30 @@ namespace SixCloud.Controllers
             };
             GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/changePasswordWithMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
             //Token = x.Token;
+            return x;
+        }
+
+        /// <summary>
+        /// 登陆后修改用户名
+        /// </summary>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public GenericResult<bool> ChangeUserName(string newName)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "name", newName },
+            };
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/changeName", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
             return x;
         }
 

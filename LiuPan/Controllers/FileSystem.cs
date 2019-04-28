@@ -19,7 +19,7 @@ namespace SixCloud.Controllers
         /// <param name="OrderBy">排序：0按文件名，1按时间</param>
         /// <param name="Type">文件类型：0显示文件，1显示文件夹，-1显示文件和文件夹(默认)</param>
         /// <returns></returns>
-        public GenericResult<FileListPage> GetDirectory(string parent = "", string path = "", int? page = null, int? pageSize = null)
+        public GenericResult<FileListPage> GetDirectory(string parent = "", string path = "", int? page = null, int? pageSize = null, int orderBy = 1)
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
             if (parent != "")
@@ -38,6 +38,7 @@ namespace SixCloud.Controllers
             {
                 data.Add("pageSize", pageSize);
             }
+            data.Add("orderBy", 1);
             while (string.IsNullOrWhiteSpace(Token))
             {
                 LoginView GetToken = new LoginView();
@@ -170,22 +171,24 @@ namespace SixCloud.Controllers
         /// <param name="SourceMeta">被重命名的项目</param>
         /// <param name="newName">新名称</param>
         /// <returns></returns>
-        public void Rename(string uuid, string newName)
+        public GenericResult<bool> Rename(string uuid, string newName)
         {
-#warning 这里的代码没有完成
-            //while (string.IsNullOrWhiteSpace(Token))
-            //{
-            //    LoginView GetToken = new LoginView();
-            //    GetToken.ShowDialog();
-            //}
-            //Dictionary<string, string> data = new Dictionary<string, string>
-            //{
-            //    { "uuid", uuid },
-            //    { "name", newName },
-            //    { "token", Token }
-            //};
-            //Dictionary<string, string> x = Post<Dictionary<string, string>>(JsonConvert.SerializeObject(data), "v1/files/rename");
-            //Token = x["token"];
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            Dictionary<string, object> data = new Dictionary<string, object>
+            {
+                { "identity", uuid },
+                { "name", newName }
+            };
+            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/rename", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
         }
 
         /// <summary>
@@ -250,6 +253,27 @@ namespace SixCloud.Controllers
                 { "identitiy", UUID },
             };
             GenericResult<FileMetaData> x = Post<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "v2/files/get", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+
+        }
+
+        public GenericResult<RecoveryBoxPage>GetRecoveryBoxPage(int page=1,int pageSize=20)
+        {
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            Dictionary<string, int> data = new Dictionary<string, int>
+            {
+                { "page", page },
+                { "pageSize", pageSize }
+            };
+            GenericResult<RecoveryBoxPage> x = Post<GenericResult<RecoveryBoxPage>>(JsonConvert.SerializeObject(data), "v2/trash/page", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);

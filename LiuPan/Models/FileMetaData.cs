@@ -59,7 +59,7 @@ namespace SixCloud.Models
         public int Type { get; set; }
 
         /// <summary>
-        /// 不知道干什么的
+        /// 指示是否为目录
         /// </summary>
         [JsonProperty(PropertyName = "directory")]
         public bool Directory { get; set; }
@@ -140,4 +140,21 @@ namespace SixCloud.Models
 
     }
 
+    internal class RecoveryBoxPage
+    {
+        [JsonProperty(PropertyName = "list")]
+        public RecoveryBoxItem[] List { get; set; }
+
+        [JsonProperty(PropertyName = "totalCount")]
+        public int TotalCount { get; set; }
+
+        [JsonProperty(PropertyName = "totalPage")]
+        public int TotalPage { get; set; }
+
+        [JsonProperty(PropertyName = "page")]
+        public int Page { get; set; }
+
+        [JsonProperty(PropertyName = "pageSize")]
+        public int PageSize { get; set; }
+    }
 }
