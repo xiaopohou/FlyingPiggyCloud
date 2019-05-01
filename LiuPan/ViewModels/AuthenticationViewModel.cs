@@ -19,14 +19,16 @@ namespace SixCloud.ViewModels
 
         private async void SignIn(object param)
         {
+            LoginingElement = Visibility.Visible;
+            OnPropertyChanged(nameof(LoginingElement));
             //如果允许自动登录，且保存了上一次的Token，则自动登录
             if (IsAutoSignIn && !string.IsNullOrEmpty(LocalProperties.Token))
             {
-                Window.GetWindow(param as PasswordBox).Close();
                 GenericResult<UserInformation> x = await Task.Run(() => authentication.GetUserInformation());
                 if (x.Success)
                 {
                     new MainFrame(x.Result).Show();
+                    Window.GetWindow(param as PasswordBox).Close();
                     return;
                 }
             }
@@ -83,6 +85,8 @@ namespace SixCloud.ViewModels
             {
                 MessageBox.Show("要登陆，请输入密码");
             }
+            LoginingElement = Visibility.Collapsed;
+            OnPropertyChanged(nameof(LoginingElement));
 
 
             async Task<GenericResult<UserInformation>> LoginOperate(string passwordMD5)
@@ -204,6 +208,8 @@ namespace SixCloud.ViewModels
                 OnPropertyChanged("PhoneNumber");
             }
         }
+
+        public Visibility LoginingElement { get; private set; } = Visibility.Collapsed;
 
         public DependencyCommand SignInCommand { get; private set; }
 

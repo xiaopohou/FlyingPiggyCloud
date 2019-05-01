@@ -1,6 +1,5 @@
 ﻿using SixCloud.Controllers;
 using SixCloud.Models;
-using SixCloud.Views;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
@@ -23,10 +22,12 @@ namespace SixCloud.ViewModels
 
         public bool Preview { get; set; }
 
-        /// <summary>
-        /// 0为文件，1为目录
-        /// </summary>
-        public int Type { get; set; }
+        ///// <summary>
+        ///// 0为文件，1为目录
+        ///// </summary>
+        //public int Type { get; set; }
+
+        public bool Directory { get; set; }
 
         public string Size { get; set; }
 
@@ -159,7 +160,7 @@ namespace SixCloud.ViewModels
 
         private bool CanDownload(object parameter)
         {
-            return Type == 0 ? true : false;
+            return !Directory;
         }
         #endregion
 
@@ -262,7 +263,7 @@ namespace SixCloud.ViewModels
             CTime = Calculators.UnixTimeStampConverter(fileMetaData.Ctime);
             Locking = fileMetaData.Locking;
             Preview = fileMetaData.Preview;
-            Type = fileMetaData.Type;
+            Directory = fileMetaData.Directory;
             Size = Calculators.SizeCalculator(fileMetaData.Size);
             UUID = fileMetaData.UUID;
 
@@ -274,14 +275,14 @@ namespace SixCloud.ViewModels
             DownloadCommand = new DependencyCommand(Download, CanDownload);
             MoreCommand = new DependencyCommand(More, AlwaysCan);
 
-            if (Type == 0)
+            if (Directory)
             {
-                string eName = System.IO.Path.GetExtension(Name);
-                Icon = IconDictionary.ContainsKey(eName) ? IconDictionary[eName] : IconDictionary["default"];
+                Icon = IconDictionary["folder"];
             }
             else
             {
-                Icon = IconDictionary["folder"];
+                string eName = System.IO.Path.GetExtension(Name);
+                Icon = IconDictionary.ContainsKey(eName) ? IconDictionary[eName] : IconDictionary["default"];
             }
         }
     }

@@ -95,7 +95,7 @@ namespace SixCloud.Controllers
         /// <param name="SourceMeta">被移动的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public GenericResult<int> Move(string sourceUUID, string targetDirectoryUUID)
+        public GenericResult<int?> Move(string sourceUUID, string targetDirectoryUUID)
         {
             Dictionary<string, object> data = new Dictionary<string, object>
             {
@@ -107,7 +107,7 @@ namespace SixCloud.Controllers
                 LoginView GetToken = new LoginView();
                 GetToken.ShowDialog();
             }
-            GenericResult<int> x = Post<GenericResult<int>>(JsonConvert.SerializeObject(data), "v2/user/move", new Dictionary<string, string>
+            GenericResult<int?> x = Post<GenericResult<int?>>(JsonConvert.SerializeObject(data), "v2/files/move", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);
@@ -121,7 +121,7 @@ namespace SixCloud.Controllers
         /// <param name="SourceMeta">被复制的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public GenericResult<int> Copy(string sourceUUID, string targetDirectoryUUID)
+        public GenericResult<int?> Copy(string sourceUUID, string targetDirectoryUUID)
         {
             Dictionary<string, object> data = new Dictionary<string, object>
             {
@@ -133,7 +133,7 @@ namespace SixCloud.Controllers
                 LoginView GetToken = new LoginView();
                 GetToken.ShowDialog();
             }
-            GenericResult<int> x = Post<GenericResult<int>>(JsonConvert.SerializeObject(data), "v2/user/copy", new Dictionary<string, string>
+            GenericResult<int?> x = Post<GenericResult<int?>>(JsonConvert.SerializeObject(data), "v2/files/copy", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);
@@ -146,7 +146,7 @@ namespace SixCloud.Controllers
         /// </summary>
         /// <param name="uuid">被删除的项目</param>
         /// <returns></returns>
-        public GenericResult<int> Remove(string uuid)
+        public GenericResult<int?> Remove(string uuid)
         {
             Dictionary<string, object> data = new Dictionary<string, object>
             {
@@ -157,7 +157,7 @@ namespace SixCloud.Controllers
                 LoginView GetToken = new LoginView();
                 GetToken.ShowDialog();
             }
-            GenericResult<int> x = Post<GenericResult<int>>(JsonConvert.SerializeObject(data), "v2/user/delete", new Dictionary<string, string>
+            GenericResult<int?> x = Post<GenericResult<int?>>(JsonConvert.SerializeObject(data), "v2/files/delete", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);
@@ -183,7 +183,7 @@ namespace SixCloud.Controllers
                 { "identity", uuid },
                 { "name", newName }
             };
-            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/rename", new Dictionary<string, string>
+            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/files/rename", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);

@@ -4,12 +4,11 @@ namespace SixCloud.Models
 {
     public class UploadToken
     {
-        [JsonProperty(PropertyName = "hashCached")]
-        public bool HashCached { get; set; }
-
-
         [JsonProperty(PropertyName = "uploadInfo")]
         public Information UploadInfo { get; set; }
+
+        [JsonProperty(PropertyName = "hashCached")]
+        public bool HashCached { get; set; }
 
         public class Information
         {
@@ -17,7 +16,7 @@ namespace SixCloud.Models
             public string Token { get; set; }
 
             [JsonProperty(PropertyName = "type")]
-            public int Type { get; set; }
+            public string Type { get; set; }
 
             [JsonProperty(PropertyName = "uploadUrl")]
             public string UploadUrl { get; set; }

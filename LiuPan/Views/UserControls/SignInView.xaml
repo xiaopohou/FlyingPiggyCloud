@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:validationrules="clr-namespace:SixCloud.ViewModels.ValidationRules">
+             xmlns:validationrules="clr-namespace:SixCloud.ViewModels.ValidationRules"
+             xmlns:controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -50,7 +51,17 @@
         <Button Grid.Row="4" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
                 Command="{Binding SignInCommand}" 
                 CommandParameter="{Binding ElementName=PasswordBox}"
-                Margin="28 0" 
-                Content="登陆"/>
+                Margin="28 0">
+            <StackPanel Orientation="Horizontal">
+                <controls:FontIcon Visibility="{Binding LoginingElement}" Icon="&#xf2f1;" Margin="5,0">
+                    <controls:FontIcon.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform CenterX="8" CenterY="9" Angle="0" x:Name="SyncIconRotate"/>
+                        </TransformGroup>
+                    </controls:FontIcon.RenderTransform>
+                </controls:FontIcon>
+                <TextBlock Text="登陆" RenderTransformOrigin="0.5,0.5"/>
+            </StackPanel>
+        </Button>
     </Grid>
 </UserControl>

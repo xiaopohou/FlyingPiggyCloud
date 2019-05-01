@@ -22,7 +22,7 @@ namespace SixCloud.Views.UserControls
             {
                 if (lvItem.DataContext is FileListItemViewModel fileListItem && DataContext is FileListViewModel dataContext)
                 {
-                    if (fileListItem.Type == 1)
+                    if (fileListItem.Directory)
                     {
                         dataContext.NavigateByUUID(fileListItem.UUID);
                     }
