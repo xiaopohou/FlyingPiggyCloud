@@ -1,7 +1,6 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:SixCloudCustomControlLibrary">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/LightButton.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroWindow.xaml"/>
@@ -10,7 +9,11 @@
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroMenuTabItem.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroFocusButton.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/FontIcon.xaml"/>
+        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/LightTabControl.xaml"/>
+        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/LightTabItem.xaml"/>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/RenamableTextBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FF61BF83"/>
+    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF75D397"/>
+    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FF4DAB6F"/>
 </ResourceDictionary>

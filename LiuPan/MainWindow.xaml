@@ -8,10 +8,27 @@
         xmlns:ctl="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
         mc:Ignorable="d"
         MinHeight="450" Height="450" Width="800" MetroWindowLayout="WideAngle">
-    <StackPanel>
-        <Button Content="HelloWorld" Click="Button_Click" Style="{StaticResource MaterialDesignFlatAccentButton}" FocusVisualStyle="{x:Null}"/>
-        <Button Click="Button_Click_2"/>
-        <Button Click="Button_Click_1"/>
-        <Button Click="Button_Click_3"/>
-    </StackPanel>
+    <ctl:MetroWindow.Resources>
+    </ctl:MetroWindow.Resources>
+    <ctl:LightTabControl>
+        <ctl:LightTabItem>
+            <Grid Margin="0">
+                <Button Content="HelloWorld" Click="Button_Click" Style="{StaticResource MaterialDesignFlatAccentButton}" FocusVisualStyle="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+        </ctl:LightTabItem>
+        <ctl:LightTabItem>
+            <Rectangle Width="100" Height="100">
+                <Rectangle.Fill>
+                    <RadialGradientBrush GradientOrigin="0,0.5" Center="0,0.5" RadiusY="0.6" RadiusX="0.4" Opacity="0.75">
+                        <GradientStop Color="White" Offset="0"/>
+                        <GradientStop Color="#00000000" Offset="1"/>
+                    </RadialGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </ctl:LightTabItem>
+        <ctl:LightTabItem/>
+        <ctl:LightTabItem/>
+        <ctl:LightTabItem/>
+        <!--<TabItem/>-->
+    </ctl:LightTabControl>
 </ctl:MetroWindow>
