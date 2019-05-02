@@ -73,11 +73,11 @@ namespace SixCloud.ViewModels
 
         private void Copy(object parameter)
         {
-            Parent.CopyList = new string[]
+            FileListViewModel.CopyList = new string[]
             {
                     UUID
             };
-            Parent.CutList = null;
+            FileListViewModel.CutList = null;
             Parent.StickCommand.OnCanExecutedChanged(this, new EventArgs());
         }
         #endregion
@@ -87,11 +87,11 @@ namespace SixCloud.ViewModels
 
         private void Cut(object parameter)
         {
-            Parent.CutList = new string[]
+            FileListViewModel.CutList = new string[]
             {
                     UUID
             };
-            Parent.CopyList = null;
+            FileListViewModel.CopyList = null;
             Parent.StickCommand.OnCanExecutedChanged(this, new EventArgs());
         }
         #endregion

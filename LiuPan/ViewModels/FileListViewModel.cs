@@ -13,9 +13,36 @@ namespace SixCloud.ViewModels
 {
     internal class FileListViewModel : FileSystemViewModel
     {
-        public string[] CopyList { get; set; }
+        public static string[] CopyList
+        {
+            get => s_copyList;
+            set
+            {
+                lock (_copyListSyncRoot)
+                {
+                    s_copyList = value;
+                }
+            }
+        }
+        private static object _copyListSyncRoot = new object();
 
-        public string[] CutList { get; set; }
+        public static string[] CutList
+        {
+            get => _cutList;
+            set
+            {
+                lock (_cutListSyncRoot)
+                {
+                    _cutList = value;
+                }
+            }
+        }
+        private static object _cutListSyncRoot = new object();
+
+        static FileListViewModel()
+        {
+
+        }
 
         public List<string> PathArray { get; set; } = new List<string>();
 
@@ -50,8 +77,15 @@ namespace SixCloud.ViewModels
             {
                 if (autoCreate)
                 {
-                    await Task.Run(() => fileSystem.CreatDirectory(Path: path));
-                    await GetFileListByPath(path);
+                    GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(Path: path));
+                    if (x.Success)
+                    {
+                        await GetFileListByPath(x.Result.Path);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它既不能找到也无法创建您想要的对象。服务器返回：{x.Message}", "找不到对象", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 else
                 {
@@ -270,6 +304,8 @@ namespace SixCloud.ViewModels
         /// 为前进按钮保存历史路径
         /// </summary>
         private Stack<string> nextPath = new Stack<string>();
+        private static string[] s_copyList;
+        private static string[] _cutList;
         #endregion
         #endregion
 
