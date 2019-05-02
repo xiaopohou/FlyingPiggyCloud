@@ -97,7 +97,7 @@ namespace SixCloud.ViewModels
         #endregion
 
         #region Delete
-        public DependencyCommand DeleteCommand { get; private set; }
+        public AsyncCommand DeleteCommand { get; private set; }
 
         private void Delete(object parameter)
         {
@@ -118,7 +118,7 @@ namespace SixCloud.ViewModels
         #endregion
 
         #region Confirm
-        public DependencyCommand ConfirmCommand { get; private set; }
+        public AsyncCommand ConfirmCommand { get; private set; }
 
         private void Confirm(object parameter)
         {
@@ -269,9 +269,9 @@ namespace SixCloud.ViewModels
 
             CopyCommand = new DependencyCommand(Copy, AlwaysCan);
             CutCommand = new DependencyCommand(Cut, AlwaysCan);
-            DeleteCommand = new DependencyCommand(Delete, AlwaysCan);
+            DeleteCommand = new AsyncCommand(Delete, AlwaysCan);
             RenameCommand = new DependencyCommand(Rename, AlwaysCan);
-            ConfirmCommand = new DependencyCommand(Confirm, CanConfirm);
+            ConfirmCommand = new AsyncCommand(Confirm, CanConfirm);
             DownloadCommand = new DependencyCommand(Download, CanDownload);
             MoreCommand = new DependencyCommand(More, AlwaysCan);
 

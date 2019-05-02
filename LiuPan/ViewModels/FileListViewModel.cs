@@ -31,27 +31,27 @@ namespace SixCloud.ViewModels
         /// </summary>
         private IEnumerator<FileMetaData[]> fileMetaDataEnumerator;
 
-        public void NavigateByUUID(string uuid)
+        public async void NavigateByUUID(string uuid)
         {
             previousPath.Push(CurrentPath);
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
-            GetFileListByUUID(uuid);
+            await GetFileListByUUID(uuid);
         }
 
-        public void NavigateByPath(string path, bool autoCreate = false)
+        public async void NavigateByPath(string path, bool autoCreate = false)
         {
             previousPath.Push(CurrentPath);
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
             try
             {
-                GetFileListByPath(path);
+                await GetFileListByPath(path);
             }
             catch (DirectoryNotFoundException ex)
             {
                 if (autoCreate)
                 {
-                    fileSystem.CreatDirectory(Path: path);
-                    GetFileListByPath(path);
+                    await Task.Run(() => fileSystem.CreatDirectory(Path: path));
+                    await GetFileListByPath(path);
                 }
                 else
                 {
@@ -60,7 +60,7 @@ namespace SixCloud.ViewModels
             }
         }
 
-        private void GetFileListByPath(string path)
+        private async Task GetFileListByPath(string path)
         {
             IEnumerable<FileMetaData[]> GetFileList()
             {
@@ -69,7 +69,7 @@ namespace SixCloud.ViewModels
                 do
                 {
                     GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage);
-                    if (x.Success&&x.Result.DictionaryInformation!=null)
+                    if (x.Success && x.Result.DictionaryInformation != null)
                     {
                         totalPage = x.Result.TotalPage;
                         CurrentPath = x.Result.DictionaryInformation.Path;
@@ -85,21 +85,22 @@ namespace SixCloud.ViewModels
                 yield break;
             }
 
-            void callback()
+            App.Current.Dispatcher.Invoke(() => FileList.Clear());
+            await Task.Run(() =>
             {
+                fileMetaDataEnumerator = GetFileList().GetEnumerator();
                 fileMetaDataEnumerator.MoveNext();
+            });
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 foreach (FileMetaData a in fileMetaDataEnumerator.Current)
                 {
                     FileList.Add(new FileListItemViewModel(this, a));
                 }
-            }
-
-            App.Current.Dispatcher.Invoke(() => FileList.Clear());
-            fileMetaDataEnumerator = GetFileList().GetEnumerator();
-            App.Current.Dispatcher.Invoke(callback);
+            });
         }
 
-        private void GetFileListByUUID(string uuid)
+        private async Task GetFileListByUUID(string uuid)
         {
             IEnumerable<FileMetaData[]> GetFileList()
             {
@@ -124,17 +125,20 @@ namespace SixCloud.ViewModels
                 yield break;
             }
 
-            void callback()
+
+            App.Current.Dispatcher.Invoke(() => FileList.Clear());
+            await Task.Run(() =>
             {
+                fileMetaDataEnumerator = GetFileList().GetEnumerator();
                 fileMetaDataEnumerator.MoveNext();
+            });
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 foreach (FileMetaData a in fileMetaDataEnumerator.Current)
                 {
                     FileList.Add(new FileListItemViewModel(this, a));
                 }
-            }
-            App.Current.Dispatcher.Invoke(() => FileList.Clear());
-            fileMetaDataEnumerator = GetFileList().GetEnumerator();
-            App.Current.Dispatcher.Invoke(callback);
+            });
         }
 
         public void LazyLoad()
@@ -204,10 +208,7 @@ namespace SixCloud.ViewModels
                     try
                     {
                         string path = previousPath.Pop();
-                        await Task.Run(() =>
-                        {
-                            GetFileListByPath(path);
-                        });
+                        await GetFileListByPath(path);
                         success = true;
                         //CreatePathArray(path);
                     }
@@ -246,10 +247,7 @@ namespace SixCloud.ViewModels
                     try
                     {
                         string path = nextPath.Pop();
-                        await Task.Run(() =>
-                        {
-                            GetFileListByPath(path);
-                        });
+                        await GetFileListByPath(path);
                         success = true;
                         //CreatePathArray(path);
                     }
@@ -279,11 +277,11 @@ namespace SixCloud.ViewModels
         #region NewFolderCommand
         public DependencyCommand NewFolderCommand { get; private set; }
 
-        private void NewFolder(object parameter)
+        private async void NewFolder(object parameter)
         {
             if (TextInputDialog.Show(out string FolderName, "请输入新文件夹的名字", "新建文件夹") && !FolderName.Contains("/"))
             {
-                GenericResult<FileMetaData> x = fileSystem.CreatDirectory(FolderName, CurrentUUID);
+                GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(FolderName, CurrentUUID));
                 if (!x.Success)
                 {
                     MessageBox.Show("创建失败：" + x.Message);
@@ -297,7 +295,7 @@ namespace SixCloud.ViewModels
 
         private async void Stick(object parameter)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 if (CopyList != null && CopyList.Length > 0)
                 {
@@ -326,7 +324,7 @@ namespace SixCloud.ViewModels
                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
                 }
                 MessageBox.Show("由于复制和剪切属于异步操作，您可能需要等待几秒钟才能看到结果", "粘贴中");
-                GetFileListByPath(CurrentPath);
+                await GetFileListByPath(CurrentPath);
             });
 
         }

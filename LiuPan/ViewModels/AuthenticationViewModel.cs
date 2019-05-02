@@ -31,6 +31,7 @@ namespace SixCloud.ViewModels
                     Window.GetWindow(param as PasswordBox).Close();
                     return;
                 }
+
             }
             //如果密码框中输入了信息，则使用密码框中的密码登陆
             if (param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
@@ -93,11 +94,12 @@ namespace SixCloud.ViewModels
             {
                 try
                 {
-                    return authentication.LoginByPassword(PhoneNumber, passwordMD5);
+                    return await Task.Run(() => authentication.LoginByPassword(PhoneNumber, passwordMD5));
                 }
                 catch (Authentication.LoginUserTooMuchException ex)
                 {
-                    GenericResult<OnlineDeviceList> getOnlineDeviceList = authentication.GetOnlineDeviceList(ex.Token, out string nextToken);
+                    string nextToken = null;
+                    GenericResult<OnlineDeviceList> getOnlineDeviceList = await Task.Run(() => authentication.GetOnlineDeviceList(ex.Token, out nextToken));
                     if (getOnlineDeviceList.Success)
                     {
                         string[] devicesSSID = await App.Current.Dispatcher.InvokeAsync(() =>
@@ -107,7 +109,7 @@ namespace SixCloud.ViewModels
                             string[] list = logoutOthersViewModels.DevicesSSID;
                             return list;
                         });
-                        GenericResult<bool?> x = authentication.LogoutOnlineDevices(nextToken, devicesSSID);
+                        GenericResult<bool?> x = await Task.Run(() => authentication.LogoutOnlineDevices(nextToken, devicesSSID));
                         if (x.Result == true)
                         {
                             return await LoginOperate(passwordMD5);
@@ -116,6 +118,7 @@ namespace SixCloud.ViewModels
                     return ex.Response;
                 }
             }
+
         }
 
         private bool CanSignIn(object paramObj)
@@ -135,17 +138,17 @@ namespace SixCloud.ViewModels
             if (param is PasswordBox passwordBox)
             {
                 GenericResult<UserInformation> x = await Task.Run(() =>
-                            {
-                                return authentication.Register(Username, authentication.UserMd5(passwordBox.Password), VerificationCode, PhoneInfo);
-                            });
+                {
+                    return authentication.Register(Username, authentication.UserMd5(passwordBox.Password), VerificationCode, PhoneInfo);
+                });
                 if (x.Success)
                 {
-                    System.Windows.Window.GetWindow(passwordBox).Close();
+                    Window.GetWindow(passwordBox).Close();
                     new MainFrame(x.Result).Show();
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show(x.Message, "注册失败");
+                    MessageBox.Show(x.Message, "注册失败");
                 }
             }
         }

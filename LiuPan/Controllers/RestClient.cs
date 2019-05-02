@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows;
 
 namespace SixCloud.Controllers
 {
@@ -152,15 +153,15 @@ namespace SixCloud.Controllers
             {
                 myResponse = (HttpWebResponse)myRequest.GetResponse();
             }
-            catch (WebException e)
+            catch (WebException e) when (e.Status == WebExceptionStatus.ProtocolError)
             {
                 myResponse = (HttpWebResponse)e.Response;
             }
-            //using (StreamReader reader = new StreamReader(myResponse.GetResponseStream(), Encoding.UTF8))
-            //{
-            //    string ReturnXml = reader.ReadToEnd();
-            //}
-            //myResponse.Close();
+            catch (WebException e) when (e.Status == WebExceptionStatus.NameResolutionFailure && e.Status == WebExceptionStatus.Timeout)
+            {
+                MessageBox.Show("无法连接到服务器", "网络错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
+            }
             return myResponse;
 
             string MD5Calculater(byte[] input)
