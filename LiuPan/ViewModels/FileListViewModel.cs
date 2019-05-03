@@ -24,7 +24,7 @@ namespace SixCloud.ViewModels
                 }
             }
         }
-        private static object _copyListSyncRoot = new object();
+        private static readonly object _copyListSyncRoot = new object();
 
         public static string[] CutList
         {
@@ -37,7 +37,7 @@ namespace SixCloud.ViewModels
                 }
             }
         }
-        private static object _cutListSyncRoot = new object();
+        private static readonly object _cutListSyncRoot = new object();
 
         static FileListViewModel()
         {
@@ -333,25 +333,20 @@ namespace SixCloud.ViewModels
         {
             await Task.Run(async () =>
             {
+#warning 这里缺少一个可视化的提示窗
                 if (CopyList != null && CopyList.Length > 0)
                 {
                     string[] copyList = CopyList;
                     CopyList = null;
                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                    foreach (string a in copyList)
-                    {
-                        fileSystem.Copy(a, CurrentUUID);
-                    }
+                    fileSystem.Copy(copyList, CurrentUUID);
                 }
                 else if (CutList != null && CutList.Length > 0)
                 {
                     string[] cutList = CutList;
                     CutList = null;
                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                    foreach (string a in cutList)
-                    {
-                        fileSystem.Move(a, CurrentUUID);
-                    }
+                    fileSystem.Move(cutList, CurrentUUID);
                 }
                 else
                 {
@@ -359,7 +354,6 @@ namespace SixCloud.ViewModels
                     CopyList = null;
                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
                 }
-                MessageBox.Show("由于复制和剪切属于异步操作，您可能需要等待几秒钟才能看到结果", "粘贴中");
                 await GetFileListByPath(CurrentPath);
             });
 

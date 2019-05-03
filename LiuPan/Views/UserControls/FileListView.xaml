@@ -58,7 +58,7 @@
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
-                        <Condition Binding="{Binding Type}" Value="0" />
+                        <Condition Binding="{Binding Directory}" Value="False" />
                     </MultiDataTrigger.Conditions>
                     <Setter TargetName="DownloadBotton" Property="Visibility" Value="Visible"/>
                 </MultiDataTrigger>
@@ -213,7 +213,7 @@
     </UserControl.Resources>
     <Grid>
         <!--地址栏-->
-        <ListBox x:Name="AddressBar" Margin="0,10,0,0" Height="24" VerticalAlignment="Top" BorderBrush="Black" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
+        <ListBox FontSize="12" x:Name="AddressBar" Margin="0,32,0,0" Height="24" VerticalAlignment="Top" BorderBrush="Black" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>
@@ -230,23 +230,23 @@
         </ListBox>
 
         <!--上方栏-->
-        <Grid Height="60" Margin="0,34,0,0" VerticalAlignment="Top">
+        <Grid Height="60" Margin="0,56,0,0" VerticalAlignment="Top">
 
             <controls:LightButton FontIcon="&#xF053;" Margin="10,0,0,0" FontSize="25" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}" x:Name="Previous" Command="{Binding PreviousNavigateCommand}"/>
 
             <controls:LightButton FontIcon="&#xF054;" Margin="30,0,0,0" FontSize="25" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
 
             <StackPanel Orientation="Horizontal" Margin="96,0,0,0">
-                <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0" Command="{Binding UploadFileCommand}">
+                <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF" Command="{Binding UploadFileCommand}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF574;" Foreground="White"/>
-                        <TextBlock Text="上传文件" Foreground="#FFFFFFFF" HorizontalAlignment="Center"/>
+                        <controls:FontIcon Icon="&#xF574;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="上传文件" Foreground="#FF5A5A5A" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="UploadFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="125" Margin="5,0"  Command="{Binding UploadFolderCommand}">
+                <Button x:Name="UploadFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FFFFFFFF" Width="125" Margin="5,0"  Command="{Binding UploadFolderCommand}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF093;" Foreground="White"/>
-                        <TextBlock Text="上传文件夹" Foreground="#FFFFFFFF"/>
+                        <controls:FontIcon Icon="&#xF093;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="上传文件夹" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF" Command="{Binding NewFolderCommand}">
@@ -277,7 +277,7 @@
             </StackPanel>
 
         </Grid>
-        <ListView ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" Margin="0,94,0,0" ItemsSource="{Binding FileList}" ItemContainerStyle="{DynamicResource ListViewItemStyle}">
+        <ListView ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" Margin="0,116,0,0" ItemsSource="{Binding FileList}" ItemContainerStyle="{DynamicResource ListViewItemStyle}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName, Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />

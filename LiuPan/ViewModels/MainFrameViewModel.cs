@@ -19,8 +19,12 @@ namespace SixCloud.ViewModels
             string path = parameter as string;
             if (path == "Recovery")
             {
-                ///#warning 这里的代码还没写完
+#warning 这里的代码还没写完
                 ///V1接口缺乏回收站实现
+            }
+            else if(path=="Search")
+            {
+#warning 这里的代码还没写完
             }
             else
             {

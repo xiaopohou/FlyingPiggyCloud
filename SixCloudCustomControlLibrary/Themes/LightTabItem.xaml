@@ -5,6 +5,7 @@
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Header" Value="HelloWorld"/>
+        <Setter Property="FontSize" Value="10"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
         <Setter Property="Template">
@@ -36,8 +37,8 @@
                             Margin="{TemplateBinding Padding}"
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                             VerticalAlignment="Center">
-                            <ctl:FontIcon Margin="0,2" Foreground="{TemplateBinding Foreground}" Icon="{TemplateBinding FontIcon}"/>
-                            <ContentPresenter x:Name="contentPresenter" ContentSource="Header" RecognizesAccessKey="True"/>
+                            <ctl:FontIcon Margin="0,2" Foreground="{TemplateBinding Foreground}" IconSize="24" Icon="{TemplateBinding FontIcon}"/>
+                            <ContentPresenter x:Name="contentPresenter" ContentSource="Header" RecognizesAccessKey="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </StackPanel>
                         <Rectangle Fill="White" Opacity="0.7" Visibility="Collapsed" x:Name="SelectedBorder"/>
                     </Grid>

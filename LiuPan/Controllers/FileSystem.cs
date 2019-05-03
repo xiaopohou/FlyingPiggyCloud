@@ -97,10 +97,27 @@ namespace SixCloud.Controllers
         /// <returns></returns>
         public GenericResult<int?> Move(string sourceUUID, string targetDirectoryUUID)
         {
+            return Move(new string[] { sourceUUID }, targetDirectoryUUID);
+        }
+
+        /// <summary>
+        /// 移动一组文件或文件夹到同一个目录
+        /// </summary>
+        /// <param name="sourceUUIDList"></param>
+        /// <param name="targetDirectoryUUID"></param>
+        /// <returns></returns>
+        public GenericResult<int?> Move(string[] sourceUUIDList, string targetDirectoryUUID)
+        {
+            List<object> list = new List<object>(sourceUUIDList.Length);
+            foreach (string uuid in sourceUUIDList)
+            {
+                var a = new { identity = uuid };
+                list.Add(a);
+            }
             Dictionary<string, object> data = new Dictionary<string, object>
             {
-                { "source",new object[]{ new Dictionary<string, string> { { "identity", sourceUUID } } } },
-                { "destination", new Dictionary<string, string> { { "identity", targetDirectoryUUID } } }
+                { "source",list},
+                { "destination", new { identity=targetDirectoryUUID } }
             };
             while (string.IsNullOrWhiteSpace(Token))
             {
@@ -123,10 +140,27 @@ namespace SixCloud.Controllers
         /// <returns></returns>
         public GenericResult<int?> Copy(string sourceUUID, string targetDirectoryUUID)
         {
+            return Copy(new string[] { sourceUUID }, targetDirectoryUUID);
+        }
+
+        /// <summary>
+        /// 复制一组文件夹或文件
+        /// </summary>
+        /// <param name="sourceUUIDList"></param>
+        /// <param name="targetDirectoryUUID"></param>
+        /// <returns></returns>
+        public GenericResult<int?> Copy(string[] sourceUUIDList, string targetDirectoryUUID)
+        {
+            List<object> list = new List<object>(sourceUUIDList.Length);
+            foreach (string uuid in sourceUUIDList)
+            {
+                var a = new { identity = uuid };
+                list.Add(a);
+            }
             Dictionary<string, object> data = new Dictionary<string, object>
             {
-                { "source",new object[]{ new Dictionary<string, string> { { "identity", sourceUUID } } } },
-                { "destination", new Dictionary<string, string> { { "identity", targetDirectoryUUID } } }
+                { "source",list},
+                { "destination", new { identity=targetDirectoryUUID } }
             };
             while (string.IsNullOrWhiteSpace(Token))
             {
