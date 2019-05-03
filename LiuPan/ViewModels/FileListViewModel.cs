@@ -465,8 +465,7 @@ namespace SixCloud.ViewModels
 
             async Task FoundFolder(DirectoryInfo path, string parentPath)
             {
-                //GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(path.Name, parentUUID));
-                string currentPath = $"{parentPath}/{path.Name}";
+                string currentPath = parentPath == "/" ? $"/{path.Name}" : $"{parentPath}/{path.Name}";
                 if (path.Exists)
                 {
                     FileInfo[] list = path.GetFiles();
