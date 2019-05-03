@@ -7,10 +7,10 @@ namespace SixCloud.ViewModels
 {
     internal class UploadingFileViewModel : UploadingTaskViewModel
     {
-        public UploadingFileViewModel(string targetUUID, string filePath) : base()
+        public UploadingFileViewModel(string targetPath, string filePath) : base()
         {
             Name = Path.GetFileName(filePath);
-            Models.GenericResult<Models.UploadToken> x = fileSystem.UploadFile(Name, targetUUID, OriginalFilename: Name);
+            Models.GenericResult<Models.UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, OriginalFilename: Name);
             task = EzWcs.EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
         }
 

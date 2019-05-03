@@ -284,7 +284,7 @@ namespace SixCloud.Controllers
             }
             Dictionary<string, string> data = new Dictionary<string, string>
             {
-                { "identitiy", UUID },
+                { "identity", UUID },
             };
             GenericResult<FileMetaData> x = Post<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "v2/files/get", new Dictionary<string, string>
             {

@@ -13,10 +13,10 @@ namespace SixCloud.ViewModels
 
         public static async Task NewTask(FileListViewModel targetList, string path)
         {
-            await NewTask(targetList.CurrentUUID, path);
+            await NewTask(targetList.CurrentPath, path);
         }
 
-        public static async Task NewTask(string targetUUID, string path)
+        public static async Task NewTask(string targetPath, string path)
         {
             if (Directory.Exists(path))
             {
@@ -24,7 +24,7 @@ namespace SixCloud.ViewModels
             }
             else if (File.Exists(path))
             {
-                UploadingFileViewModel task = await Task.Run(() => new UploadingFileViewModel(targetUUID, path));
+                UploadingFileViewModel task = await Task.Run(() => new UploadingFileViewModel(targetPath, path));
                 _observableCollection.Add(task);
                 task.UploadCompleted += CompletedEventHandler;
                 void CompletedEventHandler(object sender, EventArgs e)

@@ -458,14 +458,15 @@ namespace SixCloud.ViewModels
                 {
                     if (Directory.Exists(commonOpenFileDialog.FileName))
                     {
-                        await FoundFolder(new DirectoryInfo(commonOpenFileDialog.FileName), CurrentUUID);
+                        await FoundFolder(new DirectoryInfo(commonOpenFileDialog.FileName), CurrentPath);
                     }
                 }
             }
 
-            async Task FoundFolder(DirectoryInfo path, string parentUUID)
+            async Task FoundFolder(DirectoryInfo path, string parentPath)
             {
-                GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(path.Name, parentUUID));
+                //GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(path.Name, parentUUID));
+                string currentPath = $"{parentPath}/{path.Name}";
                 if (path.Exists)
                 {
                     FileInfo[] list = path.GetFiles();
@@ -475,7 +476,7 @@ namespace SixCloud.ViewModels
                         {
                             if (a.Exists)
                             {
-                                await UploadingListViewModel.NewTask(x.Result.UUID, a.FullName);
+                                await UploadingListViewModel.NewTask(currentPath, a.FullName);
                             }
                         }
                     }
@@ -486,7 +487,7 @@ namespace SixCloud.ViewModels
                         {
                             if (a.Exists)
                             {
-                                await FoundFolder(a, x.Result.UUID);
+                                await FoundFolder(a, currentPath);
                             }
                         }
                     }
