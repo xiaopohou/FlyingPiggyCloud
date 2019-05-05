@@ -261,7 +261,7 @@
                         <TextBlock Text="剪切" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Stick" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF"  Command="{Binding StickCommand}">
+                <Button x:Name="Stick" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF"  Command="{Binding StickCommand}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF46C;" Foreground="#FF5A5A5A"/>
                         <TextBlock Text="粘贴" Foreground="#FF5A5A5A"/>

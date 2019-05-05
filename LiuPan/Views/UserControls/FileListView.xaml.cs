@@ -67,7 +67,7 @@ namespace SixCloud.Views.UserControls
                 int i = listBox.SelectedIndex;
                 if (i == 0)
                 {
-                    viewmodel.NavigateByPath("/");
+                    viewmodel.NavigateByPathAsync("/");
                 }
                 else if (i != -1)
                 {
@@ -79,7 +79,7 @@ namespace SixCloud.Views.UserControls
                         stringBuilder.Append("/");
                         stringBuilder.Append(path);
                     }
-                    viewmodel.NavigateByPath(stringBuilder.ToString());
+                    viewmodel.NavigateByPathAsync(stringBuilder.ToString());
                 }
                 listBox.SelectedIndex = -1;
             }

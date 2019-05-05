@@ -136,6 +136,7 @@
     <Compile Include="Controllers\Authentication.cs" />
     <Compile Include="Controllers\Calculators.cs" />
     <Compile Include="Controllers\FileSystem.cs" />
+    <Compile Include="Controllers\RecoveryBox.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\SixCloudMethordBase.cs" />
     <Compile Include="Controllers\SqLiteHelper.cs" />
@@ -205,6 +206,9 @@
     <Compile Include="Views\UserControls\UserInformationView.xaml.cs">
       <DependentUpon>UserInformationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\LoadingView.xaml.cs">
+      <DependentUpon>LoadingView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -254,6 +258,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserControls\UserInformationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoadingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

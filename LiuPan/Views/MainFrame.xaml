@@ -111,11 +111,11 @@
                     <!--NavigateBar窗格-->
                     <StackPanel Grid.Row="2">
                         <RadioButton FontSize="14" Content="全部文件" Command="{Binding PathNavigateCommand}" CommandParameter=""/>
-                        <RadioButton FontSize="14" Content="图片收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Images"/>
+                        <!--<RadioButton FontSize="14" Content="图片收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Images"/>
                         <RadioButton FontSize="14" Content="视频收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Videos"/>
                         <RadioButton FontSize="14" Content="音乐收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Music"/>
-                        <RadioButton FontSize="14" Content="文档收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Documents"/>
-                        <RadioButton FontSize="14" Content="垃圾回收" Command="{Binding PathNavigateCommand}" CommandParameter="Recovery"/>
+                        <RadioButton FontSize="14" Content="文档收藏" Command="{Binding PathNavigateCommand}" CommandParameter="Documents"/>-->
+                        <RadioButton FontSize="14" Content="回收站" Command="{Binding PathNavigateCommand}" CommandParameter="Recovery"/>
                     </StackPanel>
                     <StackPanel Grid.Row="3">
                         <TextBlock Text="搜索" FontWeight="Bold" FontSize="24" Foreground="#FF5A5A5A"/>

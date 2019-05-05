@@ -1,6 +1,8 @@
 ﻿using FileDownloader;
 using SixCloud.Models;
+using SixCloud.Views;
 using SixCloudCustomControlLibrary.Controls;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 
@@ -19,7 +21,7 @@ namespace SixCloud
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            new Views.LoginView().Show();
+            new LoginView().Show();
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -29,7 +31,7 @@ namespace SixCloud
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //FileDownloader.Pause();
+            new LoadingView(this, ()=>Thread.Sleep(5000)).ShowDialog();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

@@ -340,7 +340,7 @@ namespace SixCloud.Controllers
         public GenericResult<PreviewImageInformation> ImagePreview(string UUID)
         {
             throw new Exception();
-
+#warning 这里的代码还没有写完
             //while (string.IsNullOrWhiteSpace(Token))
             //{
             //    LoginView GetToken = new LoginView();

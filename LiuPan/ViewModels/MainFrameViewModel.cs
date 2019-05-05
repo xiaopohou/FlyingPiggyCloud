@@ -13,7 +13,7 @@ namespace SixCloud.ViewModels
 
         public TransferListViewModel TransferList { get; set; } = new TransferListViewModel();
 
-        private void PathNavigate(object parameter)
+        private async void PathNavigate(object parameter)
         {
             FileList = new FileListViewModel();
             string path = parameter as string;
@@ -28,7 +28,7 @@ namespace SixCloud.ViewModels
             }
             else
             {
-                FileList.NavigateByPath("/" + path, true);
+                await FileList.NavigateByPath("/" + path, true);
             }
             OnPropertyChanged("FileList");
         }
@@ -42,7 +42,7 @@ namespace SixCloud.ViewModels
             PathNavigateCommand = new AsyncCommand(PathNavigate, CanPathNavigate);
             UserInformation = new UserInformationViewModel(currentUser);
             FileList = new FileListViewModel();
-            FileList.NavigateByPath("/");
+            FileList.NavigateByPathAsync("/");
         }
     }
 }

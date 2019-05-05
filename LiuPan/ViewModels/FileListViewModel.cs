@@ -65,7 +65,7 @@ namespace SixCloud.ViewModels
             await GetFileListByUUID(uuid);
         }
 
-        public async void NavigateByPath(string path, bool autoCreate = false)
+        public async Task NavigateByPath(string path, bool autoCreate = false)
         {
             previousPath.Push(CurrentPath);
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
@@ -92,6 +92,11 @@ namespace SixCloud.ViewModels
                     MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它找不到这个目录。服务器返回：{ex.Message}", "错误");
                 }
             }
+        }
+
+        public async void NavigateByPathAsync(string path, bool autoCreate = false)
+        {
+            await NavigateByPath(path, autoCreate);
         }
 
         private async Task GetFileListByPath(string path)
@@ -329,33 +334,33 @@ namespace SixCloud.ViewModels
         #region Stick
         public DependencyCommand StickCommand { get; private set; }
 
-        private async void Stick(object parameter)
+        private void Stick(object parameter)
         {
-            await Task.Run(async () =>
-            {
-#warning 这里缺少一个可视化的提示窗
+            new LoadingView(parameter as Window, async () =>
+             {
+                //#warning 这里缺少一个可视化的提示窗
                 if (CopyList != null && CopyList.Length > 0)
-                {
-                    string[] copyList = CopyList;
-                    CopyList = null;
-                    StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                    fileSystem.Copy(copyList, CurrentUUID);
-                }
-                else if (CutList != null && CutList.Length > 0)
-                {
-                    string[] cutList = CutList;
-                    CutList = null;
-                    StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                    fileSystem.Move(cutList, CurrentUUID);
-                }
-                else
-                {
-                    CutList = null;
-                    CopyList = null;
-                    StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                }
-                await GetFileListByPath(CurrentPath);
-            });
+                 {
+                     string[] copyList = CopyList;
+                     CopyList = null;
+                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
+                     fileSystem.Copy(copyList, CurrentUUID);
+                 }
+                 else if (CutList != null && CutList.Length > 0)
+                 {
+                     string[] cutList = CutList;
+                     CutList = null;
+                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
+                     GenericResult<int?> x = fileSystem.Move(cutList, CurrentUUID);
+                 }
+                 else
+                 {
+                     CutList = null;
+                     CopyList = null;
+                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
+                 }
+                 await NavigateByPath(CurrentPath);
+             },"正在与服务器py，SixCloud处理中").ShowDialog();
 
         }
 
