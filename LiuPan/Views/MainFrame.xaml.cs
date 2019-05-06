@@ -2,6 +2,8 @@
 using SixCloud.ViewModels;
 using SixCloudCustomControlLibrary.Controls;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -17,7 +19,7 @@ namespace SixCloud.Views
         private static UserInformation recoveryInfo;
         public static Window Recovery()
         {
-            if(recoveryInfo!=null)
+            if (recoveryInfo != null)
             {
                 return new MainFrame(recoveryInfo);
             }
@@ -41,7 +43,19 @@ namespace SixCloud.Views
         {
             recoveryInfo = currentUser;
             InitializeComponent();
-            DataContext = new MainFrameViewModel(currentUser);
+            MainFrameViewModel mainFrameViewModel = new MainFrameViewModel(currentUser);
+            DataContext = mainFrameViewModel;
+            Activated += ActivatedHandler;
+            void ActivatedHandler(object sender, EventArgs e)
+            {
+                Activated -= ActivatedHandler;
+                new LoadingView(this, () =>
+                {
+                    Thread.Sleep(1000);
+                    Task t = mainFrameViewModel.FileList.NavigateByPath("/");
+                    t.Wait();
+                }, "正在加载文件目录").ShowDialog();
+            }
         }
 
         private void MainContainer_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

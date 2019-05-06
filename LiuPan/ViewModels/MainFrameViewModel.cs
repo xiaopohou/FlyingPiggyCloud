@@ -42,7 +42,7 @@ namespace SixCloud.ViewModels
             PathNavigateCommand = new AsyncCommand(PathNavigate, CanPathNavigate);
             UserInformation = new UserInformationViewModel(currentUser);
             FileList = new FileListViewModel();
-            FileList.NavigateByPathAsync("/");
+            //FileList.NavigateByPathAsync("/");
         }
     }
 }

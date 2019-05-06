@@ -338,8 +338,7 @@ namespace SixCloud.ViewModels
         {
             new LoadingView(parameter as Window, async () =>
              {
-                //#warning 这里缺少一个可视化的提示窗
-                if (CopyList != null && CopyList.Length > 0)
+                 if (CopyList != null && CopyList.Length > 0)
                  {
                      string[] copyList = CopyList;
                      CopyList = null;
@@ -351,7 +350,7 @@ namespace SixCloud.ViewModels
                      string[] cutList = CutList;
                      CutList = null;
                      StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                     GenericResult<int?> x = fileSystem.Move(cutList, CurrentUUID);
+                     fileSystem.Move(cutList, CurrentUUID);
                  }
                  else
                  {
@@ -360,7 +359,7 @@ namespace SixCloud.ViewModels
                      StickCommand.OnCanExecutedChanged(this, new EventArgs());
                  }
                  await NavigateByPath(CurrentPath);
-             },"正在与服务器py，SixCloud处理中").ShowDialog();
+             }, "正在与服务器py，SixCloud处理中").ShowDialog();
 
         }
 
