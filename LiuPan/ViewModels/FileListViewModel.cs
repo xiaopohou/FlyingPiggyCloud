@@ -359,7 +359,7 @@ namespace SixCloud.ViewModels
                      StickCommand.OnCanExecutedChanged(this, new EventArgs());
                  }
                  await NavigateByPath(CurrentPath);
-             }, "正在与服务器py，SixCloud处理中").ShowDialog();
+             }, "正在与服务器py，SixCloud处理中").Show();
 
         }
 

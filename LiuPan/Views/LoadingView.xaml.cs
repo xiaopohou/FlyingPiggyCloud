@@ -15,10 +15,10 @@ namespace SixCloud.Views
             Width = owner.Width;
             Height = owner.Height;
             BlurHolder.Visual = owner;
-            action?.BeginInvoke((parameter) => App.Current.Dispatcher.Invoke(() => Close()), null);
+            Activated += (sender, e) => action?.BeginInvoke((parameter) => Application.Current.Dispatcher.Invoke(() => Close()), null);
         }
 
-        public LoadingView(Window owner,Action action,string friendlyText):this(owner,action)
+        public LoadingView(Window owner, Action action, string friendlyText) : this(owner, action)
         {
             FriendlyText.Text = friendlyText;
         }

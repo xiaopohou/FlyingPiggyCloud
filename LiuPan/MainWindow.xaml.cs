@@ -21,6 +21,7 @@ namespace SixCloud
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            Close();
             new LoginView().Show();
         }
 
@@ -31,7 +32,7 @@ namespace SixCloud
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            new LoadingView(this, ()=>Thread.Sleep(5000)).ShowDialog();
+            //new LoadingView(this, ()=>Thread.Sleep(5000)).ShowDialog();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

@@ -54,7 +54,7 @@ namespace SixCloud.Views
                     Thread.Sleep(1000);
                     Task t = mainFrameViewModel.FileList.NavigateByPath("/");
                     t.Wait();
-                }, "正在加载文件目录").ShowDialog();
+                }, "正在加载文件目录").Show();
             }
         }
 
