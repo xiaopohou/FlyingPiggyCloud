@@ -87,8 +87,21 @@
         </Style>
 
     </metro:MetroWindow.Resources>
+    <metro:MetroWindow.HeaderControl>
+        <metro:LightButton FontIcon="&#xf013;" Foreground="{DynamicResource PrimaryHueDarkBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,15,0"/>
+    </metro:MetroWindow.HeaderControl>
     <Grid>
-        <metro:LightTabControl SelectedIndex="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="15"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="540"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <metro:LightTabControl SelectedIndex="1" Grid.ColumnSpan="3" Grid.RowSpan="3">
             <metro:LightTabItem FontIcon="&#xf360;" Header="传输">
                 <usercontrols:TransferListView DataContext="{Binding TransferList}"/>
             </metro:LightTabItem>
@@ -137,7 +150,7 @@
                         <metro:LightButton FontIcon="&#xf002;" Command="{Binding PathNavigateCommand}" CommandParameter="Search"/>
                     </StackPanel>
                     <!--主文件列表窗格-->
-                    <Grid Margin="25,15,25,35" Grid.Column="1" Grid.RowSpan="4">
+                    <Grid Margin="25,35,25,35" Grid.Column="1" Grid.RowSpan="4">
                         <usercontrols:FileListView x:Name="MainContainer" DataContext="{Binding FileList}" DataContextChanged="MainContainer_DataContextChanged"/>
                         <Grid.RenderTransform>
                             <TranslateTransform x:Name="MainContainerTransform"/>
@@ -149,5 +162,10 @@
             <!--分享功能（V1接口未实现）-->
             <!--<metro:LightTabItem Icon="&#xf1e0;" Header="分享设置"/>-->
         </metro:LightTabControl>
+        <Border x:Name="UserInformationMenu" Grid.Column="1" Grid.Row="1" CornerRadius="5" Background="Black" Visibility="Collapsed" LostFocus="Border_LostFocus">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0" BlurRadius="15"/>
+            </Border.Effect>
+        </Border>
     </Grid>
 </metro:MetroWindow>

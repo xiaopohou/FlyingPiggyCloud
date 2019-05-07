@@ -11,11 +11,13 @@ namespace SixCloudCustomControlLibrary.Controls
         public static new readonly DependencyProperty BorderBrushProperty = DependencyProperty.Register("BorderBrush", typeof(Brush), typeof(MetroWindow));
         public static readonly DependencyProperty TitleForegroundProperty = DependencyProperty.Register("TitleForeground", typeof(Brush), typeof(MetroWindow));
         public static readonly DependencyProperty MetroWindowLayoutProperty = DependencyProperty.Register("MetroWindowLayout", typeof(MetroWindowLayout), typeof(MetroWindow), new PropertyMetadata(MetroWindowLayout.Normal));
+        public static readonly DependencyProperty HeaderControlProperty = DependencyProperty.Register("HeaderControl", typeof(object), typeof(MetroWindow));
 
         public bool IsSubWindowShow { get => (bool)GetValue(IsSubWindowShowProperty); set => SetValue(IsSubWindowShowProperty, value); }
         public new Brush BorderBrush { get => (Brush)GetValue(BorderBrushProperty); set => SetValue(BorderBrushProperty, value); }
         public Brush TitleForeground { get => (Brush)GetValue(TitleForegroundProperty); set => SetValue(TitleForegroundProperty, value); }
         public MetroWindowLayout MetroWindowLayout { get => (MetroWindowLayout)GetValue(MetroWindowLayoutProperty); set => SetValue(MetroWindowLayoutProperty, value); }
+        public object HeaderControl { get => GetValue(HeaderControlProperty); set => SetValue(HeaderControlProperty, value); }
 
         public object ReturnValue { get; set; } = null;
         public bool EscClose { get; set; } = false;

@@ -10,7 +10,6 @@
     <Style x:Key="buttonStyle" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
-
         <Setter Property="Width" Value="40"/>
         <Setter Property="Height" Value="32"/>
         <Setter Property="Template">
@@ -93,21 +92,25 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <!--<Grid Grid.Column="2">
-                                    <ContentPresenter Content="{TemplateBinding Menu}" Margin="0,32,-120,0"/>
-                                </Grid>-->
                                 <Grid x:Name="windowContent" Grid.Row="1" Grid.ColumnSpan="4" Background="{TemplateBinding Background}">
                                     <AdornerDecorator>
                                         <ContentPresenter/>
                                     </AdornerDecorator>
                                 </Grid>
+                                
+                                <Grid Grid.Column="2" Shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                                    <ContentPresenter ContentSource="HeaderControl"/>
+                                </Grid>
+                                
                                 <Grid Grid.Column="0">
                                     <Image Source="{TemplateBinding Icon}"/>
                                     <Rectangle Fill="{TemplateBinding TitleForeground}" Opacity="0.15"/>
                                 </Grid>
+                                
                                 <Grid Grid.Column="1">
                                     <TextBlock Text="{TemplateBinding Title}"  Foreground="{TemplateBinding TitleForeground}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0"/>
                                 </Grid>
+                                
                                 <Grid Grid.Column="3" Shell:WindowChrome.IsHitTestVisibleInChrome="True">
                                     <Button x:Name="minimizedButton" Foreground="{TemplateBinding TitleForeground}" HorizontalAlignment="Right" Click="Minimized" Margin="0,0,80,0" Style="{StaticResource buttonStyle}">
                                         <Button.Content>

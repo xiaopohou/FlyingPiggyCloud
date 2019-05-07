@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -74,6 +75,14 @@ namespace SixCloud.Views
             };
             MainContainer.BeginAnimation(OpacityProperty, appearAnimation);
             MainContainerTransform.BeginAnimation(TranslateTransform.XProperty, moveAnimation);
+        }
+
+        private void Border_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if(sender is Border border)
+            {
+                border.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }
