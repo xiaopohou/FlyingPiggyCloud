@@ -5,7 +5,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -77,12 +76,22 @@ namespace SixCloud.Views
             MainContainerTransform.BeginAnimation(TranslateTransform.XProperty, moveAnimation);
         }
 
-        private void Border_LostFocus(object sender, RoutedEventArgs e)
+        private void LightButton_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is Border border)
+            UserInformationMenu.Visibility = Visibility.Visible;
+        }
+
+        private void Grid_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (UserInformationMenu.Visibility == Visibility.Visible)
             {
-                border.Visibility = Visibility.Collapsed;
+                UserInformationMenu.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void UserInformationMenu_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }
