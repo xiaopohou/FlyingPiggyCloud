@@ -161,7 +161,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -277,7 +277,7 @@
             </StackPanel>
 
         </Grid>
-        <ListView ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" Margin="0,116,0,0" ItemsSource="{Binding FileList}" ItemContainerStyle="{DynamicResource ListViewItemStyle}">
+        <ListView SelectedIndex="{Binding SelectedIndex,Mode=OneWayToSource}" ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" Margin="0,116,0,0" ItemsSource="{Binding FileList}" ItemContainerStyle="{DynamicResource ListViewItemStyle}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName, Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />

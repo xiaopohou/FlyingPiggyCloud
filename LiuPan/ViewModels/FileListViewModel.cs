@@ -39,7 +39,29 @@ namespace SixCloud.ViewModels
         }
         private static readonly object _cutListSyncRoot = new object();
 
-        public FileListItemViewModel FileListItemInformation { get; private set; }
+        public FileListItemViewModel FileListItemInformation
+        {
+            get
+            {
+                if (SelectedIndex == -1 || SelectedIndex > FileList.Count - 1)
+                {
+                    return null;
+                }
+                else
+                {
+                    return FileList[SelectedIndex];
+                }
+            }
+        }
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set
+            {
+                OnPropertyChanged(nameof(FileListItemInformation));
+                _selectedIndex = value;
+            }
+        }
 
         static FileListViewModel()
         {
@@ -313,6 +335,7 @@ namespace SixCloud.ViewModels
         private Stack<string> nextPath = new Stack<string>();
         private static string[] s_copyList;
         private static string[] _cutList;
+        private int _selectedIndex;
         #endregion
         #endregion
 
