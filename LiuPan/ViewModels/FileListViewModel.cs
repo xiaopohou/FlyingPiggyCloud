@@ -58,8 +58,8 @@ namespace SixCloud.ViewModels
             get => _selectedIndex;
             set
             {
-                OnPropertyChanged(nameof(FileListItemInformation));
                 _selectedIndex = value;
+                OnPropertyChanged(nameof(FileListItemInformation));
             }
         }
 
