@@ -13,8 +13,9 @@
     <ctl:LightTabControl>
         <ctl:LightTabItem>
             <Grid Margin="0">
-                <Button Content="HelloWorld" Click="Button_Click" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" FocusVisualStyle="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Button Content="heyworld" Click="Button_Click_1" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" FocusVisualStyle="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="342,100,343,279"/>
+                <Button Content="HelloWorld" Click="Button_Click" Style="{StaticResource MaterialDesignFlatButton }" FocusVisualStyle="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <!--<Button Content="heyworld" Click="Button_Click_1" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" FocusVisualStyle="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="342,100,343,279"/>-->
+                <!--<ProgressBar Value="50" Margin="352,100,57,184" Height="Auto" Width="Auto"/>-->
             </Grid>
         </ctl:LightTabItem>
         <ctl:LightTabItem>

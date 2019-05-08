@@ -39,6 +39,8 @@ namespace SixCloud.ViewModels
         }
         private static readonly object _cutListSyncRoot = new object();
 
+        public FileListItemViewModel FileListItemInformation { get; private set; }
+
         static FileListViewModel()
         {
 
