@@ -8,7 +8,7 @@
              xmlns:controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
              xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="SixCloud.Views.UserControls.FileListView"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Background="White">
+             d:DesignHeight="450" d:DesignWidth="800" Background="#FFF3F2F1">
     <UserControl.Resources>
         <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>
 
@@ -18,7 +18,7 @@
         </Style>
 
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
-            <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
         </Style>
 
         <DataTemplate x:Key="MetaName">
@@ -232,51 +232,52 @@
         <!--上方栏-->
         <Grid Height="60" Margin="0,56,0,0" VerticalAlignment="Top">
 
-            <controls:LightButton FontIcon="&#xF053;" Margin="10,0,0,0" FontSize="25" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}" x:Name="Previous" Command="{Binding PreviousNavigateCommand}"/>
+            <controls:LightButton FontIcon="&#xF053;" Margin="20,0,0,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FF5A5A5A" x:Name="Previous" Command="{Binding PreviousNavigateCommand}"/>
 
-            <controls:LightButton FontIcon="&#xF054;" Margin="30,0,0,0" FontSize="25" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
+            <controls:LightButton FontIcon="&#xF054;" Margin="40,0,0,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FF5A5A5A" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
 
             <StackPanel Orientation="Horizontal" Margin="96,0,0,0">
-                <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF" Command="{Binding UploadFileCommand}">
+                <Button x:Name="UploadButton" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0" Command="{Binding UploadFileCommand}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF574;" Foreground="#FF5A5A5A"/>
                         <TextBlock Text="上传文件" Foreground="#FF5A5A5A" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="UploadFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FFFFFFFF" Width="125" Margin="5,0"  Command="{Binding UploadFolderCommand}">
+                <Button x:Name="UploadFolderButton" HorizontalAlignment="Left" VerticalAlignment="Center" Width="125" Margin="5,0"  Command="{Binding UploadFolderCommand}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF093;" Foreground="#FF5A5A5A"/>
                         <TextBlock Text="上传文件夹" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF" Command="{Binding NewFolderCommand}">
+                <Button x:Name="NewFolderButton" HorizontalAlignment="Left" Width="125" VerticalAlignment="Center" Margin="5,0" Command="{Binding NewFolderCommand}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF65E;" Foreground="#FF5A5A5A"/>
                         <TextBlock Text="新建文件夹" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Cut" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF"  Command="{Binding CutCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
+                <Button x:Name="Cut" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding CutCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF0C4;" Foreground="#FF5A5A5A"/>
                         <TextBlock Text="剪切" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Stick" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF"  Command="{Binding StickCommand}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF46C;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="粘贴" Foreground="#FF5A5A5A"/>
-                    </StackPanel>
-                </Button>
-                <Button x:Name="Copy" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Background="#FFFFFFFF"  Command="{Binding CopyCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
+                <Button x:Name="Copy" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF0C5;" Foreground="#FF5A5A5A"/>
                         <TextBlock Text="复制" Foreground="#FF5A5A5A"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="Stick" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding StickCommand}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xF46C;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="粘贴" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
 
             </StackPanel>
 
         </Grid>
+        <Rectangle Margin="0,116,0,0" Fill="White"/>
         <ListView SelectedIndex="{Binding SelectedIndex,Mode=OneWayToSource}" ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" Margin="0,116,0,0" ItemsSource="{Binding FileList}" ItemContainerStyle="{DynamicResource ListViewItemStyle}">
             <ListView.View>
                 <GridView>

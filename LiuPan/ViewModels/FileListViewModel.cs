@@ -13,6 +13,7 @@ namespace SixCloud.ViewModels
 {
     internal class FileListViewModel : FileSystemViewModel
     {
+        private bool canNavigate = true;
         public static string[] CopyList
         {
             get => s_copyList;
@@ -91,30 +92,42 @@ namespace SixCloud.ViewModels
 
         public async Task NavigateByPath(string path, bool autoCreate = false)
         {
-            previousPath.Push(CurrentPath);
-            PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+            if(!canNavigate)
+            {
+                return;
+            }
+            canNavigate = false;
             try
             {
-                await GetFileListByPath(path);
-            }
-            catch (DirectoryNotFoundException ex)
-            {
-                if (autoCreate)
+                previousPath.Push(CurrentPath);
+                PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+                try
                 {
-                    GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(Path: path));
-                    if (x.Success)
+                    await GetFileListByPath(path);
+                }
+                catch (DirectoryNotFoundException ex)
+                {
+                    if (autoCreate)
                     {
-                        await GetFileListByPath(x.Result.Path);
+                        GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(Path: path));
+                        if (x.Success)
+                        {
+                            await GetFileListByPath(x.Result.Path);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它既不能找到也无法创建您想要的对象。服务器返回：{x.Message}", "找不到对象", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                     else
                     {
-                        MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它既不能找到也无法创建您想要的对象。服务器返回：{x.Message}", "找不到对象", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它找不到这个目录。服务器返回：{ex.Message}", "错误");
                     }
                 }
-                else
-                {
-                    MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它找不到这个目录。服务器返回：{ex.Message}", "错误");
-                }
+            }
+            finally
+            {
+                canNavigate = true;
             }
         }
 

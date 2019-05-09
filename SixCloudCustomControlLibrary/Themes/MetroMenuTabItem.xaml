@@ -33,7 +33,7 @@
                                 <VisualState x:Name="Disabled"/>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Rectangle x:Name="back" Grid.ColumnSpan="2" Fill="#FFF1F2F4" Opacity="0"/>
+                        <Rectangle x:Name="back" Grid.ColumnSpan="2" Fill="#FFF3F2F1" Opacity="0"/>
                         <Grid Height="24" Width="24"  Margin="10,8" >
                             <Metro:FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" IconSize="16" Icon="{TemplateBinding IconMove}" x:Name="iconMove" Foreground="{DynamicResource PrimaryHueMidBrush}" Opacity="0"/>
                             <Metro:FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" IconSize="16" Icon="{TemplateBinding Icon}" x:Name="icon" Foreground="{TemplateBinding Foreground}" />

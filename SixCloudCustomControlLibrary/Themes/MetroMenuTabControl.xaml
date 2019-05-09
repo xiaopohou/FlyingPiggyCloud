@@ -169,8 +169,8 @@
                                 </Canvas>
                             </Metro:MetroScrollViewer>
                         </Grid>
-                        
-                        <Border x:Name="contentPanel" Background="#FFF1F2F4" Grid.Column="1" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local">
+
+                        <Border x:Name="contentPanel" Background="#FFF3F2F1" Grid.Column="1" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local">
                             <ContentPresenter x:Name="content" ContentSource="SelectedContent"/>
                         </Border>
                     </Grid>

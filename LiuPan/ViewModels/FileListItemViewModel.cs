@@ -36,6 +36,7 @@ namespace SixCloud.ViewModels
         private static readonly Dictionary<string, string> IconDictionary;
 
         public string UUID { get; set; }
+        public string Mime { get; private set; }
 
         private bool AlwaysCan(object parameter)
         {
@@ -266,6 +267,7 @@ namespace SixCloud.ViewModels
             Directory = fileMetaData.Directory;
             Size = Calculators.SizeCalculator(fileMetaData.Size);
             UUID = fileMetaData.UUID;
+            Mime = fileMetaData.Mime;
 
             CopyCommand = new DependencyCommand(Copy, AlwaysCan);
             CutCommand = new DependencyCommand(Cut, AlwaysCan);
