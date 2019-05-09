@@ -110,12 +110,13 @@
             <metro:LightTabItem FontIcon="&#xf07b;" Header="文件">
                 <Grid Background="#FFF3F2F1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="280"/>
+                        <ColumnDefinition Width="245"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="32"/>
                         <RowDefinition Height="1*"/>
+                        <RowDefinition Height="5"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.RowSpan="4" Background="White"/>
@@ -158,8 +159,10 @@
                             </EventTrigger>
                         </StackPanel.Triggers>
                     </StackPanel>
-                    
-                    <StackPanel Margin="15,0,0,0" Grid.Row="2">
+
+                    <Rectangle Fill="#FFF3F2F1" Grid.Row="2"/>
+
+                    <StackPanel Margin="15,0,15,0" Grid.Row="3">
                         <usercontrols:FileListItemInformationView DataContext="{Binding FileList.FileListItemInformation}"/>
                     </StackPanel>
                     
