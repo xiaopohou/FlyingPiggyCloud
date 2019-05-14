@@ -569,5 +569,57 @@ namespace SixCloud.ViewModels
     internal class RecoverBoxViewModel:ViewModelBase
     {
         private static readonly RecoveryBox recoveryBox = new RecoveryBox();
+
+        public RecoverBoxViewModel()
+        {
+            EmptyCommand = new AsyncCommand(Empty, DependencyCommand.AlwaysCan);
+            DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
+            RecoveryCommand = new DependencyCommand(Recovery, DependencyCommand.AlwaysCan);
+        }
+
+        #region Empty
+        public AsyncCommand EmptyCommand { get; private set; }
+        private void Empty(object parameter)
+        {
+            recoveryBox.Empty();
+        }
+        #endregion
+
+        #region Delete
+        public DependencyCommand DeleteCommand { get; private set; }
+
+        private void Delete(object parameter)
+        {
+            if (parameter is IList selectedItems)
+            {
+                List<string> list = new List<string>(selectedItems.Count);
+                foreach (FileListItemViewModel a in selectedItems)
+                {
+                    list.Add(a.UUID);
+                }
+                recoveryBox.Delete(list.ToArray());
+            }
+        }
+        #endregion
+
+        #region Recovery
+        public DependencyCommand RecoveryCommand { get; private set; }
+
+        private void Recovery(object parameter)
+        {
+            if (parameter is IList selectedItems)
+            {
+                List<string> list = new List<string>(selectedItems.Count);
+                foreach (FileListItemViewModel a in selectedItems)
+                {
+                    list.Add(a.UUID);
+                }
+                recoveryBox.Restore(list.ToArray());
+            }
+        }
+        #endregion
+
+        public ObservableCollection<RecoveryBoxItem> RecoveryList { get; private set; }
+
     }
 }
