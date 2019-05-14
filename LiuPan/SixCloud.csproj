@@ -190,6 +190,9 @@
     <Compile Include="Views\UserControls\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserControls\RecoveryBox.xaml.cs">
+      <DependentUpon>RecoveryBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\SignInView.xaml.cs">
       <DependentUpon>SignInView.xaml</DependentUpon>
     </Compile>
@@ -241,6 +244,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserControls\FileListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\RecoveryBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

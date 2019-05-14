@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="SixCloud.Views.UserControls.RecoveryBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SixCloud.Views.UserControls"
+             xmlns:controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
+             xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type controls:FontIcon}">
+            <Setter Property="IconSize" Value="14"/>
+            <Setter Property="Margin" Value="5,0"/>
+        </Style>
+
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <!--上方栏-->
+        <Grid Height="60" Margin="0,32,0,0" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                <Button x:Name="Delete" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding DeleteCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xF1F8;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="删除" Foreground="#FF5A5A5A"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="Cut" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding RecoveryCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xF0C4;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="恢复" Foreground="#FF5A5A5A"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="Copy" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding EmptyCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:FontIcon Icon="&#xF0C5;" Foreground="#FF5A5A5A"/>
+                        <TextBlock Text="清空" Foreground="#FF5A5A5A"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+        </Grid>
+        <Rectangle Margin="0,92,0,0" Fill="White"/>
+        <ListView SelectedIndex="{Binding SelectedIndex,Mode=OneWayToSource}" x:Name="RecoveryList" Margin="0,116,0,0" ItemsSource="{Binding FileList}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName, Mode=OneWay}" Header="文件名" />
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperSourcePath}" Header="源位置"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileSize}" Header="大小"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" Header="删除时间"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!--这个Grid用于帮助GridView自动校正分栏宽度-->
+        <Grid Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" x:Name="WidthHelperFlieName"/>
+            <Grid Grid.Column="1" x:Name="WidthHelperSourcePath"/>
+            <Grid Grid.Column="2" x:Name="WidthHelperFileSize"/>
+            <Grid Grid.Column="3" x:Name="WidthHelperMTime"/>
+        </Grid>
+
+    </Grid>
+</UserControl>

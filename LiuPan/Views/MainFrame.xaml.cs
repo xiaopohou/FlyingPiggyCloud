@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -92,6 +93,22 @@ namespace SixCloud.Views
         private void UserInformationMenu_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void MainContainer_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            //如果不是从文件列表Raise的事件，忽略
+            if (e.OriginalSource is ListView)
+            {
+                if (e.AddedItems.Count == 0)
+                {
+                    InfoView.BeginAnimation(OpacityProperty, new DoubleAnimation(0d, new Duration(TimeSpan.FromMilliseconds(300d))));
+                }
+                else
+                {
+                    InfoView.BeginAnimation(OpacityProperty, new DoubleAnimation(0d, 1d, new Duration(TimeSpan.FromMilliseconds(300d))));
+                }
+            }
         }
     }
 }

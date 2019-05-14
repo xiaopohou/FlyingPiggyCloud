@@ -200,6 +200,35 @@ namespace SixCloud.Controllers
         }
 
         /// <summary>
+        /// 删除文件夹或文件
+        /// </summary>
+        /// <param name="uuid">被删除的项目</param>
+        /// <returns></returns>
+        public GenericResult<int?> Remove(string[] uuids)
+        {
+            List<object> list = new List<object>(uuids.Length);
+            foreach (string uuid in uuids)
+            {
+                list.Add(new { identity = uuid });
+            }
+            Dictionary<string, object> data = new Dictionary<string, object>
+            {
+                { "source",list.ToArray() },
+            };
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            GenericResult<int?> x = Post<GenericResult<int?>>(JsonConvert.SerializeObject(data), "v2/files/delete", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
+
+        /// <summary>
         /// 重命名文件夹或文件
         /// </summary>
         /// <param name="SourceMeta">被重命名的项目</param>

@@ -163,12 +163,14 @@
                     <Rectangle Fill="#FFF3F2F1" Grid.Row="2"/>
 
                     <StackPanel Margin="15,0,15,0" Grid.Row="3">
-                        <usercontrols:FileListItemInformationView DataContext="{Binding FileList.FileListItemInformation}"/>
+                        <usercontrols:FileListItemInformationView Opacity="0" x:Name="InfoView" DataContext="{Binding FileList.FileListItemInformation}"/>
                     </StackPanel>
                     
                     <!--主文件列表窗格 Margin不能低于0/32/0/0-->
-                    <Grid Margin="25,35,25,35" Grid.Column="1" Grid.RowSpan="4">
-                        <usercontrols:FileListView x:Name="MainContainer" DataContext="{Binding FileList}" DataContextChanged="MainContainer_DataContextChanged"/>
+                    <Grid Margin="25,35,25,35" Grid.Column="1" Grid.RowSpan="4" DataContext="{Binding FileList}">
+                        <usercontrols:FileListView x:Name="MainContainer"
+                                                   ListView.SelectionChanged="MainContainer_SelectionChanged"
+                                                   DataContextChanged="MainContainer_DataContextChanged"/>
                         <Grid.RenderTransform>
                             <TranslateTransform x:Name="MainContainerTransform"/>
                         </Grid.RenderTransform>

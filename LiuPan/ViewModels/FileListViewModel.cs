@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using SixCloud.Controllers;
 using SixCloud.Models;
 using SixCloud.Views;
 using System;
@@ -364,7 +365,9 @@ namespace SixCloud.ViewModels
                 if (!x.Success)
                 {
                     MessageBox.Show("创建失败：" + x.Message);
+                    return;
                 }
+                NavigateByUUID(CurrentUUID);
             }
         }
         #endregion
@@ -431,11 +434,25 @@ namespace SixCloud.ViewModels
                 StickCommand.OnCanExecutedChanged(this, new EventArgs());
             }
         }
+        #endregion
 
-        private bool CanCut(object parameter)
+        #region Delete
+        public DependencyCommand DeleteCommand { get; private set; }
+
+        private void Delete(object parameter)
         {
-            return true;
+            if (parameter is IList selectedItems)
+            {
+                List<string> list = new List<string>(selectedItems.Count);
+                foreach (FileListItemViewModel a in selectedItems)
+                {
+                    list.Add(a.UUID);
+                }
+                fileSystem.Remove(list.ToArray());
+                NavigateByUUID(CurrentUUID);
+            }
         }
+
         #endregion
 
         #region Copy
@@ -454,11 +471,6 @@ namespace SixCloud.ViewModels
                 CutList = null;
                 StickCommand.OnCanExecutedChanged(this, new EventArgs());
             }
-        }
-
-        private bool CanCopy(object parameter)
-        {
-            return true;
         }
         #endregion
 
@@ -545,11 +557,17 @@ namespace SixCloud.ViewModels
             NextNavigateCommand = new DependencyCommand(NextNavigate, CanNextNavigate);
             PreviousNavigateCommand = new DependencyCommand(PreviousNavigate, CanPreviousNavigate);
             StickCommand = new DependencyCommand(Stick, CanStick);
-            CutCommand = new DependencyCommand(Cut, CanCut);
-            CopyCommand = new DependencyCommand(Copy, CanCopy);
+            CutCommand = new DependencyCommand(Cut, DependencyCommand.AlwaysCan);
+            DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
+            CopyCommand = new DependencyCommand(Copy, DependencyCommand.AlwaysCan);
             NewFolderCommand = new DependencyCommand(NewFolder, DependencyCommand.AlwaysCan);
             UploadFileCommand = new DependencyCommand(UploadFile, DependencyCommand.AlwaysCan);
             UploadFolderCommand = new DependencyCommand(UploadFolder, DependencyCommand.AlwaysCan);
         }
+    }
+
+    internal class RecoverBoxViewModel:ViewModelBase
+    {
+        private static readonly RecoveryBox recoveryBox = new RecoveryBox();
     }
 }
