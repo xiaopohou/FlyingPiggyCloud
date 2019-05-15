@@ -9,6 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <local:FontIconConverter x:Key="FontIconConverter"/>
         <local:UnixTimeCalculator x:Key="UnixTimeCalculator"/>
         <local:SizeCalculator x:Key="SizeCalculator"/>
         <Style TargetType="{x:Type controls:FontIcon}">
@@ -22,7 +23,17 @@
 
         <DataTemplate x:Key="NameCell">
             <Grid>
-                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <controls:FontIcon Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                   IconSize="24"
+                                   Margin="4"
+                                   Icon="{Binding Directory, Converter={StaticResource FontIconConverter}, Mode=OneWay}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </Grid>
         </DataTemplate>
 
@@ -34,13 +45,13 @@
 
         <DataTemplate x:Key="SizeCell">
             <Grid>
-                <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator},Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator}, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="DeleteTimeCell">
             <Grid>
-                <TextBlock Text="{Binding DeleteTime, Converter={StaticResource UnixTimeCalculator},Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Text="{Binding DeleteTime, Converter={StaticResource UnixTimeCalculator}, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </Grid>
         </DataTemplate>
 

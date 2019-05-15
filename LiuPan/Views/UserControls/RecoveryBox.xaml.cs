@@ -79,4 +79,24 @@ namespace SixCloud.Views.UserControls
             throw new NotImplementedException();
         }
     }
+
+    public class FontIconConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if(value is bool directory)
+            {
+                return directory ? '\uf07b'.ToString() : '\uf15c'.ToString();
+            }
+            else
+            {
+                return '\uf15c'.ToString();
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

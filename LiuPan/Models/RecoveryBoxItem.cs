@@ -19,5 +19,7 @@ namespace SixCloud.Models
         [JsonProperty(PropertyName = "deleteTime")]
         public long DeleteTime { get; set; }
 
+        [JsonProperty(PropertyName = "directory")]
+        public bool Directory { get; set; }
     }
 }
