@@ -1,5 +1,4 @@
 ﻿using SixCloud.Models;
-using System.Collections.Generic;
 
 namespace SixCloud.ViewModels
 {
@@ -9,28 +8,30 @@ namespace SixCloud.ViewModels
 
         public UserInformationViewModel UserInformation { get; set; }
 
-        public FileListViewModel FileList { get; set; }
+        public ViewModelBase MainContainerContent { get; set; }
 
         public TransferListViewModel TransferList { get; set; } = new TransferListViewModel();
 
         private async void PathNavigate(object parameter)
         {
-            FileList = new FileListViewModel();
             string path = parameter as string;
             if (path == "Recovery")
             {
-#warning 这里的代码还没写完
-                ///V1接口缺乏回收站实现
+                RecoveryBoxViewModel x = new RecoveryBoxViewModel();
+                x.LazyLoad();
+                MainContainerContent = x;
             }
-            else if(path=="Search")
+            else if (path == "Search")
             {
 #warning 这里的代码还没写完
             }
             else
             {
-                await FileList.NavigateByPath("/" + path, true);
+                FileListViewModel x = new FileListViewModel();
+                await x.NavigateByPath("/" + path, true);
+                MainContainerContent = x;
             }
-            OnPropertyChanged("FileList");
+            OnPropertyChanged("MainContainerContent");
         }
         private bool CanPathNavigate(object parameter)
         {
@@ -41,7 +42,7 @@ namespace SixCloud.ViewModels
         {
             PathNavigateCommand = new AsyncCommand(PathNavigate, CanPathNavigate);
             UserInformation = new UserInformationViewModel(currentUser);
-            FileList = new FileListViewModel();
+            MainContainerContent = new FileListViewModel();
             //FileList.NavigateByPathAsync("/");
         }
     }

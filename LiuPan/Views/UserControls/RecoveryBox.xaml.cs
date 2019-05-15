@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using SixCloud.Controllers;
+using SixCloud.ViewModels;
+using System;
+using System.Globalization;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SixCloud.Views.UserControls
 {
@@ -23,6 +16,67 @@ namespace SixCloud.Views.UserControls
         public RecoveryBox()
         {
             InitializeComponent();
+        }
+
+        private void RecoveryList_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (e.OriginalSource is ScrollViewer viewer)
+            {
+                double bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
+                if (viewer.VerticalOffset > 0 && bottomOffset < 0.3)
+                {
+                    LazyLoadEventHandler?.Invoke(sender, e);
+                }
+            }
+        }
+
+        private ScrollChangedEventHandler LazyLoadEventHandler;
+
+        private async void LazyLoad(object sender, ScrollChangedEventArgs e)
+        {
+            lock (LazyLoadEventHandler)
+            {
+                LazyLoadEventHandler = null;
+            }
+            //懒加载的业务代码
+            RecoveryBoxViewModel vm = DataContext as RecoveryBoxViewModel;
+            await Task.Run(() => vm.LazyLoad());
+            LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
+        }
+
+
+    }
+    public class SizeCalculator : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is long size)
+            {
+                return Calculators.SizeCalculator(size);
+            }
+            return "未知";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class UnixTimeCalculator : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is long time)
+            {
+                return Calculators.UnixTimeStampConverter(time);
+            }
+            return "未知";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

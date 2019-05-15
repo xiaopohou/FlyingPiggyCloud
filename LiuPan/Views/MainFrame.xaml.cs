@@ -53,8 +53,11 @@ namespace SixCloud.Views
                 new LoadingView(this, () =>
                 {
                     Thread.Sleep(1000);
-                    Task t = mainFrameViewModel.FileList.NavigateByPath("/");
-                    t.Wait();
+                    if (mainFrameViewModel.MainContainerContent is FileListViewModel fileListViewModel)
+                    {
+                        Task t = fileListViewModel.NavigateByPath("/");
+                        t.Wait();
+                    }
                 }, "正在加载文件目录").Show();
             }
         }
@@ -73,6 +76,20 @@ namespace SixCloud.Views
                 To = 0d,
                 Duration = new Duration(TimeSpan.FromMilliseconds(500))
             };
+            if (e.NewValue is FileListViewModel)
+            {
+                FileListContainer.Visibility = Visibility.Visible;
+                RecoveryBoxContainer.Visibility = Visibility.Collapsed;
+            }
+            else if (e.NewValue is RecoveryBoxViewModel)
+            {
+                FileListContainer.Visibility = Visibility.Collapsed;
+                RecoveryBoxContainer.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                return;
+            }
             MainContainer.BeginAnimation(OpacityProperty, appearAnimation);
             MainContainerTransform.BeginAnimation(TranslateTransform.XProperty, moveAnimation);
         }
@@ -95,7 +112,7 @@ namespace SixCloud.Views
             e.Handled = true;
         }
 
-        private void MainContainer_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void FileListContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //如果不是从文件列表Raise的事件，忽略
             if (e.OriginalSource is ListView)
@@ -110,5 +127,6 @@ namespace SixCloud.Views
                 }
             }
         }
+
     }
 }

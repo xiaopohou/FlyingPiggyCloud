@@ -9,6 +9,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <local:UnixTimeCalculator x:Key="UnixTimeCalculator"/>
+        <local:SizeCalculator x:Key="SizeCalculator"/>
         <Style TargetType="{x:Type controls:FontIcon}">
             <Setter Property="IconSize" Value="14"/>
             <Setter Property="Margin" Value="5,0"/>
@@ -17,6 +19,31 @@
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Setter Property="Background" Value="Transparent"/>
         </Style>
+
+        <DataTemplate x:Key="NameCell">
+            <Grid>
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SourceCell">
+            <Grid>
+                <TextBlock Text="{Binding Source}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SizeCell">
+            <Grid>
+                <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator},Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DeleteTimeCell">
+            <Grid>
+                <TextBlock Text="{Binding DeleteTime, Converter={StaticResource UnixTimeCalculator},Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Grid>
+        </DataTemplate>
+
     </UserControl.Resources>
     <Grid>
         <!--上方栏-->
@@ -44,13 +71,13 @@
 
         </Grid>
         <Rectangle Margin="0,92,0,0" Fill="White"/>
-        <ListView SelectedIndex="{Binding SelectedIndex,Mode=OneWayToSource}" x:Name="RecoveryList" Margin="0,116,0,0" ItemsSource="{Binding FileList}">
+        <ListView ScrollViewer.ScrollChanged="RecoveryList_ScrollChanged" x:Name="RecoveryList" Margin="0,116,0,0" ItemsSource="{Binding RecoveryList}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName, Mode=OneWay}" Header="文件名" />
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperSourcePath}" Header="源位置"/>
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileSize}" Header="大小"/>
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" Header="删除时间"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName, Mode=OneWay}" CellTemplate="{StaticResource NameCell}" Header="文件名" />
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperSourcePath}" CellTemplate="{StaticResource SourceCell}" Header="源位置"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileSize}" CellTemplate="{StaticResource SizeCell}" Header="大小"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" CellTemplate="{StaticResource DeleteTimeCell}" Header="删除时间"/>
                 </GridView>
             </ListView.View>
         </ListView>

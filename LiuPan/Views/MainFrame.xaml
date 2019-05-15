@@ -167,10 +167,9 @@
                     </StackPanel>
                     
                     <!--主文件列表窗格 Margin不能低于0/32/0/0-->
-                    <Grid Margin="25,35,25,35" Grid.Column="1" Grid.RowSpan="4" DataContext="{Binding FileList}">
-                        <usercontrols:FileListView x:Name="MainContainer"
-                                                   ListView.SelectionChanged="MainContainer_SelectionChanged"
-                                                   DataContextChanged="MainContainer_DataContextChanged"/>
+                    <Grid x:Name="MainContainer" Margin="25,35,25,35" Grid.Column="1" Grid.RowSpan="4" DataContext="{Binding MainContainerContent}" DataContextChanged="MainContainer_DataContextChanged">
+                        <usercontrols:FileListView x:Name="FileListContainer" ListView.SelectionChanged="FileListContainer_SelectionChanged" Visibility="Collapsed"/>
+                        <usercontrols:RecoveryBox x:Name="RecoveryBoxContainer" Visibility="Collapsed"/>
                         <Grid.RenderTransform>
                             <TranslateTransform x:Name="MainContainerTransform"/>
                         </Grid.RenderTransform>

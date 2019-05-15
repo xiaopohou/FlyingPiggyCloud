@@ -1,5 +1,4 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using SixCloud.Controllers;
 using SixCloud.Models;
 using SixCloud.Views;
 using System;
@@ -93,7 +92,7 @@ namespace SixCloud.ViewModels
 
         public async Task NavigateByPath(string path, bool autoCreate = false)
         {
-            if(!canNavigate)
+            if (!canNavigate)
             {
                 return;
             }
@@ -241,7 +240,7 @@ namespace SixCloud.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    System.Windows.MessageBox.Show(ex.Message, "加载文件列表失败");
+                    MessageBox.Show(ex.Message, "加载文件列表失败");
                 }
             }
 
@@ -564,62 +563,5 @@ namespace SixCloud.ViewModels
             UploadFileCommand = new DependencyCommand(UploadFile, DependencyCommand.AlwaysCan);
             UploadFolderCommand = new DependencyCommand(UploadFolder, DependencyCommand.AlwaysCan);
         }
-    }
-
-    internal class RecoverBoxViewModel:ViewModelBase
-    {
-        private static readonly RecoveryBox recoveryBox = new RecoveryBox();
-
-        public RecoverBoxViewModel()
-        {
-            EmptyCommand = new AsyncCommand(Empty, DependencyCommand.AlwaysCan);
-            DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
-            RecoveryCommand = new DependencyCommand(Recovery, DependencyCommand.AlwaysCan);
-        }
-
-        #region Empty
-        public AsyncCommand EmptyCommand { get; private set; }
-        private void Empty(object parameter)
-        {
-            recoveryBox.Empty();
-        }
-        #endregion
-
-        #region Delete
-        public DependencyCommand DeleteCommand { get; private set; }
-
-        private void Delete(object parameter)
-        {
-            if (parameter is IList selectedItems)
-            {
-                List<string> list = new List<string>(selectedItems.Count);
-                foreach (FileListItemViewModel a in selectedItems)
-                {
-                    list.Add(a.UUID);
-                }
-                recoveryBox.Delete(list.ToArray());
-            }
-        }
-        #endregion
-
-        #region Recovery
-        public DependencyCommand RecoveryCommand { get; private set; }
-
-        private void Recovery(object parameter)
-        {
-            if (parameter is IList selectedItems)
-            {
-                List<string> list = new List<string>(selectedItems.Count);
-                foreach (FileListItemViewModel a in selectedItems)
-                {
-                    list.Add(a.UUID);
-                }
-                recoveryBox.Restore(list.ToArray());
-            }
-        }
-        #endregion
-
-        public ObservableCollection<RecoveryBoxItem> RecoveryList { get; private set; }
-
     }
 }
