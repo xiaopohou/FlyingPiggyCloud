@@ -389,7 +389,7 @@ namespace SixCloud.Controllers
 
     internal sealed class OfflineDownloader : SixCloudMethordBase
     {
-        public GenericResult<OfflineTaskParseUrl[]> GetRecoveryBoxPage(string[] urls)
+        public GenericResult<OfflineTaskParseUrl[]> ParseUrl(string[] urls)
         {
             while (string.IsNullOrWhiteSpace(Token))
             {
@@ -404,6 +404,22 @@ namespace SixCloud.Controllers
             }
             var data = new { url = stringBuilder.ToString() };
             GenericResult<OfflineTaskParseUrl[]> x = Post<GenericResult<OfflineTaskParseUrl[]>>(JsonConvert.SerializeObject(data), "v2/offline/parseUrl", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
+
+        public GenericResult<dynamic> Add(string path, object[] taskParameters)
+        {
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            var data = new { path, task = taskParameters };
+            GenericResult<dynamic> x = Post<GenericResult<dynamic>>(JsonConvert.SerializeObject(data), "v2/offline/add", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);
