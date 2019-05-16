@@ -4,6 +4,7 @@ using SixCloud.Views;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 
 namespace SixCloud.Controllers
 {
@@ -388,6 +389,27 @@ namespace SixCloud.Controllers
 
     internal sealed class OfflineDownloader : SixCloudMethordBase
     {
+        public GenericResult<OfflineTaskParseUrl[]> GetRecoveryBoxPage(string[] urls)
+        {
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (string url in urls)
+            {
+                stringBuilder.Append(url);
+                stringBuilder.Append("\n");
+            }
+            var data = new { url = stringBuilder.ToString() };
+            GenericResult<OfflineTaskParseUrl[]> x = Post<GenericResult<OfflineTaskParseUrl[]>>(JsonConvert.SerializeObject(data), "v2/offline/parseUrl", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
 
     }
 }
