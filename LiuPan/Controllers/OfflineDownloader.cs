@@ -63,7 +63,7 @@ namespace SixCloud.Controllers
             return x;
         }
 
-        public GenericResult<OfflineTaskList> DeleteTask(string[] identities)
+        public GenericResult<int> DeleteTask(string[] identities)
         {
             while (string.IsNullOrWhiteSpace(Token))
             {
@@ -71,7 +71,7 @@ namespace SixCloud.Controllers
                 GetToken.ShowDialog();
             }
             var data = new { identities };
-            GenericResult<OfflineTaskList> x = Post<GenericResult<OfflineTaskList>>(JsonConvert.SerializeObject(data), "v2/offline/delete", new Dictionary<string, string>
+            GenericResult<int> x = Post<GenericResult<int>>(JsonConvert.SerializeObject(data), "v2/offline/delete", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);
