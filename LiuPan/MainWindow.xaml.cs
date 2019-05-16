@@ -1,10 +1,8 @@
-﻿using FileDownloader;
+﻿using SixCloud.Controllers;
 using SixCloud.Models;
 using SixCloud.Views;
 using SixCloudCustomControlLibrary.Controls;
-using System.Threading;
 using System.Windows;
-using System.Windows.Media;
 
 namespace SixCloud
 {
@@ -33,6 +31,17 @@ namespace SixCloud
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             //new LoadingView(this, ()=>Thread.Sleep(5000)).ShowDialog();
+            //OfflineDownloader offlineDownloader = new OfflineDownloader();
+            //GenericResult<OfflineTaskParseUrl[]> x = offlineDownloader.ParseUrl(new string[]
+            //{
+            //    @"https://files-cdn.cnblogs.com/files/Gyoung/SqliteLinqTest.zip",
+            //    @"https://newcontinuum.dl.sourceforge.net/project/openmediavault/4.1.3/openmediavault_4.1.3-amd64.iso"
+            //});
+            //var c = offlineDownloader.Add(@"/", new object[]
+            //{
+            //    new {identity=x.Result[0].Identity},
+            //    new {identity=x.Result[1].Identity}
+            //});
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

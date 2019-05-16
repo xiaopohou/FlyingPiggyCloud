@@ -411,7 +411,7 @@ namespace SixCloud.Controllers
             return x;
         }
 
-        public GenericResult<dynamic> Add(string path, object[] taskParameters)
+        public GenericResult<object> Add(string path, object[] taskParameters)
         {
             while (string.IsNullOrWhiteSpace(Token))
             {
@@ -419,7 +419,7 @@ namespace SixCloud.Controllers
                 GetToken.ShowDialog();
             }
             var data = new { path, task = taskParameters };
-            GenericResult<dynamic> x = Post<GenericResult<dynamic>>(JsonConvert.SerializeObject(data), "v2/offline/add", new Dictionary<string, string>
+            GenericResult<object> x = Post<GenericResult<object>>(JsonConvert.SerializeObject(data), "v2/offline/add", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);
