@@ -136,6 +136,7 @@
     <Compile Include="Controllers\Authentication.cs" />
     <Compile Include="Controllers\Calculators.cs" />
     <Compile Include="Controllers\FileSystem.cs" />
+    <Compile Include="Controllers\OfflineDownloader.cs" />
     <Compile Include="Controllers\RecoveryBox.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\SixCloudMethordBase.cs" />
