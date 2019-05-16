@@ -411,7 +411,7 @@ namespace SixCloud.Controllers
             return x;
         }
 
-        public GenericResult<object> Add(string path, object[] taskParameters)
+        public GenericResult<OfflineTaskAdd> Add(string path, OfflineTaskParameters[] taskParameters)
         {
             while (string.IsNullOrWhiteSpace(Token))
             {
@@ -419,7 +419,7 @@ namespace SixCloud.Controllers
                 GetToken.ShowDialog();
             }
             var data = new { path, task = taskParameters };
-            GenericResult<object> x = Post<GenericResult<object>>(JsonConvert.SerializeObject(data), "v2/offline/add", new Dictionary<string, string>
+            GenericResult<OfflineTaskAdd> x = Post<GenericResult<OfflineTaskAdd>>(JsonConvert.SerializeObject(data), "v2/offline/add", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);
@@ -427,5 +427,36 @@ namespace SixCloud.Controllers
             return x;
         }
 
+        public GenericResult<OfflineTaskList> GetList(int page = 1, int pageSize = 20)
+        {
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            var data = new { page, pageSize };
+            GenericResult<OfflineTaskList> x = Post<GenericResult<OfflineTaskList>>(JsonConvert.SerializeObject(data), "v2/offline/page", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
+
+        public GenericResult<OfflineTaskList> DeleteTask(string[] identities)
+        {
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            var data = new { identities };
+            GenericResult<OfflineTaskList> x = Post<GenericResult<OfflineTaskList>>(JsonConvert.SerializeObject(data), "v2/offline/delete", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
     }
 }
