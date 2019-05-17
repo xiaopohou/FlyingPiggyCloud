@@ -24,25 +24,5 @@ namespace SixCloud.Views
         {
             InitializeComponent();
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (IsWhichTypeStage.IsChecked ?? false)
-            {
-                IsInputUrlsStage.IsChecked = true;
-            }
-            else if (IsInputUrlsStage.IsChecked ?? false)
-            {
-                IsUploadTorrentStage.IsChecked = true;
-            }
-            else if (IsUploadTorrentStage.IsChecked ?? false)
-            {
-                IsCheckFilesStage.IsChecked = true;
-            }
-            else
-            {
-                IsWhichTypeStage.IsChecked = true;
-            }
-        }
     }
 }
