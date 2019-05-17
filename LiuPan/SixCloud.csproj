@@ -183,6 +183,9 @@
     <Compile Include="Views\LogoutOthersView.xaml.cs">
       <DependentUpon>LogoutOthersView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\OfflineUrlsDialog.xaml.cs">
+      <DependentUpon>OfflineUrlsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PreView.xaml.cs">
       <DependentUpon>PreView.xaml</DependentUpon>
     </Compile>
@@ -233,6 +236,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\LogoutOthersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OfflineUrlsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

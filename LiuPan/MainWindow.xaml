@@ -19,14 +19,6 @@
             </Grid>
         </ctl:LightTabItem>
         <ctl:LightTabItem>
-            <Rectangle Width="100" Height="100">
-                <Rectangle.Fill>
-                    <RadialGradientBrush GradientOrigin="0,0.5" Center="0,0.5" RadiusY="0.6" RadiusX="0.4" Opacity="0.75">
-                        <GradientStop Color="White" Offset="0"/>
-                        <GradientStop Color="#00000000" Offset="1"/>
-                    </RadialGradientBrush>
-                </Rectangle.Fill>
-            </Rectangle>
         </ctl:LightTabItem>
         <ctl:LightTabItem/>
         <ctl:LightTabItem/>
