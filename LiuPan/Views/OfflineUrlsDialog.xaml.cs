@@ -24,5 +24,10 @@ namespace SixCloud.Views
         {
             InitializeComponent();
         }
+
+        private void CutDownRadioButtonChecked(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

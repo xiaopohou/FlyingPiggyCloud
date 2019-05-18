@@ -9,133 +9,78 @@
     xmlns:local="clr-namespace:SixCloud.Views"
     mc:Ignorable="d"
     BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-    Title="{Binding Title}" Height="Auto" Width="Auto" MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
-    <!--<Window.Resources>
-        <Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="Padding" Value="6,2,6,2"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TabItem}">
-                        <StackPanel x:Name="templateRoot" SnapsToDevicePixels="true">
-                            <ContentPresenter x:Name="contentPresenter" 
-                                              ContentSource="Header" 
-                                              Focusable="False" 
-                                              Margin="{TemplateBinding Padding}"
-                                              RecognizesAccessKey="True"
-                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                            <Rectangle x:Name="line" Fill="{DynamicResource PrimaryHueMidBrush}" VerticalAlignment="Bottom" Height="3" Margin="2"/>
-                        </StackPanel>
-                        <ControlTemplate.Triggers>
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="False"/>
-                                </MultiDataTrigger.Conditions>
-                                <Setter Property="Foreground" Value="Gray"/>
-                                <Setter Property="Opacity" Value="0.5"/>
-                            </MultiDataTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-    <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">
-        <TabItem
-                 IsSelected="True"
-                 Header="链接"
-                 Background="{x:Null}"
-                 BorderBrush="{x:Null}">
-            <Grid>
-                <Grid x:Name="Link" OpacityMask="White">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBox Margin="15"
-                 FontSize="16"
-                 BorderBrush="{DynamicResource PrimaryHueMidBrush}"
-                 materialDesign:HintAssist.Hint="输入离线下载的任务链接，每行一个"
-                 Foreground="{DynamicResource PrimaryHueDarkBrush}"
-                 AcceptsReturn="True"
-                 TextWrapping="Wrap"/>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                        <Button Margin="15" Padding="45,0" Content="确定"/>
-                        <Button Margin="15" Padding="45,0" Content="取消"/>
-                    </StackPanel>
-
-                </Grid>
-                <Grid.RenderTransform>
-                    <TranslateTransform x:Name="LinkTranslateTransform"/>
-                </Grid.RenderTransform>
-            </Grid>
-            <TabItem.Triggers>
-                <EventTrigger RoutedEvent="Selector.Selected">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation BeginTime="00:00:00"
-                                             Duration="00:00:00.500"
-                                             Storyboard.TargetName="Link"
-                                             Storyboard.TargetProperty="OpacityMask.Opacity"
-                                             From="0"
-                                             To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <SineEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation BeginTime="00:00:00"
-                                             Duration="00:00:00.250"
-                                             Storyboard.TargetName="LinkTranslateTransform"
-                                             Storyboard.TargetProperty="X"
-                                             From="-100"
-                                             To="0"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </TabItem.Triggers>
-        </TabItem>
-        <TabItem Header="种子文件"
-                 Background="{x:Null}"
-                 BorderBrush="{x:Null}">
-            <Grid>
-                <Grid x:Name="Seed" OpacityMask="White">
-
-                </Grid>
-                <Grid.RenderTransform>
-                    <TranslateTransform x:Name="SeedTranslateTransform"/>
-                </Grid.RenderTransform>
-            </Grid>
-            <TabItem.Triggers>
-                <EventTrigger RoutedEvent="Selector.Selected">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation BeginTime="00:00:00"
-                                             Duration="00:00:00.500"
-                                             Storyboard.TargetName="Seed"
-                                             Storyboard.TargetProperty="OpacityMask.Opacity"
-                                             From="0"
-                                             To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <SineEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation BeginTime="00:00:00"
-                                             Duration="00:00:00.250"
-                                             Storyboard.TargetName="SeedTranslateTransform"
-                                             Storyboard.TargetProperty="X"
-                                             From="100"
-                                             To="0"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </TabItem.Triggers>
-        </TabItem>
-    </TabControl>-->
+    Title="{Binding Title}" Height="720" Width="720" MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
     <controls:MetroWindow.Resources>
         <Style x:Key="StageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Margin" Value="15"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+
+        <Style x:Key="CardRadioButton" TargetType="{x:Type RadioButton}">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="Foreground" Value="{Binding (TextElement.Foreground), RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type FrameworkElement}}}"/>
+            <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border Name="ContainBorder" CornerRadius="1" Background="White" BorderBrush="LightGray" BorderThickness="1" SnapsToDevicePixels="True">
+                            <Grid x:Name="templateRoot" SnapsToDevicePixels="True">
+                                <Rectangle Name="Mask" Fill="{DynamicResource PrimaryHueDarkBrush}" Opacity="0" RadiusX="1" RadiusY="1"/>
+                                <ContentPresenter x:Name="contentPresenter"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Content="{TemplateBinding Content}"
+                                              ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                              Focusable="False"
+                                              Margin="{TemplateBinding Padding}"
+                                              RecognizesAccessKey="True"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="0" BlurRadius="5" Color="#FF5A5A5A"/>
+                            </Border.Effect>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="ButtonBase.Click">
+                                <BeginStoryboard>
+                                    <Storyboard>
+
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <Trigger Property="HasContent" Value="True">
+                                <Setter Property="Padding" Value="1"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.26"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="ContainBorder" Property="Effect" Value="{x:Null}"/>
+                                <Setter TargetName="Mask" Property="Opacity" Value="0.4"/>
+                                <Setter TargetName="ContainBorder" Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+                            </Trigger>
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{DynamicResource ValidationErrorBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </controls:MetroWindow.Resources>
     <Grid>
@@ -143,13 +88,37 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Margin="5,32,5,5" x:Name="MainContainer">
-            <Grid x:Name="WhichTypeStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
+        <Grid Margin="25,32,25,5" x:Name="MainContainer">
+            <Grid x:Name="WhichTypeStageContainer" RenderTransformOrigin="0.5,0.5">
+                <StackPanel VerticalAlignment="Center" RadioButton.Checked="CutDownRadioButtonChecked" RadioButton.Unchecked="CutDownRadioButtonChecked">
+                    <RadioButton x:Name="Urls" Style="{DynamicResource CardRadioButton}">
+                        <Grid Height="70">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Fill="LightPink" Opacity="0.7"/>
+                            <Image Source="https://png.pngtree.com/element_pic/17/01/08/23875592320496ef07cd7b07abd55e78.jpg"/>
+                            <TextBlock Margin="15" Text="网址/磁力链接" Grid.Column="1"/>
+                        </Grid>
+                    </RadioButton>
+                    <RadioButton x:Name="Torrent" Style="{DynamicResource CardRadioButton}">
+                        <Grid Height="70">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Fill="LightPink" Opacity="0.7"/>
+                            <Image Source="https://png.pngtree.com/element_pic/17/01/08/23875592320496ef07cd7b07abd55e78.jpg"/>
+                            <TextBlock Margin="15" Text="种子文件" Grid.Column="1"/>
+                        </Grid>
+                    </RadioButton>
+                </StackPanel>
                 <!--#region  动画及触发器-->
                 <RadioButton x:Name="IsWhichTypeStage" Visibility="Collapsed" GroupName="Stage"/>
                 <Grid.RenderTransform>
                     <TransformGroup>
-                        <TranslateTransform x:Name="WhichTypeStageTranslateTransform" X="{Binding ElementName=MainContainer,Path=ActualWidth}"/>
+                        <TranslateTransform x:Name="WhichTypeStageTranslateTransform"/>
                         <ScaleTransform x:Name="WhichTypeStageScaleTransform" CenterX="0.5" CenterY="0.5"/>
                     </TransformGroup>
                 </Grid.RenderTransform>
