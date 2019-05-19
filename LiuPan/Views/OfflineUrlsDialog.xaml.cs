@@ -16,7 +16,7 @@ namespace SixCloud.Views
                 System.Threading.Thread.Sleep(1000);
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    IsInputUrlsStage.IsChecked = true;
+                    IsWhichTypeStage.IsChecked = true;
                 });
             });
 
