@@ -100,7 +100,16 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ParseFileTemplate">
-            <Grid/>
+            <Grid Name="fileInfoContainer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding ElementName=fileInfoContainer,Path=ActualHeight}"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <RadioButton IsChecked="{Binding IsChecked,Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                <TextBlock Text="{Binding Size,Converter={StaticResource ResourceKey=SizeCalculator},Mode=OneWay}" Grid.Column="2"/>
+            </Grid>
         </DataTemplate>
     </controls:MetroWindow.Resources>
     <Grid>
