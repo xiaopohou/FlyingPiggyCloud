@@ -1,5 +1,6 @@
 ﻿using SixCloud.Controllers;
 using SixCloud.Models;
+using SixCloud.ViewModels;
 using SixCloud.Views;
 using SixCloudCustomControlLibrary.Controls;
 using System.Windows;
@@ -30,7 +31,9 @@ namespace SixCloud
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            (new OfflineUrlsDialog()).ShowDialog();
+            var a = new OfflineUrlsDialog();
+            a.Show();
+            a.DataContext = new OfflineUrlsDialogViewModel();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

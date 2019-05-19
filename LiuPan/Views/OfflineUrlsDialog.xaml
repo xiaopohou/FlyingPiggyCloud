@@ -7,12 +7,17 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:local="clr-namespace:SixCloud.Views"
     xmlns:UserControls="clr-namespace:SixCloud.Views.UserControls"
+    xmlns:ViewModels="clr-namespace:SixCloud.ViewModels"
     x:Class="SixCloud.Views.OfflineUrlsDialog"
     mc:Ignorable="d"
     BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-    Title="{Binding Title}" Height="720" Width="720" MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
+    ShowInTaskbar="False" Height="720" Width="720"
+    MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
     <controls:MetroWindow.Resources>
+        <ViewModels:StageConverter x:Key="StageConverter"/>
+        <ViewModels:TaskTypeConverter x:Key="TaskTypeConverter"/>
         <UserControls:SizeCalculator x:Key="SizeCalculator"/>
+
         <Style x:Key="StageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Margin" Value="15"/>
@@ -87,8 +92,8 @@
         <DataTemplate x:Key="ParseResultTemplate">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="50"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Name}"/>
@@ -96,19 +101,20 @@
                     <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
                     <TextBlock Text=")"/>
                 </StackPanel>
-                <ListBox Grid.Row="1" SelectionMode="Single" ItemsSource="{Binding Files}" ItemTemplate="{DynamicResource ParseFileTemplate}"/>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Files}" ItemTemplate="{DynamicResource ParseFileTemplate}" />
             </Grid>
         </DataTemplate>
+        
         <DataTemplate x:Key="ParseFileTemplate">
-            <Grid Name="fileInfoContainer">
+            <Grid x:Name="fileInfoContainer">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="{Binding ElementName=fileInfoContainer,Path=ActualHeight}"/>
+                    <ColumnDefinition Width="{Binding ActualHeight, ElementName=fileInfoContainer}"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <RadioButton IsChecked="{Binding IsChecked,Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <RadioButton IsChecked="{Binding IsChecked, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Name}" Grid.Column="1"/>
-                <TextBlock Text="{Binding Size,Converter={StaticResource ResourceKey=SizeCalculator},Mode=OneWay}" Grid.Column="2"/>
+                <TextBlock Text="{Binding Size, Converter={StaticResource ResourceKey=SizeCalculator}, Mode=OneWay}" Grid.Column="2"/>
             </Grid>
         </DataTemplate>
     </controls:MetroWindow.Resources>
@@ -119,51 +125,6 @@
         </Grid.RowDefinitions>
         <Grid Margin="25,32,25,5" x:Name="MainContainer">
             <Grid x:Name="WhichTypeStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
-                <TextBlock Text="这是什么类型的下载任务？" Margin="15,3" FontSize="24" VerticalAlignment="Top"/>
-                <StackPanel VerticalAlignment="Top" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked" Margin="0,48,0,0">
-                    <RadioButton x:Name="Urls" Style="{DynamicResource CardRadioButton}">
-                        <Grid Height="70">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="70"/>
-                                <ColumnDefinition Width="1*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="35"/>
-                                <RowDefinition Height="35"/>
-                            </Grid.RowDefinitions>
-                            <Rectangle Grid.RowSpan="2" Fill="LightPink" Opacity="0.5" Margin="10" RadiusX="3" RadiusY="3"/>
-                            <Image Grid.RowSpan="2" Opacity="0.7" Margin="20" UseLayoutRounding="True" Source="/SixCloud;component/MediaResources/link-interface-hyperlink-icon-2770-512x512.png"/>
-                            <TextBlock Margin="5,3" VerticalAlignment="Bottom" Text="链接" Grid.Column="1"/>
-                            <TextBlock FontSize="14" Margin="5,0" VerticalAlignment="Top" Text="支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接" Grid.Column="1" Grid.Row="1">
-                                <TextBlock.Foreground>
-                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
-                                </TextBlock.Foreground>
-                            </TextBlock>
-                        </Grid>
-                    </RadioButton>
-                    <RadioButton x:Name="Torrent" Style="{DynamicResource CardRadioButton}">
-                        <Grid Height="70">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="70"/>
-                                <ColumnDefinition Width="1*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="35"/>
-                                <RowDefinition Height="35"/>
-                            </Grid.RowDefinitions>
-                            <Rectangle Grid.RowSpan="2" Opacity="0.5" Margin="10" RadiusX="3" RadiusY="3"/>
-                            <Image Grid.RowSpan="2" Margin="15" UseLayoutRounding="True" Source="/SixCloud;component/MediaResources/torrent-brand-software-icon-7283-512x512.png"/>
-                            <TextBlock Margin="5,3" VerticalAlignment="Bottom" Text="种子文件" Grid.Column="1"/>
-                            <TextBlock FontSize="14" Margin="5,0" VerticalAlignment="Top" Text="支持BitTorrent种子文件" Grid.Column="1" Grid.Row="1">
-                                <TextBlock.Foreground>
-                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
-                                </TextBlock.Foreground>
-                            </TextBlock>
-                        </Grid>
-                    </RadioButton>
-                </StackPanel>
-                <!--#region  动画及触发器-->
-                <RadioButton x:Name="IsWhichTypeStage" Visibility="Collapsed" GroupName="Stage"/>
                 <Grid.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform x:Name="WhichTypeStageTranslateTransform"  X="{Binding ActualWidth, ElementName=MainContainer}"/>
@@ -212,17 +173,53 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </Grid.Triggers>
-                <!--#endregion-->
+                <TextBlock Text="这是什么类型的下载任务？" Margin="15,3" FontSize="24" VerticalAlignment="Top"/>
+                <StackPanel VerticalAlignment="Top" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked" Margin="0,48,0,0">
+                    <RadioButton IsChecked="{Binding TaskType, ConverterParameter=Urls, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}" x:Name="Urls" Style="{DynamicResource CardRadioButton}">
+                        <Grid Height="70">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                            </Grid.RowDefinitions>
+                            <Rectangle Grid.RowSpan="2" Fill="LightPink" Opacity="0.5" Margin="10" RadiusX="3" RadiusY="3"/>
+                            <Image Grid.RowSpan="2" Opacity="0.7" Margin="20" UseLayoutRounding="True" Source="/SixCloud;component/MediaResources/link-interface-hyperlink-icon-2770-512x512.png"/>
+                            <TextBlock Margin="5,3" VerticalAlignment="Bottom" Text="链接" Grid.Column="1"/>
+                            <TextBlock FontSize="14" Margin="5,0" VerticalAlignment="Top" Text="支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接" Grid.Column="1" Grid.Row="1">
+                                <TextBlock.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                        </Grid>
+                    </RadioButton>
+                    <RadioButton x:Name="Torrent" Style="{DynamicResource CardRadioButton}" IsChecked="{Binding TaskType, ConverterParameter=Torrent, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}">
+                        <Grid Height="70">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                            </Grid.RowDefinitions>
+                            <Rectangle Grid.RowSpan="2" Opacity="0.5" Margin="10" RadiusX="3" RadiusY="3"/>
+                            <Image Grid.RowSpan="2" Margin="15" UseLayoutRounding="True" Source="/SixCloud;component/MediaResources/torrent-brand-software-icon-7283-512x512.png"/>
+                            <TextBlock Margin="5,3" VerticalAlignment="Bottom" Text="种子文件" Grid.Column="1"/>
+                            <TextBlock FontSize="14" Margin="5,0" VerticalAlignment="Top" Text="支持BitTorrent种子文件" Grid.Column="1" Grid.Row="1">
+                                <TextBlock.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                        </Grid>
+                    </RadioButton>
+                </StackPanel>
+                <RadioButton x:Name="IsWhichTypeStage" Visibility="Collapsed" GroupName="Stage" IsChecked="{Binding Stage, ConverterParameter=WhichType, Converter={StaticResource StageConverter}, Mode=OneWay}"/>
             </Grid>
 
             <Grid x:Name="InputUrlsStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
-                <TextBlock Text="请输入链接" Margin="15,3" FontSize="24" VerticalAlignment="Top"/>
-                <TextBox AcceptsReturn="True"
-                         materialDesign:HintAssist.Hint="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
-                         Margin="15,90,15,45"
-                         Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"/>
-                <!--#region  动画及触发器-->
-                <RadioButton x:Name="IsInputUrlsStage" Visibility="Collapsed" GroupName="Stage"/>
                 <Grid.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform x:Name="InputUrlsStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
@@ -271,12 +268,15 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </Grid.Triggers>
-                <!--#endregion-->
+                <TextBlock Text="请输入链接" Margin="15,3" FontSize="24" VerticalAlignment="Top"/>
+                <TextBox AcceptsReturn="True"
+                         materialDesign:HintAssist.Hint="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
+                         Margin="15,90,15,45"
+                         Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"/>
+                <RadioButton IsChecked="{Binding Stage, ConverterParameter=InputUrls, Converter={StaticResource StageConverter}, Mode=OneWay}" x:Name="IsInputUrlsStage" Visibility="Collapsed" GroupName="Stage"/>
             </Grid>
-            
+
             <Grid x:Name="UploadTorrentStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
-                <!--#region  动画及触发器-->
-                <RadioButton x:Name="IsUploadTorrentStage" Visibility="Collapsed" GroupName="Stage"/>
                 <Grid.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform x:Name="UploadTorrentStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
@@ -325,13 +325,10 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </Grid.Triggers>
-                <!--#endregion-->
+                <RadioButton x:Name="IsUploadTorrentStage" Visibility="Collapsed" GroupName="Stage"/>
             </Grid>
-            
+
             <Grid x:Name="CheckFilesStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
-                <ItemsControl ItemsSource="{Binding ParseResults}" ItemTemplate="{DynamicResource ParseResultTemplate}" RadioButton.Checked="CutDownRadioButtonChecked" RadioButton.Unchecked="CutDownRadioButtonChecked"/>
-                <!--#region  动画及触发器-->
-                <RadioButton x:Name="IsCheckFilesStage" Visibility="Collapsed" GroupName="Stage"/>
                 <Grid.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform x:Name="CheckFilesStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
@@ -380,7 +377,10 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </Grid.Triggers>
-                <!--#endregion-->
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding ParseResults}" ItemTemplate="{DynamicResource ParseResultTemplate}" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked"/>
+                </ScrollViewer>
+                <RadioButton x:Name="IsCheckFilesStage" IsChecked="{Binding Stage, ConverterParameter=CheckFiles, Converter={StaticResource StageConverter}, Mode=OneWay}" Visibility="Collapsed" GroupName="Stage"/>
             </Grid>
         </Grid>
 

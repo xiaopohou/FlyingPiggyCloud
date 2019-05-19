@@ -1,4 +1,6 @@
-﻿using EzWcs.HTTP;
+﻿using EzWcs.Calculators;
+using EzWcs.HTTP;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -18,6 +20,8 @@ namespace EzWcs
                 HttpResult result = UploadFile(simpleUploadTask.FilePath, simpleUploadTask.Token, simpleUploadTask.Address, Path.GetFileName(simpleUploadTask.FilePath));
                 if (result.Code == (int)HttpStatusCode.OK)
                 {
+                    JObject jo = JObject.Parse(result.Text);
+                    simpleUploadTask.Hash = jo["hash"].ToString();
                     simpleUploadTask.UploadTaskStatus = UploadTaskStatus.Completed;
                 }
                 else

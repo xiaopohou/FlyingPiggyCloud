@@ -7,6 +7,9 @@ namespace SixCloud.Models
     /// </summary>
     internal class OfflineTaskParseFile
     {
+        [JsonIgnore]
+        public bool? IsChecked { get; set; } = true;
+
         [JsonProperty(PropertyName = "downloadIdentity")]
         public string DownloadIdentity { get; set; }
 

@@ -31,6 +31,22 @@ namespace SixCloud.Controllers
             return x;
         }
 
+        public GenericResult<OfflineTaskParseUrl[]> ParseTorrent(string[] hashs)
+        {
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            var data = new { hash = hashs };
+            GenericResult<OfflineTaskParseUrl[]> x = Post<GenericResult<OfflineTaskParseUrl[]>>(JsonConvert.SerializeObject(data), "v2/offline/parseTorrent", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
+
         public GenericResult<OfflineTaskAdd> Add(string path, OfflineTaskParameters[] taskParameters)
         {
             while (string.IsNullOrWhiteSpace(Token))

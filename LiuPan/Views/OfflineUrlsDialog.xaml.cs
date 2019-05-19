@@ -11,14 +11,14 @@ namespace SixCloud.Views
         public OfflineUrlsDialog()
         {
             InitializeComponent();
-            System.Threading.Tasks.Task.Run(() =>
-            {
-                System.Threading.Thread.Sleep(1000);
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    IsWhichTypeStage.IsChecked = true;
-                });
-            });
+            //System.Threading.Tasks.Task.Run(() =>
+            //{
+            //    System.Threading.Thread.Sleep(1000);
+            //    App.Current.Dispatcher.Invoke(() =>
+            //    {
+            //        IsWhichTypeStage.IsChecked = true;
+            //    });
+            //});
 
         }
 

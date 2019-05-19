@@ -11,6 +11,8 @@ namespace EzWcs
 
         public string Address { get; protected set; }
 
+        public string Hash { get; internal set; }
+
         public long CompletedBytes
         {
             get

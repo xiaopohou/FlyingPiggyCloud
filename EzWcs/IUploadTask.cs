@@ -19,6 +19,8 @@
 
         long CompletedBytes { get; }
 
+        string Hash { get; }
+
         long TotalBytes { get; }
 
         UploadTaskStatus UploadTaskStatus { get; }

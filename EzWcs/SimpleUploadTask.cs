@@ -8,6 +8,8 @@ namespace EzWcs
 
         public string Token { get; protected set; }
 
+        public string Hash { get; internal set; }
+
         public string Address { get; protected set; }
 
         public long CompletedBytes

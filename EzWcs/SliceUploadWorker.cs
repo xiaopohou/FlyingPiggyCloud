@@ -196,6 +196,7 @@ namespace EzWcs
                 }
                 else
                 {
+                    task.Hash = jo["hash"].ToString();
                     task.UploadTaskStatus = UploadTaskStatus.Completed;
                 }
                 return;

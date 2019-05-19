@@ -171,6 +171,7 @@
     <Compile Include="ViewModels\FileSystemViewModel.cs" />
     <Compile Include="ViewModels\LogoutOthersViewModels.cs" />
     <Compile Include="ViewModels\MainFrameViewModel.cs" />
+    <Compile Include="ViewModels\OfflineUrlsDialogViewModel.cs" />
     <Compile Include="ViewModels\RecoveryBoxViewModel.cs" />
     <Compile Include="ViewModels\TransferListViewModel.cs" />
     <Compile Include="ViewModels\UploadedListViewModel.cs" />
