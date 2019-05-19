@@ -1,17 +1,5 @@
 ﻿using SixCloudCustomControlLibrary.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SixCloud.Views
 {
@@ -23,6 +11,15 @@ namespace SixCloud.Views
         public OfflineUrlsDialog()
         {
             InitializeComponent();
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                System.Threading.Thread.Sleep(1000);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    IsInputUrlsStage.IsChecked = true;
+                });
+            });
+
         }
 
         private void CutDownRadioButtonChecked(object sender, RoutedEventArgs e)

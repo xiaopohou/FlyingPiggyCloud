@@ -144,7 +144,9 @@
     <Compile Include="Controllers\TaskBarButton.cs" />
     <Compile Include="Controllers\TransmissionProgressController.cs" />
     <Compile Include="Models\DownloadTask.cs" />
+    <Compile Include="Models\OfflineTaskAdd.cs" />
     <Compile Include="Models\OfflineTaskList.cs" />
+    <Compile Include="Models\OfflineTaskParameters.cs" />
     <Compile Include="Models\OfflineTaskParseFile.cs" />
     <Compile Include="Models\OfflineTaskParseUrl.cs" />
     <Compile Include="Models\OnlineClient.cs" />
