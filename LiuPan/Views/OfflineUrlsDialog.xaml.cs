@@ -1,5 +1,8 @@
-﻿using SixCloudCustomControlLibrary.Controls;
+﻿using SixCloud.Models;
+using SixCloud.ViewModels;
+using SixCloudCustomControlLibrary.Controls;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SixCloud.Views
 {

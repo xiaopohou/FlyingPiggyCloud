@@ -100,7 +100,8 @@ namespace SixCloud.ViewModels
     {
         WhichType,
         InputUrls,
-        CheckFiles
+        CheckFiles,
+        SelectSavingPath
     }
 
     internal class TaskTypeConverter : IValueConverter

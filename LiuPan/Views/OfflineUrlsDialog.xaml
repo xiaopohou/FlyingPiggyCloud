@@ -93,7 +93,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition MaxHeight="50"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition MinHeight="50"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Name}"/>
@@ -101,7 +101,7 @@
                     <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
                     <TextBlock Text=")"/>
                 </StackPanel>
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding Files}" ItemTemplate="{DynamicResource ParseFileTemplate}" />
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Files}" ItemTemplate="{DynamicResource ParseFileTemplate}"/>
             </Grid>
         </DataTemplate>
         
@@ -276,30 +276,30 @@
                 <RadioButton IsChecked="{Binding Stage, ConverterParameter=InputUrls, Converter={StaticResource StageConverter}, Mode=OneWay}" x:Name="IsInputUrlsStage" Visibility="Collapsed" GroupName="Stage"/>
             </Grid>
 
-            <Grid x:Name="UploadTorrentStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
+            <Grid x:Name="SelectSavingPathStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>
                     <TransformGroup>
-                        <TranslateTransform x:Name="UploadTorrentStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
-                        <ScaleTransform x:Name="UploadTorrentStageScaleTransform" CenterX="0.5" CenterY="0.5"/>
+                        <TranslateTransform x:Name="SelectSavingPathStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
+                        <ScaleTransform x:Name="SelectSavingPathStageScaleTransform" CenterX="0.5" CenterY="0.5"/>
                     </TransformGroup>
                 </Grid.RenderTransform>
                 <Grid.Triggers>
                     <EventTrigger RoutedEvent="ToggleButton.Checked">
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation Storyboard.TargetName="UploadTorrentStageScaleTransform"
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageScaleTransform"
                                                      Storyboard.TargetProperty="ScaleX"
                                                      From="0" To="1"
                                                      Duration="00:00:00.200"/>
-                                <DoubleAnimation Storyboard.TargetName="UploadTorrentStageContainer"
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageContainer"
                                                      Storyboard.TargetProperty="Opacity"
                                                      From="0" To="1"
                                                      Duration="00:00:00.200"/>
-                                <DoubleAnimation Storyboard.TargetName="UploadTorrentStageScaleTransform"
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageScaleTransform"
                                                      Storyboard.TargetProperty="ScaleY"
                                                      From="0" To="1"
                                                      Duration="00:00:00.200"/>
-                                <DoubleAnimation Storyboard.TargetName="UploadTorrentStageTranslateTransform"
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageTranslateTransform"
                                                      Storyboard.TargetProperty="X"
                                                      To="0"
                                                      Duration="00:00:00"/>
@@ -309,11 +309,11 @@
                     <EventTrigger RoutedEvent="ToggleButton.Unchecked">
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation Storyboard.TargetName="UploadTorrentStageContainer"
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageContainer"
                                                      Storyboard.TargetProperty="Opacity"
                                                      From="1" To="0"
                                                      Duration="00:00:00.200"/>
-                                <DoubleAnimation Storyboard.TargetName="UploadTorrentStageTranslateTransform"
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageTranslateTransform"
                                                      Storyboard.TargetProperty="X"
                                                      To="{Binding ActualWidth, ElementName=MainContainer}"
                                                      Duration="00:00:00.200">
@@ -325,7 +325,7 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </Grid.Triggers>
-                <RadioButton x:Name="IsUploadTorrentStage" Visibility="Collapsed" GroupName="Stage"/>
+                <RadioButton x:Name="IsSelectSavingPathStage" IsChecked="{Binding Stage, ConverterParameter=SelectSavingPath, Converter={StaticResource StageConverter}, Mode=OneWay}" Visibility="Collapsed" GroupName="Stage"/>
             </Grid>
 
             <Grid x:Name="CheckFilesStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
