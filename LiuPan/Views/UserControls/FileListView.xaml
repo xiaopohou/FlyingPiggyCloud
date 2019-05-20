@@ -216,7 +216,7 @@
         <ListBox FontSize="12" x:Name="AddressBar" Margin="0,32,0,0" Height="24" VerticalAlignment="Top" BorderBrush="Black" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"/>
+                    <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>

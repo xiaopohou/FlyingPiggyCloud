@@ -276,58 +276,6 @@
                 <RadioButton IsChecked="{Binding Stage, ConverterParameter=InputUrls, Converter={StaticResource StageConverter}, Mode=OneWay}" x:Name="IsInputUrlsStage" Visibility="Collapsed" GroupName="Stage"/>
             </Grid>
 
-            <Grid x:Name="SelectSavingPathStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
-                <Grid.RenderTransform>
-                    <TransformGroup>
-                        <TranslateTransform x:Name="SelectSavingPathStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
-                        <ScaleTransform x:Name="SelectSavingPathStageScaleTransform" CenterX="0.5" CenterY="0.5"/>
-                    </TransformGroup>
-                </Grid.RenderTransform>
-                <Grid.Triggers>
-                    <EventTrigger RoutedEvent="ToggleButton.Checked">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageScaleTransform"
-                                                     Storyboard.TargetProperty="ScaleX"
-                                                     From="0" To="1"
-                                                     Duration="00:00:00.200"/>
-                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageContainer"
-                                                     Storyboard.TargetProperty="Opacity"
-                                                     From="0" To="1"
-                                                     Duration="00:00:00.200"/>
-                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageScaleTransform"
-                                                     Storyboard.TargetProperty="ScaleY"
-                                                     From="0" To="1"
-                                                     Duration="00:00:00.200"/>
-                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageTranslateTransform"
-                                                     Storyboard.TargetProperty="X"
-                                                     To="0"
-                                                     Duration="00:00:00"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageContainer"
-                                                     Storyboard.TargetProperty="Opacity"
-                                                     From="1" To="0"
-                                                     Duration="00:00:00.200"/>
-                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageTranslateTransform"
-                                                     Storyboard.TargetProperty="X"
-                                                     To="{Binding ActualWidth, ElementName=MainContainer}"
-                                                     Duration="00:00:00.200">
-                                    <DoubleAnimation.EasingFunction>
-                                        <PowerEase EasingMode="EaseIn"/>
-                                    </DoubleAnimation.EasingFunction>
-                                </DoubleAnimation>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Grid.Triggers>
-                <RadioButton x:Name="IsSelectSavingPathStage" IsChecked="{Binding Stage, ConverterParameter=SelectSavingPath, Converter={StaticResource StageConverter}, Mode=OneWay}" Visibility="Collapsed" GroupName="Stage"/>
-            </Grid>
-
             <Grid x:Name="CheckFilesStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>
                     <TransformGroup>
@@ -381,6 +329,58 @@
                     <ItemsControl ItemsSource="{Binding ParseResults}" ItemTemplate="{DynamicResource ParseResultTemplate}" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked"/>
                 </ScrollViewer>
                 <RadioButton x:Name="IsCheckFilesStage" IsChecked="{Binding Stage, ConverterParameter=CheckFiles, Converter={StaticResource StageConverter}, Mode=OneWay}" Visibility="Collapsed" GroupName="Stage"/>
+            </Grid>
+            
+            <Grid x:Name="SelectSavingPathStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform x:Name="SelectSavingPathStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
+                        <ScaleTransform x:Name="SelectSavingPathStageScaleTransform" CenterX="0.5" CenterY="0.5"/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="ToggleButton.Checked">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageScaleTransform"
+                                                     Storyboard.TargetProperty="ScaleX"
+                                                     From="0" To="1"
+                                                     Duration="00:00:00.200"/>
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageContainer"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="0" To="1"
+                                                     Duration="00:00:00.200"/>
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageScaleTransform"
+                                                     Storyboard.TargetProperty="ScaleY"
+                                                     From="0" To="1"
+                                                     Duration="00:00:00.200"/>
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageTranslateTransform"
+                                                     Storyboard.TargetProperty="X"
+                                                     To="0"
+                                                     Duration="00:00:00"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageContainer"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="1" To="0"
+                                                     Duration="00:00:00.200"/>
+                                <DoubleAnimation Storyboard.TargetName="SelectSavingPathStageTranslateTransform"
+                                                     Storyboard.TargetProperty="X"
+                                                     To="{Binding ActualWidth, ElementName=MainContainer}"
+                                                     Duration="00:00:00.200">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase EasingMode="EaseIn"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+                <RadioButton x:Name="IsSelectSavingPathStage" IsChecked="{Binding Stage, ConverterParameter=SelectSavingPath, Converter={StaticResource StageConverter}, Mode=OneWay}" Visibility="Collapsed" GroupName="Stage"/>
             </Grid>
         </Grid>
 
