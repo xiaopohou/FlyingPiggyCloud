@@ -1,5 +1,6 @@
 ﻿using SixCloud.Controllers;
 using SixCloud.Models;
+using SixCloud.Views.UserControls;
 using System;
 using System.Globalization;
 using System.Threading;
@@ -19,7 +20,11 @@ namespace SixCloud.ViewModels
         {
             Stage = Stage.WhichType;
             OnPropertyChanged(nameof(Stage));
+            FileGrid.Mode = Mode.PathSelector;
         }
+
+        public object SelectObject { get;
+            set; }
 
         public Stage Stage { get; set; } = Stage.WhichType;
 
@@ -74,6 +79,20 @@ namespace SixCloud.ViewModels
                                 }
                                 ParseResults = offlineDownloader.ParseTorrent(new string[] { task.Hash }).Result;
                                 Stage = Stage.CheckFiles;
+                                if(new Func<bool>(()=>
+                                {
+                                    foreach(OfflineTaskParseUrl res in ParseResults)
+                                    {
+                                        if(res.Files.Length>0)
+                                        {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                }).Invoke())
+                                {
+                                    Stage = Stage.SelectSavingPath;
+                                }
                                 OnPropertyChanged(nameof(ParseResults));
                             });
                         }
@@ -87,7 +106,7 @@ namespace SixCloud.ViewModels
             OnPropertyChanged(nameof(Stage));
         }
 
-
+        public FileGridViewModel FileGrid { get; set; } = new FileGridViewModel();
     }
 
     internal enum TaskType

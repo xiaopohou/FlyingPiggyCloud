@@ -166,6 +166,7 @@
     <Compile Include="ViewModels\DownloadedTaskViewModel.cs" />
     <Compile Include="ViewModels\DownloadingListViewModel.cs" />
     <Compile Include="ViewModels\DownloadingTaskViewModel.cs" />
+    <Compile Include="ViewModels\FileGridViewModel.cs" />
     <Compile Include="ViewModels\FileListItemViewModel.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\FileSystemViewModel.cs" />

@@ -15,9 +15,6 @@ namespace SixCloud
         public MainWindow()
         {
             InitializeComponent();
-            FileGridViewModel fileGridViewModel = new FileGridViewModel();
-            fileList.DataContext = fileGridViewModel;
-            fileGridViewModel.Mode = Views.UserControls.Mode.PathSelector;
         }
 
 

@@ -332,6 +332,7 @@
             </Grid>
             
             <Grid x:Name="SelectSavingPathStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
+                <!--#region 动画和触发器-->
                 <Grid.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform x:Name="SelectSavingPathStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
@@ -381,6 +382,8 @@
                     </EventTrigger>
                 </Grid.Triggers>
                 <RadioButton x:Name="IsSelectSavingPathStage" IsChecked="{Binding Stage, ConverterParameter=SelectSavingPath, Converter={StaticResource StageConverter}, Mode=OneWay}" Visibility="Collapsed" GroupName="Stage"/>
+                <!--#endregion-->
+                <UserControls:FileGridView Mode="PathSelector" SelectObject="{Binding SelecObject,Mode=OneWayToSource}" DataContext="{Binding FileGrid}" x:Name="fileList" Command="{Binding NavigateCommand}" CommandParameter="{Binding SelectObject, ElementName=fileList}"/>
             </Grid>
         </Grid>
 

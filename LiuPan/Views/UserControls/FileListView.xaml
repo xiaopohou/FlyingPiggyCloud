@@ -6,10 +6,11 @@
              xmlns:local="clr-namespace:SixCloud.Views.UserControls"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
-             xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="SixCloud.Views.UserControls.FileListView"
+             xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:ViewModels="clr-namespace:SixCloud.ViewModels" x:Class="SixCloud.Views.UserControls.FileListView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="#FFF3F2F1">
     <UserControl.Resources>
+        <ViewModels:HidingSizeinfoForDirectoryConverter x:Key="HidingSizeinfoForDirectoryConverter"/>
         <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>
 
         <Style TargetType="{x:Type controls:FontIcon}">
@@ -66,7 +67,7 @@
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
                     </MultiDataTrigger.Conditions>
-                    <Setter TargetName="NameBox" Property="TextAreaWidth" Value="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox,Mode=OneWay}"/>
+                    <Setter TargetName="NameBox" Property="TextAreaWidth" Value="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox, Mode=OneWay}"/>
                     <Setter TargetName="MoreBotton" Property="Visibility" Value="Visible"/>
                 </MultiDataTrigger>
             </DataTemplate.Triggers>
@@ -74,7 +75,7 @@
 
         <DataTemplate x:Key="MetaSize">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="#FF5A5A5A" Text="{Binding Size}"/>
+                <TextBlock Foreground="#FF5A5A5A" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}, Mode=OneWay}" />
             </StackPanel>
         </DataTemplate>
 
@@ -132,24 +133,13 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Grid>
-                                <Border x:Name="MouseOverBorder" Opacity="0">
-                                    <Border.Background>
-                                        <TemplateBinding Property="Foreground" Converter="{StaticResource BrushRoundConverter}"/>
-                                    </Border.Background>
-                                </Border>
-                                <Border x:Name="SelectedBorder" Opacity="0" RenderTransformOrigin="0.5,0.5">
-                                    <Border.Background>
-                                        <TemplateBinding Property="Foreground" Converter="{StaticResource BrushRoundConverter}"/>
-                                    </Border.Background>
+                                <Border x:Name="MouseOverBorder" Opacity="0" Background="{TemplateBinding Foreground, Converter={StaticResource BrushRoundConverter}}"/>
+                                <Border x:Name="SelectedBorder" Opacity="0" RenderTransformOrigin="0.5,0.5" Background="{TemplateBinding Foreground, Converter={StaticResource BrushRoundConverter}}">
                                     <Border.RenderTransform>
                                         <ScaleTransform ScaleX="1"/>
                                     </Border.RenderTransform>
                                 </Border>
-                                <materialDesign:Ripple ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Focusable="False" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
-                                    <materialDesign:Ripple.Feedback>
-                                        <TemplateBinding Property="Foreground" Converter="{StaticResource BrushRoundConverter}"/>
-                                    </materialDesign:Ripple.Feedback>
-                                </materialDesign:Ripple>
+                                <materialDesign:Ripple ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Focusable="False" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Feedback="{TemplateBinding Foreground, Converter={StaticResource BrushRoundConverter}}"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -176,7 +166,7 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+            <EventSetter Event="Control.MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
             <Style.Triggers>
                 <Trigger Property="IsKeyboardFocusWithin" Value="True">
                     <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignTextBoxBorder}"/>
@@ -223,7 +213,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="5,0">
                         <TextBlock Foreground="#FF5A5A5A" Text="{Binding DataContext, RelativeSource={RelativeSource Self}}" FontWeight="Bold"/>
-                        <controls:FontIcon Icon="&#xf054;" Foreground="#FF5A5A5A" />
+                        <controls:FontIcon Icon="&#xF054;" Foreground="#FF5A5A5A" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -255,19 +245,19 @@
                         <TextBlock Text="新建文件夹" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Delete" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding DeleteCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
+                <Button x:Name="Delete" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF1F8;" Foreground="#FF5A5A5A"/>
                         <TextBlock Text="删除" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Cut" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding CutCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
+                <Button x:Name="Cut" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding CutCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF0C4;" Foreground="#FF5A5A5A"/>
                         <TextBlock Text="剪切" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Copy" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=FileList}">
+                <Button x:Name="Copy" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Margin="5,0" Command="{Binding CopyCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF0C5;" Foreground="#FF5A5A5A"/>
                         <TextBlock Text="复制" Foreground="#FF5A5A5A"/>
@@ -284,7 +274,7 @@
 
         </Grid>
         <Rectangle Margin="0,116,0,0" Fill="White"/>
-        <ListView SelectedIndex="{Binding SelectedIndex,Mode=OneWayToSource}" ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" Margin="0,116,0,0" ItemsSource="{Binding FileList}" ItemContainerStyle="{DynamicResource ListViewItemStyle}">
+        <ListView SelectedIndex="{Binding SelectedIndex, Mode=OneWayToSource}" ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" Margin="0,116,0,0" ItemsSource="{Binding FileList}" ItemContainerStyle="{DynamicResource ListViewItemStyle}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName, Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
