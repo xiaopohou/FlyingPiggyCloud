@@ -1,6 +1,7 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using SixCloud.Models;
 using SixCloud.Views;
+using SixCloud.Views.UserControls;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -81,7 +82,7 @@ namespace SixCloud.ViewModels
         /// <summary>
         /// 保存LazyLoad状态的枚举器
         /// </summary>
-        private IEnumerator<FileMetaData[]> fileMetaDataEnumerator;
+        protected IEnumerator<FileMetaData[]> fileMetaDataEnumerator;
 
         public async void NavigateByUUID(string uuid)
         {
@@ -136,7 +137,7 @@ namespace SixCloud.ViewModels
             await NavigateByPath(path, autoCreate);
         }
 
-        private async Task GetFileListByPath(string path)
+        protected virtual async Task GetFileListByPath(string path)
         {
             IEnumerable<FileMetaData[]> GetFileList()
             {
@@ -176,7 +177,7 @@ namespace SixCloud.ViewModels
             });
         }
 
-        private async Task GetFileListByUUID(string uuid)
+        protected virtual async Task GetFileListByUUID(string uuid)
         {
             IEnumerable<FileMetaData[]> GetFileList()
             {
@@ -246,7 +247,7 @@ namespace SixCloud.ViewModels
 
         }
 
-        private void CreatePathArray(string path)
+        protected void CreatePathArray(string path)
         {
             if (path == "/")
             {
@@ -562,6 +563,121 @@ namespace SixCloud.ViewModels
             NewFolderCommand = new DependencyCommand(NewFolder, DependencyCommand.AlwaysCan);
             UploadFileCommand = new DependencyCommand(UploadFile, DependencyCommand.AlwaysCan);
             UploadFolderCommand = new DependencyCommand(UploadFolder, DependencyCommand.AlwaysCan);
+        }
+    }
+
+    internal class FileGridViewModel : FileListViewModel
+    {
+        public Mode Mode { get; set; } = Mode.FileListContainer;
+
+        protected override async Task GetFileListByPath(string path)
+        {
+            IEnumerable<FileMetaData[]> GetFileList()
+            {
+                int currentPage = 0;
+                int totalPage;
+                do
+                {
+                    GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage);
+                    if (x.Success && x.Result.DictionaryInformation != null)
+                    {
+                        totalPage = x.Result.TotalPage;
+                        CurrentPath = x.Result.DictionaryInformation.Path;
+                        CurrentUUID = x.Result.DictionaryInformation.UUID;
+                        CreatePathArray(CurrentPath);
+                        yield return x.Result.List;
+                    }
+                    else
+                    {
+                        throw new DirectoryNotFoundException(x.Message);
+                    }
+                } while (currentPage < totalPage);
+                yield break;
+            }
+
+            App.Current.Dispatcher.Invoke(() => FileList.Clear());
+            await Task.Run(() =>
+            {
+                fileMetaDataEnumerator = GetFileList().GetEnumerator();
+                fileMetaDataEnumerator.MoveNext();
+            });
+
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (FileMetaData a in fileMetaDataEnumerator.Current)
+                {
+                    if (Mode == Mode.PathSelector && !a.Directory)
+                    {
+                        continue;
+                    }
+                    FileList.Add(new FileListItemViewModel(this, a));
+                }
+            });
+        }
+
+        protected override async Task GetFileListByUUID(string uuid)
+        {
+            {
+                IEnumerable<FileMetaData[]> GetFileList()
+                {
+                    int currentPage = 0;
+                    int totalPage;
+                    do
+                    {
+                        GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage);
+                        if (x.Success)
+                        {
+                            totalPage = x.Result.TotalPage;
+                            CurrentPath = x.Result.DictionaryInformation.Path;
+                            CurrentUUID = x.Result.DictionaryInformation.UUID;
+                     
+       CreatePathArray(CurrentPath);
+                            yield return x.Result.List;
+                        }
+                        else
+                        {
+                            throw new DirectoryNotFoundException(x.Message);
+                        }
+                    } while (currentPage < totalPage);
+                    yield break;
+                }
+
+
+                Application.Current.Dispatcher.Invoke(() => FileList.Clear());
+                await Task.Run(() =>
+                {
+                    fileMetaDataEnumerator = GetFileList().GetEnumerator();
+                    fileMetaDataEnumerator.MoveNext();
+                });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    foreach (FileMetaData a in fileMetaDataEnumerator.Current)
+                    {
+                        if (Mode == Mode.PathSelector && !a.Directory)
+                        {
+                            continue;
+                        }
+                        FileList.Add(new FileListItemViewModel(this, a));
+                    }
+                });
+            }
+        }
+
+        public DependencyCommand NavigateCommand { get; set; }
+        private async void Navigate(object parameter)
+        {
+            var selectObject = (FileListItemViewModel)parameter;
+            await GetFileListByUUID(selectObject.UUID);
+            LazyLoad();
+        }
+
+        public FileGridViewModel()
+        {
+            NavigateCommand = new DependencyCommand(Navigate, DependencyCommand.AlwaysCan);
+            Task.Run(async () =>
+            {
+                await GetFileListByPath("/");
+            });
         }
     }
 }

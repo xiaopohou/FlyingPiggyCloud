@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:SixCloud"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:ctl="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
-        mc:Ignorable="d"
+                 xmlns:usercontrols="clr-namespace:SixCloud.Views.UserControls"
+                 mc:Ignorable="d"
         MinHeight="450" Height="450" Width="800" MetroWindowLayout="WideAngle">
     <ctl:MetroWindow.Resources>
     </ctl:MetroWindow.Resources>
@@ -19,6 +20,7 @@
             </Grid>
         </ctl:LightTabItem>
         <ctl:LightTabItem>
+            <usercontrols:FileGridView x:Name="fileList" Mode="{Binding Mode}" Command="{Binding NavigateCommand}" CommandParameter="{Binding SelectObject, ElementName=fileList}"/>
         </ctl:LightTabItem>
         <ctl:LightTabItem/>
         <ctl:LightTabItem/>

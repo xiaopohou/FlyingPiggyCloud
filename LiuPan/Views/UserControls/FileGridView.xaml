@@ -6,13 +6,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SixCloud.Views.UserControls"
              xmlns:controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <local:GridViewContextMenuAvailableConverter x:Key="GridViewContextMenuAvailableConverter"/>
+        
         <ItemsPanelTemplate x:Key="ListBoxItemsPanel">
             <WrapPanel IsItemsHost="True"/>
         </ItemsPanelTemplate>
+
         <DataTemplate x:Key="FileCell">
             <Grid MaxHeight="150" IsEnabled="{Binding Mode, Converter={StaticResource GridViewContextMenuAvailableConverter}, ElementName=userControl, Mode=OneTime}">
                 <Grid.ColumnDefinitions>
@@ -24,23 +27,40 @@
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Grid.ToolTip>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="文件大小：" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <TextBlock Text="修改时间：" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1"/>
-                        <TextBlock Text="{Binding Size}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1"/>
-                        <TextBlock Text="{Binding MTime}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"/>
-                    </Grid>
-                </Grid.ToolTip>
-                <Grid.ContextMenu>
+                <controls:FontIcon Grid.Column="1" Icon="{Binding Icon}" IconSize="90" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                <TextBlock MaxWidth="100"
+                           Text="{Binding Name}"
+                           TextWrapping="Wrap"
+                           Grid.ColumnSpan="3" Grid.Row="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="ListBoxItemStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+            <Setter Property="ToolTip">
+                <Setter.Value>
+                    <ToolTip>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="文件大小：" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <TextBlock Text="修改时间：" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1"/>
+                            <TextBlock Text="{Binding Size}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1"/>
+                            <TextBlock Text="{Binding MTime}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"/>
+                        </Grid>
+                    </ToolTip>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ContextMenu">
+                <Setter.Value>
                     <ContextMenu x:Name="GridViewContextMenu" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="White">
                         <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
                             <MenuItem.Icon>
@@ -63,13 +83,22 @@
                             </MenuItem.Icon>
                         </MenuItem>
                     </ContextMenu>
-                </Grid.ContextMenu>
-                <controls:FontIcon Grid.Column="1" Icon="{Binding Icon}" IconSize="90" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
-                <TextBlock MaxWidth="100" Text="{Binding FileName}" TextWrapping="Wrap" Grid.ColumnSpan="3" Grid.Row="1"/>
-            </Grid>
-        </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Mode,ElementName=userControl}" Value="PathSelector">
+                    <Setter Property="ContextMenu" Value="{x:Null}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
+    
     <Grid>
-        <ListBox ItemsPanel="{DynamicResource ListBoxItemsPanel}" ItemsSource="{Binding FileList}" ItemTemplate="{DynamicResource FileCell}"/>
+        <ListBox Name="MainList"
+                 ItemsPanel="{DynamicResource ListBoxItemsPanel}"
+                 ItemsSource="{Binding FileList}"
+                 ItemTemplate="{DynamicResource FileCell}"
+                 SelectedItem="{Binding SelectObject, ElementName=userControl, Mode=OneWayToSource}"
+                 ScrollViewer.ScrollChanged="MainList_ScrollChanged" ItemContainerStyle="{DynamicResource ListBoxItemStyle}"/>
     </Grid>
 </UserControl>
