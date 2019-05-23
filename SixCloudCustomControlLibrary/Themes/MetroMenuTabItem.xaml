@@ -10,10 +10,11 @@
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="MinWidth" Value="150"/>
         <Setter Property="Foreground" Value="#E5FFFFFF"/>
+        <Setter Property="TextHorizontalAlignment" Value="Left"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Metro:MetroMenuTabItem}">
-                    <Grid Background="#00000000">
+                    <Grid Background="#00000000" MinWidth="245">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition x:Name="iconWidth" Width="Auto"/>
                             <ColumnDefinition x:Name="contentWidth"/>
@@ -38,7 +39,7 @@
                             <Metro:FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" IconSize="16" Icon="{TemplateBinding IconMove}" x:Name="iconMove" Foreground="{DynamicResource PrimaryHueMidBrush}" Opacity="0"/>
                             <Metro:FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" IconSize="16" Icon="{TemplateBinding Icon}" x:Name="icon" Foreground="{TemplateBinding Foreground}" />
                         </Grid>
-                        <TextBlock x:Name="title" Grid.Column="1" Text="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" Margin="0,0,15,0" VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding TextHorizontalAlignment}"/>
+                        <TextBlock x:Name="title" Grid.Column="1" Text="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" Margin="15,0" VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding TextHorizontalAlignment}"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Selector.IsSelected" Value="True">

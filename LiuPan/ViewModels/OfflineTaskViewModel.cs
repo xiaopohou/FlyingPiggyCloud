@@ -1,8 +1,12 @@
 ﻿using SixCloud.Controllers;
 using SixCloud.Models;
 using SixCloud.Views;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using static SixCloud.Models.OfflineTaskList;
 
@@ -52,16 +56,36 @@ namespace SixCloud.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var a = new OfflineUrlsDialog();
+                OfflineUrlsDialog a = new OfflineUrlsDialog();
                 a.Show();
                 a.DataContext = new OfflineUrlsDialogViewModel(a);
             });
         }
 
         public DependencyCommand CancelTaskCommand { get; set; }
-        private void CancelTask(object parameters)
+        private async void CancelTask(object parameters)
         {
-            
+            IList list = parameters as IList;
+            if (list.Count > 0)
+            {
+                IEnumerable<OfflineTask> cancellingTasks = list.Cast<OfflineTask>();
+                List<string> taskID = new List<string>(list.Count);
+                foreach (OfflineTask task in cancellingTasks)
+                {
+                    taskID.Add(task.Identity);
+                }
+                await Task.Run(() => downloader.DeleteTask(taskID.ToArray()));
+                RefreshList();
+            }
+        }
+
+
+        public DependencyCommand RefreshListCommand { get; set; }
+        private void RefreshList(object parameter=null)
+        {
+            ObservableCollection.Clear();
+            listEnumerator = null;
+            LazyLoad();
         }
         #endregion
 
@@ -71,6 +95,7 @@ namespace SixCloud.ViewModels
         {
             NewTaskCommand = new DependencyCommand(NewTask, DependencyCommand.AlwaysCan);
             CancelTaskCommand = new DependencyCommand(CancelTask, DependencyCommand.AlwaysCan);
+            RefreshListCommand = new DependencyCommand(RefreshList, DependencyCommand.AlwaysCan);
             LazyLoad();
         }
     }

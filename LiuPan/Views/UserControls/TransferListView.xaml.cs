@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -74,5 +75,32 @@ namespace SixCloud.Views.UserControls
                 list.ContextMenu.DataContext = list.SelectedItem;
             }
         }
+
+        private void OfflineList_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (e.OriginalSource is ScrollViewer viewer)
+            {
+                double bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
+                if (viewer.VerticalOffset > 0 && bottomOffset < 0.3)
+                {
+                    LazyLoadEventHandler?.Invoke(sender, e);
+                }
+            }
+        }
+
+        private ScrollChangedEventHandler LazyLoadEventHandler;
+
+        private async void LazyLoad(object sender, ScrollChangedEventArgs e)
+        {
+            lock (LazyLoadEventHandler)
+            {
+                LazyLoadEventHandler = null;
+            }
+            //懒加载的业务代码
+            OfflineTaskViewModel vm = DataContext as OfflineTaskViewModel;
+            await Task.Run(() => vm.LazyLoad());
+            LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
+        }
+
     }
 }
