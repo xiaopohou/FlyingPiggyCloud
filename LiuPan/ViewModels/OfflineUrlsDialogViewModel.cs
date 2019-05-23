@@ -23,9 +23,6 @@ namespace SixCloud.ViewModels
             FileGrid.Mode = Mode.PathSelector;
         }
 
-        public object SelectObject { get;
-            set; }
-
         public Stage Stage { get; set; } = Stage.WhichType;
 
         public OfflineTaskParseUrl[] ParseResults { get; set; }

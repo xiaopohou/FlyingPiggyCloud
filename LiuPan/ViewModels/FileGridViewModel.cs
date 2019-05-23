@@ -11,6 +11,9 @@ namespace SixCloud.ViewModels
     {
         public Mode Mode { get; set; } = Mode.FileListContainer;
 
+        public object SelectObject { get;
+            set; }
+
         protected override async Task GetFileListByPath(string path)
         {
             IEnumerable<FileMetaData[]> GetFileList()

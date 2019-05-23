@@ -101,7 +101,7 @@
                  ItemsPanel="{DynamicResource ListBoxItemsPanel}"
                  ItemsSource="{Binding FileList}"
                  ItemTemplate="{DynamicResource FileCell}"
-                 SelectedItem="{Binding SelectObject, ElementName=userControl, Mode=OneWayToSource}"
+                 SelectedItem="{Binding SelectObject, ElementName=userControl, Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.ScrollChanged="MainList_ScrollChanged" ItemContainerStyle="{DynamicResource ListBoxItemStyle}"/>
     </Grid>
 </UserControl>
