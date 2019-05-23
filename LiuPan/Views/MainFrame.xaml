@@ -206,16 +206,19 @@
                             <ImageBrush ImageSource="{Binding Icon,Mode=OneTime}" Stretch="UniformToFill"/>
                         </Border.Background>
                     </Border>
+                    
                     <!--用户名-->
                     <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <TextBlock x:Name="textBlock" Text="{Binding Name,Mode=OneTime}" HorizontalAlignment="Center" Foreground="#FF5A5A5A" FontSize="18" Margin="0,5"/>
                         <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding ChangeUserNameCommand}" Content="修改用户名"/>
                     </StackPanel>
                 </Grid>
+                
                 <Grid Grid.Row="1">
                     <ProgressBar Value="{Binding AvailableRate}" Height="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"/>
                     <TextBlock Text="{Binding FrendlySpaceCapacity}" FontSize="12" Margin="5" Foreground="#FF5A5A5A" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
+                
                 <Button Style="{DynamicResource MaterialDesignFlatButton}" Grid.Row="2" Content="修改密码" Command="{Binding ChangePasswordCommand}" Foreground="#FF5A5A5A" Margin="0,5,0,0"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}" Grid.Row="3" Content="注销登录" Command="{Binding LogoutCommand}" Foreground="#FF5A5A5A"/>
             </Grid>
