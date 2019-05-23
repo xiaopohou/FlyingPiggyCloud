@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace SixCloud.Views
 {
@@ -22,6 +23,12 @@ namespace SixCloud.Views
         public LoadingView(Window owner, Action action, string friendlyText) : this(owner, action)
         {
             FriendlyText.Text = friendlyText;
+        }
+
+        public LoadingView(Window owner, Action action, string friendlyText, AlignmentX x, AlignmentY y):this(owner,action,friendlyText)
+        {
+            BlurHolder.AlignmentX = x;
+            BlurHolder.AlignmentY = y;
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

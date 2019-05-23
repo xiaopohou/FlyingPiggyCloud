@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Forms;
+using System.Windows.Media;
 
 namespace SixCloud.ViewModels
 {
@@ -142,7 +143,7 @@ namespace SixCloud.ViewModels
                                 }
                                 OnPropertyChanged(nameof(ParseResults));
 
-                            }, "正在解析种子文件，请稍等").Show();
+                            }, "正在解析种子文件，请稍等",AlignmentX.Left,AlignmentY.Top).Show();
                         }
                     }
                 }
@@ -207,7 +208,7 @@ namespace SixCloud.ViewModels
                         break;
                 }
 
-            }, "正在与服务器PY，请稍等").Show();
+            }, "正在与服务器PY，请稍等", AlignmentX.Left, AlignmentY.Top).Show();
         }
         public Visibility NextStageButtonVisibility { get; set; } = Visibility.Collapsed;
         public string NextStageButtonText { get; set; } = "下一步";

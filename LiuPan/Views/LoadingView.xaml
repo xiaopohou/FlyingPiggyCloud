@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.RowSpan="3" Grid.ColumnSpan="3">
             <Grid.Background>
-                <VisualBrush x:Name="BlurHolder" Stretch="Uniform"/>
+                <VisualBrush x:Name="BlurHolder" Stretch="UniformToFill"/>
             </Grid.Background>
             <Grid.Effect>
                 <BlurEffect Radius="15"/>
