@@ -31,9 +31,6 @@ namespace SixCloud
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var a = new OfflineUrlsDialog();
-            a.Show();
-            a.DataContext = new OfflineUrlsDialogViewModel();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

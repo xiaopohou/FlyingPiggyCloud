@@ -14,17 +14,38 @@ namespace SixCloud.ViewModels
 {
     internal class OfflineUrlsDialogViewModel : ViewModelBase
     {
+        private readonly Window DataContextHost;
         private TaskType _taskType;
         private Stage _stage = Stage.WhichType;
         private readonly OfflineDownloader offlineDownloader = new OfflineDownloader();
+        private bool CheckParseResults()
+        {
+            if (ParseResults != null)
+            {
+                bool result = false;
+                OfflineTaskParameters = new OfflineTaskParameters[ParseResults.Length];
+                for (int index = 0; index < ParseResults.Length; index++)
+                {
+                    OfflineTaskParameters[index] = new OfflineTaskParameters(ParseResults[index].Identity);
+                    result = ParseResults[index].Files.Length != 0 || result;
+                }
+                return result;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public string InputUrl { get; set; }
 
-        public OfflineUrlsDialogViewModel()
+        public OfflineUrlsDialogViewModel(Window host)
         {
+            DataContextHost = host;
             Stage = Stage.WhichType;
             FileGrid.Mode = Mode.PathSelector;
             NextStageCommand = new DependencyCommand(NextStage, DependencyCommand.AlwaysCan);
+            PrevStageCommand = new DependencyCommand(PrevStage, DependencyCommand.AlwaysCan);
         }
 
         public Stage Stage
@@ -56,26 +77,9 @@ namespace SixCloud.ViewModels
                 OnPropertyChanged(nameof(Stage));
             }
         }
+
         public OfflineTaskParseUrl[] ParseResults { get; set; }
 
-        private bool CheckParseResults()
-        {
-            if (ParseResults != null)
-            {
-                bool result = false;
-                OfflineTaskParameters = new OfflineTaskParameters[ParseResults.Length];
-                for (int index = 0; index < ParseResults.Length; index++)
-                {
-                    OfflineTaskParameters[index] = new OfflineTaskParameters(ParseResults[index].Identity);
-                    result = ParseResults[index].Files.Length != 0 || result;
-                }
-                return result;
-            }
-            else
-            {
-                return false;
-            }
-        }
 
         public OfflineTaskParameters[] OfflineTaskParameters { get; set; }
 
@@ -180,7 +184,7 @@ namespace SixCloud.ViewModels
                                 ignoreList.Add(file.PathIdentity);
                             }
                         }
-                        if(ignoreList.Count>0)
+                        if (ignoreList.Count > 0)
                         {
                             OfflineTaskParameters[index].IginreFiles = ignoreList.ToArray();
                         }
@@ -190,12 +194,48 @@ namespace SixCloud.ViewModels
                 case Stage.SelectSavingPath:
                     FileListItemViewModel itemvm = parameter as FileListItemViewModel;
                     string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
-                    offlineDownloader.Add(savingPath, OfflineTaskParameters);
+                    GenericResult<OfflineTaskAdd> tasks = offlineDownloader.Add(savingPath, OfflineTaskParameters);
+                    if (!tasks.Success)
+                    {
+                        System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    DataContextHost.Close();
                     break;
             }
         }
         public Visibility NextStageButtonVisibility { get; set; } = Visibility.Collapsed;
         public string NextStageButtonText { get; set; } = "下一步";
+
+        public DependencyCommand PrevStageCommand { get; set; }
+        private void PrevStage(object parameter)
+        {
+            switch (Stage)
+            {
+                case Stage.WhichType:
+                    return;
+                case Stage.InputUrls:
+                    InputUrl = "";
+                    Stage = Stage.WhichType;
+                    break;
+                case Stage.CheckFiles:
+                    ParseResults = null;
+                    OfflineTaskParameters = null;
+                    Stage = Stage.WhichType;
+                    break;
+                case Stage.SelectSavingPath:
+                    if (FileGrid.CurrentPath == "/")
+                    {
+                        Stage = Stage.CheckFiles;
+                    }
+                    else
+                    {
+                        string upPath = FileGrid.CurrentPath.Substring(0, FileGrid.CurrentPath.LastIndexOf("/") + 1);
+                        FileGrid.NavigateByPathAsync(upPath);
+                    }
+                    break;
+            }
+            OnPropertyChanged(nameof(Stage));
+        }
         #endregion
     }
 

@@ -112,7 +112,7 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <RadioButton IsChecked="{Binding IsChecked, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Name}" Grid.Column="1"/>
                 <TextBlock Text="{Binding Size, Converter={StaticResource ResourceKey=SizeCalculator}, Mode=OneWay}" Grid.Column="2"/>
             </Grid>
@@ -326,7 +326,12 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </Grid.Triggers>
-                <ScrollViewer>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="如果不希望下载某些文件，请取消勾选" Margin="5" FontSize="24" VerticalAlignment="Top"/>
+                <ScrollViewer Grid.Row="1">
                     <ItemsControl ItemsSource="{Binding ParseResults}" ItemTemplate="{DynamicResource ParseResultTemplate}" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked"/>
                 </ScrollViewer>
                 <RadioButton x:Name="IsCheckFilesStage" IsChecked="{Binding Stage, ConverterParameter=CheckFiles, Converter={StaticResource StageConverter}, Mode=OneWay}" Visibility="Collapsed" GroupName="Stage"/>
@@ -382,11 +387,18 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </Grid.Triggers>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
                 <RadioButton x:Name="IsSelectSavingPathStage" IsChecked="{Binding Stage, ConverterParameter=SelectSavingPath, Converter={StaticResource StageConverter}, Mode=OneWay}" Visibility="Collapsed" GroupName="Stage"/>
                 <!--#endregion-->
+                <TextBlock Text="请选择保存路径" Margin="5" FontSize="24" VerticalAlignment="Top"/>
                 <UserControls:FileGridView Mode="PathSelector"
+                                           Grid.Row="1"
                                            DataContext="{Binding FileGrid}"
                                            x:Name="fileList"
+                                           Margin="5"
                                            Command="{Binding NavigateCommand}"
                                            CommandParameter="{Binding SelectObject, ElementName=fileList}"/>
             </Grid>
