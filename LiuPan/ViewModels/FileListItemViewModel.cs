@@ -38,6 +38,8 @@ namespace SixCloud.ViewModels
         public string UUID { get; set; }
         public string Mime { get; private set; }
 
+        public string Path { get; private set; }
+
         private bool AlwaysCan(object parameter)
         {
             return true;
@@ -268,6 +270,7 @@ namespace SixCloud.ViewModels
             Size = Calculators.SizeCalculator(fileMetaData.Size);
             UUID = fileMetaData.UUID;
             Mime = fileMetaData.Mime;
+            Path = fileMetaData.Path;
 
             CopyCommand = new DependencyCommand(Copy, AlwaysCan);
             CutCommand = new DependencyCommand(Cut, AlwaysCan);

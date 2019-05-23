@@ -270,6 +270,7 @@
                 </Grid.Triggers>
                 <TextBlock Text="请输入链接" Margin="15,3" FontSize="24" VerticalAlignment="Top"/>
                 <TextBox AcceptsReturn="True"
+                         Text="{Binding InputUrl,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"
                          materialDesign:HintAssist.Hint="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
                          Margin="15,90,15,45"
                          Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"/>

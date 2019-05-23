@@ -2,9 +2,11 @@
 using SixCloud.Models;
 using SixCloud.Views.UserControls;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Forms;
 
@@ -13,19 +15,69 @@ namespace SixCloud.ViewModels
     internal class OfflineUrlsDialogViewModel : ViewModelBase
     {
         private TaskType _taskType;
-
+        private Stage _stage = Stage.WhichType;
         private readonly OfflineDownloader offlineDownloader = new OfflineDownloader();
+
+        public string InputUrl { get; set; }
 
         public OfflineUrlsDialogViewModel()
         {
             Stage = Stage.WhichType;
-            OnPropertyChanged(nameof(Stage));
             FileGrid.Mode = Mode.PathSelector;
+            NextStageCommand = new DependencyCommand(NextStage, DependencyCommand.AlwaysCan);
         }
 
-        public Stage Stage { get; set; } = Stage.WhichType;
-
+        public Stage Stage
+        {
+            get => _stage;
+            set
+            {
+                _stage = value;
+                switch (value)
+                {
+                    case Stage.WhichType:
+                        NextStageButtonVisibility = Visibility.Collapsed;
+                        break;
+                    case Stage.InputUrls:
+                        NextStageButtonVisibility = Visibility.Visible;
+                        NextStageButtonText = "确认";
+                        break;
+                    case Stage.CheckFiles:
+                        NextStageButtonVisibility = Visibility.Visible;
+                        NextStageButtonText = "下一步";
+                        break;
+                    case Stage.SelectSavingPath:
+                        NextStageButtonVisibility = Visibility.Visible;
+                        NextStageButtonText = "保存";
+                        break;
+                }
+                OnPropertyChanged(nameof(NextStageButtonVisibility));
+                OnPropertyChanged(nameof(NextStageButtonText));
+                OnPropertyChanged(nameof(Stage));
+            }
+        }
         public OfflineTaskParseUrl[] ParseResults { get; set; }
+
+        private bool CheckParseResults()
+        {
+            if (ParseResults != null)
+            {
+                bool result = false;
+                OfflineTaskParameters = new OfflineTaskParameters[ParseResults.Length];
+                for (int index = 0; index < ParseResults.Length; index++)
+                {
+                    OfflineTaskParameters[index] = new OfflineTaskParameters(ParseResults[index].Identity);
+                    result = ParseResults[index].Files.Length != 0 || result;
+                }
+                return result;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public OfflineTaskParameters[] OfflineTaskParameters { get; set; }
 
         public TaskType TaskType
         {
@@ -67,26 +119,19 @@ namespace SixCloud.ViewModels
                                 int timeoutIndex = 0;
                                 while (task.UploadTaskStatus != EzWcs.UploadTaskStatus.Completed)
                                 {
-                                    if(timeoutIndex++>50)
+                                    if (timeoutIndex++ > 50)
                                     {
-                                        MessageBox.Show("种子文件上传失败");
+                                        System.Windows.MessageBox.Show("种子文件上传失败");
                                         return;
                                     }
                                     Thread.Sleep(1000);
                                 }
                                 ParseResults = offlineDownloader.ParseTorrent(new string[] { task.Hash }).Result;
-                                Stage = Stage.CheckFiles;
-                                if(new Func<bool>(()=>
+                                if (CheckParseResults())
                                 {
-                                    foreach(OfflineTaskParseUrl res in ParseResults)
-                                    {
-                                        if(res.Files.Length>0)
-                                        {
-                                            return false;
-                                        }
-                                    }
-                                    return true;
-                                }).Invoke())
+                                    Stage = Stage.CheckFiles;
+                                }
+                                else
                                 {
                                     Stage = Stage.SelectSavingPath;
                                 }
@@ -100,10 +145,58 @@ namespace SixCloud.ViewModels
                     return;
                 }
             }
-            OnPropertyChanged(nameof(Stage));
         }
 
         public FileGridViewModel FileGrid { get; set; } = new FileGridViewModel();
+
+        #region Commands
+        public DependencyCommand NextStageCommand { get; set; }
+        private void NextStage(object parameter)
+        {
+            switch (Stage)
+            {
+                case Stage.InputUrls:
+                    string[] urls = System.Text.RegularExpressions.Regex.Split(InputUrl, Environment.NewLine);
+                    GenericResult<OfflineTaskParseUrl[]> x = offlineDownloader.ParseUrl(urls);
+                    ParseResults = x.Result;
+                    if (CheckParseResults())
+                    {
+                        OnPropertyChanged(nameof(ParseResults));
+                        Stage = Stage.CheckFiles;
+                    }
+                    else
+                    {
+                        Stage = Stage.SelectSavingPath;
+                    }
+                    break;
+                case Stage.CheckFiles:
+                    for (int index = 0; index < ParseResults.Length; index++)
+                    {
+                        List<string> ignoreList = new List<string>(ParseResults.Length);
+                        foreach (OfflineTaskParseFile file in ParseResults[index].Files)
+                        {
+                            if (file.IsChecked == false)
+                            {
+                                ignoreList.Add(file.PathIdentity);
+                            }
+                        }
+                        if(ignoreList.Count>0)
+                        {
+                            OfflineTaskParameters[index].IginreFiles = ignoreList.ToArray();
+                        }
+                    }
+                    Stage = Stage.SelectSavingPath;
+                    break;
+                case Stage.SelectSavingPath:
+                    FileListItemViewModel itemvm = parameter as FileListItemViewModel;
+                    string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
+                    offlineDownloader.Add(savingPath, OfflineTaskParameters);
+                    break;
+            }
+        }
+        public Visibility NextStageButtonVisibility { get; set; } = Visibility.Collapsed;
+        public string NextStageButtonText { get; set; } = "下一步";
+        #endregion
     }
 
     internal enum TaskType
