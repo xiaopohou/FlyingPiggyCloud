@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SixCloud.Views"
         mc:Ignorable="d"
+        KeyDown="Window_KeyDown"
         Title="Window1" Height="300" AllowsTransparency="True" Background="Transparent"  Width="400" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>

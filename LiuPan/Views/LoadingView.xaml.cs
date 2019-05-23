@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 
 namespace SixCloud.Views
 {
@@ -21,6 +22,14 @@ namespace SixCloud.Views
         public LoadingView(Window owner, Action action, string friendlyText) : this(owner, action)
         {
             FriendlyText.Text = friendlyText;
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.System && e.SystemKey == Key.F4)
+            {
+                e.Handled = true;
+            }
         }
     }
 }

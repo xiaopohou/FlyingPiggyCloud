@@ -1,5 +1,6 @@
 ﻿using SixCloud.Controllers;
 using SixCloud.Models;
+using SixCloud.Views;
 using SixCloud.Views.UserControls;
 using System;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace SixCloud.ViewModels
             }
         }
 
-        private async void OnTaskTypeChanged()
+        private void OnTaskTypeChanged()
         {
             if (TaskType == TaskType.Urls)
             {
@@ -112,7 +113,7 @@ namespace SixCloud.ViewModels
                     {
                         if (openFileDialog.ShowDialog() == DialogResult.OK)
                         {
-                            await Task.Run(() =>
+                            new LoadingView(DataContextHost, () =>
                             {
                                 string Name = openFileDialog.SafeFileName;
                                 string targetPath = "/:torrent";
@@ -140,7 +141,8 @@ namespace SixCloud.ViewModels
                                     Stage = Stage.SelectSavingPath;
                                 }
                                 OnPropertyChanged(nameof(ParseResults));
-                            });
+
+                            }, "正在解析种子文件，请稍等").Show();
                         }
                     }
                 }
@@ -157,51 +159,55 @@ namespace SixCloud.ViewModels
         public DependencyCommand NextStageCommand { get; set; }
         private void NextStage(object parameter)
         {
-            switch (Stage)
+            new LoadingView(DataContextHost, () =>
             {
-                case Stage.InputUrls:
-                    string[] urls = System.Text.RegularExpressions.Regex.Split(InputUrl, Environment.NewLine);
-                    GenericResult<OfflineTaskParseUrl[]> x = offlineDownloader.ParseUrl(urls);
-                    ParseResults = x.Result;
-                    if (CheckParseResults())
-                    {
-                        OnPropertyChanged(nameof(ParseResults));
-                        Stage = Stage.CheckFiles;
-                    }
-                    else
-                    {
-                        Stage = Stage.SelectSavingPath;
-                    }
-                    break;
-                case Stage.CheckFiles:
-                    for (int index = 0; index < ParseResults.Length; index++)
-                    {
-                        List<string> ignoreList = new List<string>(ParseResults.Length);
-                        foreach (OfflineTaskParseFile file in ParseResults[index].Files)
+                switch (Stage)
+                {
+                    case Stage.InputUrls:
+                        string[] urls = System.Text.RegularExpressions.Regex.Split(InputUrl, Environment.NewLine);
+                        GenericResult<OfflineTaskParseUrl[]> x = offlineDownloader.ParseUrl(urls);
+                        ParseResults = x.Result;
+                        if (CheckParseResults())
                         {
-                            if (file.IsChecked == false)
+                            OnPropertyChanged(nameof(ParseResults));
+                            Stage = Stage.CheckFiles;
+                        }
+                        else
+                        {
+                            Stage = Stage.SelectSavingPath;
+                        }
+                        break;
+                    case Stage.CheckFiles:
+                        for (int index = 0; index < ParseResults.Length; index++)
+                        {
+                            List<string> ignoreList = new List<string>(ParseResults.Length);
+                            foreach (OfflineTaskParseFile file in ParseResults[index].Files)
                             {
-                                ignoreList.Add(file.PathIdentity);
+                                if (file.IsChecked == false)
+                                {
+                                    ignoreList.Add(file.PathIdentity);
+                                }
+                            }
+                            if (ignoreList.Count > 0)
+                            {
+                                OfflineTaskParameters[index].IginreFiles = ignoreList.ToArray();
                             }
                         }
-                        if (ignoreList.Count > 0)
+                        Stage = Stage.SelectSavingPath;
+                        break;
+                    case Stage.SelectSavingPath:
+                        FileListItemViewModel itemvm = parameter as FileListItemViewModel;
+                        string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
+                        GenericResult<OfflineTaskAdd> tasks = offlineDownloader.Add(savingPath, OfflineTaskParameters);
+                        if (!tasks.Success)
                         {
-                            OfflineTaskParameters[index].IginreFiles = ignoreList.ToArray();
+                            System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
-                    }
-                    Stage = Stage.SelectSavingPath;
-                    break;
-                case Stage.SelectSavingPath:
-                    FileListItemViewModel itemvm = parameter as FileListItemViewModel;
-                    string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
-                    GenericResult<OfflineTaskAdd> tasks = offlineDownloader.Add(savingPath, OfflineTaskParameters);
-                    if (!tasks.Success)
-                    {
-                        System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    DataContextHost.Close();
-                    break;
-            }
+                        System.Windows.Application.Current.Dispatcher.Invoke(() => DataContextHost.Close());
+                        break;
+                }
+
+            }, "正在与服务器PY，请稍等").Show();
         }
         public Visibility NextStageButtonVisibility { get; set; } = Visibility.Collapsed;
         public string NextStageButtonText { get; set; } = "下一步";

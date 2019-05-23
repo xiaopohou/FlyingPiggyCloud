@@ -55,7 +55,6 @@ namespace SixCloud.ViewModels
                 var a = new OfflineUrlsDialog();
                 a.Show();
                 a.DataContext = new OfflineUrlsDialogViewModel(a);
-
             });
         }
 
@@ -72,6 +71,7 @@ namespace SixCloud.ViewModels
         {
             NewTaskCommand = new DependencyCommand(NewTask, DependencyCommand.AlwaysCan);
             CancelTaskCommand = new DependencyCommand(CancelTask, DependencyCommand.AlwaysCan);
+            LazyLoad();
         }
     }
 
