@@ -21,10 +21,6 @@ namespace SixCloud.ViewModels
                 x.LazyLoad();
                 MainContainerContent = x;
             }
-            else if (path == "Search")
-            {
-#warning 这里的代码还没写完
-            }
             else
             {
                 FileListViewModel x = new FileListViewModel();

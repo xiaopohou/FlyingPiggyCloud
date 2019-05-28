@@ -1,5 +1,6 @@
 ﻿using SixCloud.Controllers;
 using SixCloud.Models;
+using SixCloud.Views;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace SixCloud.ViewModels
         public bool Locking { get; set; }
 
         public bool Preview { get; set; }
+
+        public int PreviewType { get; set; }
 
         ///// <summary>
         ///// 0为文件，1为目录
@@ -63,15 +66,18 @@ namespace SixCloud.ViewModels
             //    PreView preView = new PreView(PreView.ResourceType.Picture, x.Result.Url, x.Result,x.Token);
             //    preView.Show();
             //}
-            //if(Preview ==1000)
-            //{
-            //    var x = await Task.Run(() =>
-            //    {
-            //        return fileSystem.VideoPreview(UUID);
-            //    });
-            //    PreView preView = new PreView(PreView.ResourceType.Video, x.Result.Preview[0].Url, x.Result,x.Token);
-            //    preView.Show();
-            //}
+            if (PreviewType == 3010)
+            {
+                GenericResult<PreviewVideoInformation> x = await Task.Run(() =>
+                {
+                    return fileSystem.VideoPreview(UUID);
+                });
+                if (x.Success)
+                {
+                    PreView preView = new PreView(PreView.ResourceType.Video, x.Result.PreviewHlsAddress, x.Result);
+                    preView.Show();
+                }
+            }
         }
 
         private void Copy(object parameter)
@@ -271,6 +277,7 @@ namespace SixCloud.ViewModels
             UUID = fileMetaData.UUID;
             Mime = fileMetaData.Mime;
             Path = fileMetaData.Path;
+            PreviewType = fileMetaData.PreviewType;
 
             CopyCommand = new DependencyCommand(Copy, AlwaysCan);
             CutCommand = new DependencyCommand(Cut, AlwaysCan);

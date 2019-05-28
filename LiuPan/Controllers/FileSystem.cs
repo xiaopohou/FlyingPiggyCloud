@@ -347,23 +347,18 @@ namespace SixCloud.Controllers
 
         public GenericResult<PreviewVideoInformation> VideoPreview(string UUID)
         {
-#warning 这里的代码还没有写完
-            throw new Exception();
-            //while (string.IsNullOrWhiteSpace(Token))
-            //{
-            //    LoginView GetToken = new LoginView();
-            //    GetToken.ShowDialog();
-            //}
-            //Dictionary<string, string> data = new Dictionary<string, string>
-            //{
-            //    { "uuid", UUID },
-            //};
-            //GenericResult<PreviewVideoInformation> x = Post<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "v2/preview/media", new Dictionary<string, string>
-            //{
-            //    { "Qingzhen-Token",Token }
-            //}, out WebHeaderCollection webHeaderCollection);
-            //Token = webHeaderCollection.Get("qingzhen-token");
-            //return x;
+            while (string.IsNullOrWhiteSpace(Token))
+            {
+                LoginView GetToken = new LoginView();
+                GetToken.ShowDialog();
+            }
+            var data = new { identity = UUID };
+            GenericResult<PreviewVideoInformation> x = Post<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "v2/preview/video", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
         }
 
         public GenericResult<PreviewImageInformation> ImagePreview(string UUID)

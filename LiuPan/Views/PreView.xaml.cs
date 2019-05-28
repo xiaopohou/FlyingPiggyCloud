@@ -1,4 +1,6 @@
-﻿using SixCloud.Models;
+﻿using SixCloud.Controllers;
+using SixCloud.Models;
+using SixCloud.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Media.Animation;
@@ -25,7 +27,7 @@ namespace SixCloud.Views
 
         public ResourceType Type { get; set; }
 
-        public PreView(ResourceType type, string uri, object parameter, string token)
+        public PreView(ResourceType type, string uri, object parameter)
         {
             Type = type;
             PreviewParameter = parameter;
@@ -49,7 +51,7 @@ namespace SixCloud.Views
                           {
                               PreviewVideoInformation p = parameter as PreviewVideoInformation;
                               ImageContainer.Visibility = Visibility.Collapsed;
-                              string address = uri + "?token=" + token;
+                              string address = uri;
                               string content = Properties.Resources.PreviewContainer.Replace("{{uri}}", address);
                               VideoContainer.NavigateToString(content);
                               VideoContainer.ContainsFullScreenElementChanged += (s, a) =>
@@ -77,10 +79,16 @@ namespace SixCloud.Views
                                         Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
                                     }
                                 };
+                              Closing += OnClose;
                               break;
                           }
                   }
               };
+        }
+
+        public void OnClose(object sender, EventArgs e)
+        {
+            VideoContainer.Close();
         }
     }
 }

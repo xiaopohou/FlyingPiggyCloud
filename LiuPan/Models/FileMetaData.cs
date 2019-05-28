@@ -107,7 +107,7 @@ namespace SixCloud.Models
         public bool Preview { get; set; }
 
         /// <summary>
-        /// 预览状态 600=text 300=pic 1000=video
+        /// 预览类型 3010=video
         /// </summary>
         [JsonProperty(PropertyName = "previewType")]
         public int PreviewType { get; set; }
