@@ -1,4 +1,5 @@
-﻿using SixCloudCustomControlLibrary.Controls;
+﻿using SixCloud.Controllers;
+using SixCloudCustomControlLibrary.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,25 @@ namespace SixCloud.Views
     /// </summary>
     public partial class ChangePasswordView : MetroWindow
     {
+        private readonly Authentication authentication = new Authentication();
+
         public ChangePasswordView()
         {
             InitializeComponent();
+        }
+
+        private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
+        {
+            var x = await Task.Run(() => authentication.ChangePasswordByOldPassword(authentication.UserMd5(OldValue.Password), authentication.UserMd5(NewValue.Password)));
+            if(x.Success)
+            {
+                Close();
+            }
+            else
+            {
+                MessageBox.Show($"修改失败，服务器返回{x.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+            }
         }
     }
 }
