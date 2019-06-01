@@ -127,7 +127,7 @@ namespace SixCloud.ViewModels
                                 {
                                     if (timeoutIndex++ > 50)
                                     {
-                                        System.Windows.MessageBox.Show("种子文件上传失败");
+                                        App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show("种子文件上传失败"));
                                         return;
                                     }
                                     Thread.Sleep(1000);
@@ -202,7 +202,7 @@ namespace SixCloud.ViewModels
                         GenericResult<OfflineTaskAdd> tasks = offlineDownloader.Add(savingPath, OfflineTaskParameters);
                         if (!tasks.Success)
                         {
-                            System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                            App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error));
                         }
                         System.Windows.Application.Current.Dispatcher.Invoke(() => DataContextHost.Close());
                         break;

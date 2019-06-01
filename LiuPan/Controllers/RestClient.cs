@@ -159,7 +159,7 @@ namespace SixCloud.Controllers
             }
             catch (WebException e) when (e.Status == WebExceptionStatus.NameResolutionFailure && e.Status == WebExceptionStatus.Timeout)
             {
-                MessageBox.Show("无法连接到服务器", "网络错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                App.Current.Dispatcher.Invoke(() => MessageBox.Show("无法连接到服务器", "网络错误", MessageBoxButton.OK, MessageBoxImage.Error));
                 throw;
             }
             return myResponse;

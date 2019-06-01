@@ -42,7 +42,7 @@ namespace SixCloud.ViewModels
             }
             else
             {
-                MessageBox.Show("由于找不到对象，6盘未能创建任务", "失败", MessageBoxButton.OK, MessageBoxImage.Stop);
+                App.Current.Dispatcher.Invoke(() => MessageBox.Show("由于找不到对象，6盘未能创建任务", "失败", MessageBoxButton.OK, MessageBoxImage.Stop));
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using SixCloud.Controllers;
 using SixCloud.Models;
 using SixCloud.Views;
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -58,7 +59,11 @@ namespace SixCloud.ViewModels
                      }
                      else
                      {
-                         MessageBox.Show(x.Message, "登陆失败");
+                         Application.Current.Dispatcher.Invoke(() =>
+                         {
+                             MessageBox.Show(x.Message, "登陆失败");
+                             currentView.Activate();
+                         });
                      }
                  }
                  //如果允许保存密码，且保存了上次登录的密码，且密码框为空，则使用上次保存的密码的md5登陆
@@ -78,14 +83,23 @@ namespace SixCloud.ViewModels
                      }
                      else
                      {
-                         MessageBox.Show(x.Message, "登陆失败");
+                         Application.Current.Dispatcher.Invoke(() =>
+                         {
+                             MessageBox.Show(x.Message, "登陆失败");
+                             currentView.Activate();
+                         });
                          LocalProperties.Password = "";
                          OnPropertyChanged("PasswordBoxHint");
                      }
                  }
                  else
                  {
-                     MessageBox.Show("要登陆，请输入密码");
+                     Application.Current.Dispatcher.Invoke(() =>
+                     {
+                         MessageBox.Show("要登陆，请输入密码");
+                         currentView.Activate();
+                     });
+                     currentView.Activate();
                  }
 
                  GenericResult<UserInformation> LoginOperate(string passwordMD5)
@@ -118,7 +132,6 @@ namespace SixCloud.ViewModels
                  }
              }, "登陆中，请稍等");
             loadView.Show();
-
         }
 
         private bool CanSignIn(object paramObj)
@@ -148,7 +161,11 @@ namespace SixCloud.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show(x.Message, "注册失败");
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show(x.Message, "注册失败");
+                        currentView.Activate();
+                    });
                 }
             }
         }
@@ -177,7 +194,11 @@ namespace SixCloud.ViewModels
             }
             else
             {
-                MessageBox.Show(x.Message, "发送验证码失败");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show(x.Message, "发送验证码失败");
+                    currentView.Activate();
+                });
             }
         }
 
