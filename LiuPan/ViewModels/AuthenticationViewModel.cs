@@ -29,15 +29,13 @@ namespace SixCloud.ViewModels
                      {
                          App.Current.Dispatcher.Invoke(() =>
                          {
-                             Window.GetWindow(param as PasswordBox).Close();
+                             currentView.Close();
                              new MainFrame(x.Result).Show();
                          });
-                         return;
                      }
-
                  }
                  //如果密码框中输入了信息，则使用密码框中的密码登陆
-                 if (param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
+                 else if (param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
                  {
                      string passwordMD5 = authentication.UserMd5(passwordBox.Password);
                      GenericResult<UserInformation> x = LoginOperate(passwordMD5);
@@ -45,7 +43,7 @@ namespace SixCloud.ViewModels
                      {
                          App.Current.Dispatcher.Invoke(() =>
                          {
-                             Window.GetWindow(passwordBox).Close();
+                             currentView.Close();
                              new MainFrame(x.Result).Show();
                          });
                          if (IsRememberPassword)
@@ -74,7 +72,7 @@ namespace SixCloud.ViewModels
                          LocalProperties.UserName = PhoneNumber;
                          App.Current.Dispatcher.Invoke(() =>
                          {
-                             Window.GetWindow(param as PasswordBox).Close();
+                             currentView.Close();
                              new MainFrame(x.Result).Show();
                          });
                      }

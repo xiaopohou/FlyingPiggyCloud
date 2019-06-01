@@ -6,7 +6,7 @@
         xmlns:metro="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
         xmlns:usercontrols="clr-namespace:SixCloud.Views.UserControls"
         mc:Ignorable="d"
-        Title="用户登录" Height="321" Width="430" x:Name="OwnerWindow" ResizeMode="CanMinimize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" MetroWindowLayout="WideAngle" Topmost="True">
+        Title="用户登录" Height="321" Width="430" x:Name="OwnerWindow" ResizeMode="CanMinimize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" MetroWindowLayout="WideAngle">
     <metro:MetroWindow.Resources>
         <Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>

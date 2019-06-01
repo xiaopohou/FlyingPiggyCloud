@@ -152,7 +152,7 @@ namespace SixCloud.Controllers
         /// <param name="oldPasswordMD5">旧密码</param>
         /// <param name="newPasswordMD5">新密码</param>
         /// <returns></returns>
-        public GenericResult<bool> ChangePasswordByOldPassword(string oldPasswordMD5, string newPasswordMD5)
+        public GenericResult<object> ChangePasswordByOldPassword(string oldPasswordMD5, string newPasswordMD5)
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
@@ -164,7 +164,7 @@ namespace SixCloud.Controllers
                 LoginView GetToken = new LoginView();
                 GetToken.ShowDialog();
             }
-            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/changePassword", new Dictionary<string, string>
+            GenericResult<object> x = Post<GenericResult<object>>(JsonConvert.SerializeObject(data), "v2/user/changePassword", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",Token }
             }, out WebHeaderCollection webHeaderCollection);

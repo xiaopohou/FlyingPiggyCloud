@@ -11,7 +11,12 @@ namespace SixCloud.Views
         public LoginView()
         {
             InitializeComponent();
-            DataContext = new AuthenticationViewModel(this);
+            AuthenticationViewModel dc = new AuthenticationViewModel(this);
+            DataContext = dc;
+            if (dc.IsAutoSignIn)
+            {
+                Activated += (sender, e) => dc.SignInCommand.Execute(null);
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace SixCloud.ViewModels
         public UserInformationViewModel(UserInformation currentUser)
         {
             ChangeUserNameCommand = new DependencyCommand(ChangeUserName, DependencyCommand.AlwaysCan);
+            ChangePasswordCommand = new DependencyCommand(ChangePassword, DependencyCommand.AlwaysCan);
             LogoutCommand = new DependencyCommand(Logout, DependencyCommand.AlwaysCan);
             ParseInformation(currentUser);
         }
@@ -70,10 +71,9 @@ namespace SixCloud.ViewModels
         }
 
         public DependencyCommand ChangePasswordCommand { get; set; }
-        private async void ChangePassword(object parameter)
+        private void ChangePassword(object parameter)
         {
-#warning 这里需要多个视图
-            //authentication.ChangePasswordByOldPassword()
+            new ChangePasswordView().ShowDialog();
         }
 
         public DependencyCommand LogoutCommand { get; set; }

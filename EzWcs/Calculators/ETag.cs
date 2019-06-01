@@ -6,7 +6,7 @@ namespace EzWcs.Calculators
     /// <summary>
     /// HTTP 协议：ETag == URL 的 Entity Tag，用于标示 URL 对象是否改变，区分不同语言和 Session 等等。
     /// </summary>
-    internal sealed class ETag
+    public sealed class ETag
     {
         public static string ComputeEtag(string filePath)
         {

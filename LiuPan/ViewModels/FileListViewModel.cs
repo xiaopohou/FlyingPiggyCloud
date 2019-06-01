@@ -155,6 +155,10 @@ namespace SixCloud.ViewModels
                         CreatePathArray(CurrentPath);
                         yield return x.Result.List;
                     }
+                    else if(x.Success)
+                    {
+                        break;
+                    }
                     else
                     {
                         throw new DirectoryNotFoundException(x.Message);
@@ -171,6 +175,10 @@ namespace SixCloud.ViewModels
             });
             App.Current.Dispatcher.Invoke(() =>
             {
+                if(fileMetaDataEnumerator.Current==null)
+                {
+                    return;
+                }
                 foreach (FileMetaData a in fileMetaDataEnumerator.Current)
                 {
                     FileList.Add(new FileListItemViewModel(this, a));
