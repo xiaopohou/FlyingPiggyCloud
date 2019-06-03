@@ -28,7 +28,7 @@ namespace SixCloud.ViewModels
                      GenericResult<UserInformation> x = authentication.GetUserInformation();
                      if (x.Success)
                      {
-                         App.Current.Dispatcher.Invoke(() =>
+                         currentView.Dispatcher.Invoke(() =>
                          {
                              currentView.Close();
                              new MainFrame(x.Result).Show();
@@ -59,7 +59,7 @@ namespace SixCloud.ViewModels
                      }
                      else
                      {
-                         Application.Current.Dispatcher.Invoke(() =>
+                         currentView.Dispatcher.Invoke(() =>
                          {
                              MessageBox.Show(x.Message, "登陆失败");
                              currentView.Activate();

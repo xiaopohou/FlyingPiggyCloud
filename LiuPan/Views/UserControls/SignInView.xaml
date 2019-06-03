@@ -26,7 +26,8 @@
 
             <materialDesign:PackIcon Kind="Account" VerticalAlignment="Bottom" Margin="6"/>
             <TextBox Grid.Row="0" Grid.Column="1" 
-                     materialDesign:HintAssist.Hint="手机号码" 
+                     materialDesign:HintAssist.Hint="手机号码"
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                      FontFamily="Microsoft Yahei Regular">
                 <TextBox.Text>
                     <Binding Path="PhoneNumber" UpdateSourceTrigger="PropertyChanged">

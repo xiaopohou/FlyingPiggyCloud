@@ -14,6 +14,11 @@ namespace SixCloud
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             DownloadingCache.StartUpRecovery();
             TaskBarButton taskBarButton = new TaskBarButton();
+            DispatcherUnhandledException += (sender, e) =>
+            {
+
+            };
+
         }
     }
 }
