@@ -15,13 +15,13 @@ namespace SixCloud.Controllers
     {
         private static readonly Dictionary<string, string> taskList;
 
-        private static readonly List<DownloadTask> records;
+        private static readonly List<DownloadTaskRecord> records;
 
         public static void StartUpRecovery()
         {
             if (taskList.Count != 0)
             {
-                foreach (DownloadTask a in records)
+                foreach (DownloadTaskRecord a in records)
                 {
                     DownloadingListViewModel.NewTask(a.DownloadAddress, a.Path, a.Name);
                 }
@@ -30,22 +30,22 @@ namespace SixCloud.Controllers
 
         public static void AddRecord(DownloadTask task)
         {
-
+            DownloadTaskRecord record = new DownloadTaskRecord(task);
             task.DownloadFileCompleted += (sender, e) =>
             {
                 Task.Run(() =>
                 {
-                    records.Remove(task);
+                    records.Remove(record);
                 });
             };
-            foreach (DownloadTask a in records)
+            foreach (DownloadTaskRecord a in records)
             {
                 if (a.DownloadAddress == task.DownloadAddress || a.Path == task.Path)
                 {
                     return;
                 }
             }
-            records.Add(task);
+            records.Add(record);
         }
 
         static DownloadTasksLogger()
@@ -72,20 +72,25 @@ namespace SixCloud.Controllers
             if (File.Exists(recordFilePath))
             {
                 string s = File.ReadAllText(recordFilePath);
-                records = JsonConvert.DeserializeObject<List<DownloadTask>>(s) ?? new List<DownloadTask>();
+                records = JsonConvert.DeserializeObject<List<DownloadTaskRecord>>(s) ?? new List<DownloadTaskRecord>();
             }
             else
             {
                 File.Create(recordFilePath).Close();
-                records = new List<DownloadTask>();
+                records = new List<DownloadTaskRecord>();
             }
             Application.Current.Exit += (sender, e) =>
             {
-                new StreamWriter(File.Create(loggerFilePath)).Write(JsonConvert.SerializeObject(taskList));
-                new StreamWriter(File.Create(recordFilePath)).Write(JsonConvert.SerializeObject(records));
-                using (var writer = new StreamWriter(File.Create(loggerFilePath)))
+                //new StreamWriter(File.Create(loggerFilePath)).Write(JsonConvert.SerializeObject(taskList));
+                //new StreamWriter(File.Create(recordFilePath)).Write(JsonConvert.SerializeObject(records));
+                using (StreamWriter writer = new StreamWriter(File.Create(loggerFilePath)))
                 {
-                    var s = JsonConvert.SerializeObject(taskList);
+                    string s = JsonConvert.SerializeObject(taskList);
+                    writer.Write(s);
+                }
+                using (StreamWriter writer = new StreamWriter(File.Create(recordFilePath)))
+                {
+                    string s = JsonConvert.SerializeObject(records);
                     writer.Write(s);
                 }
             };
@@ -95,7 +100,7 @@ namespace SixCloud.Controllers
         {
             lock (taskList)
             {
-                taskList.Add(uri.ToString(), path);
+                taskList[uri.ToString()] = path;
             }
         }
 
@@ -116,6 +121,26 @@ namespace SixCloud.Controllers
             lock (taskList)
             {
                 taskList.Remove(uri.ToString());
+            }
+        }
+
+        private class DownloadTaskRecord
+        {
+            public string DownloadAddress { get; set; }
+
+            public string Path { get; set; }
+
+            public string Name { get; set; }
+
+            public DownloadTaskRecord(DownloadTask task)
+            {
+                DownloadAddress = task.DownloadAddress;
+                Path = task.Path;
+                Name = task.Name;
+            }
+            public DownloadTaskRecord()
+            {
+
             }
         }
     }
