@@ -51,7 +51,7 @@ namespace SixCloud.ViewModels
         public DownloadingTaskViewModel(string downloadAddress, string localPath, string name)
         {
             downloadTask = new DownloadTask(downloadAddress, localPath, name);
-            TransmissionProgressController.DownloadingCache.AddRecord(downloadTask);
+            DownloadTasksLogger.AddRecord(downloadTask);
             downloadTask.DownloadFileProgressChanged += (sender, e) =>
             {
                 OnPropertyChanged("Completed");

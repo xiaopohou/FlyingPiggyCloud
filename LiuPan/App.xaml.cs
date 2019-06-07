@@ -1,6 +1,5 @@
 ﻿using SixCloud.Controllers;
 using System.Windows;
-using static SixCloud.Controllers.TransmissionProgressController;
 
 namespace SixCloud
 {
@@ -12,13 +11,12 @@ namespace SixCloud
         public App() : base()
         {
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            DownloadingCache.StartUpRecovery();
+            DownloadTasksLogger.StartUpRecovery();
             TaskBarButton taskBarButton = new TaskBarButton();
             DispatcherUnhandledException += (sender, e) =>
             {
 
             };
-
         }
     }
 }
