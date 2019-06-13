@@ -10,6 +10,11 @@ namespace SixCloud.Views
     /// </summary>
     public partial class LoadingView : Window
     {
+        public LoadingView(Window owner) : this(owner, null)
+        {
+
+        }
+
         public LoadingView(Window owner, Action action) : base()
         {
             InitializeComponent();

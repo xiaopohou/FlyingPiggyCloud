@@ -3,6 +3,7 @@ using SixCloud.Models;
 using SixCloud.Views;
 using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,118 +21,126 @@ namespace SixCloud.ViewModels
 
         private void SignIn(object param)
         {
-            LoadingView loadView = new LoadingView(currentView, () =>
-             {
-                 //如果允许自动登录，且保存了上一次的Token，则自动登录
-                 if (IsAutoSignIn && !string.IsNullOrEmpty(LocalProperties.Token))
-                 {
-                     GenericResult<UserInformation> x = authentication.GetUserInformation();
-                     if (x.Success)
-                     {
-                         currentView.Dispatcher.Invoke(() =>
-                         {
-                             currentView.Close();
-                             new MainFrame(x.Result).Show();
-                         });
-                     }
-                 }
-                 //如果密码框中输入了信息，则使用密码框中的密码登陆
-                 else if (param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
-                 {
-                     string passwordMD5 = authentication.UserMd5(passwordBox.Password);
-                     GenericResult<UserInformation> x = LoginOperate(passwordMD5);
-                     if (x.Success)
-                     {
-                         App.Current.Dispatcher.Invoke(() =>
-                         {
-                             currentView.Close();
-                             new MainFrame(x.Result).Show();
-                         });
-                         if (IsRememberPassword)
-                         {
-                             LocalProperties.UserName = PhoneNumber;
-                             LocalProperties.Password = authentication.UserMd5(passwordBox.Password);
-                         }
-                         else
-                         {
-                             LocalProperties.Password = "";
-                         }
-                     }
-                     else
-                     {
-                         currentView.Dispatcher.Invoke(() =>
-                         {
-                             MessageBox.Show(x.Message, "登陆失败");
-                             currentView.Activate();
-                         });
-                     }
-                 }
-                 //如果允许保存密码，且保存了上次登录的密码，且密码框为空，则使用上次保存的密码的md5登陆
-                 else if (IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
-                 {
-                     string passwordMD5 = LocalProperties.Password;
-                     GenericResult<UserInformation> x = LoginOperate(passwordMD5);
-
-                     if (x.Success)
-                     {
-                         LocalProperties.UserName = PhoneNumber;
-                         App.Current.Dispatcher.Invoke(() =>
-                         {
-                             currentView.Close();
-                             new MainFrame(x.Result).Show();
-                         });
-                     }
-                     else
-                     {
-                         Application.Current.Dispatcher.Invoke(() =>
-                         {
-                             MessageBox.Show(x.Message, "登陆失败");
-                             currentView.Activate();
-                         });
-                         LocalProperties.Password = "";
-                         OnPropertyChanged("PasswordBoxHint");
-                     }
-                 }
-                 else
-                 {
-                     Application.Current.Dispatcher.Invoke(() =>
-                     {
-                         MessageBox.Show("要登陆，请输入密码");
-                         currentView.Activate();
-                     });
-                     currentView.Activate();
-                 }
-
-                 GenericResult<UserInformation> LoginOperate(string passwordMD5)
-                 {
-                     try
-                     {
-                         return authentication.LoginByPassword(PhoneNumber, passwordMD5);
-                     }
-                     catch (Authentication.LoginUserTooMuchException ex)
-                     {
-                         GenericResult<OnlineDeviceList> getOnlineDeviceList = authentication.GetOnlineDeviceList(ex.Token, out string nextToken);
-                         if (getOnlineDeviceList.Success)
-                         {
-                             string[] devicesSSID = null;
-                             App.Current.Dispatcher.Invoke(() =>
-                             {
-                                 LogoutOthersViewModels logoutOthersViewModels = new LogoutOthersViewModels(getOnlineDeviceList);
-                                 logoutOthersViewModels.ShowDialog();
-                                 string[] list = logoutOthersViewModels.DevicesSSID;
-                                 devicesSSID = list;
-                             });
-                             GenericResult<bool?> x = authentication.LogoutOnlineDevices(nextToken, devicesSSID);
-                             if (x.Result == true)
-                             {
-                                 return LoginOperate(passwordMD5);
-                             }
-                         }
-                         return ex.Response;
-                     }
-                 }
-             }, "登陆中，请稍等");
+            LoadingView loadView = new LoadingView(currentView);
+            loadView.FriendlyText.Text = "登陆中，请稍后";
             loadView.Show();
+            //如果允许自动登录，且保存了上一次的Token，则自动登录
+            if (IsAutoSignIn && !string.IsNullOrEmpty(LocalProperties.Token))
+            {
+                GenericResult<UserInformation> x = authentication.GetUserInformation();
+                if (x.Success)
+                {
+                    currentView.Dispatcher.Invoke(() =>
+                    {
+                        currentView.Close();
+                        new MainFrame(x.Result).Show();
+                    });
+                }
+            }
+            //如果密码框中输入了信息，则使用密码框中的密码登陆
+            else if (param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
+            {
+                string passwordMD5 = authentication.UserMd5(passwordBox.Password);
+                GenericResult<UserInformation> x = LoginOperate(passwordMD5);
+                if (x.Success)
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        currentView.Close();
+                        new MainFrame(x.Result).Show();
+                    });
+                    if (IsRememberPassword)
+                    {
+                        LocalProperties.UserName = PhoneNumber;
+                        LocalProperties.Password = authentication.UserMd5(passwordBox.Password);
+                    }
+                    else
+                    {
+                        LocalProperties.Password = "";
+                    }
+                }
+                else
+                {
+                    currentView.Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show(x.Message, "登陆失败");
+                        currentView.Activate();
+                    });
+                }
+            }
+            //如果允许保存密码，且保存了上次登录的密码，且密码框为空，则使用上次保存的密码的md5登陆
+            else if (IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
+            {
+                string passwordMD5 = LocalProperties.Password;
+                GenericResult<UserInformation> x = LoginOperate(passwordMD5);
+
+                if (x.Success)
+                {
+                    LocalProperties.UserName = PhoneNumber;
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        currentView.Close();
+                        new MainFrame(x.Result).Show();
+                    });
+                }
+                else
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show(x.Message, "登陆失败");
+                        currentView.Activate();
+                    });
+                    LocalProperties.Password = "";
+                    OnPropertyChanged("PasswordBoxHint");
+                }
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show("要登陆，请输入密码");
+                    currentView.Activate();
+                });
+                currentView.Activate();
+                return;
+            }
+
+            GenericResult<UserInformation> LoginOperate(string passwordMD5)
+            {
+                try
+                {
+                    return authentication.LoginByPassword(PhoneNumber, passwordMD5);
+                }
+                catch (Authentication.LoginUserTooMuchException ex)
+                {
+                    GenericResult<OnlineDeviceList> getOnlineDeviceList = authentication.GetOnlineDeviceList(ex.Token, out string nextToken);
+                    if (getOnlineDeviceList.Success)
+                    {
+                        string[] devicesSSID = null;
+                        object syncRoot = new object();
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            lock (syncRoot)
+                            {
+                                LogoutOthersViewModels logoutOthersViewModels = new LogoutOthersViewModels(getOnlineDeviceList);
+                                logoutOthersViewModels.ShowDialog();
+                                devicesSSID = logoutOthersViewModels.DevicesSSID;
+                            }
+                        });
+                        Thread.Sleep(1000);
+                        lock (syncRoot)
+                        {
+                            GenericResult<bool?> x = authentication.LogoutOnlineDevices(nextToken, devicesSSID);
+                            if (x.Result == true)
+                            {
+                                return LoginOperate(passwordMD5);
+                            }
+                        }
+                    }
+                    return ex.Response;
+                }
+            }
+            loadView.Close();
         }
 
         private bool CanSignIn(object paramObj)
