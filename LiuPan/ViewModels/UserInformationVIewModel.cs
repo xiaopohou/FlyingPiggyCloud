@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace SixCloud.ViewModels
 {
-    internal sealed class UserInformationViewModel:ViewModelBase
+    internal sealed class UserInformationViewModel : ViewModelBase
     {
         private readonly Authentication authentication = new Authentication();
 
@@ -58,15 +58,17 @@ namespace SixCloud.ViewModels
         private async void ChangeUserName(object parameter)
         {
             TextInputDialog.Show(out string newUserName, "请输入新用户名", "更改用户名");
-            var x = await Task.Run(() => authentication.ChangeUserName(newUserName));
-            if(x.Success)
+            if (!string.IsNullOrWhiteSpace(newUserName))
             {
-                ParseInformation((await Task.Run(() => authentication.GetUserInformation())).Result);
-                
-            }
-            else
-            {
-                MessageBox.Show($"未能成功修改用户名，原因：{x.Message}", "更改失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                var x = await Task.Run(() => authentication.ChangeUserName(newUserName));
+                if (x.Success)
+                {
+                    ParseInformation((await Task.Run(() => authentication.GetUserInformation())).Result);
+                }
+                else
+                {
+                    MessageBox.Show($"未能成功修改用户名，原因：{x.Message}", "更改失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
