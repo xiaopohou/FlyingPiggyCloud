@@ -84,13 +84,17 @@ namespace SixCloud.ViewModels
             if (recoveryBoxItemsEnumerator.MoveNext())
             {
                 RecoveryBoxItem[] x = recoveryBoxItemsEnumerator.Current;
-                Application.Current.Dispatcher.Invoke(() =>
+                //Application.Current.Dispatcher.Invoke(() =>
+                //{
+                //    foreach (RecoveryBoxItem a in x)
+                //    {
+                //        RecoveryList.Add(a);
+                //    }
+                //});
+                foreach (RecoveryBoxItem a in x)
                 {
-                    foreach (RecoveryBoxItem a in x)
-                    {
-                        RecoveryList.Add(a);
-                    }
-                });
+                    Application.Current.Dispatcher.Invoke(() => RecoveryList.Add(a));
+                }
             }
         }
 

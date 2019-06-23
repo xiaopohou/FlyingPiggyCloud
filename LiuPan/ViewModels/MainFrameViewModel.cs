@@ -1,4 +1,5 @@
 ﻿using SixCloud.Models;
+using System.Threading.Tasks;
 
 namespace SixCloud.ViewModels
 {
@@ -9,6 +10,8 @@ namespace SixCloud.ViewModels
         public UserInformationViewModel UserInformation { get; set; }
 
         public ViewModelBase MainContainerContent { get; set; }
+        private RecoveryBoxViewModel recVM { get; set; }
+        private FileListViewModel fileVM { get; set; }
 
         public TransferListViewModel TransferList { get; set; } = new TransferListViewModel();
 
@@ -17,15 +20,21 @@ namespace SixCloud.ViewModels
             string path = parameter as string;
             if (path == "Recovery")
             {
-                RecoveryBoxViewModel x = new RecoveryBoxViewModel();
-                x.LazyLoad();
-                MainContainerContent = x;
+                if(recVM==null)
+                {
+                    recVM = new RecoveryBoxViewModel();
+                }
+                MainContainerContent = recVM;
+                recVM.LazyLoad();
             }
             else
             {
-                FileListViewModel x = new FileListViewModel();
-                await x.NavigateByPath("/" + path, true);
-                MainContainerContent = x;
+                if(fileVM==null)
+                {
+                    fileVM = new FileListViewModel();
+                }
+                MainContainerContent = fileVM;
+                await fileVM.NavigateByPath("/" + path, true);
             }
             OnPropertyChanged("MainContainerContent");
         }
@@ -38,7 +47,8 @@ namespace SixCloud.ViewModels
         {
             PathNavigateCommand = new AsyncCommand(PathNavigate, CanPathNavigate);
             UserInformation = new UserInformationViewModel(currentUser);
-            MainContainerContent = new FileListViewModel();
+            fileVM = new FileListViewModel();
+            MainContainerContent = fileVM;
             //FileList.NavigateByPathAsync("/");
         }
     }

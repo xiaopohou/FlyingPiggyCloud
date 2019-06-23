@@ -3,6 +3,7 @@ using SixCloud.Models;
 using SixCloud.Views;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,7 +13,7 @@ namespace SixCloud.Controllers
     internal sealed class Authentication : SixCloudMethordBase
     {
         /// <summary>
-        /// 发起验证码请求
+        /// 发起注册验证码请求
         /// </summary>
         /// <param name="phoneNumber">请求验证码的手机号</param>
         /// <returns>PhoneInfo</returns>
@@ -23,6 +24,20 @@ namespace SixCloud.Controllers
                 { "phone", phoneNumber },
             };
             return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendRegisterMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+        }
+
+        /// <summary>
+        /// 发起登陆验证码请求
+        /// </summary>
+        /// <param name="phoneNumber"></param>
+        /// <returns></returns>
+        public GenericResult<string> SendingMessageToMobilePhoneNumberForLogin(string phoneNumber)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "phone", phoneNumber },
+            };
+            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendLoginMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
         }
 
         /// <summary>
@@ -43,10 +58,6 @@ namespace SixCloud.Controllers
                 {"phoneInfo", phoneInfo }
             };
             GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/register", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
-            //if (string.IsNullOrEmpty(x.Token))
-            //{
-            //    Token = x.Token;
-            //}
             return x;
         }
 
@@ -265,6 +276,80 @@ namespace SixCloud.Controllers
             public string Token { get; set; }
 
             public GenericResult<UserInformation> Response { get; set; }
+        }
+    }
+
+    internal sealed class Share : SixCloudMethordBase
+    {
+        /// <summary>
+        /// 通过路径创建分享
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="password"></param>
+        /// <param name="expire"></param>
+        /// <param name="copyCountLeft"></param>
+        /// <returns></returns>
+        public GenericResult<ShareMetaData> CreateByPath(string path, string password = null, long expire = 0, long copyCountLeft = 0)
+        {
+            dynamic data = new ExpandoObject();
+            data.path = path;
+            if (!string.IsNullOrWhiteSpace(password))
+            {
+                data.password = password;
+            }
+            if (expire != 0)
+            {
+                data.expire = expire;
+            }
+            if (copyCountLeft != 0)
+            {
+                data.copyCountLeft = copyCountLeft;
+            }
+            var x = Post<GenericResult<ShareMetaData>>(JsonConvert.SerializeObject(data), "v2/share/create", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
+
+        public GenericResult<ShareMetaData> Get(string identity)
+        {
+            var data = new { identity };
+            var x = Post<GenericResult<ShareMetaData>>(JsonConvert.SerializeObject(data), "v2/share/get", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
+
+        public GenericResult<bool> Save(string identity, string path, string password = null)
+        {
+            dynamic data = new ExpandoObject();
+            data.identity = identity;
+            data.filePath = path;
+            if (!string.IsNullOrWhiteSpace(password))
+            {
+                data.password = password;
+            }
+            var x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/share/get", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
+        }
+
+        public GenericResult<bool> Cancel(string path)
+        {
+            var data = new { path };
+            var x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/share/cancel", new Dictionary<string, string>
+            {
+                { "Qingzhen-Token",Token }
+            }, out WebHeaderCollection webHeaderCollection);
+            Token = webHeaderCollection.Get("qingzhen-token");
+            return x;
         }
     }
 }

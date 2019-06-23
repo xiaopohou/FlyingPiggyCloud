@@ -10,13 +10,16 @@ using System.Windows.Controls;
 
 namespace SixCloud.ViewModels
 {
-    internal class AuthenticationViewModel : INotifyPropertyChanged
+    internal class AuthenticationViewModel : ViewModelBase, INotifyPropertyChanged
     {
         private readonly Authentication authentication = new Authentication();
         private string _phoneNumber;
         private string _username;
         private string _verificationCode;
 
+        /// <summary>
+        /// 申请短信验证码后，同步返回该字段
+        /// </summary>
         private string PhoneInfo { get; set; }
 
         private void SignIn(object param)
@@ -37,8 +40,21 @@ namespace SixCloud.ViewModels
                     });
                 }
             }
+            //如果是验证码登陆，且已输入验证码，则验证码登录
+            else if (IsCodeMode && !string.IsNullOrWhiteSpace(PhoneCode))
+            {
+                var x = authentication.LoginByMessageCode(PhoneInfo, PhoneCode);
+                if (x.Success)
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        currentView.Close();
+                        new MainFrame(x.Result).Show();
+                    });
+                }
+            }
             //如果密码框中输入了信息，则使用密码框中的密码登陆
-            else if (param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
+            else if (!IsCodeMode && param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
             {
                 string passwordMD5 = authentication.UserMd5(passwordBox.Password);
                 GenericResult<UserInformation> x = LoginOperate(passwordMD5);
@@ -69,7 +85,7 @@ namespace SixCloud.ViewModels
                 }
             }
             //如果允许保存密码，且保存了上次登录的密码，且密码框为空，则使用上次保存的密码的md5登陆
-            else if (IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
+            else if (!IsCodeMode && IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
             {
                 string passwordMD5 = LocalProperties.Password;
                 GenericResult<UserInformation> x = LoginOperate(passwordMD5);
@@ -104,6 +120,7 @@ namespace SixCloud.ViewModels
                 currentView.Activate();
                 return;
             }
+            loadView.Close();
 
             GenericResult<UserInformation> LoginOperate(string passwordMD5)
             {
@@ -140,7 +157,6 @@ namespace SixCloud.ViewModels
                     return ex.Response;
                 }
             }
-            loadView.Close();
         }
 
         private bool CanSignIn(object paramObj)
@@ -193,10 +209,21 @@ namespace SixCloud.ViewModels
 
         private async void SendVerificationCode(object paramObj)
         {
-            GenericResult<string> x = await Task.Run(() =>
+            GenericResult<string> x;
+            if (paramObj as string == "Login")
             {
-                return authentication.SendingMessageToMobilePhoneNumber(PhoneNumber);
-            });
+                x = await Task.Run(() =>
+                {
+                    return authentication.SendingMessageToMobilePhoneNumberForLogin(PhoneNumber);
+                });
+            }
+            else
+            {
+                x = await Task.Run(() =>
+                {
+                    return authentication.SendingMessageToMobilePhoneNumber(PhoneNumber);
+                });
+            }
             if (x.Success)
             {
                 PhoneInfo = x.Result;
@@ -221,13 +248,6 @@ namespace SixCloud.ViewModels
             {
                 return true;
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private readonly Window currentView;
@@ -297,6 +317,9 @@ namespace SixCloud.ViewModels
 
         public int RemainingTimeBasedSecond { get; set; }
 
+        public bool IsCodeMode { get; set; } = false;
+
+        public string PhoneCode { get; set; }
     }
 
 }
