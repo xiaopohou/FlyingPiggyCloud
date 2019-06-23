@@ -68,6 +68,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\LoadingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\MetroBase.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -102,6 +106,7 @@
     <Compile Include="Controls\FontIcon.cs" />
     <Compile Include="Controls\LightButton.cs" />
     <Compile Include="Controls\LightTabControl.cs" />
+    <Compile Include="Controls\LoadingControl.cs" />
     <Compile Include="Controls\MetroFocusButton.cs" />
     <Compile Include="Controls\MetroMenuTabControl.cs" />
     <Compile Include="Controls\MetroMenuTabItem.cs" />
