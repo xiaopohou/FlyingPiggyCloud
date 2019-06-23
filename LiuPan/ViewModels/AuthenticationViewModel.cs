@@ -117,8 +117,6 @@ namespace SixCloud.ViewModels
                     MessageBox.Show("要登陆，请输入密码");
                     currentView.Activate();
                 });
-                currentView.Activate();
-                return;
             }
             loadView.Close();
 
@@ -251,6 +249,7 @@ namespace SixCloud.ViewModels
         }
 
         private readonly Window currentView;
+
         public AuthenticationViewModel(Window viewPointer)
         {
             SignInCommand = new DependencyCommand(SignIn, CanSignIn);

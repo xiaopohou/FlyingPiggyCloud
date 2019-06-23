@@ -145,6 +145,7 @@
     <Compile Include="Controllers\OfflineDownloader.cs" />
     <Compile Include="Controllers\RecoveryBox.cs" />
     <Compile Include="Controllers\RestClient.cs" />
+    <Compile Include="Controllers\Share.cs" />
     <Compile Include="Controllers\SixCloudMethordBase.cs" />
     <Compile Include="Controllers\TaskBarButton.cs" />
     <Compile Include="Models\DownloadTask.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Models\RecoveryBoxItem.cs" />
     <Compile Include="Models\RecoveryBoxPage.cs" />
     <Compile Include="Models\SelfClient.cs" />
+    <Compile Include="Models\ShareMetaData.cs" />
     <Compile Include="Models\SingleFileUploadTask.cs" />
     <Compile Include="Models\UploadTask.cs" />
     <Compile Include="ViewModels\AsyncCommand.cs" />
