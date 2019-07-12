@@ -11,10 +11,10 @@ namespace SixCloud.Controllers
         /// <summary>
         /// 通过路径创建分享
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="password"></param>
-        /// <param name="expire"></param>
-        /// <param name="copyCountLeft"></param>
+        /// <param name="path">文件路径</param>
+        /// <param name="password">分享密码，默认为公开</param>
+        /// <param name="expire">过期时间，默认为不限</param>
+        /// <param name="copyCountLeft">可转存次数，默认为不限</param>
         /// <returns></returns>
         public GenericResult<ShareMetaData> CreateByPath(string path, string password = null, long expire = 0, long copyCountLeft = 0)
         {

@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SixCloud.Views"
+        xmlns:controls="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
         mc:Ignorable="d"
         KeyDown="Window_KeyDown"
         Title="Window1" Height="300" AllowsTransparency="True" Background="Transparent"  Width="400" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
-    <Grid>
+    <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="75"/>
@@ -18,77 +19,7 @@
             <RowDefinition Height="75"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.RowSpan="3" Grid.ColumnSpan="3">
-            <Grid.Background>
-                <VisualBrush x:Name="BlurHolder" Stretch="UniformToFill"/>
-            </Grid.Background>
-            <Grid.Effect>
-                <BlurEffect Radius="15"/>
-            </Grid.Effect>
-        </Grid>
-        <Border Grid.Row="1" Grid.Column="1" BorderBrush="{DynamicResource PrimaryHueDarkBrush}" BorderThickness="5" CornerRadius="50" RenderTransformOrigin="0.5,0.5" Opacity="0">
-            <Border.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform x:Name="Transform" ScaleY="1" ScaleX="1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Border.RenderTransform>
-            <Border.Triggers>
-                <EventTrigger RoutedEvent="Loaded">
-                    <BeginStoryboard>
-                        <Storyboard >
-                            <DoubleAnimation Storyboard.TargetName="Transform" Storyboard.TargetProperty="ScaleY" To="0" Duration="00:00:01" RepeatBehavior="Forever"/>
-                            <DoubleAnimation Storyboard.TargetName="Transform" Storyboard.TargetProperty="ScaleX" To="0" Duration="00:00:01" RepeatBehavior="Forever"/>
-                            <DoubleAnimation Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType=Border}}" Storyboard.TargetProperty="Opacity"  From="0" To="1" Duration="00:00:01" RepeatBehavior="Forever"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Border.Triggers>
-        </Border>
-        <Border Grid.Row="1" Grid.Column="1" BorderBrush="{DynamicResource PrimaryHueDarkBrush}" BorderThickness="5" CornerRadius="50" RenderTransformOrigin="0.5,0.5" Opacity="0">
-            <Border.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform x:Name="Transform_2" ScaleY="1" ScaleX="1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Border.RenderTransform>
-            <Border.Triggers>
-                <EventTrigger RoutedEvent="Loaded">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation BeginTime="00:00:00.333" Storyboard.TargetName="Transform_2" Storyboard.TargetProperty="ScaleY" To="0" Duration="00:00:01" RepeatBehavior="Forever"/>
-                            <DoubleAnimation BeginTime="00:00:00.333" Storyboard.TargetName="Transform_2" Storyboard.TargetProperty="ScaleX" To="0" Duration="00:00:01" RepeatBehavior="Forever"/>
-                            <DoubleAnimation BeginTime="00:00:00.333" Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType=Border}}" Storyboard.TargetProperty="Opacity"  From="0" To="1" Duration="00:00:01" RepeatBehavior="Forever"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Border.Triggers>
-        </Border>
-        <Border Grid.Row="1" Grid.Column="1" BorderBrush="{DynamicResource PrimaryHueDarkBrush}" BorderThickness="5" CornerRadius="50" RenderTransformOrigin="0.5,0.5" Opacity="0">
-            <Border.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform x:Name="Transform_3" ScaleY="1" ScaleX="1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Border.RenderTransform>
-            <Border.Triggers>
-                <EventTrigger RoutedEvent="Loaded">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation BeginTime="00:00:00.666" Storyboard.TargetName="Transform_3" Storyboard.TargetProperty="ScaleY" To="0" Duration="00:00:01" RepeatBehavior="Forever"/>
-                            <DoubleAnimation BeginTime="00:00:00.666" Storyboard.TargetName="Transform_3" Storyboard.TargetProperty="ScaleX" To="0" Duration="00:00:01" RepeatBehavior="Forever"/>
-                            <DoubleAnimation BeginTime="00:00:00.666" Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType=Border}}" Storyboard.TargetProperty="Opacity"  From="0" To="1" Duration="00:00:01" RepeatBehavior="Forever"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Border.Triggers>
-        </Border>
+        <controls:LoadingControl Grid.Column="1" Grid.Row="1"/>
         <TextBlock x:Name="FriendlyText" Grid.Row="2" Grid.ColumnSpan="3" Text="正在和服务器不可描述" Foreground="{DynamicResource PrimaryHueDarkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
     </Grid>
 </Window>

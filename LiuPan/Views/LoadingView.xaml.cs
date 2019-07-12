@@ -21,7 +21,7 @@ namespace SixCloud.Views
             Owner = owner;
             Width = owner.Width;
             Height = owner.Height;
-            BlurHolder.Visual = owner;
+            //BlurHolder.Visual = owner;
             Activated += (sender, e) => action?.BeginInvoke((parameter) => Application.Current.Dispatcher.Invoke(() => Close()), null);
         }
 
@@ -32,8 +32,8 @@ namespace SixCloud.Views
 
         public LoadingView(Window owner, Action action, string friendlyText, AlignmentX x, AlignmentY y):this(owner,action,friendlyText)
         {
-            BlurHolder.AlignmentX = x;
-            BlurHolder.AlignmentY = y;
+            //BlurHolder.AlignmentX = x;
+            //BlurHolder.AlignmentY = y;
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

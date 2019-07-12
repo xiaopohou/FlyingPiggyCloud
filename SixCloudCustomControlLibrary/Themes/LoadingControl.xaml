@@ -10,7 +10,7 @@
                           xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml">
                         <Grid.Resources>
                             <!-- Particle Styling -->
-                            <SolidColorBrush x:Key = "ParticleColor" Color = "#006699"/>
+                            <SolidColorBrush x:Key = "PrimaryHueDarkBrush" Color = "#FF4DAB6F"/>
                             <SolidColorBrush x:Key = "ParticleBackgroundColor" Color = "Transparent"/>
                             <system:Double x:Key = "ParticleOpacity">1</system:Double>
                             <system:Double x:Key = "ParticleRadius">5</system:Double>
@@ -57,13 +57,13 @@
                             <Style x:Key = "EllipseStyle" TargetType = "Ellipse">
                                 <Setter Property = "Width" Value = "{StaticResource ParticleRadius}"/>
                                 <Setter Property = "Height" Value = "{StaticResource ParticleRadius}"/>
-                                <Setter Property = "Fill" Value = "{StaticResource ParticleColor}"/>
+                                <Setter Property = "Fill" Value = "{StaticResource PrimaryHueDarkBrush}"/>
                                 <Setter Property = "RenderTransformOrigin" Value = "0.5, 0.5"/>
                                 <Setter Property = "Opacity" Value = "{StaticResource ParticleOpacity}"/>
                             </Style>
                         </Grid.Resources>
-                        <Canvas Width = "50" Height = "50">
-                            <Canvas.Triggers>
+                        <Grid>
+                            <Grid.Triggers>
                                 <EventTrigger RoutedEvent = "Canvas.Loaded">
                                     <EventTrigger.Actions>
                                         <BeginStoryboard>
@@ -188,7 +188,7 @@
                                         </BeginStoryboard>
                                     </EventTrigger.Actions>
                                 </EventTrigger>
-                            </Canvas.Triggers>
+                            </Grid.Triggers>
                             <Border x:Name = "p0" Background = "{StaticResource ParticleBackgroundColor}" Opacity = "{StaticResource ParticleOpacity}">
                                 <Border.RenderTransform>
                                     <RotateTransform/>
@@ -269,7 +269,7 @@
                                     </Ellipse.RenderTransform>
                                 </Ellipse>
                             </Border>
-                        </Canvas>
+                        </Grid>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
