@@ -1,4 +1,6 @@
-﻿using SixCloud.Controllers;
+﻿using Exceptionless;
+using Newtonsoft.Json;
+using SixCloud.Controllers;
 using SixCloud.Models;
 using SixCloud.Views;
 using System;
@@ -31,12 +33,22 @@ namespace SixCloud.ViewModels
 
         private void ParseInformation(UserInformation currentUser)
         {
-            string icon = currentUser.Icon;
-            if (string.IsNullOrEmpty(icon) || icon == "default.jpg")
+            string icon = null;
+            try
             {
-                icon = "http://qc.cdorey.net/default.jpg";
+                icon = currentUser.Icon;
+                if (string.IsNullOrEmpty(icon) || icon == "default.jpg")
+                {
+                    icon = "http://qc.cdorey.net/default.jpg";
+                }
+                Icon = new BitmapImage(new Uri(icon));
+
             }
-            Icon = new BitmapImage(new Uri(icon));
+            catch (UriFormatException ex)
+            {
+                //检查导致解析头像崩溃的原因
+                ex.ToExceptionless().AddObject(icon).AddObject(currentUser).Submit();
+            }
             try
             {
                 AvailableRate = currentUser.SpaceUsed * 100 / currentUser.SpaceCapacity;
