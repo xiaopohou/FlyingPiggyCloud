@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -44,6 +45,25 @@ namespace SixCloud.ViewModels
             {
                 App.Current.Dispatcher.Invoke(() => MessageBox.Show("由于找不到对象，6盘未能创建任务", "失败", MessageBoxButton.OK, MessageBoxImage.Stop));
             }
+        }
+
+        static UploadingListViewModel()
+        {
+            Application.Current.Exit += (sender, e) =>
+            {
+                List<string> recordList = new List<string>(_observableCollection.Count);
+                lock (_observableCollection)
+                {
+                    foreach (UploadingTaskViewModel a in _observableCollection)
+                    {
+                        if (a is UploadingFileViewModel task)
+                        {
+                            recordList.Add(task.ToString());
+                        }
+                    }
+                }
+#warning 这里的代码没有完成
+            };
         }
 
     }

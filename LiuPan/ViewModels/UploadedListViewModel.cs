@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace SixCloud.ViewModels
 {
@@ -16,6 +18,11 @@ namespace SixCloud.ViewModels
                 CompletedTime = DateTime.Now
             };
             _observableCollection.Insert(0, task);
+        }
+
+        static UploadedListViewModel()
+        {
+
         }
     }
 }

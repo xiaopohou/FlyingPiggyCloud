@@ -1,5 +1,7 @@
-﻿using EzWcs;
+﻿using Exceptionless;
+using EzWcs;
 using EzWcs.Calculators;
+using Newtonsoft.Json;
 using SixCloud.Controllers;
 using System;
 using System.IO;
@@ -13,13 +15,45 @@ namespace SixCloud.ViewModels
             Name = Path.GetFileName(filePath);
             var hash = ETag.ComputeEtag(filePath);
             Models.GenericResult<Models.UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, Hash: hash, OriginalFilename: Name);
-            if(x.Result.HashCached)
+            if (x.Result.HashCached)
             {
                 task = new HashCachedTask();
                 return;
             }
             task = EzWcs.EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
+            recordString = JsonConvert.SerializeObject(new { filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl });
         }
+
+        public UploadingFileViewModel(string recordString) : base()
+        {
+            this.recordString = recordString;
+            dynamic record = JsonConvert.DeserializeObject(recordString);
+            try
+            {
+                string filePath = record.filePath;
+                string token = record.Token;
+                string uploadUrl = record.UploadUrl;
+                Name = Path.GetFileName(filePath);
+                task = EzWcs.EzWcs.NewTask(filePath, token, uploadUrl);
+            }
+            catch (Exception ex)
+            {
+                //如果没有(object)强转，编译器始终会认为Submit方法是record的
+                ex.ToExceptionless()
+                    .AddObject((object)record)
+                    .Submit();
+                if(task==null)
+                {
+                    task = new ErrorTask();
+                }
+                if(string.IsNullOrEmpty(Name))
+                {
+                    Name = "该上传任务恢复失败";
+                }
+            }
+        }
+
+        private readonly string recordString;
 
         private readonly IUploadTask task;
 
@@ -58,6 +92,11 @@ namespace SixCloud.ViewModels
             task.TaskOperate(UploadTaskStatus.Abort);
         }
 
+        public override string ToString()
+        {
+            return recordString;
+        }
+
         protected override void Pause()
         {
             task.TaskOperate(UploadTaskStatus.Pause);
@@ -68,8 +107,9 @@ namespace SixCloud.ViewModels
             task.TaskOperate(UploadTaskStatus.Active);
         }
 
-        //public override event EventHandler UploadAborted;
-
+        /// <summary>
+        /// 一个可以秒传的上传任务
+        /// </summary>
         private class HashCachedTask : IUploadTask
         {
             public string FilePath { get; set; }
@@ -91,6 +131,31 @@ namespace SixCloud.ViewModels
             public long TotalBytes { get; set; }
 
             public UploadTaskStatus UploadTaskStatus => UploadTaskStatus.Completed;
+
+            public bool TaskOperate(UploadTaskStatus todo)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 表示一个错误的无法进行的上传任务
+        /// </summary>
+        private class ErrorTask : IUploadTask
+        {
+            public string FilePath { get; set; }
+
+            public string Token { get; set; }
+
+            public string Address { get; set; }
+
+            public long CompletedBytes => 0;
+
+            public string Hash => null;
+
+            public long TotalBytes => 999;
+
+            public UploadTaskStatus UploadTaskStatus => UploadTaskStatus.Error;
 
             public bool TaskOperate(UploadTaskStatus todo)
             {

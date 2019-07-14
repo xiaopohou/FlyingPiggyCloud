@@ -308,6 +308,8 @@ namespace SixCloud.ViewModels
 
         public string PhoneNumber { get => _phoneNumber; set { _phoneNumber = value; SendVerificationCodeCommand.OnCanExecutedChanged(this, null); SignUpCommand.OnCanExecutedChanged(this, null); SignInCommand.OnCanExecutedChanged(this, null); OnPropertyChanged("PhoneNumber"); } }
 
+        public int CountryCode { get; set; } = 86;
+
         public string Username { get => _username; set { _username = value; SignUpCommand.OnCanExecutedChanged(this, null); } }
 
         public string VerificationCode { get => _verificationCode; set { _verificationCode = value; SignUpCommand.OnCanExecutedChanged(this, null); } }

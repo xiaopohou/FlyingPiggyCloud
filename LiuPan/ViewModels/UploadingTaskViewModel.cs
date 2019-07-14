@@ -6,7 +6,10 @@ namespace SixCloud.ViewModels
 {
     internal abstract class UploadingTaskViewModel : FileSystemViewModel
     {
-        private static DispatcherTimer timer;
+        /// <summary>
+        /// 用于定时刷新任务进度
+        /// </summary>
+        private static readonly DispatcherTimer timer;
 
         static UploadingTaskViewModel()
         {
@@ -83,8 +86,8 @@ namespace SixCloud.ViewModels
         public DependencyCommand StopCommand { get; protected set; }
         public abstract void Stop(object parameter);
 
-
         public event EventHandler UploadCompleted;
+
         public virtual event EventHandler UploadAborted;
     }
 }

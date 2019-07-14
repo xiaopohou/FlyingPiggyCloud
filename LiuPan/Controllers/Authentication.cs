@@ -60,13 +60,17 @@ namespace SixCloud.Controllers
         /// <param name="value">用户手机或者用户名</param>
         /// <param name="passwordMD5">用户密码MD5</param>
         /// <returns>登录请求的返回体</returns>
-        public GenericResult<UserInformation> LoginByPassword(string value, string passwordMD5)
+        public GenericResult<UserInformation> LoginByPassword(string value, string passwordMD5, int? countryCode=null)
         {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 { "value", value },
                 { "password", passwordMD5 }
             };
+            if(countryCode!=null)
+            {
+                data.Add("countryCode", countryCode.ToString());
+            }
             GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/login", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
             if (!x.Success && x.Code == "LOGIN_USER_TOO_MUCH")
             {
