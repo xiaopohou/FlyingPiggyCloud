@@ -180,7 +180,7 @@
                                 </StackPanel>
                                 <ProgressBar Height="Auto" Value="{Binding Progress, Mode=OneWay}" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center"/>
                                 <Controls:FontIcon Icon="&#xf4de;" Grid.RowSpan="2"/>
-                                <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     <TextBlock Text="{Binding DownloadSize, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
                                     <TextBlock Text="/"/>

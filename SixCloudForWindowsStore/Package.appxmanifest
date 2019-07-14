@@ -19,6 +19,13 @@
         <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png">
         </uap:DefaultTile>
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="ed2k">
+            <uap:DisplayName>6盘离线下载服务</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>

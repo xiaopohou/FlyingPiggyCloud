@@ -13,6 +13,8 @@ namespace EzWcs
 {
     internal sealed class SimpleUploadWorker
     {
+        private const int MaximumParallelTask = 5;
+
         private void SimpleUpload(SimpleUploadTask simpleUploadTask)
         {
             try
@@ -184,14 +186,6 @@ namespace EzWcs
 
         private SimpleUploadTask[] runningTasks = new SimpleUploadTask[MaximumParallelTask];
 
-        public const int MaximumParallelTask = 5;
-
-        public SimpleUploadWorker()
-        {
-            httpManager = new HttpManager();
-            StartWork();
-        }
-
         private void Check()
         {
             List<int> completedIndex = new List<int>();
@@ -252,6 +246,12 @@ namespace EzWcs
         public void AddTask(SimpleUploadTask simpleUploadTask)
         {
             workbook.Enqueue(simpleUploadTask);
+        }
+
+        public SimpleUploadWorker()
+        {
+            httpManager = new HttpManager();
+            StartWork();
         }
     }
 }
