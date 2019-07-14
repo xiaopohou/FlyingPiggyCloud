@@ -6,8 +6,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:SixCloud.Views"
              mc:Ignorable="d"
-             Title="新建共享" Height="450" Width="800">
-    <Grid>
+             Title="新建共享" Height="450" Width="800" Background="LightGray" MetroWindowLayout="WideAngle">
+    <Grid Margin="50,32,50,75" Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="1*"/>

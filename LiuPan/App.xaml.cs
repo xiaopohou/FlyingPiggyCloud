@@ -13,7 +13,7 @@ namespace SixCloud
         {
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             DownloadTasksLogger.StartUpRecovery();
-            TaskBarButton taskBarButton = new TaskBarButton();
+            new TaskBarButton();
             ExceptionlessClient.Default.Register();
         }
     }

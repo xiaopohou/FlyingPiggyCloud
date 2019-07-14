@@ -16,12 +16,9 @@ namespace SixCloud.Controllers
         /// </summary>
         /// <param name="phoneNumber">请求验证码的手机号</param>
         /// <returns>PhoneInfo</returns>
-        public GenericResult<string> SendingMessageToMobilePhoneNumber(string phoneNumber)
+        public GenericResult<string> SendingMessageToMobilePhoneNumber(string phoneNumber, int countryCode = 86)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "phone", phoneNumber },
-            };
+            var data = new { phone = phoneNumber, countryCode };
             return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendRegisterMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
         }
 
@@ -30,12 +27,9 @@ namespace SixCloud.Controllers
         /// </summary>
         /// <param name="phoneNumber"></param>
         /// <returns></returns>
-        public GenericResult<string> SendingMessageToMobilePhoneNumberForLogin(string phoneNumber)
+        public GenericResult<string> SendingMessageToMobilePhoneNumberForLogin(string phoneNumber, int countryCode = 86)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "phone", phoneNumber },
-            };
+            var data = new { phone = phoneNumber, countryCode };
             return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendLoginMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
         }
 
@@ -187,12 +181,9 @@ namespace SixCloud.Controllers
         /// </summary>
         /// <param name="phoneNumber">请求验证码的手机号</param>
         /// <returns></returns>
-        public GenericResult<string> SendingMessageToMobilePhoneNumberForChangingPassword(string phoneNumber)
+        public GenericResult<string> SendingMessageToMobilePhoneNumberForChangingPassword(string phoneNumber, int countryCode = 86)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "phone", phoneNumber },
-            };
+            var data = new { phone = phoneNumber, countryCode };
             return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendChangePasswordMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
         }
 
