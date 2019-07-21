@@ -49,21 +49,7 @@ namespace SixCloud.ViewModels
 
         static UploadingListViewModel()
         {
-            Application.Current.Exit += (sender, e) =>
-            {
-                List<string> recordList = new List<string>(_observableCollection.Count);
-                lock (_observableCollection)
-                {
-                    foreach (UploadingTaskViewModel a in _observableCollection)
-                    {
-                        if (a is UploadingFileViewModel task)
-                        {
-                            recordList.Add(task.ToString());
-                        }
-                    }
-                }
-#warning 这里的代码没有完成
-            };
+
         }
 
     }

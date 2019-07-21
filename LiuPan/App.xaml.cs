@@ -12,7 +12,7 @@ namespace SixCloud
         public App() : base()
         {
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            DownloadTasksLogger.StartUpRecovery();
+            TasksLogger.StartUpRecovery();
             new TaskBarButton();
             ExceptionlessClient.Default.Register();
         }

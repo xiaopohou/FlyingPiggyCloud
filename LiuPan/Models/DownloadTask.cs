@@ -18,7 +18,7 @@ namespace SixCloud.Models
         private readonly object statusSyncRoot = new object();
 
         private IFileDownloader fileDownloader;
-        private static readonly DownloadTasksLogger Cache = new DownloadTasksLogger();
+        private static readonly TasksLogger Cache = new TasksLogger();
 
         private readonly Uri downloadResource;
 
