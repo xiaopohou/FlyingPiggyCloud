@@ -12,7 +12,6 @@
             <RowDefinition Height="24"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
         <Grid >
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -28,32 +27,18 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <materialDesign:PackIcon Kind="Phone" VerticalAlignment="Bottom" Margin="6"/>
-            <TextBox Grid.Column="1" Grid.Row="0" 
+            <materialDesign:PackIcon Grid.Column="0" Grid.Row="2" Kind="Phone" VerticalAlignment="Bottom" Margin="6"/>
+            <TextBox Grid.Column="1" Grid.Row="2" 
                      materialDesign:HintAssist.Hint="手机号码"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <TextBox.Text>
-                    <Binding Path="PhoneNumber" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <validationrules:PhoneNumber/>
-                        </Binding.ValidationRules>
-                    </Binding>
+                    <Binding Path="PhoneNumber" UpdateSourceTrigger="PropertyChanged"/>
                 </TextBox.Text>
             </TextBox>
 
-            <materialDesign:PackIcon Grid.Column="0" Grid.Row="2" Kind="Account" VerticalAlignment="Bottom" Margin="6"/>
-            <TextBox Grid.Column="1" Grid.Row="2" 
-                     materialDesign:HintAssist.Hint="用户名"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <TextBox.Text>
-                    <Binding Path="Username" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <validationrules:RejectNullOrEmptyString/>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-
+            <materialDesign:PackIcon Grid.Column="0" Grid.Row="0" Kind="Globe" VerticalAlignment="Bottom" Margin="6"/>
+            <ComboBox Grid.Column="1" Grid.Row="0" materialDesign:HintAssist.Hint="地区" ItemsSource="{Binding RegionCollection}" SelectedItem="{Binding Code,Mode=TwoWay}"/>
+            
             <materialDesign:PackIcon Grid.Column="0" Grid.Row="4" Kind="Key" VerticalAlignment="Bottom" Margin="6"/>
             <PasswordBox Name="PasswordBox" Grid.Column="1" Grid.Row="4" 
                          materialDesign:HintAssist.Hint="密码"

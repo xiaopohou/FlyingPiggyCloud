@@ -3,6 +3,7 @@ using SixCloud.Models;
 using SixCloud.Views;
 using System;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,8 +15,19 @@ namespace SixCloud.ViewModels
     {
         private readonly Authentication authentication = new Authentication();
         private string _phoneNumber;
-        private string _username;
+        private string _code;
         private string _verificationCode;
+
+        public string[] RegionCollection { get; set; } =
+        {
+            "(86)中国大陆",
+            "(852)香港地区",
+            "(853)澳门地区",
+            "(886)台湾省",
+            "(1)美国",
+            "(81)日本",
+            "(48)波兰",
+        };
 
         /// <summary>
         /// 申请短信验证码后，同步返回该字段
@@ -68,6 +80,7 @@ namespace SixCloud.ViewModels
                     if (IsRememberPassword)
                     {
                         LocalProperties.UserName = PhoneNumber;
+                        LocalProperties.CountryCode = Code;
                         LocalProperties.Password = authentication.UserMd5(passwordBox.Password);
                     }
                     else
@@ -93,6 +106,7 @@ namespace SixCloud.ViewModels
                 if (x.Success)
                 {
                     LocalProperties.UserName = PhoneNumber;
+                    LocalProperties.CountryCode = Code;
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         currentView.Close();
@@ -107,7 +121,7 @@ namespace SixCloud.ViewModels
                         currentView.Activate();
                     });
                     LocalProperties.Password = "";
-                    OnPropertyChanged("PasswordBoxHint");
+                    OnPropertyChanged(nameof(PasswordBoxHint));
                 }
             }
             else
@@ -124,7 +138,7 @@ namespace SixCloud.ViewModels
             {
                 try
                 {
-                    return authentication.LoginByPassword(PhoneNumber, passwordMD5);
+                    return authentication.LoginByPassword(PhoneNumber, passwordMD5, GetCountryCode());
                 }
                 catch (Authentication.LoginUserTooMuchException ex)
                 {
@@ -175,7 +189,7 @@ namespace SixCloud.ViewModels
             {
                 GenericResult<UserInformation> x = await Task.Run(() =>
                 {
-                    return authentication.Register(Username, authentication.UserMd5(passwordBox.Password), VerificationCode, PhoneInfo);
+                    return authentication.Register(authentication.UserMd5(passwordBox.Password), VerificationCode, PhoneInfo, GetCountryCode());
                 });
                 if (x.Success)
                 {
@@ -193,9 +207,23 @@ namespace SixCloud.ViewModels
             }
         }
 
+        private int GetCountryCode()
+        {
+            Code = "(86)中国大陆";
+            if (!string.IsNullOrWhiteSpace(Code))
+            {
+                string regularResult = Regex.Match(Code, @"(?<=\()\d+(?=\))").Value;
+                if (int.TryParse(regularResult, out int code))
+                {
+                    return code;
+                }
+            }
+            return 86;
+        }
+
         private bool CanSignUp(object paramObj)
         {
-            if (string.IsNullOrEmpty(PhoneNumber) || string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(VerificationCode) || string.IsNullOrEmpty(PhoneInfo))
+            if (string.IsNullOrEmpty(PhoneNumber) || string.IsNullOrEmpty(Code) || string.IsNullOrEmpty(VerificationCode) || string.IsNullOrEmpty(PhoneInfo))
             {
                 return false;
             }
@@ -212,14 +240,14 @@ namespace SixCloud.ViewModels
             {
                 x = await Task.Run(() =>
                 {
-                    return authentication.SendingMessageToMobilePhoneNumberForLogin(PhoneNumber);
+                    return authentication.SendingMessageToMobilePhoneNumberForLogin(PhoneNumber, GetCountryCode());
                 });
             }
             else
             {
                 x = await Task.Run(() =>
                 {
-                    return authentication.SendingMessageToMobilePhoneNumber(PhoneNumber);
+                    return authentication.SendingMessageToMobilePhoneNumber(PhoneNumber, GetCountryCode());
                 });
             }
             if (x.Success)
@@ -258,7 +286,9 @@ namespace SixCloud.ViewModels
             if (IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.UserName))
             {
                 PhoneNumber = LocalProperties.UserName;
-                OnPropertyChanged("PhoneNumber");
+                Code = LocalProperties.CountryCode;
+                OnPropertyChanged(nameof(PhoneNumber));
+                OnPropertyChanged(nameof(Code));
             }
             currentView = viewPointer;
         }
@@ -280,7 +310,7 @@ namespace SixCloud.ViewModels
                 if (!value)
                 {
                     LocalProperties.Password = "";
-                    OnPropertyChanged("PasswordBoxHint");
+                    OnPropertyChanged(nameof(PasswordBoxHint));
                 }
             }
         }
@@ -306,11 +336,12 @@ namespace SixCloud.ViewModels
             set => LocalProperties.IsAutoLogin = value;
         }
 
-        public string PhoneNumber { get => _phoneNumber; set { _phoneNumber = value; SendVerificationCodeCommand.OnCanExecutedChanged(this, null); SignUpCommand.OnCanExecutedChanged(this, null); SignInCommand.OnCanExecutedChanged(this, null); OnPropertyChanged("PhoneNumber"); } }
+        public string PhoneNumber { get => _phoneNumber; set { _phoneNumber = value; SendVerificationCodeCommand.OnCanExecutedChanged(this, null); SignUpCommand.OnCanExecutedChanged(this, null); SignInCommand.OnCanExecutedChanged(this, null); OnPropertyChanged(nameof(PhoneNumber)); } }
 
-        public int CountryCode { get; set; } = 86;
-
-        public string Username { get => _username; set { _username = value; SignUpCommand.OnCanExecutedChanged(this, null); } }
+        public string Code
+        {
+            get => _code; set { _code = value; SignUpCommand.OnCanExecutedChanged(this, null); }
+        }
 
         public string VerificationCode { get => _verificationCode; set { _verificationCode = value; SignUpCommand.OnCanExecutedChanged(this, null); } }
 

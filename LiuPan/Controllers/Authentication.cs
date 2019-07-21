@@ -16,10 +16,10 @@ namespace SixCloud.Controllers
         /// </summary>
         /// <param name="phoneNumber">请求验证码的手机号</param>
         /// <returns>PhoneInfo</returns>
-        public GenericResult<string> SendingMessageToMobilePhoneNumber(string phoneNumber, int countryCode = 86)
+        public GenericResult<string> SendingMessageToMobilePhoneNumber(string phoneNumber, int countryCode)
         {
             var data = new { phone = phoneNumber, countryCode };
-            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendRegisterMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendRegisterMessage", new Dictionary<string, string>(), out _);
         }
 
         /// <summary>
@@ -27,30 +27,23 @@ namespace SixCloud.Controllers
         /// </summary>
         /// <param name="phoneNumber"></param>
         /// <returns></returns>
-        public GenericResult<string> SendingMessageToMobilePhoneNumberForLogin(string phoneNumber, int countryCode = 86)
+        public GenericResult<string> SendingMessageToMobilePhoneNumberForLogin(string phoneNumber, int countryCode)
         {
             var data = new { phone = phoneNumber, countryCode };
-            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendLoginMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendLoginMessage", new Dictionary<string, string>(), out _);
         }
 
         /// <summary>
         /// 发起注册请求
         /// </summary>
-        /// <param name="name">用户名：已弃用</param>
         /// <param name="code">手机验证码</param>
         /// <param name="passwordMD5">密码MD5</param>
         /// <param name="phoneInfo">该参数来自验证码请求的返回体</param>
         /// <returns></returns>
-        public GenericResult<UserInformation> Register(string name, string passwordMD5, string code, string phoneInfo)
+        public GenericResult<UserInformation> Register(string passwordMD5, string code, string phoneInfo, int countryCode)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                //{ "name", name },
-                {"password", passwordMD5 },
-                {"code",code },
-                {"phoneInfo", phoneInfo }
-            };
-            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/register", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            var data = new { password = passwordMD5, code, phoneInfo, countryCode };
+            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/register", new Dictionary<string, string>(), out _);
             return x;
         }
 
@@ -60,17 +53,9 @@ namespace SixCloud.Controllers
         /// <param name="value">用户手机或者用户名</param>
         /// <param name="passwordMD5">用户密码MD5</param>
         /// <returns>登录请求的返回体</returns>
-        public GenericResult<UserInformation> LoginByPassword(string value, string passwordMD5, int? countryCode=null)
+        public GenericResult<UserInformation> LoginByPassword(string value, string passwordMD5, int countryCode)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "value", value },
-                { "password", passwordMD5 }
-            };
-            if(countryCode!=null)
-            {
-                data.Add("countryCode", countryCode.ToString());
-            }
+            var data = new { value, password = passwordMD5, countryCode };
             GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/login", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
             if (!x.Success && x.Code == "LOGIN_USER_TOO_MUCH")
             {
@@ -134,7 +119,7 @@ namespace SixCloud.Controllers
             GenericResult<bool?> x = Post<GenericResult<bool?>>(JsonConvert.SerializeObject(data), "v2/user/logoutOther", new Dictionary<string, string>
             {
                 { "Qingzhen-Token",token }
-            }, out WebHeaderCollection webHeaderCollection);
+            }, out _);
             return x;
         }
 
@@ -185,10 +170,10 @@ namespace SixCloud.Controllers
         /// </summary>
         /// <param name="phoneNumber">请求验证码的手机号</param>
         /// <returns></returns>
-        public GenericResult<string> SendingMessageToMobilePhoneNumberForChangingPassword(string phoneNumber, int countryCode = 86)
+        public GenericResult<string> SendingMessageToMobilePhoneNumberForChangingPassword(string phoneNumber, int countryCode)
         {
             var data = new { phone = phoneNumber, countryCode };
-            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendChangePasswordMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendChangePasswordMessage", new Dictionary<string, string>(), out _);
         }
 
         /// <summary>
@@ -206,7 +191,7 @@ namespace SixCloud.Controllers
                 {"password", newPasswordMD5 },
                 {"code",code },
             };
-            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/changePasswordWithMessage", new Dictionary<string, string>(), out WebHeaderCollection webHeaderCollection);
+            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/changePasswordWithMessage", new Dictionary<string, string>(), out _);
             //Token = x.Token;
             return x;
         }

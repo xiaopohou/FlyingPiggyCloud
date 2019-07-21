@@ -53,5 +53,11 @@ namespace SixCloud.Models
             get => (string)ApplicationDictionary.GetValue("CurrentUserInformation");
             set => ApplicationDictionary.SetValue("CurrentUserInformation", value);
         }
+        public static string CountryCode
+        {
+            get => (string)ApplicationDictionary.GetValue("CountryCode") ?? "(86)中国大陆";
+            set => ApplicationDictionary.SetValue("CountryCode", value);
+        }
+
     }
 }

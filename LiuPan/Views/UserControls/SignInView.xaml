@@ -11,9 +11,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="24"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="16"/>
                 <RowDefinition />
                 <RowDefinition Height="16"/>
                 <RowDefinition />
@@ -22,26 +26,26 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <materialDesign:PackIcon Grid.Column="0" Grid.Row="0" Kind="Globe" VerticalAlignment="Bottom" Margin="6"/>
+            <ComboBox Grid.Column="1" Grid.Row="0" materialDesign:HintAssist.Hint="地区" ItemsSource="{Binding RegionCollection}" SelectedItem="{Binding Code,Mode=TwoWay}"/>
 
-            <materialDesign:PackIcon Kind="Account" VerticalAlignment="Bottom" Margin="6"/>
-            <TextBox Grid.Row="0" Grid.Column="1" 
-                     materialDesign:HintAssist.Hint="手机号码"
+            <materialDesign:PackIcon Grid.Row="2" Grid.Column="0" Kind="Account" VerticalAlignment="Bottom" Margin="6"/>
+            <TextBox Grid.Row="2" Grid.Column="1" 
+                     materialDesign:HintAssist.Hint="用户名/手机号码"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                      FontFamily="Microsoft Yahei Regular">
                 <TextBox.Text>
-                    <Binding Path="PhoneNumber" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <validationrules:PhoneNumber/>
-                        </Binding.ValidationRules>
-                    </Binding>
+                    <Binding Path="PhoneNumber" UpdateSourceTrigger="PropertyChanged"/>
                 </TextBox.Text>
             </TextBox>
-            <materialDesign:PackIcon Grid.Column="0" Grid.Row="2" Kind="Key" VerticalAlignment="Bottom" Margin="6"/>
-            <PasswordBox Name="PasswordBox" Grid.Column="1" Grid.Row="2" 
+            
+            <materialDesign:PackIcon Grid.Column="0" Grid.Row="4" Kind="Key" VerticalAlignment="Bottom" Margin="6"/>
+            <PasswordBox Name="PasswordBox" Grid.Column="1" Grid.Row="4" 
                          materialDesign:HintAssist.Hint="{Binding PasswordBoxHint}" 
                          Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                          FontFamily="Microsoft Yahei Regular"/>
-            <Grid x:Name="CodeBoxContainer" Visibility="Collapsed" Grid.Row="2" Grid.Column="1">
+            
+            <Grid x:Name="CodeBoxContainer" Visibility="Collapsed" Grid.Row="4" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>

@@ -6,7 +6,7 @@
         xmlns:metro="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary"
         xmlns:usercontrols="clr-namespace:SixCloud.Views.UserControls"
         mc:Ignorable="d"
-        Title="用户登录" Height="321" Width="430" x:Name="OwnerWindow" ResizeMode="CanMinimize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" MetroWindowLayout="WideAngle">
+        Title="用户登录" Height="380" Width="430" x:Name="OwnerWindow" ResizeMode="CanMinimize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" MetroWindowLayout="WideAngle">
     <metro:MetroWindow.Resources>
         <Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
@@ -54,7 +54,7 @@
                 <EventTrigger RoutedEvent="Selector.Selected">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="384" To="321">
+                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
                                 <DoubleAnimation.EasingFunction>
                                     <BackEase  EasingMode="EaseIn"/>
                                 </DoubleAnimation.EasingFunction>
@@ -93,7 +93,7 @@
                 <EventTrigger RoutedEvent="Selector.Selected">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}"  Storyboard.TargetProperty="Height" From="321" To="384">
+                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="380" To="400">
                                 <DoubleAnimation.EasingFunction>
                                     <BackEase  EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
