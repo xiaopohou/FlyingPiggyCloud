@@ -120,21 +120,21 @@ namespace SixCloud.Controllers
                     writer.Write(s);
                 }
 
-                if (uploadingTaskListPrinter != null)
-                {
-                    List<string> recordList = new List<string>(uploadingTaskListPrinter.Count);
-                    lock (uploadingTaskListPrinter)
-                    {
-                        foreach (UploadingTaskViewModel a in uploadingTaskListPrinter)
-                        {
-                            if (a is UploadingFileViewModel task)
-                            {
-                                recordList.Add(task.ToString());
-                            }
-                        }
-                    }
+                //if (uploadingTaskListPrinter != null)
+                //{
+                //    List<string> recordList = new List<string>(uploadingTaskListPrinter.Count);
+                //    lock (uploadingTaskListPrinter)
+                //    {
+                //        foreach (UploadingTaskViewModel a in uploadingTaskListPrinter)
+                //        {
+                //            if (a is UploadingFileViewModel task)
+                //            {
+                //                recordList.Add(task.ToString());
+                //            }
+                //        }
+                //    }
 
-                }
+                //}
             };
         }
 
