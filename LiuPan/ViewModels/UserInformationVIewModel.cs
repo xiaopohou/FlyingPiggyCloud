@@ -37,7 +37,7 @@ namespace SixCloud.ViewModels
             try
             {
                 icon = currentUser.Icon;
-                if (string.IsNullOrEmpty(icon) || icon == "default.jpg")
+                if (string.IsNullOrEmpty(icon) || icon == "default.jpg" || icon == "default")
                 {
                     icon = "http://qc.cdorey.net/default.jpg";
                 }
