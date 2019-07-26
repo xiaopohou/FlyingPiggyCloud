@@ -187,14 +187,15 @@ namespace SixCloud.ViewModels
         {
             if (param is PasswordBox passwordBox)
             {
-                GenericResult<UserInformation> x = await Task.Run(() =>
+                GenericResult<bool> x = await Task.Run(() =>
                 {
                     return authentication.Register(authentication.UserMd5(passwordBox.Password), VerificationCode, PhoneInfo, GetCountryCode());
                 });
                 if (x.Success)
                 {
                     Window.GetWindow(passwordBox).Close();
-                    new MainFrame(x.Result).Show();
+                    var loginResult = authentication.LoginByPassword(PhoneNumber, authentication.UserMd5(passwordBox.Password), GetCountryCode());
+                    new MainFrame(loginResult.Result).Show();
                 }
                 else
                 {

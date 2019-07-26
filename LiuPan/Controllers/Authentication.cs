@@ -40,10 +40,10 @@ namespace SixCloud.Controllers
         /// <param name="passwordMD5">密码MD5</param>
         /// <param name="phoneInfo">该参数来自验证码请求的返回体</param>
         /// <returns></returns>
-        public GenericResult<UserInformation> Register(string passwordMD5, string code, string phoneInfo, int countryCode)
+        public GenericResult<bool> Register(string passwordMD5, string code, string phoneInfo, int countryCode)
         {
             var data = new { password = passwordMD5, code, phoneInfo, countryCode };
-            GenericResult<UserInformation> x = Post<GenericResult<UserInformation>>(JsonConvert.SerializeObject(data), "v2/user/register", new Dictionary<string, string>(), out _);
+            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/user/register", new Dictionary<string, string>(), out _);
             return x;
         }
 
