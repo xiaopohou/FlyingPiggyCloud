@@ -244,6 +244,7 @@ namespace SixCloud.Controllers
             return sBuilder.ToString();
         }
 
+        [Serializable]
         public class LoginUserTooMuchException : Exception
         {
             public LoginUserTooMuchException(string token, string message, GenericResult<UserInformation> response) : base(message)
@@ -255,6 +256,23 @@ namespace SixCloud.Controllers
             public string Token { get; set; }
 
             public GenericResult<UserInformation> Response { get; set; }
+
+            protected LoginUserTooMuchException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+            {
+                throw new NotImplementedException();
+            }
+
+            public LoginUserTooMuchException()
+            {
+            }
+
+            public LoginUserTooMuchException(string message) : base(message)
+            {
+            }
+
+            public LoginUserTooMuchException(string message, Exception innerException) : base(message, innerException)
+            {
+            }
         }
     }
 }

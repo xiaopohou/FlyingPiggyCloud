@@ -19,7 +19,7 @@ namespace SixCloud.Properties {
     // 类通过类似于 ResGen 或 Visual Studio 的工具自动生成的。
     // 若要添加或移除成员，请编辑 .ResX 文件，然后重新运行 ResGen
     // (以 /str 作为命令选项)，或重新生成 VS 项目。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -78,19 +78,17 @@ namespace SixCloud.Properties {
         ///    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
         ///&lt;/head&gt;
         ///&lt;body style=&quot;margin:0;background:#000000&quot;&gt;
-        ///    &lt;video style=&quot;clear:both;display:block;margin:auto&quot; autoplay controls src=&quot;{{uri}}&quot;&gt;&lt;/video&gt;
-        ///  &lt;style&gt;
-        ///  video {
-        ///  display: flex;
-        ///  display: -webkit-flex;
-        ///  position: absolute;
-        ///  left: 0;
-        ///  top: 0;
-        ///  flex-direction: column;
-        ///  justify-content: center;
-        ///  width: 100%;
-        ///  height: 100%;
-        ///  visibility:  [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///    &lt;video id=&quot;video&quot; style=&quot;clear:both;display:block;margin:auto&quot; autoplay controls&gt;
+        ///    &lt;/video&gt;
+        ///    &lt;style&gt;
+        ///        video {
+        ///            display: flex;
+        ///            display: -webkit-flex;
+        ///            position: absolute;
+        ///            left: 0;
+        ///            top: 0;
+        ///            flex-direction: column;
+        ///     [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string PreviewContainer {
             get {
