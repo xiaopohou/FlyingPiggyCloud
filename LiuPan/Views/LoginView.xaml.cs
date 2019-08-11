@@ -1,5 +1,6 @@
 ﻿using SixCloud.ViewModels;
 using SixCloudCustomControlLibrary.Controls;
+using System;
 
 namespace SixCloud.Views
 {
@@ -15,7 +16,13 @@ namespace SixCloud.Views
             DataContext = dc;
             if (dc.IsAutoSignIn)
             {
-                Loaded += (sender, e) => dc.SignInCommand?.Execute(null);
+                Activated += SignIn;
+
+                void SignIn(object sender, EventArgs e)
+                {
+                    Activated -= SignIn;
+                    dc.SignInCommand?.Execute(null);
+                }
             }
         }
     }

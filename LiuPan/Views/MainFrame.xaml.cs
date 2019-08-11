@@ -46,8 +46,10 @@ namespace SixCloud.Views
             InitializeComponent();
             MainFrameViewModel mainFrameViewModel = new MainFrameViewModel(currentUser);
             DataContext = mainFrameViewModel;
-            Loaded += (sender, e) =>
+            Activated += LoadDirectory;
+            void LoadDirectory(object sender, EventArgs e)
             {
+                Activated -= LoadDirectory;
                 new LoadingView(this, () =>
                 {
                     Thread.Sleep(1000);
