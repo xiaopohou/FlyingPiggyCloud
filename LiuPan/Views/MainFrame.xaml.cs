@@ -46,10 +46,8 @@ namespace SixCloud.Views
             InitializeComponent();
             MainFrameViewModel mainFrameViewModel = new MainFrameViewModel(currentUser);
             DataContext = mainFrameViewModel;
-            Loaded += ActivatedHandler;
-            void ActivatedHandler(object sender, EventArgs e)
+            Loaded += (sender, e) =>
             {
-                Activated -= ActivatedHandler;
                 new LoadingView(this, () =>
                 {
                     Thread.Sleep(1000);
@@ -59,7 +57,7 @@ namespace SixCloud.Views
                         t.Wait();
                     }
                 }, "正在加载文件目录").Show();
-            }
+            };
         }
 
         private void MainContainer_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
