@@ -21,10 +21,10 @@ namespace SixCloud
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //if(!SingleInstanceManager.Check())
-            //{
-            //    Shutdown();
-            //}
+            if (!SingleInstanceManager.Check())
+            {
+                Shutdown();
+            }
         }
     }
 }
