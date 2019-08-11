@@ -38,101 +38,116 @@ namespace SixCloud.ViewModels
         {
             LoadingView loadView = new LoadingView(currentView);
             loadView.FriendlyText.Text = "登陆中，请稍后";
-            loadView.Show();
-            //如果允许自动登录，且保存了上一次的Token，则自动登录
-            if (IsAutoSignIn && !string.IsNullOrEmpty(LocalProperties.Token))
+            try
             {
-                GenericResult<UserInformation> x = authentication.GetUserInformation();
-                if (x.Success)
+                loadView.Show();
+                //如果允许自动登录，且保存了上一次的Token，则自动登录
+                if (IsAutoSignIn && !string.IsNullOrEmpty(LocalProperties.Token))
                 {
-                    currentView.Dispatcher.Invoke(() =>
+                    GenericResult<UserInformation> x = authentication.GetUserInformation();
+                    if (x.Success)
                     {
-                        currentView.Close();
-                        new MainFrame(x.Result).Show();
-                    });
+                        currentView.Dispatcher.Invoke(() =>
+                        {
+                            currentView.Close();
+                            new MainFrame(x.Result).Show();
+                        });
+                        return;
+                    }
                 }
-            }
-            //如果是验证码登陆，且已输入验证码，则验证码登录
-            else if (IsCodeMode && !string.IsNullOrWhiteSpace(PhoneCode))
-            {
-                var x = authentication.LoginByMessageCode(PhoneInfo, PhoneCode);
-                if (x.Success)
+
+                //如果是验证码登陆，且已输入验证码，则验证码登录
+                if (IsCodeMode && !string.IsNullOrWhiteSpace(PhoneCode))
                 {
-                    App.Current.Dispatcher.Invoke(() =>
+                    var x = authentication.LoginByMessageCode(PhoneInfo, PhoneCode);
+                    if (x.Success)
                     {
-                        currentView.Close();
-                        new MainFrame(x.Result).Show();
-                    });
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            currentView.Close();
+                            new MainFrame(x.Result).Show();
+                        });
+                        return;
+                    }
                 }
-            }
-            //如果密码框中输入了信息，则使用密码框中的密码登陆
-            else if (!IsCodeMode && param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
-            {
-                string passwordMD5 = authentication.UserMd5(passwordBox.Password);
-                GenericResult<UserInformation> x = LoginOperate(passwordMD5);
-                if (x.Success)
+
+                //如果密码框中输入了信息，则使用密码框中的密码登陆
+                if (!IsCodeMode && param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
                 {
-                    App.Current.Dispatcher.Invoke(() =>
+                    string passwordMD5 = authentication.UserMd5(passwordBox.Password);
+                    GenericResult<UserInformation> x = LoginOperate(passwordMD5);
+                    if (x.Success)
                     {
-                        currentView.Close();
-                        new MainFrame(x.Result).Show();
-                    });
-                    if (IsRememberPassword)
-                    {
-                        LocalProperties.UserName = PhoneNumber;
-                        LocalProperties.CountryCode = Code;
-                        LocalProperties.Password = authentication.UserMd5(passwordBox.Password);
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            currentView.Close();
+                            new MainFrame(x.Result).Show();
+                        });
+                        if (IsRememberPassword)
+                        {
+                            LocalProperties.UserName = PhoneNumber;
+                            LocalProperties.CountryCode = Code;
+                            LocalProperties.Password = authentication.UserMd5(passwordBox.Password);
+                        }
+                        else
+                        {
+                            LocalProperties.Password = "";
+                        }
                     }
                     else
                     {
-                        LocalProperties.Password = "";
+                        currentView.Dispatcher.Invoke(() =>
+                        {
+                            MessageBox.Show(x.Message, "登陆失败");
+                            currentView.Activate();
+                        });
                     }
+                    return;
                 }
-                else
-                {
-                    currentView.Dispatcher.Invoke(() =>
-                    {
-                        MessageBox.Show(x.Message, "登陆失败");
-                        currentView.Activate();
-                    });
-                }
-            }
-            //如果允许保存密码，且保存了上次登录的密码，且密码框为空，则使用上次保存的密码的md5登陆
-            else if (!IsCodeMode && IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
-            {
-                string passwordMD5 = LocalProperties.Password;
-                GenericResult<UserInformation> x = LoginOperate(passwordMD5);
 
-                if (x.Success)
+                //如果允许保存密码，且保存了上次登录的密码，且密码框为空，则使用上次保存的密码的md5登陆
+                if (!IsCodeMode && IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
                 {
-                    LocalProperties.UserName = PhoneNumber;
-                    LocalProperties.CountryCode = Code;
-                    App.Current.Dispatcher.Invoke(() =>
+                    string passwordMD5 = LocalProperties.Password;
+                    GenericResult<UserInformation> x = LoginOperate(passwordMD5);
+
+                    if (x.Success)
                     {
-                        currentView.Close();
-                        new MainFrame(x.Result).Show();
-                    });
+                        LocalProperties.UserName = PhoneNumber;
+                        LocalProperties.CountryCode = Code;
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            currentView.Close();
+                            new MainFrame(x.Result).Show();
+                        });
+                    }
+                    else
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            MessageBox.Show(x.Message, "登陆失败");
+                            currentView.Activate();
+                        });
+                        LocalProperties.Password = "";
+                        OnPropertyChanged(nameof(PasswordBoxHint));
+                    }
+                    return;
+
                 }
                 else
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        MessageBox.Show(x.Message, "登陆失败");
+                        MessageBox.Show("要登陆，请输入密码");
                         currentView.Activate();
                     });
-                    LocalProperties.Password = "";
-                    OnPropertyChanged(nameof(PasswordBoxHint));
                 }
+
             }
-            else
+            finally
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    MessageBox.Show("要登陆，请输入密码");
-                    currentView.Activate();
-                });
+                loadView.Close();
             }
-            loadView.Close();
 
             GenericResult<UserInformation> LoginOperate(string passwordMD5)
             {

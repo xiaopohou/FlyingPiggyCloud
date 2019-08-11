@@ -15,7 +15,7 @@ namespace SixCloud.Views
             DataContext = dc;
             if (dc.IsAutoSignIn)
             {
-                Activated += (sender, e) => dc.SignInCommand.Execute(null);
+                Loaded += (sender, e) => dc.SignInCommand?.Execute(null);
             }
         }
     }

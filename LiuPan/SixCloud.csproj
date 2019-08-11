@@ -146,6 +146,7 @@
     <Compile Include="Controllers\RecoveryBox.cs" />
     <Compile Include="Controllers\RestClient.cs" />
     <Compile Include="Controllers\Share.cs" />
+    <Compile Include="Controllers\SingleInstanceManager.cs" />
     <Compile Include="Controllers\SixCloudMethordBase.cs" />
     <Compile Include="Controllers\TaskBarButton.cs" />
     <Compile Include="Models\DownloadTask.cs" />

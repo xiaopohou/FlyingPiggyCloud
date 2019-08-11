@@ -46,7 +46,7 @@ namespace SixCloud.Views
             InitializeComponent();
             MainFrameViewModel mainFrameViewModel = new MainFrameViewModel(currentUser);
             DataContext = mainFrameViewModel;
-            Activated += ActivatedHandler;
+            Loaded += ActivatedHandler;
             void ActivatedHandler(object sender, EventArgs e)
             {
                 Activated -= ActivatedHandler;
