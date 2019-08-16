@@ -14,11 +14,17 @@ namespace SixCloud.Controllers
 {
     internal class TasksLogger : IDownloadCache
     {
+        /// <summary>
+        /// 这个字典用于服务FileDownloader
+        /// </summary>
         private static readonly Dictionary<string, string> taskList;
 
+        /// <summary>
+        /// 这个列表用于启动时重建未完成任务列表
+        /// </summary>
         private static readonly List<DownloadTaskRecord> records;
 
-        private static ObservableCollection<UploadingTaskViewModel> uploadingTaskListPrinter;
+        //private static ObservableCollection<UploadingTaskViewModel> uploadingTaskListPrinter;
 
         public static void StartUpRecovery()
         {
@@ -31,6 +37,10 @@ namespace SixCloud.Controllers
             }
         }
 
+        /// <summary>
+        /// 添加一条下载记录
+        /// </summary>
+        /// <param name="task"></param>
         public static void AddRecord(DownloadTask task)
         {
             DownloadTaskRecord record = new DownloadTaskRecord(task);
@@ -43,7 +53,7 @@ namespace SixCloud.Controllers
             };
             foreach (DownloadTaskRecord a in records)
             {
-                if (a.DownloadAddress == task.DownloadAddress || a.Path == task.Path)
+                if (a.DownloadAddress == task.DownloadAddress)
                 {
                     return;
                 }
@@ -51,16 +61,16 @@ namespace SixCloud.Controllers
             records.Add(record);
         }
 
-        internal static void SetUploadingTaskList(ObservableCollection<UploadingTaskViewModel> printer)
-        {
-            lock (uploadingTaskListPrinter)
-            {
-                if (uploadingTaskListPrinter == null)
-                {
-                    uploadingTaskListPrinter = printer;
-                }
-            }
-        }
+        //internal static void SetUploadingTaskList(ObservableCollection<UploadingTaskViewModel> printer)
+        //{
+        //    lock (uploadingTaskListPrinter)
+        //    {
+        //        if (uploadingTaskListPrinter == null)
+        //        {
+        //            uploadingTaskListPrinter = printer;
+        //        }
+        //    }
+        //}
 
         static TasksLogger()
         {
@@ -86,7 +96,7 @@ namespace SixCloud.Controllers
             if (File.Exists(recordFilePath))
             {
                 string s = File.ReadAllText(recordFilePath);
-                records = JsonConvert.DeserializeObject<List<DownloadTaskRecord>>(s) ?? new List<DownloadTaskRecord>();
+                records = JsonConvert.DeserializeObject<List<DownloadTaskRecord>>(s);// ?? new List<DownloadTaskRecord>();
             }
             else
             {
@@ -96,15 +106,15 @@ namespace SixCloud.Controllers
             #endregion
 
             #region uploadLogger
-            string uploadLoggerFilePath = rootDirectory + "/UploadTasksLogger.json";
-            if (File.Exists(uploadLoggerFilePath))
-            {
-                //string s = File.ReadAllText(uploadLoggerFilePath);
-                //string[] uploadTasks = JsonConvert.DeserializeObject<string[]>(s);
-                //File.Delete(uploadLoggerFilePath);
-                //UploadingListViewModel.NewTask(new )
-#warning 这里的上传恢复代码没有完成
-            }
+            //            string uploadLoggerFilePath = rootDirectory + "/UploadTasksLogger.json";
+            //            if (File.Exists(uploadLoggerFilePath))
+            //            {
+            //                string s = File.ReadAllText(uploadLoggerFilePath);
+            //                string[] uploadTasks = JsonConvert.DeserializeObject<string[]>(s);
+            //                File.Delete(uploadLoggerFilePath);
+            //                UploadingListViewModel.NewTask(new )
+            //#warning 这里的上传恢复代码没有完成
+            //            }
             #endregion
             Application.Current.Dispatcher.Invoke(() => Application.Current.Exit += ExitEventHandler);
             void ExitEventHandler(object sender, EventArgs e)
@@ -137,6 +147,7 @@ namespace SixCloud.Controllers
                 //}
             };
         }
+
 
         public void Add(Uri uri, string path, WebHeaderCollection headers)
         {
@@ -179,6 +190,11 @@ namespace SixCloud.Controllers
                 DownloadAddress = task.DownloadAddress;
                 Path = task.Path;
                 Name = task.Name;
+            }
+
+            public DownloadTaskRecord()
+            {
+
             }
         }
     }
