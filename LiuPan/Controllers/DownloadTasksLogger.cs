@@ -99,15 +99,15 @@ namespace SixCloud.Controllers
             string uploadLoggerFilePath = rootDirectory + "/UploadTasksLogger.json";
             if (File.Exists(uploadLoggerFilePath))
             {
-                string s = File.ReadAllText(uploadLoggerFilePath);
-                string[] uploadTasks = JsonConvert.DeserializeObject<string[]>(s);
-                File.Delete(uploadLoggerFilePath);
+                //string s = File.ReadAllText(uploadLoggerFilePath);
+                //string[] uploadTasks = JsonConvert.DeserializeObject<string[]>(s);
+                //File.Delete(uploadLoggerFilePath);
                 //UploadingListViewModel.NewTask(new )
 #warning 这里的上传恢复代码没有完成
             }
             #endregion
-
-            Application.Current.Exit += (sender, e) =>
+            Application.Current.Dispatcher.Invoke(() => Application.Current.Exit += ExitEventHandler);
+            void ExitEventHandler(object sender, EventArgs e)
             {
                 using (StreamWriter writer = new StreamWriter(File.Create(downloadLoggerFilePath)))
                 {

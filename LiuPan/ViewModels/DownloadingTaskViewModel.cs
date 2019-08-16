@@ -2,6 +2,7 @@
 using SixCloud.Models;
 using System;
 using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Data;
 
@@ -50,6 +51,7 @@ namespace SixCloud.ViewModels
 
         public DownloadingTaskViewModel(string downloadAddress, string localPath, string name)
         {
+
             downloadTask = new DownloadTask(downloadAddress, localPath, name);
             TasksLogger.AddRecord(downloadTask);
             downloadTask.DownloadFileProgressChanged += (sender, e) =>

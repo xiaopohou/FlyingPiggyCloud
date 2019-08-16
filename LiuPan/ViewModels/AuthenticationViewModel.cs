@@ -146,7 +146,7 @@ namespace SixCloud.ViewModels
             }
             finally
             {
-                //loadView.Close();
+                loadView.Close();
             }
 
             GenericResult<UserInformation> LoginOperate(string passwordMD5)
