@@ -29,5 +29,10 @@ namespace SixCloud.Views
         {
             e.Handled = true;
         }
+
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            UpdateLayout();
+        }
     }
 }

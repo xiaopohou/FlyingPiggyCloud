@@ -124,7 +124,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Margin="25,32,25,5" x:Name="MainContainer">
-            <Grid x:Name="WhichTypeStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
+            <Grid x:Name="WhichTypeStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5" ToggleButton.Checked="ToggleButton_Checked">
                 <Grid.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform x:Name="WhichTypeStageTranslateTransform"  X="{Binding ActualWidth, ElementName=MainContainer}"/>
@@ -219,7 +219,7 @@
                 <RadioButton x:Name="IsWhichTypeStage" Visibility="Collapsed" GroupName="Stage" IsChecked="{Binding Stage, ConverterParameter=WhichType, Converter={StaticResource StageConverter}, Mode=OneWay}"/>
             </Grid>
 
-            <Grid x:Name="InputUrlsStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
+            <Grid x:Name="InputUrlsStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5" ToggleButton.Checked="ToggleButton_Checked">
                 <Grid.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform x:Name="InputUrlsStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
@@ -277,7 +277,7 @@
                 <RadioButton IsChecked="{Binding Stage, ConverterParameter=InputUrls, Converter={StaticResource StageConverter}, Mode=OneWay}" x:Name="IsInputUrlsStage" Visibility="Collapsed" GroupName="Stage"/>
             </Grid>
 
-            <Grid x:Name="CheckFilesStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
+            <Grid x:Name="CheckFilesStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5" ToggleButton.Checked="ToggleButton_Checked">
                 <Grid.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform x:Name="CheckFilesStageTranslateTransform" X="{Binding ActualWidth, ElementName=MainContainer}"/>
@@ -336,8 +336,8 @@
                 </ScrollViewer>
                 <RadioButton x:Name="IsCheckFilesStage" IsChecked="{Binding Stage, ConverterParameter=CheckFiles, Converter={StaticResource StageConverter}, Mode=OneWay}" Visibility="Collapsed" GroupName="Stage"/>
             </Grid>
-            
-            <Grid x:Name="SelectSavingPathStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5">
+
+            <Grid x:Name="SelectSavingPathStageContainer" Opacity="0" RenderTransformOrigin="0.5,0.5" ToggleButton.Checked="ToggleButton_Checked">
                 <!--#region 动画和触发器-->
                 <Grid.RenderTransform>
                     <TransformGroup>
