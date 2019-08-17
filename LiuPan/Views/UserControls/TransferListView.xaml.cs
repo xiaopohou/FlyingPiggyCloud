@@ -18,6 +18,8 @@ namespace SixCloud.Views.UserControls
         public TransferListView()
         {
             InitializeComponent();
+            LazyLoadEventHandler += LazyLoad;
+
         }
 
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -94,12 +96,12 @@ namespace SixCloud.Views.UserControls
         {
             lock (LazyLoadEventHandler)
             {
-                LazyLoadEventHandler = null;
+                LazyLoadEventHandler -= LazyLoad;
             }
             //懒加载的业务代码
-            OfflineTaskViewModel vm = DataContext as OfflineTaskViewModel;
-            await Task.Run(() => vm.LazyLoad());
-            LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
+            TransferListViewModel vm = DataContext as TransferListViewModel;
+            await Task.Run(() => vm.OfflineTask.LazyLoad());
+            LazyLoadEventHandler += LazyLoad;
         }
 
     }

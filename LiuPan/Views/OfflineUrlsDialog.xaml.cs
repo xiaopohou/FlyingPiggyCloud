@@ -14,6 +14,7 @@ namespace SixCloud.Views
         public OfflineUrlsDialog()
         {
             InitializeComponent();
+            UpdateLayout();
             //System.Threading.Tasks.Task.Run(() =>
             //{
             //    System.Threading.Thread.Sleep(1000);

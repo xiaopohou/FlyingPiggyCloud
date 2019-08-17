@@ -34,6 +34,13 @@ namespace SixCloud.ViewModels
         /// </summary>
         private string PhoneInfo { get; set; }
 
+        private void OnSignInSuccessful()
+        {
+            App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            TasksLogger.StartUpRecovery();
+            new TaskBarButton();
+        }
+
         private void SignIn(object param)
         {
             LoadingView loadView = new LoadingView(currentView);
@@ -47,8 +54,9 @@ namespace SixCloud.ViewModels
                     GenericResult<UserInformation> x = authentication.GetUserInformation();
                     if (x.Success)
                     {
-                        currentView.Dispatcher.Invoke(() =>
+                        App.Current.Dispatcher.Invoke(() =>
                         {
+                            OnSignInSuccessful();
                             currentView.Close();
                             new MainFrame(x.Result).Show();
                         });
@@ -64,6 +72,7 @@ namespace SixCloud.ViewModels
                     {
                         App.Current.Dispatcher.Invoke(() =>
                         {
+                            OnSignInSuccessful();
                             currentView.Close();
                             new MainFrame(x.Result).Show();
                         });
@@ -80,6 +89,7 @@ namespace SixCloud.ViewModels
                     {
                         App.Current.Dispatcher.Invoke(() =>
                         {
+                            OnSignInSuccessful();
                             currentView.Close();
                             new MainFrame(x.Result).Show();
                         });
@@ -117,6 +127,7 @@ namespace SixCloud.ViewModels
                         LocalProperties.CountryCode = Code;
                         App.Current.Dispatcher.Invoke(() =>
                         {
+                            OnSignInSuccessful();
                             currentView.Close();
                             new MainFrame(x.Result).Show();
                         });

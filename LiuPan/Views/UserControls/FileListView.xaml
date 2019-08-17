@@ -11,6 +11,7 @@
              d:DesignHeight="450" d:DesignWidth="800" Background="#FFF3F2F1">
     <UserControl.Resources>
         <ViewModels:HidingSizeinfoForDirectoryConverter x:Key="HidingSizeinfoForDirectoryConverter"/>
+        
         <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>
 
         <Style TargetType="{x:Type controls:FontIcon}">
@@ -75,7 +76,7 @@
 
         <DataTemplate x:Key="MetaSize">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="#FF5A5A5A" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}, Mode=OneWay}" />
+                <TextBlock Foreground="#FF5A5A5A" Text="{Binding Size}"/>
             </StackPanel>
         </DataTemplate>
 
@@ -199,7 +200,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
     </UserControl.Resources>
     <Grid>
         <!--地址栏-->
@@ -269,7 +269,6 @@
                         <TextBlock Text="粘贴" Foreground="#FF5A5A5A"/>
                     </StackPanel>
                 </Button>
-
             </StackPanel>
 
         </Grid>

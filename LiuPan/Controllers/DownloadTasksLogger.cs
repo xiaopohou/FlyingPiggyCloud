@@ -96,7 +96,8 @@ namespace SixCloud.Controllers
             if (File.Exists(recordFilePath))
             {
                 string s = File.ReadAllText(recordFilePath);
-                records = JsonConvert.DeserializeObject<List<DownloadTaskRecord>>(s);// ?? new List<DownloadTaskRecord>();
+                records = JsonConvert.DeserializeObject<List<DownloadTaskRecord>>(s) ?? new List<DownloadTaskRecord>();
+                File.Delete(recordFilePath);
             }
             else
             {
