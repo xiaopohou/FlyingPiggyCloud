@@ -39,6 +39,14 @@ namespace SixCloud.ViewModels
             App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             TasksLogger.StartUpRecovery();
             new TaskBarButton();
+            ThreadPool.QueueUserWorkItem((obj) =>
+            {
+                do
+                {
+                    Thread.Sleep(TimeSpan.FromMinutes(1));
+                    authentication.GetUserInformation();
+                } while (true);
+            });
         }
 
         private void SignIn(object param)
