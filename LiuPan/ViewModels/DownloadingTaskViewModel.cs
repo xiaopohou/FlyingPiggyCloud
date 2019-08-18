@@ -31,20 +31,20 @@ namespace SixCloud.ViewModels
         public async void Start()
         {
             await downloadTask.Start();
-            OnPropertyChanged("Status");
+            OnPropertyChanged(nameof(Status));
         }
 
         public void Stop()
         {
             DownloadCompleted?.Invoke(this, new EventArgs());
             downloadTask.Stop();
-            OnPropertyChanged("Status");
+            OnPropertyChanged(nameof(Status));
         }
 
         public async void Pause()
         {
             await downloadTask.Pause();
-            OnPropertyChanged("Status");
+            OnPropertyChanged(nameof(Status));
         }
 
         public event EventHandler<EventArgs> DownloadCompleted;
@@ -53,12 +53,12 @@ namespace SixCloud.ViewModels
         {
 
             downloadTask = new DownloadTask(downloadAddress, localPath, name);
-            TasksLogger.AddRecord(downloadTask);
+            //TasksLogger.AddRecord(downloadTask);
             downloadTask.DownloadFileProgressChanged += (sender, e) =>
             {
-                OnPropertyChanged("Completed");
-                OnPropertyChanged("Total");
-                OnPropertyChanged("Progress");
+                OnPropertyChanged(nameof(Completed));
+                OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(Progress));
             };
             downloadTask.DownloadFileCompleted += (sender, e) =>
             {

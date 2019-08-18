@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SixCloud.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -49,7 +50,7 @@ namespace SixCloud.ViewModels
 
         static UploadingListViewModel()
         {
-
+            TasksLogger.Uploadings = _observableCollection;
         }
 
     }

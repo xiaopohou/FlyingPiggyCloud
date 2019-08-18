@@ -12,6 +12,8 @@ namespace SixCloud.ViewModels
     {
         public UploadingFileViewModel(string targetPath, string filePath) : base()
         {
+            TargetPath = targetPath;
+            LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
             var hash = ETag.ComputeEtag(filePath);
             Models.GenericResult<Models.UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, Hash: hash, OriginalFilename: Name);
@@ -21,39 +23,7 @@ namespace SixCloud.ViewModels
                 return;
             }
             task = EzWcs.EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
-            recordString = JsonConvert.SerializeObject(new { filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl });
         }
-
-        public UploadingFileViewModel(string recordString) : base()
-        {
-            this.recordString = recordString;
-            dynamic record = JsonConvert.DeserializeObject(recordString);
-            try
-            {
-                string filePath = record.filePath;
-                string token = record.Token;
-                string uploadUrl = record.UploadUrl;
-                Name = Path.GetFileName(filePath);
-                task = EzWcs.EzWcs.NewTask(filePath, token, uploadUrl);
-            }
-            catch (Exception ex)
-            {
-                //如果没有(object)强转，编译器始终会认为Submit方法是record的
-                ex.ToExceptionless()
-                    .AddObject((object)record)
-                    .Submit();
-                if(task==null)
-                {
-                    task = new ErrorTask();
-                }
-                if(string.IsNullOrEmpty(Name))
-                {
-                    Name = "该上传任务恢复失败";
-                }
-            }
-        }
-
-        private readonly string recordString;
 
         private readonly IUploadTask task;
 
@@ -90,11 +60,6 @@ namespace SixCloud.ViewModels
         public override void Stop(object parameter)
         {
             task.TaskOperate(UploadTaskStatus.Abort);
-        }
-
-        public override string ToString()
-        {
-            return recordString;
         }
 
         protected override void Pause()

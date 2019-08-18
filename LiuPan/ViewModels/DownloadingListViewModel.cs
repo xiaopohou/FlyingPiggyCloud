@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SixCloud.Controllers;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -44,6 +45,11 @@ namespace SixCloud.ViewModels
             {
                 task.Start();
             }
+        }
+
+        static DownloadingListViewModel()
+        {
+            TasksLogger.Downloadings = _observableCollection;
         }
     }
 

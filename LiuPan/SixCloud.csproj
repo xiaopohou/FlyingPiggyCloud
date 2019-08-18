@@ -140,7 +140,7 @@
     </ApplicationDefinition>
     <Compile Include="Controllers\Authentication.cs" />
     <Compile Include="Controllers\Calculators.cs" />
-    <Compile Include="Controllers\DownloadTasksLogger.cs" />
+    <Compile Include="Controllers\TasksLogger.cs" />
     <Compile Include="Controllers\FileSystem.cs" />
     <Compile Include="Controllers\OfflineDownloader.cs" />
     <Compile Include="Controllers\RecoveryBox.cs" />

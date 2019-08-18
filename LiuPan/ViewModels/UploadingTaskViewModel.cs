@@ -78,7 +78,7 @@ namespace SixCloud.ViewModels
                 case UploadStatus.Stop:
                     return;
             }
-            OnPropertyChanged("Status");
+            OnPropertyChanged(nameof(Status));
         }
         protected abstract void Pause();
         protected abstract void Start();
@@ -89,5 +89,9 @@ namespace SixCloud.ViewModels
         public event EventHandler UploadCompleted;
 
         public virtual event EventHandler UploadAborted;
+
+        public string LocalFilePath { get; protected set; }
+
+        public string TargetPath { get; protected set; }
     }
 }
