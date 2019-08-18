@@ -23,7 +23,7 @@ namespace SixCloud.Controllers
         }
 
         /// <summary>
-        /// 发起登陆验证码请求
+        /// 发起登录验证码请求
         /// </summary>
         /// <param name="phoneNumber"></param>
         /// <returns></returns>
@@ -67,7 +67,7 @@ namespace SixCloud.Controllers
         }
 
         /// <summary>
-        /// 发起短信验证码登陆请求
+        /// 发起短信验证码登录请求
         /// </summary>
         /// <param name="phoneInfo">验证码请求的返回值</param>
         /// <param name="code">验证码</param>
@@ -197,7 +197,7 @@ namespace SixCloud.Controllers
         }
 
         /// <summary>
-        /// 登陆后修改用户名
+        /// 登录后修改用户名
         /// </summary>
         /// <param name="newName"></param>
         /// <returns></returns>

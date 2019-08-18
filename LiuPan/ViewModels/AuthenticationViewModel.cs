@@ -44,7 +44,7 @@ namespace SixCloud.ViewModels
         private void SignIn(object param)
         {
             LoadingView loadView = new LoadingView(currentView);
-            loadView.FriendlyText.Text = "登陆中，请稍后";
+            loadView.FriendlyText.Text = "登录中，请稍后";
             try
             {
                 loadView.Show();
@@ -64,7 +64,7 @@ namespace SixCloud.ViewModels
                     }
                 }
 
-                //如果是验证码登陆，且已输入验证码，则验证码登录
+                //如果是验证码登录，且已输入验证码，则验证码登录
                 if (IsCodeMode && !string.IsNullOrWhiteSpace(PhoneCode))
                 {
                     var x = authentication.LoginByMessageCode(PhoneInfo, PhoneCode);
@@ -80,7 +80,7 @@ namespace SixCloud.ViewModels
                     }
                 }
 
-                //如果密码框中输入了信息，则使用密码框中的密码登陆
+                //如果密码框中输入了信息，则使用密码框中的密码登录
                 if (!IsCodeMode && param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
                 {
                     string passwordMD5 = authentication.UserMd5(passwordBox.Password);
@@ -108,14 +108,14 @@ namespace SixCloud.ViewModels
                     {
                         currentView.Dispatcher.Invoke(() =>
                         {
-                            MessageBox.Show(x.Message, "登陆失败");
+                            MessageBox.Show(x.Message, "登录失败");
                             currentView.Activate();
                         });
                     }
                     return;
                 }
 
-                //如果允许保存密码，且保存了上次登录的密码，且密码框为空，则使用上次保存的密码的md5登陆
+                //如果允许保存密码，且保存了上次登录的密码，且密码框为空，则使用上次保存的密码的md5登录
                 if (!IsCodeMode && IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
                 {
                     string passwordMD5 = LocalProperties.Password;
@@ -136,7 +136,7 @@ namespace SixCloud.ViewModels
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
-                            MessageBox.Show(x.Message, "登陆失败");
+                            MessageBox.Show(x.Message, "登录失败");
                             currentView.Activate();
                         });
                         LocalProperties.Password = "";
@@ -149,7 +149,7 @@ namespace SixCloud.ViewModels
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        MessageBox.Show("要登陆，请输入密码");
+                        MessageBox.Show("要登录，请输入密码");
                         currentView.Activate();
                     });
                 }

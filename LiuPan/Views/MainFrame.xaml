@@ -191,7 +191,7 @@
                     <RowDefinition Height="Auto"/>
                     <!--密码相关-->
                     <RowDefinition Height="Auto"/>
-                    <!--登陆注销相关-->
+                    <!--登录注销相关-->
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="10"/>
                 </Grid.RowDefinitions>

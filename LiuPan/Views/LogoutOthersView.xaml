@@ -14,7 +14,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="基于安全考虑，6盘最多允许5台设备同时登陆，请您选择一些已登陆的设备并断开他们与6盘的连接" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+        <TextBlock Text="基于安全考虑，6盘最多允许5台设备同时登录，请您选择一些已登录的设备并断开他们与6盘的连接" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
         <ListBox Grid.Row="1" Name="SelectList" ItemsSource="{Binding DeviceList, Mode=OneWay}" SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -41,13 +41,13 @@
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="设备名称"/>
                         <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Device}"/>
                         <controls:FontIcon Grid.Row="1" Grid.Column="0" Icon="&#xf031;"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="请求登陆时间"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="请求登录时间"/>
                         <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding LoginTime}"/>
                         <controls:FontIcon Grid.Row="2" Grid.Column="0" Icon="&#xf2f1;"/>
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="上次在线时间"/>
                         <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding RefreshTime}"/>
                         <!--<controls:FontIcon Grid.Row="3" Grid.Column="0" Icon="&#xf577;"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="登陆识别码"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="登录识别码"/>
                         <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding SSID}"/>
                         <controls:FontIcon Grid.Row="4" Grid.Column="0" Icon="&#xf05a;"/>
                         <TextBlock Grid.Row="4" Grid.Column="1" Text="状态识别码"/>

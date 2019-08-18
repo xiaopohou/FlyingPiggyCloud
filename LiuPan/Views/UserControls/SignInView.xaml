@@ -109,7 +109,7 @@
                     </EventTrigger>
                 </ToggleButton.Triggers>
             </ToggleButton>
-            <TextBlock Grid.Column="1" Text="验证码登陆" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+            <TextBlock Grid.Column="1" Text="验证码登录" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
             <Button Grid.Column="2" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
                     Command="{Binding SignInCommand}" 
                     CommandParameter="{Binding ElementName=PasswordBox}"
@@ -122,7 +122,7 @@
                             </TransformGroup>
                         </controls:FontIcon.RenderTransform>
                     </controls:FontIcon>
-                    <TextBlock Text="登陆" RenderTransformOrigin="0.5,0.5"/>
+                    <TextBlock Text="登录" RenderTransformOrigin="0.5,0.5"/>
                 </StackPanel>
             </Button>
 

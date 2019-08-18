@@ -41,7 +41,7 @@
     <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">
         <TabItem x:Name="SignInTabItem"
                  IsSelected="True"
-                 Header="登陆"
+                 Header="登录"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
             <Grid>
