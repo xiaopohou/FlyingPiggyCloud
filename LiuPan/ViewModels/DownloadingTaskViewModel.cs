@@ -22,6 +22,12 @@ namespace SixCloud.ViewModels
 
         public string Completed => downloadTask.Completed;
 
+        public string DownloadAddress => downloadTask.DownloadAddress;
+
+        public string TargetUUID { get; private set; }
+
+        public string SavedLocalPath { get; private set; }
+
         public string Total => downloadTask.Total;
 
         public double Progress => downloadTask.DownloadProgress;
@@ -49,9 +55,10 @@ namespace SixCloud.ViewModels
 
         public event EventHandler<EventArgs> DownloadCompleted;
 
-        public DownloadingTaskViewModel(string downloadAddress, string localPath, string name)
+        public DownloadingTaskViewModel(string targetUUID, string downloadAddress, string localPath, string name)
         {
-
+            TargetUUID = targetUUID;
+            SavedLocalPath = localPath;
             downloadTask = new DownloadTask(downloadAddress, localPath, name);
             //TasksLogger.AddRecord(downloadTask);
             downloadTask.DownloadFileProgressChanged += (sender, e) =>

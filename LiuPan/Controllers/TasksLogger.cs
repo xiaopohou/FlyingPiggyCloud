@@ -1,4 +1,5 @@
-﻿using FileDownloader;
+﻿//#define Record
+using FileDownloader;
 using Newtonsoft.Json;
 using SixCloud.Models;
 using SixCloud.ViewModels;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows;
+using Exceptionless;
 
 namespace SixCloud.Controllers
 {
@@ -24,12 +26,6 @@ namespace SixCloud.Controllers
         /// </summary>
         private static readonly Dictionary<string, string> downloadCache;
 
-        ///// <summary>
-        ///// 这个列表用于启动时重建未完成任务列表
-        ///// </summary>
-        //private static readonly List<DownloadTaskRecord> records;
-
-        private static ObservableCollection<UploadingTaskViewModel> uploadingList;
         public static ObservableCollection<UploadingTaskViewModel> Uploadings
         {
             set
@@ -37,8 +33,8 @@ namespace SixCloud.Controllers
                 uploadingList = uploadingList ?? value;
             }
         }
+        private static ObservableCollection<UploadingTaskViewModel> uploadingList;
 
-        private static ObservableCollection<DownloadingTaskViewModel> downloadingList;
         public static ObservableCollection<DownloadingTaskViewModel> Downloadings
         {
             set
@@ -46,16 +42,10 @@ namespace SixCloud.Controllers
                 downloadingList = downloadingList ?? value;
             }
         }
+        private static ObservableCollection<DownloadingTaskViewModel> downloadingList;
 
         public static void StartUpRecovery()
         {
-            //if (downloadCache.Count != 0)
-            //{
-            //    foreach (DownloadTaskRecord a in records)
-            //    {
-            //        DownloadingListViewModel.NewTask(a.DownloadAddress, a.Path, a.Name);
-            //    }
-            //}
             try
             {
                 if (File.Exists(uploadingRecordsPath))
@@ -66,51 +56,31 @@ namespace SixCloud.Controllers
                     {
                         foreach (var record in list)
                         {
-                            UploadingListViewModel.NewTask(record.TargetPath, record.LocalFilePath).Wait();
+                            App.Current.Dispatcher.Invoke(async () => await UploadingListViewModel.NewTask(record.TargetPath, record.LocalFilePath));
                         }
                     }
                 }
 
-                if(File.Exists(downloadingRecordsPath))
+                if (File.Exists(downloadingRecordsPath))
                 {
                     FileSystem fs = new FileSystem();
                     var s = File.ReadAllText(downloadingRecordsPath);
                     var list = JsonConvert.DeserializeObject<DownloadTaskRecord[]>(s);
-                    if(list !=null&&list.Length>0)
+                    if (list != null && list.Length > 0)
                     {
                         foreach (var record in list)
                         {
                             var result = fs.GetDetailsByUUID(record.TargetUUID);
-                            DownloadingListViewModel.NewTask(result.Result.DownloadAddress, record.LocalPath);
+                            DownloadingListViewModel.NewTask(record.TargetUUID, result.Result.DownloadAddress, record.LocalPath, record.Name);
                         }
                     }
                 }
             }
+            catch (InvalidOperationException ex)
+            {
+                ex.ToExceptionless();
+            }
         }
-
-        /// <summary>
-        /// 添加一条下载记录
-        /// </summary>
-        /// <param name="task"></param>
-        //public static void AddRecord(DownloadTask task)
-        //{
-        //    DownloadTaskRecord record = new DownloadTaskRecord(task);
-        //    task.DownloadFileCompleted += (sender, e) =>
-        //    {
-        //        Task.Run(() =>
-        //        {
-        //            records.Remove(record);
-        //        });
-        //    };
-        //    foreach (DownloadTaskRecord a in records)
-        //    {
-        //        if (a.DownloadAddress == task.DownloadAddress)
-        //        {
-        //            return;
-        //        }
-        //    }
-        //    records.Add(record);
-        //}
 
         static TasksLogger()
         {
@@ -132,7 +102,7 @@ namespace SixCloud.Controllers
                 downloadCache = new Dictionary<string, string>();
             }
             #endregion
-
+#if Record
             #region record
             //用于处理旧的记录文件，在两个版本后移除
             var recordFilePath = rootDirectory + "/Records.json";
@@ -145,60 +115,57 @@ namespace SixCloud.Controllers
                 {
                     foreach (Record a in records)
                     {
-                        DownloadingListViewModel.NewTask(a.DownloadAddress, a.Path, a.Name);
+                        DownloadingListViewModel.NewTask(null, a.DownloadAddress, a.Path, a.Name);
                     }
                 }
             }
             #endregion
+#endif
+        }
 
-            Application.Current.Dispatcher.Invoke(() => Application.Current.Exit += ExitEventHandler);
-
-            void ExitEventHandler(object sender, EventArgs e)
+        public static void ExitEventHandler(object sender, EventArgs e)
+        {
+            if (downloadCache != null)
             {
                 using (StreamWriter writer = new StreamWriter(File.Create(downloadLoggerFilePath)))
                 {
-                    string s;
-                    try
-                    {
-                        s = JsonConvert.SerializeObject(downloadCache);
-                    }
-                    catch (Exception)
-                    {
-                        s = "";
-                    }
+                    string s = JsonConvert.SerializeObject(downloadCache);
                     writer.Write(s);
                 }
-                using (StreamWriter writer = new StreamWriter(File.Create(recordFilePath)))
-                {
-                    //string s = JsonConvert.SerializeObject(records);
-                    var taskList = from record in downloadingList
-                                   where record.Status == DownloadTask.TaskStatus.Running || record.Status == DownloadTask.TaskStatus.Pause
-                                   select new DownloadTaskRecord
-                                   {
-                                       LocalPath = record.LocalPath,
-                                       TargetUUID = record.TargetUUID,
-                                       DownloadAddress = record.DownloadAddress,
-                                       Name = record.Name
-                                   };
-                    string s = JsonConvert.SerializeObject(taskList);
-                    writer.Write(s);
-                }
-                using (StreamWriter writer = new StreamWriter(File.Create(uploadingRecordsPath)))
-                {
-                    var taskList = from record in uploadingList
-                                   where record.Status == UploadingTaskViewModel.UploadStatus.Running || record.Status == UploadingTaskViewModel.UploadStatus.Pause
-                                   select new UploadTaskRecord
-                                   {
-                                       LocalFilePath = record.LocalFilePath,
-                                       TargetPath = record.TargetPath
-                                   };
-                    string s = JsonConvert.SerializeObject(taskList);
-                    writer.Write(s);
-                }
-            };
+
+            }
+
+            using (StreamWriter writer = new StreamWriter(File.Create(downloadingRecordsPath)))
+            {
+                var taskList = from record in downloadingList
+                               where record.Status == DownloadTask.TaskStatus.Running || record.Status == DownloadTask.TaskStatus.Pause
+                               select new DownloadTaskRecord
+                               {
+                                   LocalPath = record.SavedLocalPath,
+                                   TargetUUID = record.TargetUUID,
+                                   DownloadAddress = record.DownloadAddress,
+                                   Name = record.Name
+                               };
+                string s = JsonConvert.SerializeObject(taskList);
+                writer.Write(s);
+            }
+
+            using (StreamWriter writer = new StreamWriter(File.Create(uploadingRecordsPath)))
+            {
+                var taskList = from record in uploadingList
+                               where record.Status == UploadingTaskViewModel.UploadStatus.Running || record.Status == UploadingTaskViewModel.UploadStatus.Pause
+                               select new UploadTaskRecord
+                               {
+                                   LocalFilePath = record.LocalFilePath,
+                                   TargetPath = record.TargetPath
+                               };
+                string s = JsonConvert.SerializeObject(taskList);
+                writer.Write(s);
+            }
         }
 
 
+        #region 这三个方法用于FileDownloader下载任务恢复
         public void Add(Uri uri, string path, WebHeaderCollection headers)
         {
             lock (downloadCache)
@@ -226,7 +193,9 @@ namespace SixCloud.Controllers
                 downloadCache.Remove(uri.ToString());
             }
         }
+        #endregion
 
+#if Record
         private class Record
         {
             public string DownloadAddress { get; set; }
@@ -247,7 +216,7 @@ namespace SixCloud.Controllers
 
             }
         }
-
+#endif
         private class DownloadTaskRecord
         {
             public string LocalPath { get; set; }
@@ -265,8 +234,6 @@ namespace SixCloud.Controllers
             public string LocalFilePath { get; set; }
 
             public string TargetPath { get; set; }
-
-
         }
     }
 }

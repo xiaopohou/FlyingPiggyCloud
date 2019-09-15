@@ -8,11 +8,11 @@ namespace SixCloud.ViewModels
     internal class DownloadingListViewModel : ViewModelBase
     {
         public ObservableCollection<DownloadingTaskViewModel> ObservableCollection => _observableCollection;
-        private static readonly ObservableCollection<DownloadingTaskViewModel> _observableCollection = new ObservableCollection<DownloadingTaskViewModel>();
+        private static readonly ObservableCollection<DownloadingTaskViewModel> _observableCollection;
 
-        public static void NewTask(string downloadAddress, string localPath, string name, bool isAutoStart = true)
+        public static void NewTask(string targetUUID, string downloadAddress, string localPath, string name, bool isAutoStart = true)
         {
-            DownloadingTaskViewModel task = new DownloadingTaskViewModel(downloadAddress, localPath, name);
+            DownloadingTaskViewModel task = new DownloadingTaskViewModel(targetUUID, downloadAddress, localPath, name);
             //当下载任务结束时从列表中移除任务信息
             task.DownloadCompleted += (sender, e) =>
             {
@@ -49,6 +49,7 @@ namespace SixCloud.ViewModels
 
         static DownloadingListViewModel()
         {
+            _observableCollection = new ObservableCollection<DownloadingTaskViewModel>();
             TasksLogger.Downloadings = _observableCollection;
         }
     }

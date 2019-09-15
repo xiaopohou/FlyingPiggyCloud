@@ -146,21 +146,24 @@ namespace SixCloud.ViewModels
         #region Download
         public DependencyCommand DownloadCommand { get; private set; }
 
+        private static string DefaultDownloadPath = null;
+
         private void Download(object parameter)
         {
             System.Windows.Forms.FolderBrowserDialog downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
             {
                 Description = "请选择下载文件夹",
-                SelectedPath = KnownFolders.Downloads.Path
+                SelectedPath = DefaultDownloadPath ?? KnownFolders.Downloads.Path
             };
             if (downloadPathDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                DefaultDownloadPath = downloadPathDialog.SelectedPath;
                 Task.Run(() =>
                 {
                     GenericResult<FileMetaData> x = fileSystem.GetDetailsByUUID(UUID);
                     if (!string.IsNullOrWhiteSpace(x.Result.DownloadAddress))
                     {
-                        DownloadingListViewModel.NewTask(x.Result.DownloadAddress, downloadPathDialog.SelectedPath, Name);
+                        DownloadingListViewModel.NewTask(UUID, x.Result.DownloadAddress, downloadPathDialog.SelectedPath, Name);
                     }
                 });
 
