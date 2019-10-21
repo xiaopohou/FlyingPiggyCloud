@@ -16,6 +16,8 @@ namespace SixCloud.Views.UserControls
         public RecoveryBox()
         {
             InitializeComponent();
+            LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
+
         }
 
         private void RecoveryList_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -38,6 +40,7 @@ namespace SixCloud.Views.UserControls
             {
                 LazyLoadEventHandler = null;
             }
+
             //懒加载的业务代码
             RecoveryBoxViewModel vm = DataContext as RecoveryBoxViewModel;
             await Task.Run(() => vm.LazyLoad());
