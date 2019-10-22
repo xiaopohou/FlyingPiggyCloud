@@ -16,7 +16,7 @@ namespace SixCloud.Views.UserControls
         public RecoveryBox()
         {
             InitializeComponent();
-            LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
+            LazyLoadEventHandler += LazyLoad;
 
         }
 
@@ -32,7 +32,7 @@ namespace SixCloud.Views.UserControls
             }
         }
 
-        private ScrollChangedEventHandler LazyLoadEventHandler;
+        private event ScrollChangedEventHandler LazyLoadEventHandler;
 
         private async void LazyLoad(object sender, ScrollChangedEventArgs e)
         {
@@ -44,7 +44,7 @@ namespace SixCloud.Views.UserControls
             //懒加载的业务代码
             RecoveryBoxViewModel vm = DataContext as RecoveryBoxViewModel;
             await Task.Run(() => vm.LazyLoad());
-            LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
+            LazyLoadEventHandler += LazyLoad;
         }
 
 
@@ -87,7 +87,7 @@ namespace SixCloud.Views.UserControls
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is bool directory)
+            if (value is bool directory)
             {
                 return directory ? '\uf07b'.ToString() : '\uf15c'.ToString();
             }

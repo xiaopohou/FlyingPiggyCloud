@@ -160,10 +160,17 @@ namespace SixCloud.ViewModels
                 DefaultDownloadPath = downloadPathDialog.SelectedPath;
                 Task.Run(() =>
                 {
-                    GenericResult<FileMetaData> x = fileSystem.GetDetailsByUUID(UUID);
-                    if (!string.IsNullOrWhiteSpace(x.Result.DownloadAddress))
+                    if (Directory)
                     {
-                        DownloadingListViewModel.NewTask(UUID, x.Result.DownloadAddress, downloadPathDialog.SelectedPath, Name);
+
+                    }
+                    else
+                    {
+                        GenericResult<FileMetaData> x = fileSystem.GetDetailsByUUID(UUID);
+                        if (!string.IsNullOrWhiteSpace(x.Result.DownloadAddress))
+                        {
+                            DownloadingListViewModel.NewTask(UUID, x.Result.DownloadAddress, downloadPathDialog.SelectedPath, Name);
+                        }
                     }
                 });
 

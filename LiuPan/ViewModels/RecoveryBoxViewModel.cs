@@ -70,7 +70,7 @@ namespace SixCloud.ViewModels
         private IEnumerator<RecoveryBoxItem[]> recoveryBoxItemsEnumerator;
         private IEnumerable<RecoveryBoxItem[]> LoadList()
         {
-            int totalPage = 0;
+            int totalPage;
             do
             {
                 GenericResult<RecoveryBoxPage> x = recoveryBox.GetList(++currentPage);
@@ -84,13 +84,6 @@ namespace SixCloud.ViewModels
             if (recoveryBoxItemsEnumerator.MoveNext())
             {
                 RecoveryBoxItem[] x = recoveryBoxItemsEnumerator.Current;
-                //Application.Current.Dispatcher.Invoke(() =>
-                //{
-                //    foreach (RecoveryBoxItem a in x)
-                //    {
-                //        RecoveryList.Add(a);
-                //    }
-                //});
                 foreach (RecoveryBoxItem a in x)
                 {
                     Application.Current.Dispatcher.Invoke(() => RecoveryList.Add(a));
