@@ -4,6 +4,7 @@ using SixCloud.Views;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 
@@ -162,7 +163,60 @@ namespace SixCloud.ViewModels
                 {
                     if (Directory)
                     {
+                        System.Threading.ThreadPool.QueueUserWorkItem((state) =>
+                        {
+                            DownloadHelper(UUID, System.IO.Path.Combine(downloadPathDialog.SelectedPath,Name), 0);
+                            void DownloadHelper(string uuid, string localParentPath, int depthIndex)
+                            {
+                                foreach (var child in GetChild(uuid))
+                                {
+                                    if (!child.Directory)
+                                    {
+                                        GenericResult<FileMetaData> x = fileSystem.GetDetailsByUUID(child.UUID);
+                                        DownloadingListViewModel.NewTask(child.UUID, x.Result.DownloadAddress, localParentPath, child.Name);
+                                    }
+                                    else
+                                    {
+                                        var nextPath = System.IO.Path.Combine(localParentPath, child.Name);
+                                        System.IO.Directory.CreateDirectory(nextPath);
+                                        if (depthIndex < 32)
+                                        {
+                                            DownloadHelper(child.UUID, nextPath, depthIndex + 1);
+                                        }
+                                        else
+                                        {
+                                            System.Threading.ThreadPool.QueueUserWorkItem((_) =>
+                                            {
+                                                DownloadHelper(child.UUID, nextPath, 0);
+                                            });
+                                        }
+                                    }
+                                }
+                            }
 
+                            IEnumerable<FileMetaData> GetChild(string uuid)
+                            {
+                                int currentPage = 0;
+                                int totalPage;
+                                do
+                                {
+                                    GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage);
+                                    if (x.Success)
+                                    {
+                                        totalPage = x.Result.TotalPage;
+                                        foreach (var item in x.Result.List)
+                                        {
+                                            yield return item;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        throw new DirectoryNotFoundException(x.Message);
+                                    }
+                                } while (currentPage < totalPage);
+                                yield break;
+                            }
+                        });
                     }
                     else
                     {
@@ -294,7 +348,7 @@ namespace SixCloud.ViewModels
             DeleteCommand = new AsyncCommand(Delete, AlwaysCan);
             RenameCommand = new DependencyCommand(Rename, AlwaysCan);
             ConfirmCommand = new AsyncCommand(Confirm, CanConfirm);
-            DownloadCommand = new DependencyCommand(Download, CanDownload);
+            DownloadCommand = new DependencyCommand(Download, AlwaysCan);
             MoreCommand = new DependencyCommand(More, AlwaysCan);
 
             if (Directory)

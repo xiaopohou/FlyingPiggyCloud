@@ -60,7 +60,7 @@
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
-                        <Condition Binding="{Binding Directory}" Value="False" />
+                        <!--<Condition Binding="{Binding Directory}" Value="False" />-->
                     </MultiDataTrigger.Conditions>
                     <Setter TargetName="DownloadBotton" Property="Visibility" Value="Visible"/>
                 </MultiDataTrigger>
