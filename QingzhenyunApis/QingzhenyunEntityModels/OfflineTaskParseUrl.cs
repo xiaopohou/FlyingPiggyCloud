@@ -1,7 +1,6 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace SixCloud.Models
+namespace QingzhenyunApis.QingzhenyunEntityModels
 {
     /// <summary>
     /// 一个离线下载链接的解析结果

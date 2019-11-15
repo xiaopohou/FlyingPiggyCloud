@@ -1,4 +1,4 @@
-﻿namespace SixCloud.Models
+﻿namespace QingzhenyunApis.QingzhenyunEntityModels
 {
     public abstract class RecoverableUploadTaskArchive
     {

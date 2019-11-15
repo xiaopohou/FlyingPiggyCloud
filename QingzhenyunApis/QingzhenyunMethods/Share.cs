@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
-using SixCloud.Models;
+using QingzhenyunApis.QingzhenyunEntityModels;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace QingzhenyunApis.QingzhenyunMethods
 {
@@ -16,7 +17,7 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// <param name="expire">过期时间，默认为不限</param>
         /// <param name="copyCountLeft">可转存次数，默认为不限</param>
         /// <returns></returns>
-        public GenericResult<ShareMetaData> CreateByPath(string path, string password = null, long expire = 0, long copyCountLeft = 0)
+        public async Task<GenericResult<ShareMetaData>> CreateByPath(string path, string password = null, long expire = 0, long copyCountLeft = 0)
         {
             dynamic data = new ExpandoObject();
             data.path = path;
@@ -32,26 +33,16 @@ namespace QingzhenyunApis.QingzhenyunMethods
             {
                 data.copyCountLeft = copyCountLeft;
             }
-            var x = Post<GenericResult<ShareMetaData>>(JsonConvert.SerializeObject(data), "v2/share/create", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<ShareMetaData>>(JsonConvert.SerializeObject(data), "/v2/share/create", false);
         }
 
-        public GenericResult<ShareMetaData> Get(string identity)
+        public async Task<GenericResult<ShareMetaData>> Get(string identity)
         {
             var data = new { identity };
-            var x = Post<GenericResult<ShareMetaData>>(JsonConvert.SerializeObject(data), "v2/share/get", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<ShareMetaData>>(JsonConvert.SerializeObject(data), "/v2/share/get", false);
         }
 
-        public GenericResult<bool> Save(string identity, string path, string password = null)
+        public async Task<GenericResult<bool>> Save(string identity, string path, string password = null)
         {
             dynamic data = new ExpandoObject();
             data.identity = identity;
@@ -60,23 +51,13 @@ namespace QingzhenyunApis.QingzhenyunMethods
             {
                 data.password = password;
             }
-            var x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/share/get", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<bool>>(JsonConvert.SerializeObject(data), "/v2/share/get", false);
         }
 
-        public GenericResult<bool> Cancel(string path)
+        public async Task<GenericResult<bool>> Cancel(string path)
         {
             var data = new { path };
-            var x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/share/cancel", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<bool>>(JsonConvert.SerializeObject(data), "/v2/share/cancel", false);
         }
     }
 }

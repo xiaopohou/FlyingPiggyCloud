@@ -20,7 +20,7 @@ namespace QingzhenyunApis.QingzhenyunMethods
 
         private static readonly HttpClient httpClient;
 
-        protected static string Token { get; set; }
+        protected static string Token { get; private set; }
 
         static SixCloudMethordBase()
         {
@@ -60,9 +60,8 @@ namespace QingzhenyunApis.QingzhenyunMethods
 
                 //构建签名
                 string unixDateTimeNow = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds.ToString();
-                string canonicalizedResource = $"/{uri}";
                 string extraHeaders = $"contentmd5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}{(isAnonymous ? "" : $"qingzhen-token: {Token}")}";
-                string signature = HmacSha1(AccessKeySecret, $"POST{unixDateTimeNow}{extraHeaders}{canonicalizedResource}");
+                string signature = HmacSha1(AccessKeySecret, $"POST{unixDateTimeNow}{extraHeaders}{uri}");
                 string authorization = $"Qingzhen {AccessKeyId}:{signature}";
                 headers.Add(nameof(authorization), authorization);
 

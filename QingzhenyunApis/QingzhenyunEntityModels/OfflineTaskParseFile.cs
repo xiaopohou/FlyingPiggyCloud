@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SixCloud.Models
+namespace QingzhenyunApis.QingzhenyunEntityModels
 {
     /// <summary>
     /// 指示一个离线任务url解析结果中的一个文件

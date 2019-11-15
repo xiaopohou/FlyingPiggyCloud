@@ -1,4 +1,4 @@
-﻿namespace SixCloud.Models
+﻿namespace QingzhenyunApis.QingzhenyunEntityModels
 {
     public interface IUploadTask
     {

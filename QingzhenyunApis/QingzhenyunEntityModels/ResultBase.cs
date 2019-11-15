@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SixCloud.Models
+namespace QingzhenyunApis.QingzhenyunEntityModels
 {
     public abstract class ResultBase
     {
@@ -15,8 +15,5 @@ namespace SixCloud.Models
 
         [JsonProperty(PropertyName = "status")]
         public string Status { get; set; }
-
-        //[JsonProperty(PropertyName = "token")]
-        //public string Token { get; set; }
     }
 }

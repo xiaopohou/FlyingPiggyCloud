@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SixCloud.Models
+namespace QingzhenyunApis.QingzhenyunEntityModels
 {
     public class PreviewImageInformation
     {

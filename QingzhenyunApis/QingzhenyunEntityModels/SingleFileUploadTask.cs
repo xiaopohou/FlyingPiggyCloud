@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SixCloud.Models
+namespace QingzhenyunApis.QingzhenyunEntityModels
 {
     public class SingleFileUploadTask : IUploadTask
     {

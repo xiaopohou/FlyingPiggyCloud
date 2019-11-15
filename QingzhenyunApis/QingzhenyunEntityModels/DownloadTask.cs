@@ -3,7 +3,7 @@ using SixCloud.Controllers;
 using System;
 using System.Threading.Tasks;
 
-namespace SixCloud.Models
+namespace QingzhenyunApis.QingzhenyunEntityModels
 {
     internal class DownloadTask
     {

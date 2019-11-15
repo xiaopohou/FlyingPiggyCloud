@@ -1,19 +1,14 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net;
+using QingzhenyunApis.QingzhenyunEntityModels;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace QingzhenyunApis.QingzhenyunMethods
 {
     internal sealed class OfflineDownloader : SixCloudMethordBase
     {
-        public GenericResult<OfflineTaskParseUrl[]> ParseUrl(string[] urls)
+        public async Task<GenericResult<OfflineTaskParseUrl[]>> ParseUrl(string[] urls)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
             StringBuilder stringBuilder = new StringBuilder();
             foreach (string url in urls)
             {
@@ -21,76 +16,31 @@ namespace QingzhenyunApis.QingzhenyunMethods
                 stringBuilder.Append("\n");
             }
             var data = new { url = stringBuilder.ToString() };
-            GenericResult<OfflineTaskParseUrl[]> x = Post<GenericResult<OfflineTaskParseUrl[]>>(JsonConvert.SerializeObject(data), "v2/offline/parseUrl", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<OfflineTaskParseUrl[]>>(JsonConvert.SerializeObject(data), "/v2/offline/parseUrl", false);
         }
 
-        public GenericResult<OfflineTaskParseUrl[]> ParseTorrent(string[] hashs)
+        public async Task<GenericResult<OfflineTaskParseUrl[]>> ParseTorrent(string[] hashs)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
             var data = new { hash = hashs };
-            GenericResult<OfflineTaskParseUrl[]> x = Post<GenericResult<OfflineTaskParseUrl[]>>(JsonConvert.SerializeObject(data), "v2/offline/parseTorrent", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<OfflineTaskParseUrl[]>>(JsonConvert.SerializeObject(data), "/v2/offline/parseTorrent", false);
         }
 
-        public GenericResult<OfflineTaskAdd> Add(string path, OfflineTaskParameters[] taskParameters)
+        public async Task<GenericResult<OfflineTaskAdd>> Add(string path, OfflineTaskParameters[] taskParameters)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
             var data = new { path, task = taskParameters };
-            GenericResult<OfflineTaskAdd> x = Post<GenericResult<OfflineTaskAdd>>(JsonConvert.SerializeObject(data), "v2/offline/add", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<OfflineTaskAdd>>(JsonConvert.SerializeObject(data), "/v2/offline/add", false);
         }
 
-        public GenericResult<OfflineTaskList> GetList(int page = 1, int pageSize = 20)
+        public async Task<GenericResult<OfflineTaskList>> GetList(int page = 1, int pageSize = 20)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
             var data = new { page, pageSize };
-            GenericResult<OfflineTaskList> x = Post<GenericResult<OfflineTaskList>>(JsonConvert.SerializeObject(data), "v2/offline/page", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<OfflineTaskList>>(JsonConvert.SerializeObject(data), "/v2/offline/page", false);
         }
 
-        public GenericResult<int> DeleteTask(string[] identities)
+        public async Task<GenericResult<int>> DeleteTask(string[] identities)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
             var data = new { identities };
-            GenericResult<int> x = Post<GenericResult<int>>(JsonConvert.SerializeObject(data), "v2/offline/delete", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<int>>(JsonConvert.SerializeObject(data), "/v2/offline/delete", false);
         }
     }
 }
