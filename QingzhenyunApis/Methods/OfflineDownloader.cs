@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using QingzhenyunApis.QingzhenyunEntityModels;
+using QingzhenyunApis.EntityModels;
 using System.Text;
 using System.Threading.Tasks;
 

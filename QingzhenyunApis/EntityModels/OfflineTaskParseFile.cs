@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace QingzhenyunApis.QingzhenyunEntityModels
+namespace QingzhenyunApis.EntityModels
 {
     /// <summary>
     /// 指示一个离线任务url解析结果中的一个文件

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace QingzhenyunApis.QingzhenyunEntityModels
+namespace QingzhenyunApis.EntityModels
 {
     internal class RecoveryBoxItem
     {

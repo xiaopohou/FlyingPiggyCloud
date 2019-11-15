@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace QingzhenyunApis.QingzhenyunEntityModels
+namespace QingzhenyunApis.EntityModels
 {
     public class GenericResult<T> : ResultBase
     {
