@@ -240,7 +240,7 @@ namespace QingzhenyunApis.QingzhenyunMethods
 
         public async Task<GenericResult<PreviewImageInformation>> ImagePreview(string identity)
         {
-            throw new InvalidOperationException();
+            throw new NotImplementedException();
 #warning 这里的代码还没有写完
             //while (string.IsNullOrWhiteSpace(Token))
             //{
