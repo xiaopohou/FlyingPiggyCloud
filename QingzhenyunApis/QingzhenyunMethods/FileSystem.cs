@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using QingzhenyunApis.QingzhenyunEntityModels;
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace QingzhenyunApis.QingzhenyunMethods
 {
@@ -16,38 +20,29 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// <param name="OrderBy">排序：0按文件名，1按时间</param>
         /// <param name="Type">文件类型：0显示文件，1显示文件夹，-1显示文件和文件夹(默认)</param>
         /// <returns></returns>
-        public GenericResult<FileListPage> GetDirectory(string parent = "", string path = "", int? page = null, int? pageSize = null, int orderBy = 1)
+        public async Task<GenericResult<FileListPage>> GetDirectory(string parent = "", string path = "", int? page = null, int? pageSize = null, int orderBy = 1)
         {
-            Dictionary<string, object> data = new Dictionary<string, object>();
-            if (parent != "")
+            dynamic data = new ExpandoObject();
+            if (!string.IsNullOrEmpty(parent))
             {
-                data.Add("identity", parent);
+                data.parent = parent;
             }
-            else if (path != "")
+            else if (!string.IsNullOrEmpty(path))
             {
-                data.Add("path", path);
+                data.path = path;
             }
+
             if (page != null)
             {
-                data.Add("page", page);
+                data.page = page;
             }
+
             if (pageSize != null)
             {
-                data.Add("pageSize", pageSize);
+                data.pageSize = pageSize;
             }
-            data.Add("orderBy", 1);
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            data.Add("token", Token);
-            GenericResult<FileListPage> x = Post<GenericResult<FileListPage>>(JsonConvert.SerializeObject(data), "v2/files/page", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            data.orderBy = orderBy;
+            return await PostAsync<GenericResult<FileListPage>>(JsonConvert.SerializeObject(data), "/v2/files/page", false);
         }
 
         /// <summary>
@@ -57,33 +52,24 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// <param name="Parent">在UUID为此的文件夹内创建新文件夹</param>
         /// <param name="Path">在此路径下创建新文件夹，如果Name参数为空则创建此路径</param>
         /// <returns></returns>
-        public GenericResult<FileMetaData> CreatDirectory(string Name = "", string Parent = "", string Path = "")
+        public async Task<GenericResult<FileMetaData>> CreatDirectory(string name = "", string parent = "", string path = "")
         {
-            Dictionary<string, string> data = new Dictionary<string, string>();
-            if (Name != "")
+            dynamic data = new ExpandoObject();
+            if (!string.IsNullOrEmpty(name))
             {
-                data.Add("name", Name);
+                data.name = name;
             }
-            if (Parent != "")
+
+            if (!string.IsNullOrEmpty(parent))
             {
-                data.Add("parent", Parent);
+                data.parent = parent;
             }
-            else if (Path != "")
+            else if (!string.IsNullOrEmpty(path))
             {
-                data.Add("path", Path);
+                data.path = path;
             }
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            data.Add("token", Token);
-            GenericResult<FileMetaData> x = Post<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "v2/files/createDirectory", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+
+            return await PostAsync<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "/v2/files/createDirectory", false);
         }
 
         /// <summary>
@@ -92,9 +78,9 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// <param name="SourceMeta">被移动的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public GenericResult<int?> Move(string sourceUUID, string targetDirectoryUUID)
+        public async Task<GenericResult<int?>> Move(string sourceUUID, string targetDirectoryUUID)
         {
-            return Move(new string[] { sourceUUID }, targetDirectoryUUID);
+            return await Move(new string[] { sourceUUID }, targetDirectoryUUID);
         }
 
         /// <summary>
@@ -103,7 +89,7 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// <param name="sourceUUIDList"></param>
         /// <param name="targetDirectoryUUID"></param>
         /// <returns></returns>
-        public GenericResult<int?> Move(string[] sourceUUIDList, string targetDirectoryUUID)
+        public async Task<GenericResult<int?>> Move(string[] sourceUUIDList, string targetDirectoryUUID)
         {
             List<object> list = new List<object>(sourceUUIDList.Length);
             foreach (string uuid in sourceUUIDList)
@@ -111,22 +97,12 @@ namespace QingzhenyunApis.QingzhenyunMethods
                 var a = new { identity = uuid };
                 list.Add(a);
             }
-            Dictionary<string, object> data = new Dictionary<string, object>
+            var data = new
             {
-                { "source",list},
-                { "destination", new { identity=targetDirectoryUUID } }
+                source = list,
+                destination = new { identity = targetDirectoryUUID }
             };
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            GenericResult<int?> x = Post<GenericResult<int?>>(JsonConvert.SerializeObject(data), "v2/files/move", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v2/files/move", false);
         }
 
         /// <summary>
@@ -135,9 +111,9 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// <param name="SourceMeta">被复制的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public GenericResult<int?> Copy(string sourceUUID, string targetDirectoryUUID)
+        public async Task<GenericResult<int?>> Copy(string sourceUUID, string targetDirectoryUUID)
         {
-            return Copy(new string[] { sourceUUID }, targetDirectoryUUID);
+            return await Copy(new string[] { sourceUUID }, targetDirectoryUUID);
         }
 
         /// <summary>
@@ -146,7 +122,7 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// <param name="sourceUUIDList"></param>
         /// <param name="targetDirectoryUUID"></param>
         /// <returns></returns>
-        public GenericResult<int?> Copy(string[] sourceUUIDList, string targetDirectoryUUID)
+        public async Task<GenericResult<int?>> Copy(string[] sourceUUIDList, string targetDirectoryUUID)
         {
             List<object> list = new List<object>(sourceUUIDList.Length);
             foreach (string uuid in sourceUUIDList)
@@ -154,22 +130,12 @@ namespace QingzhenyunApis.QingzhenyunMethods
                 var a = new { identity = uuid };
                 list.Add(a);
             }
-            Dictionary<string, object> data = new Dictionary<string, object>
+            var data = new
             {
-                { "source",list},
-                { "destination", new { identity=targetDirectoryUUID } }
+                source = list,
+                destination = new { identity = targetDirectoryUUID }
             };
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            GenericResult<int?> x = Post<GenericResult<int?>>(JsonConvert.SerializeObject(data), "v2/files/copy", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v2/files/copy", false);
         }
 
         /// <summary>
@@ -177,23 +143,13 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// </summary>
         /// <param name="uuid">被删除的项目</param>
         /// <returns></returns>
-        public GenericResult<int?> Remove(string uuid)
+        public async Task<GenericResult<int?>> Remove(string identity)
         {
-            Dictionary<string, object> data = new Dictionary<string, object>
+            var data = new
             {
-                { "source",new object[]{ new Dictionary<string, string> { { "identity", uuid } } } },
+                source = new object[] { new { identity } }
             };
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            GenericResult<int?> x = Post<GenericResult<int?>>(JsonConvert.SerializeObject(data), "v2/files/delete", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v2/files/delete", false);
         }
 
         /// <summary>
@@ -201,28 +157,16 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// </summary>
         /// <param name="uuid">被删除的项目</param>
         /// <returns></returns>
-        public GenericResult<int?> Remove(string[] uuids)
+        public async Task<GenericResult<int?>> Remove(string[] uuids)
         {
             List<object> list = new List<object>(uuids.Length);
             foreach (string uuid in uuids)
             {
                 list.Add(new { identity = uuid });
             }
-            Dictionary<string, object> data = new Dictionary<string, object>
-            {
-                { "source",list.ToArray() },
-            };
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            GenericResult<int?> x = Post<GenericResult<int?>>(JsonConvert.SerializeObject(data), "v2/files/delete", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            var data = new { source = list.ToArray() };
+
+            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v2/files/delete", false);
         }
 
         /// <summary>
@@ -231,136 +175,72 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// <param name="SourceMeta">被重命名的项目</param>
         /// <param name="newName">新名称</param>
         /// <returns></returns>
-        public GenericResult<bool> Rename(string uuid, string newName)
+        public async Task<GenericResult<bool>> Rename(string identity, string name)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            Dictionary<string, object> data = new Dictionary<string, object>
-            {
-                { "identity", uuid },
-                { "name", newName }
-            };
-            GenericResult<bool> x = Post<GenericResult<bool>>(JsonConvert.SerializeObject(data), "v2/files/rename", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            var data = new { identity, name };
+            return await PostAsync<GenericResult<bool>>(JsonConvert.SerializeObject(data), "/v2/files/rename", false);
         }
 
         /// <summary>
         /// 上传文件
         /// </summary>
-        /// <param name="Name">FileMeta的文件名</param>
+        /// <param name="name">FileMeta的文件名</param>
         /// <param name="parentUUID">上传到哪个文件夹</param>
-        /// <param name="Hash">哈希</param>
-        /// <param name="OriginalFilename">保存的源信息的文件名</param>
+        /// <param name="hash">哈希</param>
+        /// <param name="originalFilename">保存的源信息的文件名</param>
         /// <returns></returns>
-        public GenericResult<UploadToken> UploadFile(string Name, string parentUUID = null, string parentPath = null, string Hash = null, string OriginalFilename = null)
+        public async Task<GenericResult<UploadToken>> UploadFile(string name, string parentUUID = null, string parentPath = null, string hash = null, string originalFilename = null)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "name", Name},
-            };
+            dynamic data = new ExpandoObject();
+            data.name = name;
+
             if (parentUUID != null)
             {
-                data.Add("identity", parentUUID);
+                data.identity = parentUUID;
             }
             else if (parentPath != null)
             {
-                data.Add("path", parentPath);
+                data.path = parentPath;
             }
             else
             {
-                data.Add("path", "/");
+                data.path = "/";
             }
 
-            if (Hash != null)
+            if (hash != null)
             {
-                data.Add("hash", Hash);
+                data.hash = hash;
             }
 
-            GenericResult<UploadToken> x = Post<GenericResult<UploadToken>>(JsonConvert.SerializeObject(data), "v2/upload/token", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            return await PostAsync<GenericResult<UploadToken>>(JsonConvert.SerializeObject(data), "/v2/upload/token", false);
         }
 
         /// <summary>
         /// 该方法用于获取下载链接
         /// </summary>
-        /// <param name="UUID"></param>
+        /// <param name="identity"></param>
         /// <returns></returns>
-        public GenericResult<FileMetaData> GetDetailsByUUID(string UUID)
+        public async Task<GenericResult<FileMetaData>> GetDetailsByUUID(string identity)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "identity", UUID },
-            };
-            GenericResult<FileMetaData> x = Post<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "v2/files/get", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
-
+            var data = new { identity };
+            return await PostAsync<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "/v2/files/get", false);
         }
 
-        public GenericResult<RecoveryBoxPage> GetRecoveryBoxPage(int page = 1, int pageSize = 20)
+        public async Task<GenericResult<RecoveryBoxPage>> GetRecoveryBoxPage(int page = 1, int pageSize = 20)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            Dictionary<string, int> data = new Dictionary<string, int>
-            {
-                { "page", page },
-                { "pageSize", pageSize }
-            };
-            GenericResult<RecoveryBoxPage> x = Post<GenericResult<RecoveryBoxPage>>(JsonConvert.SerializeObject(data), "v2/trash/page", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
-
+            var data = new { page, pageSize };
+            return await PostAsync<GenericResult<RecoveryBoxPage>>(JsonConvert.SerializeObject(data), "/v2/trash/page", false);
         }
 
-        public GenericResult<PreviewVideoInformation> VideoPreview(string UUID)
+        public async Task<GenericResult<PreviewVideoInformation>> VideoPreview(string identity)
         {
-            while (string.IsNullOrWhiteSpace(Token))
-            {
-                LoginView GetToken = new LoginView();
-                GetToken.ShowDialog();
-            }
-            var data = new { identity = UUID };
-            GenericResult<PreviewVideoInformation> x = Post<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "v2/preview/video", new Dictionary<string, string>
-            {
-                { "Qingzhen-Token",Token }
-            }, out WebHeaderCollection webHeaderCollection);
-            Token = webHeaderCollection.Get("qingzhen-token");
-            return x;
+            var data = new { identity };
+            return await PostAsync<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "/v2/preview/video",false);
         }
 
-        public GenericResult<PreviewImageInformation> ImagePreview(string UUID)
+        public async Task<GenericResult<PreviewImageInformation>> ImagePreview(string identity)
         {
-            throw new Exception();
+            throw new InvalidOperationException();
 #warning 这里的代码还没有写完
             //while (string.IsNullOrWhiteSpace(Token))
             //{

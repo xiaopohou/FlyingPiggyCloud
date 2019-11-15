@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using QingzhenyunApis.QingzhenyunEntityModels;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace QingzhenyunApis.QingzhenyunMethods
 {
@@ -13,10 +16,10 @@ namespace QingzhenyunApis.QingzhenyunMethods
         /// </summary>
         /// <param name="phoneNumber">请求验证码的手机号</param>
         /// <returns>PhoneInfo</returns>
-        public GenericResult<string> SendingMessageToMobilePhoneNumber(string phoneNumber, int countryCode)
+        public async Task<GenericResult<string>> SendingMessageToMobilePhoneNumber(string phoneNumber, int countryCode)
         {
             var data = new { phone = phoneNumber, countryCode };
-            return Post<GenericResult<string>>(JsonConvert.SerializeObject(data), "v2/user/sendRegisterMessage", new Dictionary<string, string>(), out _);
+            return await PostAsync<GenericResult<string>>(JsonConvert.SerializeObject(data), "/v2/user/sendRegisterMessage");
         }
 
         /// <summary>
