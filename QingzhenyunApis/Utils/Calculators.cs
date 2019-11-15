@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace QingzhenyunApis.QingzhenyunMethods
+namespace QingzhenyunApis.Utils
 {
     internal static class Calculators
     {
@@ -33,7 +33,8 @@ namespace QingzhenyunApis.QingzhenyunMethods
 
         internal static string UnixTimeStampConverter(long UnixTimeStamp)
         {
-            return TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)).AddMilliseconds(UnixTimeStamp).ToString("yyyy/MM/dd HH:mm:ss");
+            return TimeZoneInfo.ConvertTimeFromUtc((new DateTime(1970, 1, 1)).AddMilliseconds(UnixTimeStamp), TimeZoneInfo.Local).ToString("yyyy/MM/dd HH:mm:ss");
+            //return TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)).AddMilliseconds(UnixTimeStamp).ToString("yyyy/MM/dd HH:mm:ss");
         }
 
         internal class Base64

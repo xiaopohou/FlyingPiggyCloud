@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QingzhenyunApis.QingzhenyunMethods
+namespace QingzhenyunApis.Methods
 {
     /// <summary>
     /// APP生命周期内，所有派生于此抽象类的对象，均拥有共同的Token字段

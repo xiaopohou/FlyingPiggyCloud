@@ -6,7 +6,7 @@ using System.Dynamic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace QingzhenyunApis.QingzhenyunMethods
+namespace QingzhenyunApis.Methods
 {
     internal sealed class FileSystem : SixCloudMethordBase
     {

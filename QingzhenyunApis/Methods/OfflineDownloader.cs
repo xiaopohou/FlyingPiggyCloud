@@ -3,7 +3,7 @@ using QingzhenyunApis.QingzhenyunEntityModels;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QingzhenyunApis.QingzhenyunMethods
+namespace QingzhenyunApis.Methods
 {
     internal sealed class OfflineDownloader : SixCloudMethordBase
     {
