@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QingzhenyunApis.Methods
 {
-    internal sealed class Share : SixCloudMethordBase
+    public sealed class Share : SixCloudMethordBase
     {
         /// <summary>
         /// 通过路径创建分享

@@ -12,7 +12,7 @@ namespace QingzhenyunApis.Methods
     /// <summary>
     /// APP生命周期内，所有派生于此抽象类的对象，均拥有共同的Token字段
     /// </summary>
-    internal abstract class SixCloudMethordBase
+    public abstract class SixCloudMethordBase
     {
         private const string AccessKeyId = "dingding";
 

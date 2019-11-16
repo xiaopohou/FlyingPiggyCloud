@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace QingzhenyunApis.Methods
 {
-    internal sealed class FileSystem : SixCloudMethordBase
+    public sealed class FileSystem : SixCloudMethordBase
     {
         /// <summary>
         /// 请求的时候，如果 name 和 path均为空，则会返回根目录

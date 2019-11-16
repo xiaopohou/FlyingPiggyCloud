@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace QingzhenyunApis.Methods
 {
-    internal sealed class Authentication : SixCloudMethordBase
+    public sealed class Authentication : SixCloudMethordBase
     {
         /// <summary>
         /// 发起注册验证码请求
@@ -168,7 +168,7 @@ namespace QingzhenyunApis.Methods
         /// </summary>
         /// <param name="input">用户输入</param>
         /// <returns></returns>
-        public string UserMd5(string input)
+        public static string UserMd5(string input)
         {
             using (var md5 = MD5.Create())
             {
@@ -182,6 +182,7 @@ namespace QingzhenyunApis.Methods
             }
         }
 
+    }
         [Serializable]
         public class LoginUserTooMuchException : Exception
         {
@@ -212,5 +213,4 @@ namespace QingzhenyunApis.Methods
             {
             }
         }
-    }
 }

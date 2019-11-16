@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using Exceptionless;
+using QingzhenyunApis.Methods;
 
 namespace SixCloud.Controllers
 {
@@ -71,7 +72,7 @@ namespace SixCloud.Controllers
                         foreach (var record in list)
                         {
                             var result = fs.GetDetailsByUUID(record.TargetUUID);
-                            DownloadingListViewModel.NewTask(record.TargetUUID, result.Result.DownloadAddress, record.LocalPath, record.Name);
+                            DownloadingListViewModel.NewTask(record.TargetUUID, result.Result.Result.DownloadAddress, record.LocalPath, record.Name);
                         }
                     }
                 }

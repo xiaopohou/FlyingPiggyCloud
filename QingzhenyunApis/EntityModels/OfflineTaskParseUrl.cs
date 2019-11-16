@@ -5,7 +5,7 @@ namespace QingzhenyunApis.EntityModels
     /// <summary>
     /// 一个离线下载链接的解析结果
     /// </summary>
-    internal class OfflineTaskParseUrl
+    public class OfflineTaskParseUrl
     {
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }

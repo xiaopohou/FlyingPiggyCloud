@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    internal class OfflineTaskParameters
+    public class OfflineTaskParameters
     {
         public OfflineTaskParameters(string identity, string[] iginreFiles=null)
         {

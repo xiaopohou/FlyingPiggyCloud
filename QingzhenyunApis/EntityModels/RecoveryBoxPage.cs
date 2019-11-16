@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    internal class RecoveryBoxPage
+    public class RecoveryBoxPage
     {
         [JsonProperty(PropertyName = "list")]
         public RecoveryBoxItem[] List { get; set; }

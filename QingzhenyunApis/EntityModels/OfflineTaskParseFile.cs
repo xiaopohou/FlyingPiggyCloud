@@ -5,7 +5,7 @@ namespace QingzhenyunApis.EntityModels
     /// <summary>
     /// 指示一个离线任务url解析结果中的一个文件
     /// </summary>
-    internal class OfflineTaskParseFile
+    public class OfflineTaskParseFile
     {
         [JsonIgnore]
         public bool? IsChecked { get; set; } = true;

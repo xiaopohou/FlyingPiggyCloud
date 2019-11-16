@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace QingzhenyunApis.Methods
 {
-    internal sealed class RecoveryBox : SixCloudMethordBase
+    public sealed class RecoveryBox : SixCloudMethordBase
     {
         /// <summary>
         /// 清空当前用户的回收站

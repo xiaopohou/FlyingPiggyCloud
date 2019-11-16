@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    internal class OfflineTaskAdd
+    public class OfflineTaskAdd
     {
         [JsonProperty(PropertyName = "success")]
         public bool Success { get; set; }
