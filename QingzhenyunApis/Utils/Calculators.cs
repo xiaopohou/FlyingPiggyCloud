@@ -3,7 +3,7 @@ using System.Text;
 
 namespace QingzhenyunApis.Utils
 {
-    internal static class Calculators
+    public static class Calculators
     {
         private const float V = 1024f;
         /// <summary>
@@ -11,7 +11,7 @@ namespace QingzhenyunApis.Utils
         /// </summary>
         /// <param name="size"></param>
         /// <returns></returns>
-        internal static string SizeCalculator(long size)
+        public static string SizeCalculator(long size)
         {
             if (size / V < 1)
             {
@@ -31,7 +31,7 @@ namespace QingzhenyunApis.Utils
             }
         }
 
-        internal static string UnixTimeStampConverter(long UnixTimeStamp)
+        public static string UnixTimeStampConverter(long UnixTimeStamp)
         {
             return TimeZoneInfo.ConvertTimeFromUtc((new DateTime(1970, 1, 1)).AddMilliseconds(UnixTimeStamp), TimeZoneInfo.Local).ToString("yyyy/MM/dd HH:mm:ss");
             //return TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)).AddMilliseconds(UnixTimeStamp).ToString("yyyy/MM/dd HH:mm:ss");

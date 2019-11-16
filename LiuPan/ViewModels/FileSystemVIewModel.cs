@@ -1,4 +1,5 @@
-﻿using SixCloud.Controllers;
+﻿using QingzhenyunApis.Methods;
+using SixCloud.Controllers;
 
 namespace SixCloud.ViewModels
 {

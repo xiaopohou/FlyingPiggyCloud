@@ -138,35 +138,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controllers\Authentication.cs" />
-    <Compile Include="Controllers\Calculators.cs" />
     <Compile Include="Controllers\TasksLogger.cs" />
-    <Compile Include="Controllers\FileSystem.cs" />
-    <Compile Include="Controllers\OfflineDownloader.cs" />
-    <Compile Include="Controllers\RecoveryBox.cs" />
-    <Compile Include="Controllers\RestClient.cs" />
-    <Compile Include="Controllers\Share.cs" />
     <Compile Include="Controllers\SingleInstanceManager.cs" />
-    <Compile Include="Controllers\SixCloudMethordBase.cs" />
     <Compile Include="Controllers\TaskBarButton.cs" />
     <Compile Include="Models\DownloadTask.cs" />
-    <Compile Include="Models\OfflineTaskAdd.cs" />
-    <Compile Include="Models\OfflineTaskList.cs" />
-    <Compile Include="Models\OfflineTaskParameters.cs" />
-    <Compile Include="Models\OfflineTaskParseFile.cs" />
-    <Compile Include="Models\OfflineTaskParseUrl.cs" />
-    <Compile Include="Models\OnlineClient.cs" />
-    <Compile Include="Models\OnlineDeviceList.cs" />
-    <Compile Include="Models\PreviewImageInformation.cs" />
-    <Compile Include="Models\PreviewVideoInformation.cs" />
     <Compile Include="Models\RecoverableUploadTaskArchive.cs" />
-    <Compile Include="Models\RecoveryBoxItem.cs" />
-    <Compile Include="Models\RecoveryBoxPage.cs" />
-    <Compile Include="Models\SelfClient.cs" />
-    <Compile Include="Models\ShareMetaData.cs" />
     <Compile Include="Models\SingleFileUploadTask.cs" />
     <Compile Include="Models\UploadTask.cs" />
-    <Compile Include="ViewModels\AsyncCommand.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
     <Compile Include="ViewModels\DependencyCommand.cs" />
     <Compile Include="ViewModels\DownloadedListViewModel.cs" />
@@ -177,6 +155,7 @@
     <Compile Include="ViewModels\FileListItemViewModel.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\FileSystemViewModel.cs" />
+    <Compile Include="ViewModels\IAsyncEnumerable.cs" />
     <Compile Include="ViewModels\LogoutOthersViewModels.cs" />
     <Compile Include="ViewModels\MainFrameViewModel.cs" />
     <Compile Include="ViewModels\OfflineTaskViewModel.cs" />
@@ -326,13 +305,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\FileListPage.cs" />
-    <Compile Include="Models\FileMetaData.cs" />
-    <Compile Include="Models\GenericResult.cs" />
     <Compile Include="Models\LocalProperties.cs" />
-    <Compile Include="Models\ResultBase.cs" />
-    <Compile Include="Models\UploadToken.cs" />
-    <Compile Include="Models\UserInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

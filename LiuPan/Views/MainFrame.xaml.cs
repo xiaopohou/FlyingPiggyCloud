@@ -1,4 +1,5 @@
-﻿using SixCloud.Models;
+﻿using QingzhenyunApis.EntityModels;
+using SixCloud.Models;
 using SixCloud.ViewModels;
 using SixCloudCustomControlLibrary.Controls;
 using System;

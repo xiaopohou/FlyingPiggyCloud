@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using QingzhenyunApis.EntityModels;
 using SixCloud.Models;
 using SixCloud.Views;
 using System;
@@ -194,7 +195,7 @@ namespace SixCloud.ViewModels
                 int totalPage;
                 do
                 {
-                    GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage);
+                    GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage).Result;
                     if (x.Success)
                     {
                         totalPage = x.Result.TotalPage;

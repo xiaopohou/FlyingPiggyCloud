@@ -1,4 +1,6 @@
-﻿using SixCloud.Controllers;
+﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Methods;
+using SixCloud.Controllers;
 using SixCloud.Models;
 using SixCloud.Views;
 using SixCloud.Views.UserControls;
@@ -120,7 +122,7 @@ namespace SixCloud.ViewModels
                                 string targetPath = "/:torrent";
                                 string filePath = openFileDialog.FileName;
                                 FileSystem fileSystem = new FileSystem();
-                                GenericResult<UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, OriginalFilename: Name);
+                                GenericResult<UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
                                 EzWcs.IUploadTask task = EzWcs.EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
                                 int timeoutIndex = 0;
                                 while (task.UploadTaskStatus != EzWcs.UploadTaskStatus.Completed)

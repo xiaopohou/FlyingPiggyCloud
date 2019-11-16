@@ -103,25 +103,6 @@ namespace SixCloud.Controllers
                 downloadCache = new Dictionary<string, string>();
             }
             #endregion
-#if Record
-            #region record
-            //用于处理旧的记录文件，在两个版本后移除
-            var recordFilePath = rootDirectory + "/Records.json";
-            if (File.Exists(recordFilePath))
-            {
-                string s = File.ReadAllText(recordFilePath);
-                var records = JsonConvert.DeserializeObject<List<Record>>(s) ?? new List<Record>();
-                File.Delete(recordFilePath);
-                if (records.Count != 0)
-                {
-                    foreach (Record a in records)
-                    {
-                        DownloadingListViewModel.NewTask(null, a.DownloadAddress, a.Path, a.Name);
-                    }
-                }
-            }
-            #endregion
-#endif
         }
 
         public static void ExitEventHandler(object sender, EventArgs e)

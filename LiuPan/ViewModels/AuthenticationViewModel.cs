@@ -1,4 +1,6 @@
-﻿using SixCloud.Controllers;
+﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Methods;
+using SixCloud.Controllers;
 using SixCloud.Models;
 using SixCloud.Views;
 using System;
@@ -60,7 +62,7 @@ namespace SixCloud.ViewModels
                 //如果允许自动登录，且保存了上一次的Token，则自动登录
                 if (IsAutoSignIn && !string.IsNullOrEmpty(LocalProperties.Token))
                 {
-                    GenericResult<UserInformation> x = authentication.GetUserInformation();
+                    GenericResult<UserInformation> x = authentication.GetUserInformation().Result;
                     if (x.Success)
                     {
                         App.Current.Dispatcher.Invoke(() =>
@@ -92,7 +94,7 @@ namespace SixCloud.ViewModels
                 //如果密码框中输入了信息，则使用密码框中的密码登录
                 if (!IsCodeMode && param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
                 {
-                    string passwordMD5 = authentication.UserMd5(passwordBox.Password);
+                    string passwordMD5 = Authentication.UserMd5(passwordBox.Password);
                     GenericResult<UserInformation> x = LoginOperate(passwordMD5);
                     if (x.Success)
                     {

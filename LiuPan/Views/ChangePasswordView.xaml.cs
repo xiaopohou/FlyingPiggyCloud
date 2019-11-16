@@ -1,4 +1,5 @@
-﻿using SixCloud.Controllers;
+﻿using QingzhenyunApis.Methods;
+using SixCloud.Controllers;
 using SixCloudCustomControlLibrary.Controls;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace SixCloud.Views
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            var x = await Task.Run(() => authentication.ChangePasswordByOldPassword(authentication.UserMd5(OldValue.Password), authentication.UserMd5(NewValue.Password)));
+            var x = await Task.Run(() => authentication.ChangePasswordByOldPassword(Authentication.UserMd5(OldValue.Password), Authentication.UserMd5(NewValue.Password)));
             if(x.Success)
             {
                 Close();

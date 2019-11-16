@@ -1,4 +1,5 @@
-﻿using SixCloud.Models;
+﻿using QingzhenyunApis.EntityModels;
+using SixCloud.Models;
 using System.Threading.Tasks;
 
 namespace SixCloud.ViewModels

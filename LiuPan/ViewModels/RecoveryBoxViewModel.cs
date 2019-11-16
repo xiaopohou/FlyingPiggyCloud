@@ -1,4 +1,6 @@
-﻿using SixCloud.Controllers;
+﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Methods;
+using SixCloud.Controllers;
 using SixCloud.Models;
 using System.Collections;
 using System.Collections.Generic;
@@ -73,7 +75,7 @@ namespace SixCloud.ViewModels
             int totalPage;
             do
             {
-                GenericResult<RecoveryBoxPage> x = recoveryBox.GetList(++currentPage);
+                GenericResult<RecoveryBoxPage> x = recoveryBox.GetList(++currentPage).Result;
                 totalPage = x.Result.TotalPage;
                 yield return x.Result.List;
             } while (currentPage < totalPage);
