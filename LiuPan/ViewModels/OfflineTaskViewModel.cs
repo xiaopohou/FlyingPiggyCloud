@@ -26,7 +26,9 @@ namespace SixCloud.ViewModels
             do
             {
 #warning 迁移到.NET CORE WPF后，此处代码应该为异步调用
-                GenericResult<OfflineTaskList> x = downloader.GetList(++currentPage).Result;
+                //var t = downloader.GetList(++currentPage);
+                //t.Wait();
+                GenericResult<OfflineTaskList> x = downloader.GetList(++currentPage);
                 totalPage = x.Result.TotalPage;
                 yield return x.Result.List;
             } while (currentPage < totalPage);
