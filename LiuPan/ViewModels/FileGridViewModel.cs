@@ -1,4 +1,5 @@
-﻿using SixCloud.Models;
+﻿using QingzhenyunApis.EntityModels;
+using SixCloud.Models;
 using SixCloud.Views.UserControls;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +22,8 @@ namespace SixCloud.ViewModels
                 int totalPage;
                 do
                 {
-                    GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage);
+#warning 切换到.NET CORE WPF后，此段代码应该为异步调用 
+                    GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage).Result;
                     if (x.Success && x.Result.DictionaryInformation != null)
                     {
                         totalPage = x.Result.TotalPage;
@@ -67,7 +69,8 @@ namespace SixCloud.ViewModels
                     int totalPage;
                     do
                     {
-                        GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage);
+#warning 切换到.NET CORE WPF后，此段代码应该为异步调用 
+                        GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage).Result;
                         if (x.Success)
                         {
                             totalPage = x.Result.TotalPage;

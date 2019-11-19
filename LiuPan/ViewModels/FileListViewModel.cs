@@ -112,7 +112,7 @@ namespace SixCloud.ViewModels
                 {
                     if (autoCreate)
                     {
-                        GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(Path: path));
+                        GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(path:path));
                         if (x.Success)
                         {
                             await GetFileListByPath(x.Result.Path);
@@ -147,7 +147,8 @@ namespace SixCloud.ViewModels
                 int totalPage;
                 do
                 {
-                    GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage);
+#warning 迁移到.NET CORE WPF后，此处代码应修改
+                    GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage).Result;
                     if (x.Success && x.Result.DictionaryInformation != null)
                     {
                         totalPage = x.Result.TotalPage;
@@ -275,7 +276,7 @@ namespace SixCloud.ViewModels
                 };
                 PathArray = array;
             }
-            OnPropertyChanged("PathArray");
+            OnPropertyChanged(nameof(PathArray));
         }
         #endregion
 
@@ -317,7 +318,7 @@ namespace SixCloud.ViewModels
         /// <summary>
         /// 为后退按钮保存历史路径
         /// </summary>
-        private Stack<string> previousPath = new Stack<string>();
+        private readonly Stack<string> previousPath = new Stack<string>();
         #endregion
 
         #region NextNavigate
@@ -356,7 +357,7 @@ namespace SixCloud.ViewModels
         /// <summary>
         /// 为前进按钮保存历史路径
         /// </summary>
-        private Stack<string> nextPath = new Stack<string>();
+        private readonly Stack<string> nextPath = new Stack<string>();
         private static string[] s_copyList;
         private static string[] _cutList;
         private int _selectedIndex;
@@ -394,14 +395,14 @@ namespace SixCloud.ViewModels
                      string[] copyList = CopyList;
                      CopyList = null;
                      StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                     fileSystem.Copy(copyList, CurrentUUID);
+                     await fileSystem.Copy(copyList, CurrentUUID);
                  }
                  else if (CutList != null && CutList.Length > 0)
                  {
                      string[] cutList = CutList;
                      CutList = null;
                      StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                     fileSystem.Move(cutList, CurrentUUID);
+                     await fileSystem.Move(cutList, CurrentUUID);
                  }
                  else
                  {
@@ -449,7 +450,7 @@ namespace SixCloud.ViewModels
         #region Delete
         public DependencyCommand DeleteCommand { get; private set; }
 
-        private void Delete(object parameter)
+        private async void Delete(object parameter)
         {
             if (parameter is IList selectedItems)
             {
@@ -458,7 +459,7 @@ namespace SixCloud.ViewModels
                 {
                     list.Add(a.UUID);
                 }
-                fileSystem.Remove(list.ToArray());
+                await fileSystem.Remove(list.ToArray());
                 NavigateByUUID(CurrentUUID);
             }
         }

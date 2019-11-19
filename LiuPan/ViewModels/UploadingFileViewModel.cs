@@ -2,6 +2,8 @@
 using EzWcs;
 using EzWcs.Calculators;
 using Newtonsoft.Json;
+using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Utils;
 using SixCloud.Controllers;
 using System;
 using System.IO;
@@ -16,7 +18,7 @@ namespace SixCloud.ViewModels
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
             var hash = ETag.ComputeEtag(filePath);
-            Models.GenericResult<Models.UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, Hash: hash, OriginalFilename: Name);
+            GenericResult<UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
             if (x.Result.HashCached)
             {
                 task = new HashCachedTask();

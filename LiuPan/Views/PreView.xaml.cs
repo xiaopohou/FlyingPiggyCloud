@@ -1,4 +1,5 @@
-﻿using SixCloud.Controllers;
+﻿using QingzhenyunApis.EntityModels;
+using SixCloud.Controllers;
 using SixCloud.Models;
 using SixCloud.ViewModels;
 using System;

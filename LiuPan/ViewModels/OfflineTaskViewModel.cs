@@ -22,10 +22,11 @@ namespace SixCloud.ViewModels
         private IEnumerable<OfflineTask[]> GetListEnumerator()
         {
             int currentPage = 0;
-            int totalPage = 0;
+            int totalPage;
             do
             {
-                GenericResult<OfflineTaskList> x = downloader.GetList(++currentPage);
+#warning 迁移到.NET CORE WPF后，此处代码应该为异步调用
+                GenericResult<OfflineTaskList> x = downloader.GetList(++currentPage).Result;
                 totalPage = x.Result.TotalPage;
                 yield return x.Result.List;
             } while (currentPage < totalPage);

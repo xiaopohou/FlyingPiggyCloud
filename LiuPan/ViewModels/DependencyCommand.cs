@@ -22,6 +22,11 @@ namespace SixCloud.ViewModels
 
         public event EventHandler CanExecuteChanged;
 
+        /// <summary>
+        /// Command可用性改变时被触发
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public bool CanExecute(object parameter)
         {
             bool? x = CanExecuteAction?.Invoke(parameter);
@@ -45,11 +50,20 @@ namespace SixCloud.ViewModels
             return true;
         }
 
+        /// <summary>
+        /// Command被调用时触发
+        /// </summary>
+        /// <param name="parameter"></param>
         public virtual void Execute(object parameter)
         {
             ExecuteAction?.Invoke(parameter);
         }
 
+        /// <summary>
+        /// Command可用性改变
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void OnCanExecutedChanged(object sender, EventArgs e)
         {
             App.Current.Dispatcher.Invoke(() => CanExecuteChanged?.Invoke(sender, e));

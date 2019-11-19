@@ -155,7 +155,6 @@
     <Compile Include="ViewModels\FileListItemViewModel.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\FileSystemViewModel.cs" />
-    <Compile Include="ViewModels\IAsyncEnumerable.cs" />
     <Compile Include="ViewModels\LogoutOthersViewModels.cs" />
     <Compile Include="ViewModels\MainFrameViewModel.cs" />
     <Compile Include="ViewModels\OfflineTaskViewModel.cs" />

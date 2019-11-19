@@ -1,7 +1,5 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Utils;
-using SixCloud.Controllers;
-using SixCloud.Models;
 using SixCloud.Views;
 using Syroot.Windows.IO;
 using System;
@@ -109,11 +107,11 @@ namespace SixCloud.ViewModels
         #endregion
 
         #region Delete
-        public AsyncCommand DeleteCommand { get; private set; }
+        public DependencyCommand DeleteCommand { get; private set; }
 
-        private void Delete(object parameter)
+        private async void Delete(object parameter)
         {
-            fileSystem.Remove(UUID);
+            await fileSystem.Remove(UUID);
         }
         #endregion
 
@@ -130,13 +128,13 @@ namespace SixCloud.ViewModels
         #endregion
 
         #region Confirm
-        public AsyncCommand ConfirmCommand { get; private set; }
+        public DependencyCommand ConfirmCommand { get; private set; }
 
-        private void Confirm(object parameter)
+        private async void Confirm(object parameter)
         {
             if (parameter is string newName)
             {
-                fileSystem.Rename(UUID, newName);
+                await fileSystem.Rename(UUID, newName);
             }
         }
 
@@ -151,7 +149,7 @@ namespace SixCloud.ViewModels
 
         private static string DefaultDownloadPath = null;
 
-        private void Download(object parameter)
+        private async void Download(object parameter)
         {
             System.Windows.Forms.FolderBrowserDialog downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
             {
@@ -161,75 +159,68 @@ namespace SixCloud.ViewModels
             if (downloadPathDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 DefaultDownloadPath = downloadPathDialog.SelectedPath;
-                Task.Run(() =>
+
+                if (Directory)
                 {
-                    if (Directory)
+                    await DownloadHelper(UUID, System.IO.Path.Combine(downloadPathDialog.SelectedPath, Name), 0);
+
+                    async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
                     {
-                        System.Threading.ThreadPool.QueueUserWorkItem((state) =>
+                        foreach (FileMetaData child in GetChild(uuid))
                         {
-                            DownloadHelper(UUID, System.IO.Path.Combine(downloadPathDialog.SelectedPath,Name), 0);
-                            void DownloadHelper(string uuid, string localParentPath, int depthIndex)
+                            if (!child.Directory)
                             {
-                                foreach (var child in GetChild(uuid))
+                                GenericResult<FileMetaData> x = await fileSystem.GetDetailsByUUID(child.UUID);
+                                DownloadingListViewModel.NewTask(child.UUID, x.Result.DownloadAddress, localParentPath, child.Name);
+                            }
+                            else
+                            {
+                                string nextPath = System.IO.Path.Combine(localParentPath, child.Name);
+                                System.IO.Directory.CreateDirectory(nextPath);
+                                if (depthIndex < 32)
                                 {
-                                    if (!child.Directory)
-                                    {
-                                        GenericResult<FileMetaData> x = fileSystem.GetDetailsByUUID(child.UUID);
-                                        DownloadingListViewModel.NewTask(child.UUID, x.Result.DownloadAddress, localParentPath, child.Name);
-                                    }
-                                    else
-                                    {
-                                        var nextPath = System.IO.Path.Combine(localParentPath, child.Name);
-                                        System.IO.Directory.CreateDirectory(nextPath);
-                                        if (depthIndex < 32)
-                                        {
-                                            DownloadHelper(child.UUID, nextPath, depthIndex + 1);
-                                        }
-                                        else
-                                        {
-                                            System.Threading.ThreadPool.QueueUserWorkItem((_) =>
-                                            {
-                                                DownloadHelper(child.UUID, nextPath, 0);
-                                            });
-                                        }
-                                    }
+                                    await DownloadHelper(child.UUID, nextPath, depthIndex + 1);
+                                }
+                                else
+                                {
+                                    await DownloadHelper(child.UUID, nextPath, 0);
                                 }
                             }
-
-                            IEnumerable<FileMetaData> GetChild(string uuid)
-                            {
-                                int currentPage = 0;
-                                int totalPage;
-                                do
-                                {
-                                    GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage);
-                                    if (x.Success)
-                                    {
-                                        totalPage = x.Result.TotalPage;
-                                        foreach (var item in x.Result.List)
-                                        {
-                                            yield return item;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new DirectoryNotFoundException(x.Message);
-                                    }
-                                } while (currentPage < totalPage);
-                                yield break;
-                            }
-                        });
-                    }
-                    else
-                    {
-                        GenericResult<FileMetaData> x = fileSystem.GetDetailsByUUID(UUID);
-                        if (!string.IsNullOrWhiteSpace(x.Result.DownloadAddress))
-                        {
-                            DownloadingListViewModel.NewTask(UUID, x.Result.DownloadAddress, downloadPathDialog.SelectedPath, Name);
                         }
                     }
-                });
 
+                    IEnumerable<FileMetaData> GetChild(string uuid)
+                    {
+                        int currentPage = 0;
+                        int totalPage;
+                        do
+                        {
+#warning 切换到.NET CORE WPF后，此段代码应该为异步调用 
+                            GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage).Result;
+                            if (x.Success)
+                            {
+                                totalPage = x.Result.TotalPage;
+                                foreach (FileMetaData item in x.Result.List)
+                                {
+                                    yield return item;
+                                }
+                            }
+                            else
+                            {
+                                throw new DirectoryNotFoundException(x.Message);
+                            }
+                        } while (currentPage < totalPage);
+                        yield break;
+                    }
+                }
+                else
+                {
+                    GenericResult<FileMetaData> x = await fileSystem.GetDetailsByUUID(UUID);
+                    if (!string.IsNullOrWhiteSpace(x.Result.DownloadAddress))
+                    {
+                        DownloadingListViewModel.NewTask(UUID, x.Result.DownloadAddress, downloadPathDialog.SelectedPath, Name);
+                    }
+                }
             }
         }
 
@@ -347,9 +338,9 @@ namespace SixCloud.ViewModels
 
             CopyCommand = new DependencyCommand(Copy, AlwaysCan);
             CutCommand = new DependencyCommand(Cut, AlwaysCan);
-            DeleteCommand = new AsyncCommand(Delete, AlwaysCan);
+            DeleteCommand = new DependencyCommand(Delete, AlwaysCan);
             RenameCommand = new DependencyCommand(Rename, AlwaysCan);
-            ConfirmCommand = new AsyncCommand(Confirm, CanConfirm);
+            ConfirmCommand = new DependencyCommand(Confirm, CanConfirm);
             DownloadCommand = new DependencyCommand(Download, AlwaysCan);
             MoreCommand = new DependencyCommand(More, AlwaysCan);
 

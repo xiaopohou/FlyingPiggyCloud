@@ -20,6 +20,9 @@ namespace SixCloud.ViewModels
         private string _code;
         private string _verificationCode;
 
+        /// <summary>
+        /// 地区/国别码集合
+        /// </summary>
         public string[] RegionCollection { get; set; } =
         {
             "(86)中国大陆",
@@ -36,6 +39,9 @@ namespace SixCloud.ViewModels
         /// </summary>
         private string PhoneInfo { get; set; }
 
+        /// <summary>
+        /// 登陆成功后被调用
+        /// </summary>
         private void OnSignInSuccessful()
         {
             App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -47,22 +53,23 @@ namespace SixCloud.ViewModels
                 do
                 {
                     Thread.Sleep(TimeSpan.FromMinutes(1));
-                    authentication.GetUserInformation();
+                    authentication.GetUserInformation().Wait();
                 } while (true);
             });
         }
 
-        private void SignIn(object param)
+        private async void SignIn(object param)
         {
             LoadingView loadView = new LoadingView(currentView);
             loadView.FriendlyText.Text = "登录中，请稍后";
             try
             {
                 loadView.Show();
+
                 //如果允许自动登录，且保存了上一次的Token，则自动登录
                 if (IsAutoSignIn && !string.IsNullOrEmpty(LocalProperties.Token))
                 {
-                    GenericResult<UserInformation> x = authentication.GetUserInformation().Result;
+                    GenericResult<UserInformation> x = await authentication.GetUserInformation();
                     if (x.Success)
                     {
                         App.Current.Dispatcher.Invoke(() =>
@@ -78,7 +85,7 @@ namespace SixCloud.ViewModels
                 //如果是验证码登录，且已输入验证码，则验证码登录
                 if (IsCodeMode && !string.IsNullOrWhiteSpace(PhoneCode))
                 {
-                    var x = authentication.LoginByMessageCode(PhoneInfo, PhoneCode);
+                    var x = await authentication.LoginByMessageCode(PhoneInfo, PhoneCode);
                     if (x.Success)
                     {
                         App.Current.Dispatcher.Invoke(() =>
@@ -95,7 +102,7 @@ namespace SixCloud.ViewModels
                 if (!IsCodeMode && param is PasswordBox passwordBox && !string.IsNullOrEmpty(passwordBox.Password))
                 {
                     string passwordMD5 = Authentication.UserMd5(passwordBox.Password);
-                    GenericResult<UserInformation> x = LoginOperate(passwordMD5);
+                    GenericResult<UserInformation> x = await LoginOperate(passwordMD5);
                     if (x.Success)
                     {
                         App.Current.Dispatcher.Invoke(() =>
@@ -108,7 +115,7 @@ namespace SixCloud.ViewModels
                         {
                             LocalProperties.UserName = PhoneNumber;
                             LocalProperties.CountryCode = Code;
-                            LocalProperties.Password = authentication.UserMd5(passwordBox.Password);
+                            LocalProperties.Password = Authentication.UserMd5(passwordBox.Password);
                         }
                         else
                         {
@@ -130,7 +137,7 @@ namespace SixCloud.ViewModels
                 if (!IsCodeMode && IsRememberPassword && !string.IsNullOrEmpty(LocalProperties.Password))
                 {
                     string passwordMD5 = LocalProperties.Password;
-                    GenericResult<UserInformation> x = LoginOperate(passwordMD5);
+                    GenericResult<UserInformation> x = await LoginOperate(passwordMD5);
 
                     if (x.Success)
                     {
@@ -156,54 +163,49 @@ namespace SixCloud.ViewModels
                     return;
 
                 }
-                else
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        MessageBox.Show("要登录，请输入密码");
-                        currentView.Activate();
-                    });
-                }
 
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show("要登录，请输入密码");
+                    currentView.Activate();
+                });
             }
             finally
             {
                 loadView.Close();
             }
 
-            GenericResult<UserInformation> LoginOperate(string passwordMD5)
+            async Task<GenericResult<UserInformation>> LoginOperate(string passwordMD5)
             {
                 try
                 {
-                    return authentication.LoginByPassword(PhoneNumber, passwordMD5, GetCountryCode());
+                    return await authentication.LoginByPassword(PhoneNumber, passwordMD5, GetCountryCode());
                 }
-                catch (Authentication.LoginUserTooMuchException ex)
+                catch (LoginUserTooMuchException ex)
                 {
-                    GenericResult<OnlineDeviceList> getOnlineDeviceList = authentication.GetOnlineDeviceList(ex.Token, out string nextToken);
+                    GenericResult<OnlineDeviceList> getOnlineDeviceList = await authentication.GetOnlineDeviceList();
                     if (getOnlineDeviceList.Success)
                     {
                         string[] devicesSSID = null;
-                        object syncRoot = new object();
-                        App.Current.Dispatcher.Invoke(() =>
+                        LogoutOthersViewModels logoutOthersViewModels = new LogoutOthersViewModels(getOnlineDeviceList);
+                        logoutOthersViewModels.ShowDialog();
+                        devicesSSID = logoutOthersViewModels.DevicesSSID;
+
+                        GenericResult<bool?> x = await authentication.LogoutOnlineDevices(devicesSSID);
+
+                        if (x.Result == true)
                         {
-                            lock (syncRoot)
-                            {
-                                LogoutOthersViewModels logoutOthersViewModels = new LogoutOthersViewModels(getOnlineDeviceList);
-                                logoutOthersViewModels.ShowDialog();
-                                devicesSSID = logoutOthersViewModels.DevicesSSID;
-                            }
-                        });
-                        Thread.Sleep(1000);
-                        lock (syncRoot)
+                            return await LoginOperate(passwordMD5);
+                        }
+                        else
                         {
-                            GenericResult<bool?> x = authentication.LogoutOnlineDevices(nextToken, devicesSSID);
-                            if (x.Result == true)
-                            {
-                                return LoginOperate(passwordMD5);
-                            }
+                            return ex.Response; 
                         }
                     }
-                    return ex.Response;
+                    else
+                    {
+                        return ex.Response;
+                    }
                 }
             }
         }
@@ -224,14 +226,11 @@ namespace SixCloud.ViewModels
         {
             if (param is PasswordBox passwordBox)
             {
-                GenericResult<bool> x = await Task.Run(() =>
-                {
-                    return authentication.Register(authentication.UserMd5(passwordBox.Password), VerificationCode, PhoneInfo, GetCountryCode());
-                });
+                GenericResult<bool> x = await authentication.Register(Authentication.UserMd5(passwordBox.Password), VerificationCode, PhoneInfo, GetCountryCode());
                 if (x.Success)
                 {
                     Window.GetWindow(passwordBox).Close();
-                    var loginResult = authentication.LoginByPassword(PhoneNumber, authentication.UserMd5(passwordBox.Password), GetCountryCode());
+                    var loginResult = await authentication.LoginByPassword(PhoneNumber, Authentication.UserMd5(passwordBox.Password), GetCountryCode());
                     new MainFrame(loginResult.Result).Show();
                 }
                 else

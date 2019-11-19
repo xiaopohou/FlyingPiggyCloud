@@ -116,13 +116,13 @@ namespace SixCloud.ViewModels
                     {
                         if (openFileDialog.ShowDialog() == DialogResult.OK)
                         {
-                            new LoadingView(DataContextHost, () =>
+                            new LoadingView(DataContextHost, async () =>
                             {
                                 string Name = openFileDialog.SafeFileName;
                                 string targetPath = "/:torrent";
                                 string filePath = openFileDialog.FileName;
                                 FileSystem fileSystem = new FileSystem();
-                                GenericResult<UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
+                                GenericResult<UploadToken> x = await fileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
                                 EzWcs.IUploadTask task = EzWcs.EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
                                 int timeoutIndex = 0;
                                 while (task.UploadTaskStatus != EzWcs.UploadTaskStatus.Completed)
@@ -134,7 +134,7 @@ namespace SixCloud.ViewModels
                                     }
                                     Thread.Sleep(1000);
                                 }
-                                ParseResults = offlineDownloader.ParseTorrent(new string[] { task.Hash }).Result;
+                                ParseResults = (await offlineDownloader.ParseTorrent(new string[] { task.Hash })).Result;
                                 if (CheckParseResults())
                                 {
                                     Stage = Stage.CheckFiles;
@@ -162,13 +162,13 @@ namespace SixCloud.ViewModels
         public DependencyCommand NextStageCommand { get; set; }
         private void NextStage(object parameter)
         {
-            new LoadingView(DataContextHost, () =>
+            new LoadingView(DataContextHost,async () =>
             {
                 switch (Stage)
                 {
                     case Stage.InputUrls:
                         string[] urls = System.Text.RegularExpressions.Regex.Split(InputUrl, Environment.NewLine);
-                        GenericResult<OfflineTaskParseUrl[]> x = offlineDownloader.ParseUrl(urls);
+                        GenericResult<OfflineTaskParseUrl[]> x = await offlineDownloader.ParseUrl(urls);
                         ParseResults = x.Result;
                         if (CheckParseResults())
                         {
@@ -201,7 +201,7 @@ namespace SixCloud.ViewModels
                     case Stage.SelectSavingPath:
                         FileListItemViewModel itemvm = parameter as FileListItemViewModel;
                         string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
-                        GenericResult<OfflineTaskAdd> tasks = offlineDownloader.Add(savingPath, OfflineTaskParameters);
+                        GenericResult<OfflineTaskAdd> tasks = await offlineDownloader.Add(savingPath, OfflineTaskParameters);
                         if (!tasks.Success)
                         {
                             App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error));

@@ -15,14 +15,14 @@ namespace SixCloud.ViewModels
 
         public RecoveryBoxViewModel()
         {
-            EmptyCommand = new AsyncCommand(Empty, DependencyCommand.AlwaysCan);
+            EmptyCommand = new DependencyCommand(Empty, DependencyCommand.AlwaysCan);
             DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
             RecoveryCommand = new DependencyCommand(Recovery, DependencyCommand.AlwaysCan);
             recoveryBoxItemsEnumerator = LoadList().GetEnumerator();
         }
 
         #region Empty
-        public AsyncCommand EmptyCommand { get; private set; }
+        public DependencyCommand EmptyCommand { get; private set; }
         private void Empty(object parameter)
         {
             recoveryBox.Empty();

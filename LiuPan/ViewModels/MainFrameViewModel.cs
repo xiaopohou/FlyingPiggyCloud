@@ -6,7 +6,7 @@ namespace SixCloud.ViewModels
 {
     internal sealed class MainFrameViewModel : ViewModelBase
     {
-        public AsyncCommand PathNavigateCommand { get; private set; }
+        public DependencyCommand PathNavigateCommand { get; private set; }
 
         public UserInformationViewModel UserInformation { get; set; }
 
@@ -37,7 +37,7 @@ namespace SixCloud.ViewModels
                 MainContainerContent = fileVM;
                 await fileVM.NavigateByPath("/" + path, true);
             }
-            OnPropertyChanged("MainContainerContent");
+            OnPropertyChanged(nameof(MainContainerContent));
         }
         private bool CanPathNavigate(object parameter)
         {
@@ -46,7 +46,7 @@ namespace SixCloud.ViewModels
 
         public MainFrameViewModel(UserInformation currentUser)
         {
-            PathNavigateCommand = new AsyncCommand(PathNavigate, CanPathNavigate);
+            PathNavigateCommand = new DependencyCommand(PathNavigate, CanPathNavigate);
             UserInformation = new UserInformationViewModel(currentUser);
             fileVM = new FileListViewModel();
             MainContainerContent = fileVM;

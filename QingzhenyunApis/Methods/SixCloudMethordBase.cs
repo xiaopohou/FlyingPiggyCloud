@@ -62,13 +62,16 @@ namespace QingzhenyunApis.Methods
                 string unixDateTimeNow = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds.ToString();
                 string extraHeaders = $"contentmd5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}{(isAnonymous ? "" : $"qingzhen-token: {Token}")}";
                 string signature = HmacSha1(AccessKeySecret, $"POST{unixDateTimeNow}{extraHeaders}{uri}");
-                string authorization = $"Qingzhen {AccessKeyId}:{signature}";
-                headers.Add(nameof(authorization), authorization);
-
+                string authorization = $"{AccessKeyId}:{signature}";
+                //headers.Add(nameof(authorization), authorization);
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Qingzhen", authorization);
                 //发起请求
                 HttpResponseMessage response = await httpClient.PostAsync(uri, requestObject);
                 string responseBody = await response.Content.ReadAsStringAsync();
-                Token = response.Headers.GetValues("qingzhen-token").FirstOrDefault() ?? Token;
+                if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
+                {
+                    Token = newToken.FirstOrDefault() ?? Token;
+                }
                 return JsonConvert.DeserializeObject<T>(responseBody);
             }
 

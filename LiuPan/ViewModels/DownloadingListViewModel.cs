@@ -8,8 +8,16 @@ namespace SixCloud.ViewModels
     internal class DownloadingListViewModel : ViewModelBase
     {
         public ObservableCollection<DownloadingTaskViewModel> ObservableCollection => _observableCollection;
-        private static readonly ObservableCollection<DownloadingTaskViewModel> _observableCollection;
+        private static readonly ObservableCollection<DownloadingTaskViewModel> _observableCollection = new ObservableCollection<DownloadingTaskViewModel>();
 
+        /// <summary>
+        /// 创建新的下载任务
+        /// </summary>
+        /// <param name="targetUUID">下载对象的uuid</param>
+        /// <param name="downloadAddress">下载地址</param>
+        /// <param name="localPath">本地路径</param>
+        /// <param name="name">文件名</param>
+        /// <param name="isAutoStart">自动开始</param>
         public static void NewTask(string targetUUID, string downloadAddress, string localPath, string name, bool isAutoStart = true)
         {
             DownloadingTaskViewModel task = new DownloadingTaskViewModel(targetUUID, downloadAddress, localPath, name);
@@ -49,7 +57,6 @@ namespace SixCloud.ViewModels
 
         static DownloadingListViewModel()
         {
-            _observableCollection = new ObservableCollection<DownloadingTaskViewModel>();
             TasksLogger.Downloadings = _observableCollection;
         }
     }
