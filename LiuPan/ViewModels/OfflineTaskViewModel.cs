@@ -1,9 +1,6 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
-using SixCloud.Controllers;
-using SixCloud.Models;
 using SixCloud.Views;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,7 +25,7 @@ namespace SixCloud.ViewModels
 #warning 迁移到.NET CORE WPF后，此处代码应该为异步调用
                 //var t = downloader.GetList(++currentPage);
                 //t.Wait();
-                GenericResult<OfflineTaskList> x = downloader.GetList(++currentPage);
+                GenericResult<OfflineTaskList> x = downloader.GetList(++currentPage).Result;
                 totalPage = x.Result.TotalPage;
                 yield return x.Result.List;
             } while (currentPage < totalPage);
@@ -85,7 +82,7 @@ namespace SixCloud.ViewModels
 
 
         public DependencyCommand RefreshListCommand { get; set; }
-        private void RefreshList(object parameter=null)
+        private void RefreshList(object parameter = null)
         {
             ObservableCollection.Clear();
             listEnumerator = null;
@@ -100,7 +97,7 @@ namespace SixCloud.ViewModels
             NewTaskCommand = new DependencyCommand(NewTask, DependencyCommand.AlwaysCan);
             CancelTaskCommand = new DependencyCommand(CancelTask, DependencyCommand.AlwaysCan);
             RefreshListCommand = new DependencyCommand(RefreshList, DependencyCommand.AlwaysCan);
-            LazyLoad();
+            //LazyLoad();
         }
     }
 

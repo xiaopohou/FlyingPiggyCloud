@@ -31,10 +31,10 @@ namespace QingzhenyunApis.Methods
             return await PostAsync<GenericResult<OfflineTaskAdd>>(JsonConvert.SerializeObject(data), "/v2/offline/add", false);
         }
 
-        public GenericResult<OfflineTaskList> GetList(int page = 1, int pageSize = 20)
+        public async Task<GenericResult<OfflineTaskList>> GetList(int page = 1, int pageSize = 20)
         {
             var data = new { page, pageSize };
-            return Post<GenericResult<OfflineTaskList>>(JsonConvert.SerializeObject(data), "/v2/offline/page", false);
+            return await PostAsync<GenericResult<OfflineTaskList>>(JsonConvert.SerializeObject(data), "/v2/offline/page", false);
         }
 
         public async Task<GenericResult<int>> DeleteTask(string[] identities)

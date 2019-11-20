@@ -84,7 +84,7 @@ namespace SixCloud.ViewModels
         /// <summary>
         /// 保存LazyLoad状态的枚举器
         /// </summary>
-        protected IEnumerator<FileMetaData[]> fileMetaDataEnumerator;
+        protected IAsyncEnumerator<FileMetaData[]> fileMetaDataEnumerator;
 
         public async void NavigateByUUID(string uuid)
         {
@@ -112,7 +112,7 @@ namespace SixCloud.ViewModels
                 {
                     if (autoCreate)
                     {
-                        GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(path:path));
+                        GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(path: path));
                         if (x.Success)
                         {
                             await GetFileListByPath(x.Result.Path);
@@ -141,14 +141,13 @@ namespace SixCloud.ViewModels
 
         protected virtual async Task GetFileListByPath(string path)
         {
-            IEnumerable<FileMetaData[]> GetFileList()
+            async IAsyncEnumerable<FileMetaData[]> GetFileListAsync()
             {
                 int currentPage = 0;
                 int totalPage;
                 do
                 {
-#warning 迁移到.NET CORE WPF后，此处代码应修改
-                    GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage).Result;
+                    GenericResult<FileListPage> x = await fileSystem.GetDirectory(path: path, page: ++currentPage);
                     if (x.Success && x.Result.DictionaryInformation != null)
                     {
                         totalPage = x.Result.TotalPage;
@@ -157,7 +156,7 @@ namespace SixCloud.ViewModels
                         CreatePathArray(CurrentPath);
                         yield return x.Result.List;
                     }
-                    else if(x.Success)
+                    else if (x.Success)
                     {
                         break;
                     }
@@ -170,14 +169,11 @@ namespace SixCloud.ViewModels
             }
 
             App.Current.Dispatcher.Invoke(() => FileList.Clear());
-            await Task.Run(() =>
-            {
-                fileMetaDataEnumerator = GetFileList().GetEnumerator();
-                fileMetaDataEnumerator.MoveNext();
-            });
+            fileMetaDataEnumerator = GetFileListAsync().GetAsyncEnumerator();
+            await fileMetaDataEnumerator.MoveNextAsync();
             App.Current.Dispatcher.Invoke(() =>
             {
-                if(fileMetaDataEnumerator.Current==null)
+                if (fileMetaDataEnumerator.Current == null)
                 {
                     return;
                 }
@@ -190,13 +186,13 @@ namespace SixCloud.ViewModels
 
         protected virtual async Task GetFileListByUUID(string uuid)
         {
-            IEnumerable<FileMetaData[]> GetFileList()
+            async IAsyncEnumerable<FileMetaData[]> GetFileListAsync()
             {
                 int currentPage = 0;
                 int totalPage;
                 do
                 {
-                    GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage).Result;
+                    GenericResult<FileListPage> x = await fileSystem.GetDirectory(uuid, page: ++currentPage);
                     if (x.Success)
                     {
                         totalPage = x.Result.TotalPage;
@@ -215,11 +211,8 @@ namespace SixCloud.ViewModels
 
 
             App.Current.Dispatcher.Invoke(() => FileList.Clear());
-            await Task.Run(() =>
-            {
-                fileMetaDataEnumerator = GetFileList().GetEnumerator();
-                fileMetaDataEnumerator.MoveNext();
-            });
+            fileMetaDataEnumerator = GetFileListAsync().GetAsyncEnumerator();
+            await fileMetaDataEnumerator.MoveNextAsync();
             App.Current.Dispatcher.Invoke(() =>
             {
                 foreach (FileMetaData a in fileMetaDataEnumerator.Current)
@@ -229,13 +222,13 @@ namespace SixCloud.ViewModels
             });
         }
 
-        public void LazyLoad()
+        public async void LazyLoad()
         {
             if (fileMetaDataEnumerator != null)
             {
                 try
                 {
-                    if (fileMetaDataEnumerator.MoveNext())
+                    if (await fileMetaDataEnumerator.MoveNextAsync())
                     {
                         App.Current.Dispatcher.Invoke(() =>
                         {
@@ -584,9 +577,9 @@ namespace SixCloud.ViewModels
             if (value is string str)
             {
                 int length = (parameter as int?) ?? 20;
-                if(str.Length>length)
+                if (str.Length > length)
                 {
-                    return $"{str.Substring(0,14)}...{str.Substring(str.Length-3)}";
+                    return $"{str.Substring(0, 14)}...{str.Substring(str.Length - 3)}";
                 }
                 else
                 {
@@ -609,7 +602,7 @@ namespace SixCloud.ViewModels
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is bool directory)
+            if (value is bool directory)
             {
                 return directory ? Visibility.Collapsed : Visibility.Visible;
             }

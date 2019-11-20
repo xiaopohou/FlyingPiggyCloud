@@ -16,14 +16,13 @@ namespace SixCloud.ViewModels
 
         protected override async Task GetFileListByPath(string path)
         {
-            IEnumerable<FileMetaData[]> GetFileList()
+            async IAsyncEnumerable<FileMetaData[]> GetFileListAsync()
             {
                 int currentPage = 0;
                 int totalPage;
                 do
                 {
-#warning 切换到.NET CORE WPF后，此段代码应该为异步调用 
-                    GenericResult<FileListPage> x = fileSystem.GetDirectory(path: path, page: ++currentPage).Result;
+                    GenericResult<FileListPage> x = await fileSystem.GetDirectory(path: path, page: ++currentPage);
                     if (x.Success && x.Result.DictionaryInformation != null)
                     {
                         totalPage = x.Result.TotalPage;
@@ -41,12 +40,8 @@ namespace SixCloud.ViewModels
             }
 
             App.Current.Dispatcher.Invoke(() => FileList.Clear());
-            await Task.Run(() =>
-            {
-                fileMetaDataEnumerator = GetFileList().GetEnumerator();
-                fileMetaDataEnumerator.MoveNext();
-            });
-
+            fileMetaDataEnumerator = GetFileListAsync().GetAsyncEnumerator();
+            await fileMetaDataEnumerator.MoveNextAsync();
             App.Current.Dispatcher.Invoke(() =>
             {
                 foreach (FileMetaData a in fileMetaDataEnumerator.Current)
@@ -63,21 +58,19 @@ namespace SixCloud.ViewModels
         protected override async Task GetFileListByUUID(string uuid)
         {
             {
-                IEnumerable<FileMetaData[]> GetFileList()
+                async IAsyncEnumerable<FileMetaData[]> GetFileListAsync()
                 {
                     int currentPage = 0;
                     int totalPage;
                     do
                     {
-#warning 切换到.NET CORE WPF后，此段代码应该为异步调用 
-                        GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage).Result;
+                        GenericResult<FileListPage> x = await fileSystem.GetDirectory(uuid, page: ++currentPage);
                         if (x.Success)
                         {
                             totalPage = x.Result.TotalPage;
                             CurrentPath = x.Result.DictionaryInformation.Path;
                             CurrentUUID = x.Result.DictionaryInformation.UUID;
-                     
-       CreatePathArray(CurrentPath);
+                            CreatePathArray(CurrentPath);
                             yield return x.Result.List;
                         }
                         else
@@ -90,11 +83,8 @@ namespace SixCloud.ViewModels
 
 
                 Application.Current.Dispatcher.Invoke(() => FileList.Clear());
-                await Task.Run(() =>
-                {
-                    fileMetaDataEnumerator = GetFileList().GetEnumerator();
-                    fileMetaDataEnumerator.MoveNext();
-                });
+                fileMetaDataEnumerator = GetFileListAsync().GetAsyncEnumerator();
+                await fileMetaDataEnumerator.MoveNextAsync();
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     foreach (FileMetaData a in fileMetaDataEnumerator.Current)
