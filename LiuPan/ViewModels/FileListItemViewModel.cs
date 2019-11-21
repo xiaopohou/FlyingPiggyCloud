@@ -166,7 +166,7 @@ namespace SixCloud.ViewModels
 
                     async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
                     {
-                        foreach (FileMetaData child in GetChild(uuid))
+                        await foreach (FileMetaData child in GetChild(uuid))
                         {
                             if (!child.Directory)
                             {
@@ -189,14 +189,13 @@ namespace SixCloud.ViewModels
                         }
                     }
 
-                    IEnumerable<FileMetaData> GetChild(string uuid)
+                    async IAsyncEnumerable<FileMetaData> GetChild(string uuid)
                     {
                         int currentPage = 0;
                         int totalPage;
                         do
                         {
-#warning 切换到.NET CORE WPF后，此段代码应该为异步调用 
-                            GenericResult<FileListPage> x = fileSystem.GetDirectory(uuid, page: ++currentPage).Result;
+                            GenericResult<FileListPage> x = await fileSystem.GetDirectory(uuid, page: ++currentPage);
                             if (x.Success)
                             {
                                 totalPage = x.Result.TotalPage;

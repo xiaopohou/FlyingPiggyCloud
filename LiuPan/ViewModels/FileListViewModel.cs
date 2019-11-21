@@ -206,6 +206,7 @@ namespace SixCloud.ViewModels
                         throw new DirectoryNotFoundException(x.Message);
                     }
                 } while (currentPage < totalPage);
+
                 yield break;
             }
 
@@ -222,7 +223,7 @@ namespace SixCloud.ViewModels
             });
         }
 
-        public async void LazyLoad()
+        public async Task LazyLoad()
         {
             if (fileMetaDataEnumerator != null)
             {

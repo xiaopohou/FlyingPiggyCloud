@@ -25,7 +25,7 @@ namespace QingzhenyunApis.Methods
             dynamic data = new ExpandoObject();
             if (!string.IsNullOrEmpty(parent))
             {
-                data.parent = parent;
+                data.identity = parent;
             }
             else if (!string.IsNullOrEmpty(path))
             {

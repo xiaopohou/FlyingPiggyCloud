@@ -56,7 +56,7 @@ namespace SixCloud.Views.UserControls
             }
             //懒加载的业务代码
             FileListViewModel vm = DataContext as FileListViewModel;
-            await Task.Run(() => vm.LazyLoad());
+            await vm.LazyLoad();
             LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
         }
 

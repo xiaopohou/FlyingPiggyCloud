@@ -15,30 +15,27 @@ namespace SixCloud.ViewModels
         public ObservableCollection<OfflineTask> ObservableCollection { get; } = new ObservableCollection<OfflineTask>();
         private readonly OfflineDownloader downloader = new OfflineDownloader();
 
-        private IEnumerator<OfflineTask[]> listEnumerator;
-        private IEnumerable<OfflineTask[]> GetListEnumerator()
+        private IAsyncEnumerator<OfflineTask[]> listEnumerator;
+        private async IAsyncEnumerable<OfflineTask[]> GetListEnumeratorAsync()
         {
             int currentPage = 0;
             int totalPage;
             do
             {
-#warning 迁移到.NET CORE WPF后，此处代码应该为异步调用
-                //var t = downloader.GetList(++currentPage);
-                //t.Wait();
-                GenericResult<OfflineTaskList> x = downloader.GetList(++currentPage).Result;
+                GenericResult<OfflineTaskList> x = await downloader.GetList(++currentPage);
                 totalPage = x.Result.TotalPage;
                 yield return x.Result.List;
             } while (currentPage < totalPage);
             yield break;
         }
 
-        public void LazyLoad()
+        public async void LazyLoad()
         {
             if (listEnumerator == null)
             {
-                listEnumerator = GetListEnumerator().GetEnumerator();
+                listEnumerator = GetListEnumeratorAsync().GetAsyncEnumerator();
             }
-            if (listEnumerator.MoveNext())
+            if (await listEnumerator.MoveNextAsync())
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -97,7 +94,7 @@ namespace SixCloud.ViewModels
             NewTaskCommand = new DependencyCommand(NewTask, DependencyCommand.AlwaysCan);
             CancelTaskCommand = new DependencyCommand(CancelTask, DependencyCommand.AlwaysCan);
             RefreshListCommand = new DependencyCommand(RefreshList, DependencyCommand.AlwaysCan);
-            //LazyLoad();
+            LazyLoad();
         }
     }
 
