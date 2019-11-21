@@ -20,21 +20,23 @@
         </ItemsPanelTemplate>
 
         <DataTemplate x:Key="FileCell">
-            <Grid MaxHeight="150" IsEnabled="{Binding Mode, Converter={StaticResource GridViewContextMenuAvailableConverter}, ElementName=userControl, Mode=OneTime}">
+            <Grid Height="150" IsEnabled="{Binding Mode, Converter={StaticResource GridViewContextMenuAvailableConverter}, ElementName=userControl, Mode=OneTime}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <controls:FontIcon Grid.Column="1" Icon="{Binding Icon}" IconSize="90" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
-                <TextBlock MaxWidth="100"
+                <controls:FontIcon Margin="5" Grid.Column="1" Icon="{Binding Icon}" IconSize="90" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                <TextBlock Width="100"
                            Text="{Binding Name, Converter={StaticResource TooLongStringConverter}, Mode=OneWay}"
-                           TextWrapping="Wrap"
-                           Grid.ColumnSpan="3" Grid.Row="1"
+                           TextWrapping="NoWrap"
+                           Grid.ColumnSpan="3"
+                           Grid.Row="1"
+                           TextAlignment="Center"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"/>
             </Grid>
