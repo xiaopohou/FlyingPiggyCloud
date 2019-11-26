@@ -238,23 +238,23 @@ namespace QingzhenyunApis.Methods
             return await PostAsync<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "/v2/preview/video",false);
         }
 
-        public async Task<GenericResult<PreviewImageInformation>> ImagePreview(string identity)
-        {
-            throw new NotImplementedException();
 #warning 这里的代码还没有写完
-            //while (string.IsNullOrWhiteSpace(Token))
-            //{
-            //    LoginView GetToken = new LoginView();
-            //    GetToken.ShowDialog();
-            //}
-            //Dictionary<string, string> data = new Dictionary<string, string>
-            //{
-            //    { "uuid", UUID },
-            //    { "token", Token }
-            //};
-            //GenericResult<PreviewImageInformation> x = Post<GenericResult<PreviewImageInformation>>(JsonConvert.SerializeObject(data), "v1/preview/image");
-            //Token = x.Token;
-            //return x;
-        }
+        //public async Task<GenericResult<PreviewImageInformation>> ImagePreview(string identity)
+        //{
+        //    throw new NotImplementedException();
+        //    //while (string.IsNullOrWhiteSpace(Token))
+        //    //{
+        //    //    LoginView GetToken = new LoginView();
+        //    //    GetToken.ShowDialog();
+        //    //}
+        //    //Dictionary<string, string> data = new Dictionary<string, string>
+        //    //{
+        //    //    { "uuid", UUID },
+        //    //    { "token", Token }
+        //    //};
+        //    //GenericResult<PreviewImageInformation> x = Post<GenericResult<PreviewImageInformation>>(JsonConvert.SerializeObject(data), "v1/preview/image");
+        //    //Token = x.Token;
+        //    //return x;
+        //}
     }
 }

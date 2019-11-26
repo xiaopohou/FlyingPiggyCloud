@@ -104,7 +104,7 @@ namespace SixCloud.ViewModels
         {
             var selectObject = (FileListItemViewModel)parameter;
             await GetFileListByUUID(selectObject.UUID);
-            LazyLoad();
+            await LazyLoad();
         }
 
         public FileGridViewModel()

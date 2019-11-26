@@ -69,7 +69,7 @@
                                 </StackPanel>
                                 <ProgressBar Height="Auto" Value="{Binding Progress, Mode=OneWay}" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center"/>
                                 <Controls:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
-                                <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     <TextBlock Text="暂停，等待中..." Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
                                     <TextBlock Text="{Binding Completed, Mode=OneWay}"/>
@@ -201,8 +201,8 @@
                             Style="{DynamicResource MaterialDesignFlatButton}"
                             VerticalAlignment="Center" Margin="5,0"
                             Command="MediaCommands.Play"
-                            CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
-                            CommandTarget="{Binding ElementName=DownloadingList}">
+                            CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
+                            CommandTarget="{Binding ElementName=UploadingList}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
                             <TextBlock Text="开始/暂停任务" HorizontalAlignment="Center"/>
@@ -212,8 +212,8 @@
                             Style="{DynamicResource MaterialDesignFlatButton}" 
                             VerticalAlignment="Center" Margin="5,0" 
                             Command="MediaCommands.Stop"
-                            CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
-                            CommandTarget="{Binding ElementName=DownloadingList}">
+                            CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
+                            CommandTarget="{Binding ElementName=UploadingList}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
                             <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
