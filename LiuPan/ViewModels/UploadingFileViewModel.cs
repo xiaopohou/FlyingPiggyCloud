@@ -1,10 +1,7 @@
-﻿using Exceptionless;
-using EzWcs;
+﻿using EzWcs;
 using EzWcs.Calculators;
-using Newtonsoft.Json;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Utils;
-using SixCloud.Controllers;
 using System;
 using System.IO;
 
@@ -17,7 +14,7 @@ namespace SixCloud.ViewModels
             TargetPath = targetPath;
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
-            var hash = ETag.ComputeEtag(filePath);
+            string hash = ETag.ComputeEtag(filePath);
             GenericResult<UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
             if (x.Result.HashCached)
             {
@@ -64,12 +61,12 @@ namespace SixCloud.ViewModels
             task.TaskOperate(UploadTaskStatus.Abort);
         }
 
-        protected override void Pause()
+        internal override void Pause()
         {
             task.TaskOperate(UploadTaskStatus.Pause);
         }
 
-        protected override void Start()
+        internal override void Start()
         {
             task.TaskOperate(UploadTaskStatus.Active);
         }

@@ -22,7 +22,7 @@ namespace SixCloud.Views.UserControls
 
         }
 
-        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void DownloadingTaskPause(object sender, ExecutedRoutedEventArgs e)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace SixCloud.Views.UserControls
             }
         }
 
-        private void CommandBinding_Executed_1(object sender, ExecutedRoutedEventArgs e)
+        private void DownloadingTaskCancel(object sender, ExecutedRoutedEventArgs e)
         {
             try
             {
@@ -104,5 +104,47 @@ namespace SixCloud.Views.UserControls
             LazyLoadEventHandler += LazyLoad;
         }
 
+        private void UploadingTaskPause(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                IList list = (IList)e.Parameter;
+                IEnumerable<UploadingTaskViewModel> downloadingTasks = list.Cast<UploadingTaskViewModel>();
+                foreach (UploadingTaskViewModel t in downloadingTasks)
+                {
+                    if (t.Status == UploadingTaskViewModel.UploadStatus.Pause)
+                    {
+                        t.Start();
+                    }
+                    else if (t.Status == UploadingTaskViewModel.UploadStatus.Running)
+                    {
+                        t.Pause();
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void UploadingTaskCancel(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                IList list = (IList)e.Parameter;
+                IEnumerable<UploadingTaskViewModel> downloadingTasks = list.Cast<UploadingTaskViewModel>();
+                foreach (var t in downloadingTasks)
+                {
+                    t.Stop(null);
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
     }
 }

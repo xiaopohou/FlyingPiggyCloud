@@ -80,8 +80,8 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.CommandBindings>
-                        <CommandBinding Command="MediaCommands.Play" Executed="CommandBinding_Executed"/>
-                        <CommandBinding Command="MediaCommands.Stop" Executed="CommandBinding_Executed_1"/>
+                        <CommandBinding Command="MediaCommands.Play" Executed="DownloadingTaskPause"/>
+                        <CommandBinding Command="MediaCommands.Stop" Executed="DownloadingTaskCancel"/>
                     </ListBox.CommandBindings>
                 </ListBox>
             </Grid>
@@ -254,8 +254,8 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.CommandBindings>
-                        <CommandBinding Command="Pause"/>
-                        <CommandBinding Command="Stop"/>
+                        <CommandBinding Command="MediaCommands.Play" Executed="UploadingTaskPause"/>
+                        <CommandBinding Command="MediaCommands.Stop" Executed="UploadingTaskCancel"/>
                     </ListBox.CommandBindings>
                 </ListBox>
             </Grid>

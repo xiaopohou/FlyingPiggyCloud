@@ -80,8 +80,8 @@ namespace SixCloud.ViewModels
             }
             OnPropertyChanged(nameof(Status));
         }
-        protected abstract void Pause();
-        protected abstract void Start();
+        internal abstract void Pause();
+        internal abstract void Start();
 
         public DependencyCommand StopCommand { get; protected set; }
         public abstract void Stop(object parameter);
