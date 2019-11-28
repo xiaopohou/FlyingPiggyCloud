@@ -15,7 +15,7 @@ using QingzhenyunApis.Methods;
 
 namespace SixCloud.Controllers
 {
-    internal class TasksLogger : IDownloadCache
+    internal class TasksLogger
     {
         private static readonly string rootDirectory;
         private static readonly string uploadingRecordsPath;
@@ -29,10 +29,7 @@ namespace SixCloud.Controllers
 
         public static ObservableCollection<UploadingTaskViewModel> Uploadings
         {
-            set
-            {
-                uploadingList = uploadingList ?? value;
-            }
+            set => uploadingList ??= value;
         }
         private static ObservableCollection<UploadingTaskViewModel> uploadingList;
 
@@ -40,7 +37,7 @@ namespace SixCloud.Controllers
         {
             set
             {
-                downloadingList = downloadingList ?? value;
+                downloadingList ??= value;
             }
         }
         private static ObservableCollection<DownloadingTaskViewModel> downloadingList;
@@ -109,11 +106,9 @@ namespace SixCloud.Controllers
         {
             if (downloadCache != null)
             {
-                using (StreamWriter writer = new StreamWriter(File.Create(downloadLoggerFilePath)))
-                {
-                    string s = JsonConvert.SerializeObject(downloadCache);
-                    writer.Write(s);
-                }
+                using StreamWriter writer = new StreamWriter(File.Create(downloadLoggerFilePath));
+                string s = JsonConvert.SerializeObject(downloadCache);
+                writer.Write(s);
 
             }
 

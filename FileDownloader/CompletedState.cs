@@ -1,10 +1,4 @@
-﻿//----------------------------------------------------------------------------------------------------
-// <copyright company="Avira Operations GmbH & Co. KG and its licensors">
-// © 2016 Avira Operations GmbH & Co. KG and its licensors.  All rights reserved.
-// </copyright>
-//----------------------------------------------------------------------------------------------------
-
-namespace FileDownloader
+﻿namespace FileDownloader
 {
     /// <summary>
     /// Downloaded completed states
@@ -26,4 +20,5 @@ namespace FileDownloader
         /// </summary>
         Failed
     }
+
 }

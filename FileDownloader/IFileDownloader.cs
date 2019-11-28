@@ -1,10 +1,4 @@
-﻿//----------------------------------------------------------------------------------------------------
-// <copyright company="Avira Operations GmbH & Co. KG and its licensors">
-// © 2016 Avira Operations GmbH & Co. KG and its licensors.  All rights reserved.
-// </copyright>
-//----------------------------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 
 namespace FileDownloader
 {
@@ -22,11 +16,6 @@ namespace FileDownloader
         /// Fired when download progress is changed.
         /// </summary>
         event EventHandler<DownloadFileProgressChangedArgs> DownloadProgressChanged;
-
-        /// <summary>
-        /// Gets or sets DNS Fallback Resolver instance. 
-        /// </summary>
-        IDnsFallbackResolver DnsFallbackResolver { get; set; }
 
         /// <summary>
         /// Gets or sets the delay between download attempts. 
