@@ -53,11 +53,11 @@ namespace SixCloud.Models
                     }
                     if (fileDownloader == null)
                     {
-                        fileDownloader = new FileDownloader.FileDownloader(Cache);
+                        fileDownloader = new FileDownloadTask();
                         fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
                         fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
                     }
-                    fileDownloader.DownloadFileAsyncPreserveServerFileName(downloadResource, Path);
+                    fileDownloader.DownloadFilePreserveServerFileName(downloadResource, Path);
                     Status = TaskStatus.Running;
                 }
             });

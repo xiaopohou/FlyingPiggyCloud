@@ -45,7 +45,7 @@ namespace SixCloud.ViewModels
         private void OnSignInSuccessful()
         {
             App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            Task.Run(() => TasksLogger.StartUpRecovery());
+            Task.Run(async() => await TasksLogger.StartUpRecovery());
             Application.Current.Exit += TasksLogger.ExitEventHandler;
             new TaskBarButton();
             ThreadPool.QueueUserWorkItem((obj) =>

@@ -370,6 +370,10 @@
       <Project>{763a07ac-1da1-44a2-873e-d72de4b73e2d}</Project>
       <Name>EzWcs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FileDownloader\FileDownloader.csproj">
+      <Project>{3B548A14-FCDE-4D79-B286-29AF825A91F6}</Project>
+      <Name>FileDownloader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QingzhenyunApis\QingzhenyunApis.csproj">
       <Project>{860caaac-0346-47eb-87d4-d3019570a10c}</Project>
       <Name>QingzhenyunApis</Name>
