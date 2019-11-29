@@ -20,10 +20,6 @@ namespace SixCloud.Models
 
         private IFileDownloader fileDownloader;
 
-        private readonly Uri downloadResource;
-
-        public string DownloadAddress => downloadResource.ToString();
-
         public double DownloadProgress => fileDownloader.BytesReceived * 100 / fileDownloader.TotalBytesToReceive;
 
         public string Completed => Calculators.SizeCalculator(fileDownloader.BytesReceived);
@@ -36,9 +32,9 @@ namespace SixCloud.Models
 
         public string CurrentFileFullPath => fileDownloader.LocalFileName;
 
-        public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
+        //public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
 
-        public event EventHandler<DownloadFileProgressChangedArgs> DownloadFileProgressChanged;
+        //public event EventHandler<DownloadFileProgressChangedArgs> DownloadFileProgressChanged;
 
         public async Task Start()
         {
@@ -76,21 +72,21 @@ namespace SixCloud.Models
 
         public void Stop()
         {
-            DownloadFileCompleted?.Invoke(this, null);
+            //DownloadFileCompleted?.Invoke(this, null);
             lock (statusSyncRoot)
             {
                 fileDownloader?.Cancel();
             }
         }
 
-        public DownloadTask(string storagePath, string name,DownloadUriInvalideEventHandler getDownloadUri)
+        public DownloadTask(string storagePath, string name,DownloadUriInvalideEventHandler getDownloadUri,EventHandler<DownloadFileCompletedArgs> downloadFileCompleted,EventHandler<DownloadFileProgressChangedArgs> downloadFileProgressChanged)
         {
             Path = storagePath;
             Name = name;
 
             fileDownloader = new FileDownloadTask(Path, getDownloadUri);
-            fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
-            fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
+            fileDownloader.DownloadFileCompleted += downloadFileCompleted;
+            fileDownloader.DownloadProgressChanged += downloadFileProgressChanged;
 
         }
     }

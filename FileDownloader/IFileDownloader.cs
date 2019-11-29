@@ -69,10 +69,13 @@ namespace FileDownloader
                 if (readCount <= 0)
                 {
                     stream.Close();
+                    DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
                     yield break;
                 }
                 else
                 {
+                    BytesReceived += readCount;
+                    DownloadProgressChanged?.Invoke(this, new DownloadFileProgressChangedArgs((int)(TotalBytesToReceive == 0 ? 0 : BytesReceived / TotalBytesToReceive), BytesReceived, TotalBytesToReceive));
                     yield return readCount;
                 }
             }
@@ -82,7 +85,7 @@ namespace FileDownloader
         {
             if (downloadEnumerator.MoveNext())
             {
-                using (var targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append))
+                using (var targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write))
                 {
                     targetFile.Write(binaryBuffer, 0, downloadEnumerator.Current);
                     targetFile.Flush();
@@ -133,17 +136,19 @@ namespace FileDownloader
             var totalBytes = Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1];
             TotalBytesToReceive = int.Parse(totalBytes);
             downloadEnumerator = CreateBlockEnumerator(binaryBuffer, result.GetResponseStream()).GetEnumerator();
-            //fileName = Guid.NewGuid().ToString();
+#warning 尚未实现获取文件名功能
+            fileName = Guid.NewGuid().ToString();
             //fileName = fileName ?? new ContentDisposition(result.Headers["Content-Disposition"]).FileName;
-            //while (MoveNext())
-            //{
+            while (MoveNext())
+            {
 
-            //}
+            }
         }
 
         public FileDownloadTask(string destinationDirectory, DownloadUriInvalideEventHandler getDownloadUri)
         {
             localPath = destinationDirectory;
+            Directory.CreateDirectory(localPath);
             flushUri = getDownloadUri;
         }
 

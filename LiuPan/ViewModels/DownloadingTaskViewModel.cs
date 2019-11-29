@@ -24,8 +24,6 @@ namespace SixCloud.ViewModels
 
         public string Completed => downloadTask.Completed;
 
-        public string DownloadAddress => downloadTask.DownloadAddress;
-
         public string TargetUUID { get; private set; }
 
         public string SavedLocalPath { get; private set; }
@@ -64,21 +62,19 @@ namespace SixCloud.ViewModels
             downloadTask = new DownloadTask(localPath, name, () =>
              {
                  return new Uri(fs.GetDetailsByUUID(targetUUID).Result.Result.DownloadAddress);
+             }, (sender, e) =>
+             {
+                 if (e.State == FileDownloader.CompletedState.Succeeded)
+                 {
+                     DownloadCompleted?.Invoke(this, new EventArgs());
+                 }
+             },(sender, e) =>
+             {
+                 OnPropertyChanged(nameof(Completed));
+                 OnPropertyChanged(nameof(Total));
+                 OnPropertyChanged(nameof(Progress));
              });
             //TasksLogger.AddRecord(downloadTask);
-            downloadTask.DownloadFileProgressChanged += (sender, e) =>
-            {
-                OnPropertyChanged(nameof(Completed));
-                OnPropertyChanged(nameof(Total));
-                OnPropertyChanged(nameof(Progress));
-            };
-            downloadTask.DownloadFileCompleted += (sender, e) =>
-            {
-                if (e.State == FileDownloader.CompletedState.Succeeded)
-                {
-                    DownloadCompleted?.Invoke(this, new EventArgs());
-                }
-            };
         }
 
     }
