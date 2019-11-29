@@ -64,8 +64,7 @@ namespace SixCloud.Controllers
                     {
                         foreach (DownloadTaskRecord record in list)
                         {
-                            var result = await fs.GetDetailsByUUID(record.TargetUUID);
-                            DownloadingListViewModel.NewTask(record.TargetUUID, result.Result.DownloadAddress, record.LocalPath, record.Name);
+                            DownloadingListViewModel.NewTask(record.TargetUUID, record.LocalPath, record.Name);
                         }
                     }
                 }
@@ -82,31 +81,10 @@ namespace SixCloud.Controllers
             Directory.CreateDirectory(rootDirectory);
             uploadingRecordsPath = rootDirectory + "/UploadRecord.json";
             downloadingRecordsPath = rootDirectory + "/DownloadRecord.json";
-
-            //#region downloadLogger
-            //if (File.Exists(downloadLoggerFilePath))
-            //{
-            //    string s = File.ReadAllText(downloadLoggerFilePath);
-            //    downloadCache = JsonConvert.DeserializeObject<Dictionary<string, string>>(s) ?? new Dictionary<string, string>();
-            //}
-            //else
-            //{
-            //    File.Create(downloadLoggerFilePath).Close();
-            //    downloadCache = new Dictionary<string, string>();
-            //}
-            //#endregion
         }
 
         public static void ExitEventHandler(object sender, EventArgs e)
         {
-            //if (downloadCache != null)
-            //{
-            //    using StreamWriter writer = new StreamWriter(File.Create(downloadLoggerFilePath));
-            //    string s = JsonConvert.SerializeObject(downloadCache);
-            //    writer.Write(s);
-
-            //}
-
             using (StreamWriter writer = new StreamWriter(File.Create(downloadingRecordsPath)))
             {
                 IEnumerable<DownloadTaskRecord> taskList = from record in downloadingList
@@ -136,59 +114,6 @@ namespace SixCloud.Controllers
             }
         }
 
-
-        //#region 这三个方法用于FileDownloader下载任务恢复
-        //public void Add(Uri uri, string path, WebHeaderCollection headers)
-        //{
-        //    lock (downloadCache)
-        //    {
-        //        downloadCache[uri.ToString()] = path;
-        //    }
-        //}
-
-        //public string Get(Uri uri, WebHeaderCollection headers)
-        //{
-        //    lock (downloadCache)
-        //    {
-        //        if (!downloadCache.TryGetValue(uri.ToString(), out string s))
-        //        {
-        //            s = null;
-        //        }
-        //        return s;
-        //    }
-        //}
-
-        //public void Invalidate(Uri uri)
-        //{
-        //    lock (downloadCache)
-        //    {
-        //        downloadCache.Remove(uri.ToString());
-        //    }
-        //}
-        //#endregion
-
-#if Record
-        private class Record
-        {
-            public string DownloadAddress { get; set; }
-
-            public string Path { get; set; }
-
-            public string Name { get; set; }
-
-            public Record(DownloadTask task)
-            {
-                DownloadAddress = task.DownloadAddress;
-                Path = task.Path;
-                Name = task.Name;
-            }
-
-            public Record()
-            {
-
-            }
-        }
-#endif
         private class DownloadTaskRecord
         {
             public string LocalPath { get; set; }

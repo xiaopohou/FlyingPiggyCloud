@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Mime;
+using System.Text.RegularExpressions;
 
 namespace FileDownloader
 {
     /// <summary>
     /// FileDownloader interface
     /// </summary>
-    public interface IFileDownloader : IDisposable
+    public interface IFileDownloader
     {
         /// <summary>
         /// Fired when download is finished, even if it's failed.
@@ -17,21 +22,6 @@ namespace FileDownloader
         /// </summary>
         event EventHandler<DownloadFileProgressChangedArgs> DownloadProgressChanged;
 
-        ///// <summary>
-        ///// Gets or sets the delay between download attempts. 
-        ///// </summary>
-        //TimeSpan DelayBetweenAttempts { get; set; }
-
-        ///// <summary>
-        ///// Gets or sets the maximum waiting timeout for pending request to be finished. Default is 15 seconds.
-        ///// </summary>
-        //TimeSpan SafeWaitTimeout { get; set; }
-
-        ///// <summary>
-        ///// Gets or sets the maximum number of download attempt.
-        ///// </summary>
-        //int MaxAttempts { get; set; }
-
         /// <summary>
         /// Gets the total bytes received so far
         /// </summary>
@@ -42,99 +32,126 @@ namespace FileDownloader
         /// </summary>
         long TotalBytesToReceive { get; }
 
-        /// <summary>
-        /// Start async download of source to destinationPath. destinationPath should be full path with file name.
-        /// </summary>
-        /// <param name="source">Source URI</param>
-        /// <param name="destinationPath">Destination path</param>
-        void DownloadFile(Uri source, string destinationPath);
-
-        /// <summary>
-        /// Start download of source file to downloadDirectory. File would be saved with filename taken from server 
-        /// </summary>
-        /// <param name="source">Source URI</param>
-        /// <param name="destinationDirectory">Destination directory</param>
-        void DownloadFilePreserveServerFileName(Uri source, string destinationDirectory);
+        CompletedState CompletedState { get; }
 
         /// <summary>
         /// Cancel current download
         /// </summary>
-        void CancelDownloadAsync();
+        void Cancel();
 
-        string GetLocalFileName();
+        void Start();
+
+        string LocalFileName { get; }
 
         void Pause();
     }
 
     public class FileDownloadTask : IFileDownloader
     {
-        public long BytesReceived => throw new NotImplementedException();
+        //缓冲区128kb
+        private const int bufferSize = 1024 * 128;
+        private const int speedLimit = 0;
 
-        public long TotalBytesToReceive => throw new NotImplementedException();
+        private string fileName;
+
+        //private readonly Uri sourceUri;
+        private readonly byte[] binaryBuffer = new byte[bufferSize];
+        private IEnumerator<int> downloadEnumerator;
+        private readonly string localPath;
+        private readonly DownloadUriInvalideEventHandler flushUri;
+
+        internal IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
+        {
+            int readCount;
+            while (true)
+            {
+                readCount = stream.Read(bytes, 0, bytes.Length);
+                if (readCount <= 0)
+                {
+                    stream.Close();
+                    yield break;
+                }
+                else
+                {
+                    yield return readCount;
+                }
+            }
+        }
+
+        internal bool MoveNext()
+        {
+            if (downloadEnumerator.MoveNext())
+            {
+                using (var targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append))
+                {
+                    targetFile.Write(binaryBuffer, 0, downloadEnumerator.Current);
+                    targetFile.Flush();
+                }
+                return true;
+            }
+            else
+            {
+                File.Move(LocalFileName + ".ezdlpart", LocalFileName);
+                return false;
+            }
+        }
+
+        public long BytesReceived { get; private set; } = 0;
+
+        public long TotalBytesToReceive { get; private set; }
+
+        public CompletedState CompletedState { get; protected set; }
 
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
         public event EventHandler<DownloadFileProgressChangedArgs> DownloadProgressChanged;
 
-        public void CancelDownloadAsync()
+
+        public void Cancel()
         {
             throw new NotImplementedException();
         }
-
-        public void DownloadFile(Uri source, string destinationPath)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DownloadFilePreserveServerFileName(Uri source, string destinationDirectory)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetLocalFileName()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Pause()
         {
             throw new NotImplementedException();
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false; // 要检测冗余调用
-
-        protected virtual void Dispose(bool disposing)
+        public void Start()
         {
-            if (!disposedValue)
+            Uri uri = flushUri();
+            HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
+            request.AddRange(BytesReceived);
+            HttpWebResponse result;
+            try
             {
-                if (disposing)
-                {
-                    // TODO: 释放托管状态(托管对象)。
-                }
-
-                // TODO: 释放未托管的资源(未托管的对象)并在以下内容中替代终结器。
-                // TODO: 将大型字段设置为 null。
-
-                disposedValue = true;
+                result = request.GetResponse() as HttpWebResponse;
             }
+            catch (WebException)
+            {
+                return;
+            }
+
+            var totalBytes = Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1];
+            TotalBytesToReceive = int.Parse(totalBytes);
+            downloadEnumerator = CreateBlockEnumerator(binaryBuffer, result.GetResponseStream()).GetEnumerator();
+            //fileName = Guid.NewGuid().ToString();
+            //fileName = fileName ?? new ContentDisposition(result.Headers["Content-Disposition"]).FileName;
+            //while (MoveNext())
+            //{
+
+            //}
         }
 
-        // TODO: 仅当以上 Dispose(bool disposing) 拥有用于释放未托管资源的代码时才替代终结器。
-        // ~FileDownloadTask()
-        // {
-        //   // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
-        //   Dispose(false);
-        // }
-
-        // 添加此代码以正确实现可处置模式。
-        public void Dispose()
+        public FileDownloadTask(string destinationDirectory, DownloadUriInvalideEventHandler getDownloadUri)
         {
-            // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
-            Dispose(true);
-            // TODO: 如果在以上内容中替代了终结器，则取消注释以下行。
-            // GC.SuppressFinalize(this);
+            localPath = destinationDirectory;
+            flushUri = getDownloadUri;
         }
-        #endregion
 
+        /// <summary>
+        /// 获取下载文件的本地路径含文件名
+        /// </summary>
+        public string LocalFileName => Path.Combine(localPath, fileName);
     }
+
+    public delegate Uri DownloadUriInvalideEventHandler();
 }

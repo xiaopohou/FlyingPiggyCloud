@@ -233,8 +233,7 @@ namespace SixCloud.ViewModels
                         {
                             if (!child.Directory)
                             {
-                                GenericResult<FileMetaData> x = await fileSystem.GetDetailsByUUID(child.UUID);
-                                DownloadingListViewModel.NewTask(child.UUID, x.Result.DownloadAddress, localParentPath, child.Name);
+                                DownloadingListViewModel.NewTask(child.UUID, localParentPath, child.Name);
                             }
                             else
                             {
@@ -277,11 +276,7 @@ namespace SixCloud.ViewModels
                 }
                 else
                 {
-                    GenericResult<FileMetaData> x = await fileSystem.GetDetailsByUUID(UUID);
-                    if (!string.IsNullOrWhiteSpace(x.Result.DownloadAddress))
-                    {
-                        DownloadingListViewModel.NewTask(UUID, x.Result.DownloadAddress, downloadPathDialog.SelectedPath, Name);
-                    }
+                    DownloadingListViewModel.NewTask(UUID, downloadPathDialog.SelectedPath, Name);
                 }
             }
         }

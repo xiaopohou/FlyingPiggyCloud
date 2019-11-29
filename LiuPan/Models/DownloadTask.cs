@@ -19,7 +19,6 @@ namespace SixCloud.Models
         private readonly object statusSyncRoot = new object();
 
         private IFileDownloader fileDownloader;
-        private static readonly TasksLogger Cache = new TasksLogger();
 
         private readonly Uri downloadResource;
 
@@ -35,7 +34,7 @@ namespace SixCloud.Models
 
         public string Path { get; }
 
-        public string CurrentFileFullPath => fileDownloader.GetLocalFileName();
+        public string CurrentFileFullPath => fileDownloader.LocalFileName;
 
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
 
@@ -51,13 +50,7 @@ namespace SixCloud.Models
                     {
                         return;
                     }
-                    if (fileDownloader == null)
-                    {
-                        fileDownloader = new FileDownloadTask();
-                        fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
-                        fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
-                    }
-                    fileDownloader.DownloadFilePreserveServerFileName(downloadResource, Path);
+                    fileDownloader.Start();
                     Status = TaskStatus.Running;
                 }
             });
@@ -86,15 +79,19 @@ namespace SixCloud.Models
             DownloadFileCompleted?.Invoke(this, null);
             lock (statusSyncRoot)
             {
-                fileDownloader?.CancelDownloadAsync();
+                fileDownloader?.Cancel();
             }
         }
 
-        public DownloadTask(string downloadAddress, string storagePath, string name)
+        public DownloadTask(string storagePath, string name,DownloadUriInvalideEventHandler getDownloadUri)
         {
-            downloadResource = new Uri(downloadAddress);
             Path = storagePath;
             Name = name;
+
+            fileDownloader = new FileDownloadTask(Path, getDownloadUri);
+            fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
+            fileDownloader.DownloadProgressChanged += DownloadFileProgressChanged;
+
         }
     }
 }

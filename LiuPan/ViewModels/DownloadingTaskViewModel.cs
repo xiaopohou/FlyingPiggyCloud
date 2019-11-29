@@ -1,4 +1,5 @@
-﻿using SixCloud.Controllers;
+﻿using QingzhenyunApis.Methods;
+using SixCloud.Controllers;
 using SixCloud.Models;
 using System;
 using System.Globalization;
@@ -11,6 +12,7 @@ namespace SixCloud.ViewModels
     internal class DownloadingTaskViewModel : ViewModelBase
     {
         //private readonly DownloadingListViewModel ParentContainer;
+        private static readonly FileSystem fs = new FileSystem();
 
         private readonly DownloadTask downloadTask;
 
@@ -55,11 +57,14 @@ namespace SixCloud.ViewModels
 
         public event EventHandler<EventArgs> DownloadCompleted;
 
-        public DownloadingTaskViewModel(string targetUUID, string downloadAddress, string localPath, string name)
+        public DownloadingTaskViewModel(string targetUUID, string localPath, string name)
         {
             TargetUUID = targetUUID;
             SavedLocalPath = localPath;
-            downloadTask = new DownloadTask(downloadAddress, localPath, name);
+            downloadTask = new DownloadTask(localPath, name, () =>
+             {
+                 return new Uri(fs.GetDetailsByUUID(targetUUID).Result.Result.DownloadAddress);
+             });
             //TasksLogger.AddRecord(downloadTask);
             downloadTask.DownloadFileProgressChanged += (sender, e) =>
             {

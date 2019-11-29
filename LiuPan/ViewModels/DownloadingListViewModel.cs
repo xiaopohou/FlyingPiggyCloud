@@ -18,9 +18,9 @@ namespace SixCloud.ViewModels
         /// <param name="localPath">本地路径</param>
         /// <param name="name">文件名</param>
         /// <param name="isAutoStart">自动开始</param>
-        public static void NewTask(string targetUUID, string downloadAddress, string localPath, string name, bool isAutoStart = true)
+        public static void NewTask(string targetUUID, string localPath, string name, bool isAutoStart = true)
         {
-            DownloadingTaskViewModel task = new DownloadingTaskViewModel(targetUUID, downloadAddress, localPath, name);
+            DownloadingTaskViewModel task = new DownloadingTaskViewModel(targetUUID, localPath, name);
             //当下载任务结束时从列表中移除任务信息
             task.DownloadCompleted += (sender, e) =>
             {
