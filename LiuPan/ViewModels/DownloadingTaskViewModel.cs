@@ -11,7 +11,6 @@ namespace SixCloud.ViewModels
 {
     internal class DownloadingTaskViewModel : ViewModelBase
     {
-        //private readonly DownloadingListViewModel ParentContainer;
         private static readonly FileSystem fs = new FileSystem();
 
         private readonly DownloadTask downloadTask;
@@ -34,9 +33,9 @@ namespace SixCloud.ViewModels
 
         public DownloadTask.TaskStatus Status => downloadTask.Status;
 
-        public async void Start()
+        public void Start()
         {
-            await downloadTask.Start();
+            downloadTask.Start();
             OnPropertyChanged(nameof(Status));
         }
 
@@ -74,7 +73,6 @@ namespace SixCloud.ViewModels
                  OnPropertyChanged(nameof(Total));
                  OnPropertyChanged(nameof(Progress));
              });
-            //TasksLogger.AddRecord(downloadTask);
         }
 
     }

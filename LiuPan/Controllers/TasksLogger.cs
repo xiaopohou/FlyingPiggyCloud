@@ -93,7 +93,7 @@ namespace SixCloud.Controllers
                                                            {
                                                                LocalPath = record.SavedLocalPath,
                                                                TargetUUID = record.TargetUUID,
-                                                               Name = record.Name
+                                                               Name = record.Name,
                                                            };
                 string s = JsonConvert.SerializeObject(taskList);
                 writer.Write(s);
@@ -119,9 +119,9 @@ namespace SixCloud.Controllers
 
             public string TargetUUID { get; set; }
 
-            public string DownloadAddress { get; set; }
-
             public string Name { get; set; }
+
+            public long BytesReceived { get; set; }
 
         }
 

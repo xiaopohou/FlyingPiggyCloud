@@ -1,6 +1,5 @@
 ﻿using FileDownloader;
 using QingzhenyunApis.Utils;
-using SixCloud.Controllers;
 using System;
 using System.Threading.Tasks;
 
@@ -20,7 +19,7 @@ namespace SixCloud.Models
 
         private IFileDownloader fileDownloader;
 
-        public double DownloadProgress => fileDownloader.BytesReceived * 100 / fileDownloader.TotalBytesToReceive;
+        public double DownloadProgress => fileDownloader.TotalBytesToReceive == 0 ? 0 : fileDownloader.BytesReceived * 100 / fileDownloader.TotalBytesToReceive;
 
         public string Completed => Calculators.SizeCalculator(fileDownloader.BytesReceived);
 
@@ -36,19 +35,19 @@ namespace SixCloud.Models
 
         //public event EventHandler<DownloadFileProgressChangedArgs> DownloadFileProgressChanged;
 
-        public async Task Start()
+        public async void Start()
         {
+            lock (statusSyncRoot)
+            {
+                if (Status != TaskStatus.Pause)
+                {
+                    return;
+                }
+                Status = TaskStatus.Running;
+            }
             await Task.Run(() =>
             {
-                lock (statusSyncRoot)
-                {
-                    if (Status != TaskStatus.Pause)
-                    {
-                        return;
-                    }
-                    fileDownloader.Start();
-                    Status = TaskStatus.Running;
-                }
+                fileDownloader.Start();
             });
         }
 
@@ -63,8 +62,6 @@ namespace SixCloud.Models
                         return;
                     }
                     fileDownloader.Pause();
-                    fileDownloader = null;
-                    GC.Collect();
                     Status = TaskStatus.Pause;
                 }
             });
@@ -79,12 +76,12 @@ namespace SixCloud.Models
             }
         }
 
-        public DownloadTask(string storagePath, string name,DownloadUriInvalideEventHandler getDownloadUri,EventHandler<DownloadFileCompletedArgs> downloadFileCompleted,EventHandler<DownloadFileProgressChangedArgs> downloadFileProgressChanged)
+        public DownloadTask(string storagePath, string name, DownloadUriInvalideEventHandler getDownloadUri, EventHandler<DownloadFileCompletedArgs> downloadFileCompleted, EventHandler<DownloadFileProgressChangedArgs> downloadFileProgressChanged)
         {
             Path = storagePath;
             Name = name;
 
-            fileDownloader = new FileDownloadTask(Path, getDownloadUri);
+            fileDownloader = new FileDownloadTask(Path, getDownloadUri, name);
             fileDownloader.DownloadFileCompleted += downloadFileCompleted;
             fileDownloader.DownloadProgressChanged += downloadFileProgressChanged;
 
