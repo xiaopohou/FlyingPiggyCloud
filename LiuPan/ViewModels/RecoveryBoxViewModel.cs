@@ -5,6 +5,7 @@ using SixCloud.Models;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace SixCloud.ViewModels
@@ -18,14 +19,14 @@ namespace SixCloud.ViewModels
             EmptyCommand = new DependencyCommand(Empty, DependencyCommand.AlwaysCan);
             DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
             RecoveryCommand = new DependencyCommand(Recovery, DependencyCommand.AlwaysCan);
-            recoveryBoxItemsEnumerator = LoadList().GetEnumerator();
+            recoveryBoxItemsEnumerator = LoadList().GetAsyncEnumerator();
         }
 
         #region Empty
         public DependencyCommand EmptyCommand { get; private set; }
-        private void Empty(object parameter)
+        private async void Empty(object parameter)
         {
-            recoveryBox.Empty();
+            await recoveryBox.Empty();
             App.Current.Dispatcher.Invoke(() => Refresh());
         }
         #endregion
@@ -33,7 +34,7 @@ namespace SixCloud.ViewModels
         #region Delete
         public DependencyCommand DeleteCommand { get; private set; }
 
-        private void Delete(object parameter)
+        private async void Delete(object parameter)
         {
             if (parameter is IList selectedItems)
             {
@@ -42,7 +43,7 @@ namespace SixCloud.ViewModels
                 {
                     list.Add(a.Identity);
                 }
-                recoveryBox.Delete(list.ToArray());
+                await recoveryBox.Delete(list.ToArray());
                 Refresh();
             }
         }
@@ -51,7 +52,7 @@ namespace SixCloud.ViewModels
         #region Recovery
         public DependencyCommand RecoveryCommand { get; private set; }
 
-        private void Recovery(object parameter)
+        private async void Recovery(object parameter)
         {
             if (parameter is IList selectedItems)
             {
@@ -60,7 +61,7 @@ namespace SixCloud.ViewModels
                 {
                     list.Add(a.Identity);
                 }
-                recoveryBox.Restore(list.ToArray());
+                await recoveryBox.Restore(list.ToArray());
                 Refresh();
             }
         }
@@ -69,21 +70,21 @@ namespace SixCloud.ViewModels
         public ObservableCollection<RecoveryBoxItem> RecoveryList { get; private set; } = new ObservableCollection<RecoveryBoxItem>();
 
         private int currentPage = 0;
-        private IEnumerator<RecoveryBoxItem[]> recoveryBoxItemsEnumerator;
-        private IEnumerable<RecoveryBoxItem[]> LoadList()
+        private IAsyncEnumerator<RecoveryBoxItem[]> recoveryBoxItemsEnumerator;
+        private async IAsyncEnumerable<RecoveryBoxItem[]> LoadList()
         {
             int totalPage;
             do
             {
-                GenericResult<RecoveryBoxPage> x = recoveryBox.GetList(++currentPage).Result;
+                GenericResult<RecoveryBoxPage> x = await recoveryBox.GetList(++currentPage);
                 totalPage = x.Result.TotalPage;
                 yield return x.Result.List;
             } while (currentPage < totalPage);
             yield break;
         }
-        public void LazyLoad()
+        public async Task LazyLoad()
         {
-            if (recoveryBoxItemsEnumerator.MoveNext())
+            if (await recoveryBoxItemsEnumerator.MoveNextAsync())
             {
                 RecoveryBoxItem[] x = recoveryBoxItemsEnumerator.Current;
                 foreach (RecoveryBoxItem a in x)
@@ -98,9 +99,9 @@ namespace SixCloud.ViewModels
             lock(RecoveryList)
             {
                 currentPage = 0;
-                recoveryBoxItemsEnumerator = LoadList().GetEnumerator();
+                recoveryBoxItemsEnumerator = LoadList().GetAsyncEnumerator();
                 RecoveryList.Clear();
-                LazyLoad();
+                LazyLoad().Wait();
             }
         }
 
