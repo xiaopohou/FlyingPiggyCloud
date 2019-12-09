@@ -8,20 +8,13 @@ namespace FileDownloader
 {
     public delegate Uri DownloadUriInvalideEventHandler();
 
-    public class FileDownloadTask : IFileDownloader
+    public class FileDownloadTask : IFileDownloader, ISplittableTask
     {
-        //缓冲区128kb
-        private const int bufferSize = 1024 * 128;
-        private const int speedLimit = 0;
-
-        private bool isRunning = false;
         private IEnumerator<int> downloadEnumerator;
         private readonly string fileName;
-        private readonly byte[] binaryBuffer = new byte[bufferSize];
         private readonly string localPath;
         private readonly DownloadUriInvalideEventHandler flushUri;
-
-        internal IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
+        private IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
         {
             int readCount;
             while (true)
@@ -41,63 +34,8 @@ namespace FileDownloader
             }
         }
 
-        internal bool MoveNext()
+        void ISplittableTask.AchieveDataStream(byte[] binaryBuffer)
         {
-            if (downloadEnumerator.MoveNext())
-            {
-                using (FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write))
-                {
-                    targetFile.Write(binaryBuffer, 0, downloadEnumerator.Current);
-                    targetFile.Flush();
-                }
-                return true;
-            }
-            else
-            {
-                File.Move(LocalFileName + ".ezdlpart", LocalFileName);
-                DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
-                return false;
-            }
-        }
-
-        public long BytesReceived { get; private set; }
-
-        public long TotalBytesToReceive { get; private set; }
-
-        //public CompletedState CompletedState { get; protected set; }
-
-        public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
-        public event EventHandler<DownloadFileProgressChangedArgs> DownloadProgressChanged;
-
-        /// <summary>
-        /// 取消下载
-        /// </summary>
-        public void Cancel()
-        {
-            isRunning = false;
-        }
-
-        /// <summary>
-        /// 暂停下载
-        /// </summary>
-        public void Pause()
-        {
-            isRunning = false;
-        }
-
-        /// <summary>
-        /// 开始下载
-        /// </summary>
-        public void Start()
-        {
-            if (isRunning)
-            {
-                return;
-            }
-
-            isRunning = true;
-
-            //暂不支持重启后的断点续传
             if (File.Exists(LocalFileName + ".ezdlpart") && new FileInfo(LocalFileName + ".ezdlpart").Length != BytesReceived)
             {
                 File.Delete(LocalFileName + ".ezdlpart");
@@ -119,10 +57,62 @@ namespace FileDownloader
             string totalBytes = Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1];
             TotalBytesToReceive = int.Parse(totalBytes);
             downloadEnumerator = CreateBlockEnumerator(binaryBuffer, result.GetResponseStream()).GetEnumerator();
-            while (MoveNext() && isRunning)
+        }
+        bool ISplittableTask.MoveNext(byte[] binaryBuffer)
+        {
+            if (downloadEnumerator.MoveNext())
             {
-
+                using (FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write))
+                {
+                    targetFile.Write(binaryBuffer, 0, downloadEnumerator.Current);
+                    targetFile.Flush();
+                }
+                return true;
             }
+            else
+            {
+                File.Move(LocalFileName + ".ezdlpart", LocalFileName);
+                DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
+                return false;
+            }
+        }
+
+        public string LocalFileName => Path.Combine(localPath, fileName);
+        public bool IsRunning { get; private set; } = false;
+        public long BytesReceived { get; private set; }
+        public long TotalBytesToReceive { get; private set; }
+
+        public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
+        public event EventHandler<DownloadFileProgressChangedArgs> DownloadProgressChanged;
+
+
+        /// <summary>
+        /// 取消下载
+        /// </summary>
+        public void Cancel()
+        {
+            IsRunning = false;
+        }
+
+        /// <summary>
+        /// 暂停下载
+        /// </summary>
+        public void Pause()
+        {
+            IsRunning = false;
+        }
+
+        /// <summary>
+        /// 开始下载
+        /// </summary>
+        public void Start()
+        {
+            if (IsRunning)
+            {
+                return;
+            }
+
+            IsRunning = true;
         }
 
         public FileDownloadTask(string destinationDirectory, DownloadUriInvalideEventHandler getDownloadUri, string name, long bytesReceived = 0)
@@ -133,10 +123,5 @@ namespace FileDownloader
             fileName = name;
             BytesReceived = bytesReceived;
         }
-
-        /// <summary>
-        /// 获取下载文件的本地路径含文件名
-        /// </summary>
-        public string LocalFileName => Path.Combine(localPath, fileName);
     }
 }
