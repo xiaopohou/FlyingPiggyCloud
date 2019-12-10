@@ -81,6 +81,9 @@ namespace FileDownloader
         public bool IsRunning { get; private set; } = false;
         public long BytesReceived { get; private set; }
         public long TotalBytesToReceive { get; private set; }
+        DownloadPorter ISplittableTask.CurrentWorker { get; set; }
+
+        bool ISplittableTask.IsRunning => throw new NotImplementedException();
 
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
         public event EventHandler<DownloadFileProgressChangedArgs> DownloadProgressChanged;
@@ -107,6 +110,7 @@ namespace FileDownloader
         /// </summary>
         public void Start()
         {
+            //DownloadFactory.Add(this);
             if (IsRunning)
             {
                 return;
@@ -122,6 +126,7 @@ namespace FileDownloader
             flushUri = getDownloadUri;
             fileName = name;
             BytesReceived = bytesReceived;
+
         }
     }
 }
