@@ -76,7 +76,7 @@ namespace SixCloud.Models
             }
         }
 
-        public DownloadTask(string storagePath, string name, DownloadUriInvalideEventHandler getDownloadUri, EventHandler<DownloadFileCompletedArgs> downloadFileCompleted, EventHandler<DownloadFileProgressChangedArgs> downloadFileProgressChanged)
+        public DownloadTask(string storagePath, string name, RefreshUri getDownloadUri, EventHandler<DownloadFileCompletedArgs> downloadFileCompleted, EventHandler<DownloadFileProgressChangedArgs> downloadFileProgressChanged)
         {
             Path = storagePath;
             Name = name;

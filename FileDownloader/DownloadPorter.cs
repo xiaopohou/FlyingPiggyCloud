@@ -13,14 +13,14 @@ namespace FileDownloader
 
         private readonly byte[] binaryBuffer = new byte[bufferSize];
 
-        internal bool Idle { get; private set; } = false;
+        internal bool Idle { get; private set; } = true;
 
         internal void NextJob(ISplittableTask task)
         {
             try
             {
                 task.CurrentWorker = this;
-                Idle = true;
+                Idle = false;
                 task.AchieveDataStream(binaryBuffer);
                 while (task.IsRunning && task.MoveNext(binaryBuffer))
                 {
@@ -36,7 +36,7 @@ namespace FileDownloader
             finally
             {
                 task.CurrentWorker = null;
-                Idle = false;
+                Idle = true;
             }
 
         }
@@ -58,7 +58,7 @@ namespace FileDownloader
     {
         private static readonly List<ISplittableTask> tasks = new List<ISplittableTask>(8);
 
-        private static readonly DownloadPorter[] porters = new DownloadPorter[5];
+        private static readonly DownloadPorter[] porters = new DownloadPorter[] { new DownloadPorter(), new DownloadPorter(), new DownloadPorter(), new DownloadPorter(), new DownloadPorter() };
 
         private static void DistributionTask()
         {

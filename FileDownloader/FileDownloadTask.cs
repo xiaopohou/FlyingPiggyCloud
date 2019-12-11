@@ -6,14 +6,26 @@ using System.Text.RegularExpressions;
 
 namespace FileDownloader
 {
-    public delegate Uri DownloadUriInvalideEventHandler();
+    public delegate Uri RefreshUri();
 
     public class FileDownloadTask : IFileDownloader, ISplittableTask
     {
-        private IEnumerator<int> downloadEnumerator;
+        /// <summary>
+        /// 下载片枚举器
+        /// </summary>
+        private IEnumerator<int> sliceEnumerator;
+        /// <summary>
+        /// 文件名（来自构造函数）
+        /// </summary>
         private readonly string fileName;
+        /// <summary>
+        /// 下载任务保存的本地路径
+        /// </summary>
         private readonly string localPath;
-        private readonly DownloadUriInvalideEventHandler flushUri;
+        /// <summary>
+        /// 用于获取下载链接的函数指针
+        /// </summary>
+        private readonly RefreshUri flushUri;
         private IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
         {
             int readCount;
@@ -56,15 +68,15 @@ namespace FileDownloader
 
             string totalBytes = Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1];
             TotalBytesToReceive = int.Parse(totalBytes);
-            downloadEnumerator = CreateBlockEnumerator(binaryBuffer, result.GetResponseStream()).GetEnumerator();
+            sliceEnumerator = CreateBlockEnumerator(binaryBuffer, result.GetResponseStream()).GetEnumerator();
         }
         bool ISplittableTask.MoveNext(byte[] binaryBuffer)
         {
-            if (downloadEnumerator.MoveNext())
+            if (sliceEnumerator.MoveNext())
             {
                 using (FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write))
                 {
-                    targetFile.Write(binaryBuffer, 0, downloadEnumerator.Current);
+                    targetFile.Write(binaryBuffer, 0, sliceEnumerator.Current);
                     targetFile.Flush();
                 }
                 return true;
@@ -110,7 +122,7 @@ namespace FileDownloader
         /// </summary>
         public void Start()
         {
-            //DownloadFactory.Add(this);
+            DownloadFactory.Add(this);
             if (IsRunning)
             {
                 return;
@@ -119,7 +131,7 @@ namespace FileDownloader
             IsRunning = true;
         }
 
-        public FileDownloadTask(string destinationDirectory, DownloadUriInvalideEventHandler getDownloadUri, string name, long bytesReceived = 0)
+        public FileDownloadTask(string destinationDirectory, RefreshUri getDownloadUri, string name, long bytesReceived = 0)
         {
             localPath = destinationDirectory;
             Directory.CreateDirectory(localPath);
