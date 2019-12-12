@@ -21,12 +21,12 @@ namespace FileDownloader
             {
                 task.CurrentWorker = this;
                 Idle = false;
-                task.AchieveDataStream(binaryBuffer);
-                while (task.IsRunning && task.MoveNext(binaryBuffer))
-                {
+                //task.AchieveDataStream(binaryBuffer);
+                //while (task.IsRunning && task.AchieveSlice(binaryBuffer))
+                //{
 
-                }
-
+                //}
+                task.AchieveSlice(binaryBuffer);
             }
 #warning 此处应捕捉更明确的异常类型
             catch (Exception)
@@ -47,9 +47,7 @@ namespace FileDownloader
     {
         internal DownloadPorter CurrentWorker { get; set; }
 
-        internal void AchieveDataStream(byte[] binaryBuffer);
-
-        internal bool MoveNext(byte[] binaryBuffer);
+        internal void AchieveSlice(byte[] binaryBuffer);
 
         public bool IsRunning { get; }
     }

@@ -11,10 +11,6 @@ namespace FileDownloader
     public class FileDownloadTask : IFileDownloader, ISplittableTask
     {
         /// <summary>
-        /// 下载片枚举器
-        /// </summary>
-        private IEnumerator<int> sliceEnumerator;
-        /// <summary>
         /// 文件名（来自构造函数）
         /// </summary>
         private readonly string fileName;
@@ -26,27 +22,7 @@ namespace FileDownloader
         /// 用于获取下载链接的函数指针
         /// </summary>
         private readonly RefreshUri flushUri;
-        private IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
-        {
-            int readCount;
-            while (true)
-            {
-                readCount = stream.Read(bytes, 0, bytes.Length);
-                if (readCount <= 0)
-                {
-                    stream.Close();
-                    yield break;
-                }
-                else
-                {
-                    BytesReceived += readCount;
-                    DownloadProgressChanged?.Invoke(this, new DownloadFileProgressChangedArgs((int)(TotalBytesToReceive == 0 ? 0 : BytesReceived / TotalBytesToReceive), BytesReceived, TotalBytesToReceive));
-                    yield return readCount;
-                }
-            }
-        }
-
-        void ISplittableTask.AchieveDataStream(byte[] binaryBuffer)
+        private IEnumerable<int> AchieveDataStream(byte[] binaryBuffer)
         {
             if (File.Exists(LocalFileName + ".ezdlpart") && new FileInfo(LocalFileName + ".ezdlpart").Length != BytesReceived)
             {
@@ -57,36 +33,63 @@ namespace FileDownloader
             HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
             request.AddRange(BytesReceived);
             HttpWebResponse result;
-            try
-            {
-                result = request.GetResponse() as HttpWebResponse;
-            }
-            catch (WebException)
-            {
-                return;
-            }
 
-            string totalBytes = Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1];
-            TotalBytesToReceive = int.Parse(totalBytes);
-            sliceEnumerator = CreateBlockEnumerator(binaryBuffer, result.GetResponseStream()).GetEnumerator();
-        }
-        bool ISplittableTask.MoveNext(byte[] binaryBuffer)
-        {
-            if (sliceEnumerator.MoveNext())
+            result = request.GetResponse() as HttpWebResponse;
+            TotalBytesToReceive = int.Parse(Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1]);
+            return CreateBlockEnumerator(binaryBuffer, result.GetResponseStream());
+
+            IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
             {
-                using (FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write))
+                int readCount;
+                while (true)
                 {
-                    targetFile.Write(binaryBuffer, 0, sliceEnumerator.Current);
-                    targetFile.Flush();
+                    readCount = stream.Read(bytes, 0, bytes.Length);
+                    if (readCount <= 0)
+                    {
+                        stream.Close();
+                        yield break;
+                    }
+                    else
+                    {
+                        BytesReceived += readCount;
+                        DownloadProgressChanged?.Invoke(this, new DownloadFileProgressChangedArgs((int)(TotalBytesToReceive == 0 ? 0 : BytesReceived / TotalBytesToReceive), BytesReceived, TotalBytesToReceive));
+                        yield return readCount;
+                    }
                 }
-                return true;
             }
-            else
+        }
+        void ISplittableTask.AchieveSlice(byte[] binaryBuffer)
+        {
+            foreach (var sliceSize in AchieveDataStream(binaryBuffer))
             {
-                File.Move(LocalFileName + ".ezdlpart", LocalFileName);
-                DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
-                return false;
+
+                using FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write);
+                targetFile.Write(binaryBuffer, 0, sliceSize);
+                targetFile.Flush();
+                if (!IsRunning)
+                {
+                    return;
+                }
             }
+            File.Move(LocalFileName + ".ezdlpart", LocalFileName);
+            DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
+
+
+            //if (sliceEnumerator.MoveNext())
+            //{
+            //    using (FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write))
+            //    {
+            //        targetFile.Write(binaryBuffer, 0, sliceEnumerator.Current);
+            //        targetFile.Flush();
+            //    }
+            //    return true;
+            //}
+            //else
+            //{
+            //    File.Move(LocalFileName + ".ezdlpart", LocalFileName);
+            //    DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
+            //    return false;
+            //}
         }
 
         public string LocalFileName => Path.Combine(localPath, fileName);
@@ -95,7 +98,7 @@ namespace FileDownloader
         public long TotalBytesToReceive { get; private set; }
         DownloadPorter ISplittableTask.CurrentWorker { get; set; }
 
-        bool ISplittableTask.IsRunning => throw new NotImplementedException();
+        //bool ISplittableTask.IsRunning => throw new NotImplementedException();
 
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
         public event EventHandler<DownloadFileProgressChangedArgs> DownloadProgressChanged;

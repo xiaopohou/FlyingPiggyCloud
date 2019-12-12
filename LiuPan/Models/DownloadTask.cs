@@ -17,7 +17,7 @@ namespace SixCloud.Models
         public TaskStatus Status { get; private set; } = TaskStatus.Pause;
         private readonly object statusSyncRoot = new object();
 
-        private IFileDownloader fileDownloader;
+        private readonly IFileDownloader fileDownloader;
 
         public double DownloadProgress => fileDownloader.TotalBytesToReceive == 0 ? 0 : fileDownloader.BytesReceived * 100 / fileDownloader.TotalBytesToReceive;
 
