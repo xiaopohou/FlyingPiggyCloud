@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FileDownloader
 {
@@ -10,22 +11,17 @@ namespace FileDownloader
     {
         private const int bufferSize = 1024 * 512;
         private const int speedLimit = 0;
-
+        private ISplittableTask currentTask;
         private readonly byte[] binaryBuffer = new byte[bufferSize];
 
-        internal bool Idle { get; private set; } = true;
+        internal bool Idle => currentTask == null;
 
         internal void NextJob(ISplittableTask task)
         {
             try
             {
                 task.CurrentWorker = this;
-                Idle = false;
-                //task.AchieveDataStream(binaryBuffer);
-                //while (task.IsRunning && task.AchieveSlice(binaryBuffer))
-                //{
-
-                //}
+                currentTask = task;
                 task.AchieveSlice(binaryBuffer);
             }
 #warning 此处应捕捉更明确的异常类型
@@ -36,7 +32,7 @@ namespace FileDownloader
             finally
             {
                 task.CurrentWorker = null;
-                Idle = true;
+                currentTask = null;
             }
 
         }
@@ -94,14 +90,8 @@ namespace FileDownloader
             {
                 while (true)
                 {
-                    try
-                    {
-                        DistributionTask();
-                    }
-                    finally
-                    {
-                        Thread.Sleep(200);
-                    }
+                    Task.Run(() => DistributionTask());
+                    Thread.Sleep(200);
                 }
             });
         }

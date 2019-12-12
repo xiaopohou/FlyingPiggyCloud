@@ -31,10 +31,6 @@ namespace SixCloud.Models
 
         public string CurrentFileFullPath => fileDownloader.LocalFileName;
 
-        //public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
-
-        //public event EventHandler<DownloadFileProgressChangedArgs> DownloadFileProgressChanged;
-
         public async void Start()
         {
             lock (statusSyncRoot)

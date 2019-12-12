@@ -32,9 +32,7 @@ namespace FileDownloader
             Uri uri = flushUri();
             HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
             request.AddRange(BytesReceived);
-            HttpWebResponse result;
-
-            result = request.GetResponse() as HttpWebResponse;
+            HttpWebResponse result = request.GetResponse() as HttpWebResponse;
             TotalBytesToReceive = int.Parse(Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1]);
             return CreateBlockEnumerator(binaryBuffer, result.GetResponseStream());
 
@@ -73,23 +71,6 @@ namespace FileDownloader
             }
             File.Move(LocalFileName + ".ezdlpart", LocalFileName);
             DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
-
-
-            //if (sliceEnumerator.MoveNext())
-            //{
-            //    using (FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write))
-            //    {
-            //        targetFile.Write(binaryBuffer, 0, sliceEnumerator.Current);
-            //        targetFile.Flush();
-            //    }
-            //    return true;
-            //}
-            //else
-            //{
-            //    File.Move(LocalFileName + ".ezdlpart", LocalFileName);
-            //    DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
-            //    return false;
-            //}
         }
 
         public string LocalFileName => Path.Combine(localPath, fileName);
