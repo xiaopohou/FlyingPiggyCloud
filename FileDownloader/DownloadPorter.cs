@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace FileDownloader
         private const int speedLimit = 0;
         private ISplittableTask currentTask;
         private readonly byte[] binaryBuffer = new byte[bufferSize];
+        HttpClient httpClient = new HttpClient();
 
         internal bool Idle => currentTask == null;
 
@@ -22,7 +24,7 @@ namespace FileDownloader
             {
                 task.CurrentWorker = this;
                 currentTask = task;
-                task.AchieveSlice(binaryBuffer);
+                task.AchieveSlice(httpClient, binaryBuffer);
             }
 #warning 此处应捕捉更明确的异常类型
             catch (Exception)
@@ -43,7 +45,7 @@ namespace FileDownloader
     {
         internal DownloadPorter CurrentWorker { get; set; }
 
-        internal void AchieveSlice(byte[] binaryBuffer);
+        internal Task AchieveSlice(HttpClient httpClient, byte[] binaryBuffer);
 
         public bool IsRunning { get; }
     }
@@ -51,6 +53,8 @@ namespace FileDownloader
     internal static class DownloadFactory
     {
         private static readonly List<ISplittableTask> tasks = new List<ISplittableTask>(8);
+
+        private static readonly Timer timer;
 
         private static readonly DownloadPorter[] porters = new DownloadPorter[] { new DownloadPorter(), new DownloadPorter(), new DownloadPorter(), new DownloadPorter(), new DownloadPorter() };
 
@@ -86,14 +90,16 @@ namespace FileDownloader
 
         static DownloadFactory()
         {
-            ThreadPool.QueueUserWorkItem(_ =>
-            {
-                while (true)
-                {
-                    Task.Run(() => DistributionTask());
-                    Thread.Sleep(200);
-                }
-            });
+            //ThreadPool.QueueUserWorkItem(_ =>
+            //{
+            //    while (true)
+            //    {
+            //        Task.Run(() => DistributionTask());
+            //        Thread.Sleep(1000);
+            //    }
+
+            //});
+            timer = new Timer((_) => DistributionTask(), null, 0, 1000);
         }
     }
 }

@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FileDownloader
 {
@@ -22,7 +27,7 @@ namespace FileDownloader
         /// 用于获取下载链接的函数指针
         /// </summary>
         private readonly RefreshUri flushUri;
-        private IEnumerable<int> AchieveDataStream(byte[] binaryBuffer)
+        private async Task<IEnumerable<int>> AchieveDataStream(HttpClient httpClient, byte[] binaryBuffer)
         {
             if (File.Exists(LocalFileName + ".ezdlpart") && new FileInfo(LocalFileName + ".ezdlpart").Length != BytesReceived)
             {
@@ -30,11 +35,25 @@ namespace FileDownloader
             }
 
             Uri uri = flushUri();
-            HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
-            request.AddRange(BytesReceived);
-            HttpWebResponse result = request.GetResponse() as HttpWebResponse;
-            TotalBytesToReceive = int.Parse(Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1]);
-            return CreateBlockEnumerator(binaryBuffer, result.GetResponseStream());
+            //using HttpClient httpClient = new HttpClient();
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Range = new RangeHeaderValue(BytesReceived, null);
+            var result = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            TotalBytesToReceive = int.Parse(Regex.Split(result.Headers.GetValues("Content-Range").First(), "/")[1]);
+            return CreateBlockEnumerator(binaryBuffer, await result.Content.ReadAsStreamAsync());
+
+            //var result = httpClient.GetStreamAsync(uri).Result;
+
+
+
+
+            //HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
+            //request.AddRange(BytesReceived);
+            //HttpWebResponse result = request.GetResponse() as HttpWebResponse;
+            //TotalBytesToReceive = int.Parse(Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1]);
+
+
 
             IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
             {
@@ -56,11 +75,10 @@ namespace FileDownloader
                 }
             }
         }
-        void ISplittableTask.AchieveSlice(byte[] binaryBuffer)
+        async Task ISplittableTask.AchieveSlice(HttpClient httpClient, byte[] binaryBuffer)
         {
-            foreach (var sliceSize in AchieveDataStream(binaryBuffer))
+            foreach (var sliceSize in await AchieveDataStream(httpClient, binaryBuffer))
             {
-
                 using FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write);
                 targetFile.Write(binaryBuffer, 0, sliceSize);
                 targetFile.Flush();
