@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -18,15 +19,24 @@ namespace FileDownloader
         {
             try
             {
-                await task.AchieveSlice(httpClient, binaryBuffer);
-
-            }
-            catch (WebException)
-            {
-                if (task is FileDownloadTask fileDownloadTask)
+                bool error;
+                do
                 {
-                    DownloadFactory.Add(fileDownloadTask);
-                }
+                    try
+                    {
+                        error = false;
+                        await task.AchieveSlice(httpClient, binaryBuffer);
+                    }
+                    catch (DownloadException)
+                    {
+                        error = true;
+                    }
+                    catch (NullReferenceException)
+                    {
+                        error = true;
+                    }
+                } while (error);
+
             }
             finally
             {

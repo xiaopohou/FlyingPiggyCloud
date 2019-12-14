@@ -13,6 +13,18 @@ namespace FileDownloader
 {
     public delegate Uri RefreshUri();
 
+
+    [Serializable]
+    public class DownloadException : Exception
+    {
+        public DownloadException() { }
+        public DownloadException(string message) : base(message) { }
+        public DownloadException(string message, Exception inner) : base(message, inner) { }
+        protected DownloadException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
+
     public class FileDownloadTask : IFileDownloader, ISplittableTask
     {
         /// <summary>
@@ -35,28 +47,24 @@ namespace FileDownloader
             }
 
             Uri uri = flushUri();
-            //using HttpClient httpClient = new HttpClient();
-
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
             request.Headers.Range = new RangeHeaderValue(BytesReceived, null);
             var result = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             TotalBytesToReceive = result.Content.Headers.ContentRange.Length ?? 0;
             return CreateBlockEnumerator(binaryBuffer, await result.Content.ReadAsStreamAsync());
 
-
-
-            IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
+            static IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
             {
-                int readCount = 0;
+                int readCount;
                 while (true)
                 {
                     try
                     {
                         readCount = stream.Read(bytes, 0, bytes.Length);
                     }
-                    catch (IOException)
+                    catch (IOException ex)
                     {
-
+                        throw new DownloadException(ex.Message, ex);
                     }
                     if (readCount <= 0)
                     {
@@ -75,23 +83,23 @@ namespace FileDownloader
             foreach (var sliceSize in await AchieveDataStream(httpClient, binaryBuffer))
             {
                 using FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write);
-                try
-                {
-                    targetFile.Write(binaryBuffer, 0, sliceSize);
-                    targetFile.Flush();
-                    BytesReceived += sliceSize;
-                    DownloadProgressChanged?.Invoke(this, new DownloadFileProgressChangedArgs((int)(TotalBytesToReceive == 0 ? 0 : BytesReceived / TotalBytesToReceive), BytesReceived, TotalBytesToReceive));
-                }
-                catch (IOException)
-                {
-                    IsRunning = false;
-                }
+                targetFile.Write(binaryBuffer, 0, sliceSize);
+                targetFile.Flush();
+                BytesReceived += sliceSize;
+                DownloadProgressChanged?.Invoke(this, new DownloadFileProgressChangedArgs((int)(TotalBytesToReceive == 0 ? 0 : BytesReceived / TotalBytesToReceive), BytesReceived, TotalBytesToReceive));
                 if (!IsRunning)
                 {
                     return;
                 }
             }
-            File.Move(LocalFileName + ".ezdlpart", LocalFileName);
+            if (File.Exists(LocalFileName))
+            {
+                File.Move(LocalFileName + ".ezdlpart", LocalFileName + Guid.NewGuid());
+            }
+            else
+            {
+                File.Move(LocalFileName + ".ezdlpart", LocalFileName);
+            }
             DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
         }
 
