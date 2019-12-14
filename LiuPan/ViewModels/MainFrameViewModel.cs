@@ -26,6 +26,7 @@ namespace SixCloud.ViewModels
                     recVM = new RecoveryBoxViewModel();
                 }
                 MainContainerContent = recVM;
+#warning 此处需要修理
                 recVM.LazyLoad();
             }
             else

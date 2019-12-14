@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Concurrent;
+using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,38 +10,34 @@ namespace FileDownloader
     {
         private const int bufferSize = 1024 * 512;
         private const int speedLimit = 0;
-        private ISplittableTask currentTask;
         private readonly byte[] binaryBuffer = new byte[bufferSize];
-        HttpClient httpClient = new HttpClient();
+        private readonly HttpClient httpClient = new HttpClient();
 
-        internal bool Idle => currentTask == null;
 
-        internal void NextJob(ISplittableTask task)
+        internal async Task NextJob(ISplittableTask task)
         {
             try
             {
-                task.CurrentWorker = this;
-                currentTask = task;
-                task.AchieveSlice(httpClient, binaryBuffer);
-            }
-#warning 此处应捕捉更明确的异常类型
-            catch (Exception)
-            {
+                await task.AchieveSlice(httpClient, binaryBuffer);
 
+            }
+            catch (WebException)
+            {
+                if (task is FileDownloadTask fileDownloadTask)
+                {
+                    DownloadFactory.Add(fileDownloadTask);
+                }
             }
             finally
             {
-                task.CurrentWorker = null;
-                currentTask = null;
+                DownloadFactory.Add(this);
             }
-
         }
 
     }
 
     internal interface ISplittableTask
     {
-        internal DownloadPorter CurrentWorker { get; set; }
 
         internal Task AchieveSlice(HttpClient httpClient, byte[] binaryBuffer);
 
@@ -52,54 +46,35 @@ namespace FileDownloader
 
     internal static class DownloadFactory
     {
-        private static readonly List<ISplittableTask> tasks = new List<ISplittableTask>(8);
+        private static readonly ConcurrentQueue<ISplittableTask> tasks = new ConcurrentQueue<ISplittableTask>();
 
-        private static readonly Timer timer;
+        private static readonly Timer timer = new Timer(async (_) => await DistributionTask(), null, 0, 1000);
 
-        private static readonly DownloadPorter[] porters = new DownloadPorter[] { new DownloadPorter(), new DownloadPorter(), new DownloadPorter(), new DownloadPorter(), new DownloadPorter() };
+        private static readonly ConcurrentQueue<DownloadPorter> porters = new ConcurrentQueue<DownloadPorter>(new DownloadPorter[] { new DownloadPorter(), new DownloadPorter(), new DownloadPorter(), new DownloadPorter(), new DownloadPorter() });
 
-        private static void DistributionTask()
+        private static async Task DistributionTask()
         {
-            var idlePorter = porters.FirstOrDefault(x => x.Idle);
-            var outstandingTask = tasks.FirstOrDefault(x => x.CurrentWorker == null);
-            if (idlePorter == default || outstandingTask == default)
+            if (porters.TryDequeue(out DownloadPorter idlePorter))
             {
-                return;
-            }
-            else
-            {
-                idlePorter.NextJob(outstandingTask);
+                if (tasks.TryDequeue(out ISplittableTask outstandingTask))
+                {
+                    await idlePorter.NextJob(outstandingTask);
+                }
+                else
+                {
+                    porters.Enqueue(idlePorter);
+                }
             }
         }
 
         internal static void Add(FileDownloadTask task)
         {
-            if (tasks.Contains(task))
-            {
-                return;
-            }
-            else
-            {
-                task.DownloadFileCompleted += (sender, e) =>
-                {
-                    tasks.Remove(sender as ISplittableTask);
-                };
-                tasks.Add(task);
-            }
+            tasks.Enqueue(task);
         }
 
-        static DownloadFactory()
+        internal static void Add(DownloadPorter porter)
         {
-            //ThreadPool.QueueUserWorkItem(_ =>
-            //{
-            //    while (true)
-            //    {
-            //        Task.Run(() => DistributionTask());
-            //        Thread.Sleep(1000);
-            //    }
-
-            //});
-            timer = new Timer((_) => DistributionTask(), null, 0, 1000);
+            porters.Enqueue(porter);
         }
     }
 }

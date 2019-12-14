@@ -40,27 +40,24 @@ namespace FileDownloader
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
             request.Headers.Range = new RangeHeaderValue(BytesReceived, null);
             var result = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-            TotalBytesToReceive = int.Parse(Regex.Split(result.Headers.GetValues("Content-Range").First(), "/")[1]);
+            TotalBytesToReceive = result.Content.Headers.ContentRange.Length ?? 0;
             return CreateBlockEnumerator(binaryBuffer, await result.Content.ReadAsStreamAsync());
-
-            //var result = httpClient.GetStreamAsync(uri).Result;
-
-
-
-
-            //HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
-            //request.AddRange(BytesReceived);
-            //HttpWebResponse result = request.GetResponse() as HttpWebResponse;
-            //TotalBytesToReceive = int.Parse(Regex.Split(result.Headers[HttpResponseHeader.ContentRange], "/")[1]);
 
 
 
             IEnumerable<int> CreateBlockEnumerator(byte[] bytes, Stream stream)
             {
-                int readCount;
+                int readCount = 0;
                 while (true)
                 {
-                    readCount = stream.Read(bytes, 0, bytes.Length);
+                    try
+                    {
+                        readCount = stream.Read(bytes, 0, bytes.Length);
+                    }
+                    catch (IOException)
+                    {
+
+                    }
                     if (readCount <= 0)
                     {
                         stream.Close();
@@ -68,8 +65,6 @@ namespace FileDownloader
                     }
                     else
                     {
-                        BytesReceived += readCount;
-                        DownloadProgressChanged?.Invoke(this, new DownloadFileProgressChangedArgs((int)(TotalBytesToReceive == 0 ? 0 : BytesReceived / TotalBytesToReceive), BytesReceived, TotalBytesToReceive));
                         yield return readCount;
                     }
                 }
@@ -80,8 +75,17 @@ namespace FileDownloader
             foreach (var sliceSize in await AchieveDataStream(httpClient, binaryBuffer))
             {
                 using FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write);
-                targetFile.Write(binaryBuffer, 0, sliceSize);
-                targetFile.Flush();
+                try
+                {
+                    targetFile.Write(binaryBuffer, 0, sliceSize);
+                    targetFile.Flush();
+                    BytesReceived += sliceSize;
+                    DownloadProgressChanged?.Invoke(this, new DownloadFileProgressChangedArgs((int)(TotalBytesToReceive == 0 ? 0 : BytesReceived / TotalBytesToReceive), BytesReceived, TotalBytesToReceive));
+                }
+                catch (IOException)
+                {
+                    IsRunning = false;
+                }
                 if (!IsRunning)
                 {
                     return;
@@ -95,9 +99,6 @@ namespace FileDownloader
         public bool IsRunning { get; private set; } = false;
         public long BytesReceived { get; private set; }
         public long TotalBytesToReceive { get; private set; }
-        DownloadPorter ISplittableTask.CurrentWorker { get; set; }
-
-        //bool ISplittableTask.IsRunning => throw new NotImplementedException();
 
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
         public event EventHandler<DownloadFileProgressChangedArgs> DownloadProgressChanged;
