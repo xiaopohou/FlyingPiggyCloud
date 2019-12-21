@@ -169,19 +169,18 @@ namespace SixCloud.ViewModels
             }
 
             App.Current.Dispatcher.Invoke(() => FileList.Clear());
+
             fileMetaDataEnumerator = GetFileListAsync().GetAsyncEnumerator();
-            await fileMetaDataEnumerator.MoveNextAsync();
-            App.Current.Dispatcher.Invoke(() =>
+            if (await fileMetaDataEnumerator.MoveNextAsync())
             {
-                if (fileMetaDataEnumerator.Current == null)
+                App.Current.Dispatcher.Invoke(() =>
                 {
-                    return;
-                }
-                foreach (FileMetaData a in fileMetaDataEnumerator.Current)
-                {
-                    FileList.Add(new FileListItemViewModel(this, a));
-                }
-            });
+                    foreach (FileMetaData a in fileMetaDataEnumerator.Current)
+                    {
+                        FileList.Add(new FileListItemViewModel(this, a));
+                    }
+                });
+            }
         }
 
         protected virtual async Task GetFileListByUUID(string uuid)

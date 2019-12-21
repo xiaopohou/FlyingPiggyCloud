@@ -1,10 +1,8 @@
 ﻿using QingzhenyunApis.EntityModels;
-using SixCloud.Models;
 using SixCloud.ViewModels;
 using SixCloudCustomControlLibrary.Controls;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -47,20 +45,13 @@ namespace SixCloud.Views
             InitializeComponent();
             MainFrameViewModel mainFrameViewModel = new MainFrameViewModel(currentUser);
             DataContext = mainFrameViewModel;
-            Activated += LoadDirectory;
-            void LoadDirectory(object sender, EventArgs e)
+            if (mainFrameViewModel.MainContainerContent is FileListViewModel fileListViewModel)
             {
-                Activated -= LoadDirectory;
-                new LoadingView(this, () =>
+                ThreadPool.QueueUserWorkItem(async(_) =>
                 {
-                    Thread.Sleep(1000);
-                    if (mainFrameViewModel.MainContainerContent is FileListViewModel fileListViewModel)
-                    {
-                        Task t = fileListViewModel.NavigateByPath("/");
-                        t.Wait();
-                    }
-                }, "正在加载文件目录").Show();
-            };
+                    await fileListViewModel.NavigateByPath("/");
+                });
+            }
         }
 
         private void MainContainer_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

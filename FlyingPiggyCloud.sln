@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QingzhenyunApis", "Qingzhen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploader", "FileUploader\FileUploader.csproj", "{C06AD45A-691C-451C-9AD7-73653E8480B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDownloader", "FileDownloader\FileDownloader.csproj", "{3B548A14-FCDE-4D79-B286-29AF825A91F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileDownloader", "FileDownloader\FileDownloader.csproj", "{3B548A14-FCDE-4D79-B286-29AF825A91F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SixCloudCore", "SixCloudCore\SixCloudCore.csproj", "{E4A8C661-88DE-4FC0-A86F-08851844A27C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -181,6 +183,26 @@ Global
 		{3B548A14-FCDE-4D79-B286-29AF825A91F6}.Release|x64.Build.0 = Release|Any CPU
 		{3B548A14-FCDE-4D79-B286-29AF825A91F6}.Release|x86.ActiveCfg = Release|Any CPU
 		{3B548A14-FCDE-4D79-B286-29AF825A91F6}.Release|x86.Build.0 = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|ARM.Build.0 = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|x64.Build.0 = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Debug|x86.Build.0 = Debug|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|ARM.Build.0 = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|ARM64.Build.0 = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|x64.ActiveCfg = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|x64.Build.0 = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|x86.ActiveCfg = Release|Any CPU
+		{E4A8C661-88DE-4FC0-A86F-08851844A27C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
