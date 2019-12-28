@@ -145,7 +145,7 @@ namespace SixCloud.ViewModels
                                 }
                                 OnPropertyChanged(nameof(ParseResults));
 
-                            }, "正在解析种子文件，请稍等",AlignmentX.Left,AlignmentY.Top).Show();
+                            }, "正在解析种子文件，请稍等").Show();
                         }
                     }
                 }
@@ -210,7 +210,7 @@ namespace SixCloud.ViewModels
                         break;
                 }
 
-            }, "正在与服务器PY，请稍等", AlignmentX.Left, AlignmentY.Top).Show();
+            }, "正在与服务器PY，请稍等").Show();
         }
         public Visibility NextStageButtonVisibility { get; set; } = Visibility.Collapsed;
         public string NextStageButtonText { get; set; } = "下一步";

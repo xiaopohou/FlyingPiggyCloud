@@ -57,6 +57,7 @@ namespace SixCloud.ViewModels
                 }
             }
         }
+
         public int SelectedIndex
         {
             get => _selectedIndex;
@@ -74,7 +75,7 @@ namespace SixCloud.ViewModels
 
         public List<string> PathArray { get; set; } = new List<string>();
 
-        public ObservableCollection<FileListItemViewModel> FileList { get; set; } = new ObservableCollection<FileListItemViewModel>();
+        public ObservableCollection<FileListItemViewModel> FileList { get; private set; } = new ObservableCollection<FileListItemViewModel>();
 
         public string CurrentPath { get; set; }
 

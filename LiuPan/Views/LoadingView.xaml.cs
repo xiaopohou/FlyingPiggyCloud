@@ -30,11 +30,11 @@ namespace SixCloud.Views
             FriendlyText.Text = friendlyText;
         }
 
-        public LoadingView(Window owner, Action action, string friendlyText, AlignmentX x, AlignmentY y):this(owner,action,friendlyText)
-        {
-            //BlurHolder.AlignmentX = x;
-            //BlurHolder.AlignmentY = y;
-        }
+        //public LoadingView(Window owner, Action action, string friendlyText, AlignmentX x, AlignmentY y):this(owner,action,friendlyText)
+        //{
+        //    //BlurHolder.AlignmentX = x;
+        //    //BlurHolder.AlignmentY = y;
+        //}
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
