@@ -82,9 +82,24 @@ namespace FileDownloader
         {
             foreach (var sliceSize in await AchieveDataStream(httpClient, binaryBuffer))
             {
-                using FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write);
-                targetFile.Write(binaryBuffer, 0, sliceSize);
-                targetFile.Flush();
+                bool success = true;
+                do
+                {
+                    try
+                    {
+                        using FileStream targetFile = new FileStream(LocalFileName + ".ezdlpart", FileMode.Append, FileAccess.Write);
+                        targetFile.Write(binaryBuffer, 0, sliceSize);
+                        targetFile.Flush();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        success = false;
+                    }
+                    catch (IOException)
+                    {
+                        success = false;
+                    }
+                } while (success == false);
                 BytesReceived += sliceSize;
                 DownloadProgressChanged?.Invoke(this, new DownloadFileProgressChangedArgs((int)(TotalBytesToReceive == 0 ? 0 : BytesReceived / TotalBytesToReceive), BytesReceived, TotalBytesToReceive));
                 if (!IsRunning)

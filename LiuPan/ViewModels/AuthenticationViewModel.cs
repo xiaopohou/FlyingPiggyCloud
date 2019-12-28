@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Exceptionless;
 
 namespace SixCloud.ViewModels
 {
@@ -45,7 +46,7 @@ namespace SixCloud.ViewModels
         private void OnSignInSuccessful()
         {
             App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            Task.Run(async() => await TasksLogger.StartUpRecovery());
+            Task.Run(async () => await TasksLogger.StartUpRecovery());
             Application.Current.Exit += TasksLogger.ExitEventHandler;
             new TaskBarButton();
             ThreadPool.QueueUserWorkItem((obj) =>
@@ -53,7 +54,15 @@ namespace SixCloud.ViewModels
                 do
                 {
                     Thread.Sleep(TimeSpan.FromMinutes(1));
-                    authentication.GetUserInformation().Wait();
+                    try
+                    {
+                        authentication.GetUserInformation().Wait();
+                    }
+                    catch (Exception ex)
+                    {
+#warning 在这里检查这个崩溃究竟是什么情况
+                        ex.ToExceptionless().Submit();
+                    }
                 } while (true);
             });
         }
@@ -199,7 +208,7 @@ namespace SixCloud.ViewModels
                         }
                         else
                         {
-                            return ex.Response; 
+                            return ex.Response;
                         }
                     }
                     else

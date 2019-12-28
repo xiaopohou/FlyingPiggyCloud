@@ -19,12 +19,6 @@ namespace SixCloud.Controllers
         private static readonly string rootDirectory;
         private static readonly string uploadingRecordsPath;
         private static readonly string downloadingRecordsPath;
-        //private static readonly string downloadLoggerFilePath;
-
-        ///// <summary>
-        ///// 这个字典用于服务FileDownloader IDownloadCache
-        ///// </summary>
-        //private static readonly Dictionary<string, string> downloadCache;
 
         public static ObservableCollection<UploadingTaskViewModel> Uploadings
         {
