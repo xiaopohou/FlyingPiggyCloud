@@ -107,14 +107,27 @@ namespace FileDownloader
                     return;
                 }
             }
-            if (File.Exists(LocalFileName))
+
+            bool moveSuccess = true;
+            do
             {
-                File.Move(LocalFileName + ".ezdlpart", LocalFileName + Guid.NewGuid());
-            }
-            else
-            {
-                File.Move(LocalFileName + ".ezdlpart", LocalFileName);
-            }
+                try
+                {
+                    if (File.Exists(LocalFileName))
+                    {
+                        File.Move(LocalFileName + ".ezdlpart", LocalFileName + Guid.NewGuid());
+                    }
+                    else
+                    {
+                        File.Move(LocalFileName + ".ezdlpart", LocalFileName);
+                    }
+                }
+                catch (DirectoryNotFoundException ex)
+                {
+                    moveSuccess = false;
+                }
+
+            } while (moveSuccess == false);
             DownloadFileCompleted?.Invoke(this, new DownloadFileCompletedArgs(CompletedState.Succeeded, fileName, null, TimeSpan.Zero, TotalBytesToReceive, BytesReceived, null));
         }
 
