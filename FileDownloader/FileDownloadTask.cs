@@ -117,7 +117,7 @@ namespace FileDownloader
                     var index = 0;
                     do
                     {
-                        targetFileName = Path.GetDirectoryName(LocalFileName) + Path.GetFileNameWithoutExtension(LocalFileName) + (index == 0 ? "" : $"（{index}）") + Path.GetExtension(LocalFileName);
+                        targetFileName = localPath + Path.GetFileNameWithoutExtension(fileName) + (index == 0 ? "" : $"（{index}）") + Path.GetExtension(fileName);
                         index++;
                     } while (File.Exists(targetFileName));
                     File.Move(LocalFileName + ".ezdlpart", targetFileName);
