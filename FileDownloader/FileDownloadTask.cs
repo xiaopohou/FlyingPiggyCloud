@@ -113,17 +113,18 @@ namespace FileDownloader
             {
                 try
                 {
-                    if (File.Exists(LocalFileName))
+                    string targetFileName;
+                    var index = 0;
+                    do
                     {
-                        File.Move(LocalFileName + ".ezdlpart", LocalFileName + Guid.NewGuid());
-                    }
-                    else
-                    {
-                        File.Move(LocalFileName + ".ezdlpart", LocalFileName);
-                    }
+                        targetFileName = Path.GetDirectoryName(LocalFileName) + Path.GetFileNameWithoutExtension(LocalFileName) + (index == 0 ? "" : $"（{index}）") + Path.GetExtension(LocalFileName);
+                        index++;
+                    } while (File.Exists(targetFileName));
+                    File.Move(LocalFileName + ".ezdlpart", targetFileName);
                 }
                 catch (DirectoryNotFoundException ex)
                 {
+#warning 某些特定的文件名会导致抛出此异常
                     moveSuccess = false;
                 }
 
