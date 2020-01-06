@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
@@ -17,6 +18,6 @@ namespace QingzhenyunApis.EntityModels
         /// 所在文件的 PathIdentity
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "iginreFiles")]
-        public string[] IginreFiles { get; set; }
+        public IList<string> IginreFiles { get; set; }
     }
 }

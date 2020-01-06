@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
@@ -8,7 +9,7 @@ namespace QingzhenyunApis.EntityModels
         public SelfClient Self { get; set; }
 
         [JsonProperty(PropertyName = "online")]
-        public OnlineClient[] Online { get; set; }
+        public IList<OnlineClient> Online { get; set; }
     }
 
 }

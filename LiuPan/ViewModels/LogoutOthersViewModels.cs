@@ -43,7 +43,7 @@ namespace SixCloud.ViewModels
         {
             LogoutOthersCommand = new DependencyCommand(LogoutOthers, DependencyCommand.AlwaysCan);
             CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
-            DeviceList = new OtherDeviceViewModels[onlineDeviceList.Result.Online.Length];
+            DeviceList = new OtherDeviceViewModels[onlineDeviceList.Result.Online.Count];
             for (int i = 0; i < DeviceList.Length; i++)
             {
                 DeviceList[i] = new OtherDeviceViewModels(onlineDeviceList.Result.Online[i]);
