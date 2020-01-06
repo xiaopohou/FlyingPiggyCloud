@@ -22,14 +22,12 @@ namespace SixCloud.Controllers
                 ThreadPool.QueueUserWorkItem((_) =>
                 {
                     pipeServer.WaitForConnection();
-                    using (StreamReader reader = new StreamReader(pipeServer))
+                    using StreamReader reader = new StreamReader(pipeServer);
+                    var newMessage = reader.ReadLine();
+                    NewMessage?.Invoke(new CrossProcessMessageEventArgs
                     {
-                        var newMessage = reader.ReadLine();
-                        NewMessage?.Invoke(new CrossProcessMessageEventArgs
-                        {
-                            Message = newMessage
-                        });
-                    }
+                        Message = newMessage
+                    });
                 });
             }
         }
