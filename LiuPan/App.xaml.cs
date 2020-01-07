@@ -22,6 +22,10 @@ namespace SixCloud
             {
                 Shutdown();
             }
+            else
+            {
+#warning Message事件处理程序
+            }
         }
     }
 }

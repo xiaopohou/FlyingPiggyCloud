@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
@@ -21,13 +22,16 @@ namespace SixCloud.Controllers
             {
                 ThreadPool.QueueUserWorkItem((_) =>
                 {
-                    pipeServer.WaitForConnection();
-                    using StreamReader reader = new StreamReader(pipeServer);
-                    var newMessage = reader.ReadLine();
-                    NewMessage?.Invoke(new CrossProcessMessageEventArgs
+                    do
                     {
-                        Message = newMessage
-                    });
+                        pipeServer.WaitForConnection();
+                        using StreamReader reader = new StreamReader(pipeServer);
+                        var newMessage = JsonConvert.DeserializeObject<IList<string>>(reader.ReadLine());
+                        NewMessage?.Invoke(new CrossProcessMessageEventArgs
+                        {
+                            Message = newMessage
+                        }); ;
+                    } while (true);
                 });
             }
         }
@@ -41,12 +45,18 @@ namespace SixCloud.Controllers
             mutex = new Mutex(true, "SixCloudWPF");
             if (mutex.WaitOne(0, false))
             {
-                pipeServer = new NamedPipeServerStream("SixCloud", PipeDirection.InOut);
+                pipeServer = new NamedPipeServerStream("SixCloud", PipeDirection.In);
                 CreateMonitor();
                 return true;
             }
             else
             {
+                //pipeServer = new NamedPipeServerStream("SixCloud", PipeDirection.Out);
+                //pipeServer.Write()
+                using NamedPipeClientStream namedPipeClientStream = new NamedPipeClientStream("localhost", "SixCloud", PipeDirection.Out);
+                namedPipeClientStream.Connect(200);
+                using StreamWriter writer = new StreamWriter(namedPipeClientStream);
+                writer.WriteLine(JsonConvert.SerializeObject(Environment.GetCommandLineArgs()));
                 return false;
             }
         }
@@ -58,7 +68,7 @@ namespace SixCloud.Controllers
 
         internal class CrossProcessMessageEventArgs : EventArgs
         {
-            internal string Message { get; set; }
+            internal IList<string> Message { get; set; }
         }
         #endregion
     }

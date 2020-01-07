@@ -61,7 +61,7 @@ namespace SixCloud.ViewModels
                     catch (Exception ex)
                     {
 #warning 在这里检查这个崩溃究竟是什么情况
-                        ex.ToExceptionless().Submit();
+                        ex.ToExceptionless().AddTags("手工提交的错误日志").Submit();
                     }
                 } while (true);
             });
