@@ -20,8 +20,9 @@ namespace SixCloud
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Close();
-            new LoginView().Show();
+            new OfflineTaskDialog().Show();
+            //Close();
+            //new LoginView().Show();
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -31,7 +32,7 @@ namespace SixCloud
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            new ChangePasswordView().Show();
+            //new ChangePasswordView().Show();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

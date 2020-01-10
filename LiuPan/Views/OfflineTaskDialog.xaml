@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:SixCloud.Views"
     xmlns:ViewModels="clr-namespace:SixCloud.ViewModels"
+    xmlns:UserControls="clr-namespace:SixCloud.Views.UserControls"
     mc:Ignorable="d"
     BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
     ShowInTaskbar="False" Height="720" Width="720"
@@ -103,6 +104,36 @@
         </Style>
 
         <ViewModels:TaskTypeConverter x:Key="TaskTypeConverter"/>
+        <UserControls:SizeCalculator x:Key="SizeCalculator"/>
+
+        <DataTemplate x:Key="ParseResultTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="50"/>
+                    <RowDefinition MinHeight="50"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"/>
+                    <TextBlock Text="("/>
+                    <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
+                    <TextBlock Text=")"/>
+                </StackPanel>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Files}" ItemTemplate="{DynamicResource ParseFileTemplate}"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ParseFileTemplate">
+            <Grid x:Name="fileInfoContainer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding ActualHeight, ElementName=fileInfoContainer}"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                <TextBlock Text="{Binding Size, Converter={StaticResource ResourceKey=SizeCalculator}, Mode=OneWay}" Grid.Column="2"/>
+            </Grid>
+        </DataTemplate>
 
     </Window.Resources>
     <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">
@@ -232,6 +263,62 @@
                             <DoubleAnimation BeginTime="00:00:00"
                                              Duration="00:00:00.250"
                                              Storyboard.TargetName="CheckFileTranslateTransform"
+                                             Storyboard.TargetProperty="X"
+                                             From="-100"
+                                             To="0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TabItem.Triggers>
+        </TabItem>
+
+
+        <TabItem x:Name="SavingPathTabItem"
+                 IsSelected="True"
+                 Header="保存路径"
+                 Background="{x:Null}"
+                 BorderBrush="{x:Null}">
+            <Grid x:Name="SavingPath" Margin="0 16 0 0" OpacityMask="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="请选择保存路径" Margin="5" FontSize="24" VerticalAlignment="Top"/>
+                <UserControls:FileGridView Mode="PathSelector"
+                                           Grid.Row="1"
+                                           DataContext="{Binding FileGrid}"
+                                           x:Name="fileList"
+                                           Margin="5"
+                                           Command="{Binding NavigateCommand}"
+                                           CommandParameter="{Binding SelectObject, ElementName=fileList}"/>
+
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="SavingPathTranslateTransform"/>
+                </Grid.RenderTransform>
+            </Grid>
+
+            <TabItem.Triggers>
+                <EventTrigger RoutedEvent="Selector.Selected">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
+                                <DoubleAnimation.EasingFunction>
+                                    <BackEase  EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.500"
+                                             Storyboard.TargetName="SavingPath"
+                                             Storyboard.TargetProperty="OpacityMask.Opacity"
+                                             From="0"
+                                             To="1">
+                                <DoubleAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.250"
+                                             Storyboard.TargetName="SavingPathTranslateTransform"
                                              Storyboard.TargetProperty="X"
                                              From="-100"
                                              To="0"/>
