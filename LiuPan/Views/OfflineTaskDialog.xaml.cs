@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SixCloudCustomControlLibrary.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace SixCloud.Views
     /// <summary>
     /// OfflineTaskDialog.xaml 的交互逻辑
     /// </summary>
-    public partial class OfflineTaskDialog : Window
+    public partial class OfflineTaskDialog : MetroWindow
     {
         public OfflineTaskDialog()
         {

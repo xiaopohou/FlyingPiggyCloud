@@ -106,13 +106,13 @@
 
     </Window.Resources>
     <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">
-        <TabItem x:Name="SignInTabItem"
+        <TabItem x:Name="NewTaskTabItem"
                  IsSelected="True"
-                 Header="登录"
+                 Header="新建任务"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
-            <Grid>
-                <TextBlock Text="这是什么类型的下载任务？" Margin="15,3" FontSize="24" VerticalAlignment="Top"/>
+            <Grid x:Name="NewTask" Margin="0 16 0 0" OpacityMask="White">
+                <TextBlock Text="任务类型 " Margin="15,3" FontSize="24" VerticalAlignment="Top"/>
                 <StackPanel VerticalAlignment="Top" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked" Margin="0,48,0,0">
                     <RadioButton IsChecked="{Binding TaskType, ConverterParameter=Urls, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}" x:Name="Urls" Style="{DynamicResource CardRadioButton}">
                         <Grid Height="70">
@@ -157,9 +157,10 @@
                 </StackPanel>
 
                 <Grid.RenderTransform>
-                    <TranslateTransform x:Name="SignInTranslateTransform"/>
+                    <TranslateTransform x:Name="NewTaskTranslateTransform"/>
                 </Grid.RenderTransform>
             </Grid>
+            
             <TabItem.Triggers>
                 <EventTrigger RoutedEvent="Selector.Selected">
                     <BeginStoryboard>
@@ -171,7 +172,7 @@
                             </DoubleAnimation>
                             <DoubleAnimation BeginTime="00:00:00"
                                              Duration="00:00:00.500"
-                                             Storyboard.TargetName="SignIn"
+                                             Storyboard.TargetName="NewTask"
                                              Storyboard.TargetProperty="OpacityMask.Opacity"
                                              From="0"
                                              To="1">
@@ -181,7 +182,56 @@
                             </DoubleAnimation>
                             <DoubleAnimation BeginTime="00:00:00"
                                              Duration="00:00:00.250"
-                                             Storyboard.TargetName="SignInTranslateTransform"
+                                             Storyboard.TargetName="NewTaskTranslateTransform"
+                                             Storyboard.TargetProperty="X"
+                                             From="-100"
+                                             To="0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TabItem.Triggers>
+        </TabItem>
+
+
+        <TabItem x:Name="CheckFileTabItem"
+                 IsSelected="True"
+                 Header="文件搜检"
+                 Background="{x:Null}"
+                 BorderBrush="{x:Null}">
+            <Grid x:Name="CheckFile" Margin="0 16 0 0" OpacityMask="White">
+                <TextBlock Text="如果不希望下载某些文件，请取消勾选" Margin="5" FontSize="24" VerticalAlignment="Top"/>
+                <ScrollViewer Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding ParseResults}" ItemTemplate="{DynamicResource ParseResultTemplate}" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked"/>
+                </ScrollViewer>
+
+                
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="CheckFileTranslateTransform"/>
+                </Grid.RenderTransform>
+            </Grid>
+
+            <TabItem.Triggers>
+                <EventTrigger RoutedEvent="Selector.Selected">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
+                                <DoubleAnimation.EasingFunction>
+                                    <BackEase  EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.500"
+                                             Storyboard.TargetName="CheckFile"
+                                             Storyboard.TargetProperty="OpacityMask.Opacity"
+                                             From="0"
+                                             To="1">
+                                <DoubleAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.250"
+                                             Storyboard.TargetName="CheckFileTranslateTransform"
                                              Storyboard.TargetProperty="X"
                                              From="-100"
                                              To="0"/>
