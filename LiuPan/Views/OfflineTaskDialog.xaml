@@ -168,7 +168,7 @@
                         </Grid>
                     </RadioButton>
 
-                    <RadioButton x:Name="Torrent" Style="{DynamicResource CardRadioButton}" IsChecked="{Binding TaskType, ConverterParameter=Torrent, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}">
+                    <RadioButton Command="{Binding UploadTorrentCommand}" x:Name="Torrent" Style="{DynamicResource CardRadioButton}" IsChecked="{Binding TaskType, ConverterParameter=Torrent, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}">
                         <Grid Height="70">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>
@@ -243,11 +243,6 @@
                 <EventTrigger RoutedEvent="Selector.Selected">
                     <BeginStoryboard>
                         <Storyboard>
-                            <!--<DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
-                                <DoubleAnimation.EasingFunction>
-                                    <BackEase  EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>-->
                             <DoubleAnimation BeginTime="00:00:00"
                                              Duration="00:00:00.500"
                                              Storyboard.TargetName="CheckFile"

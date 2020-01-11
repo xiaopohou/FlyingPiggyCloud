@@ -14,6 +14,7 @@ namespace SixCloud
         public App() : base()
         {
             ExceptionlessClient.Default.Register();
+
         }
 
         protected override void OnStartup(StartupEventArgs e)

@@ -51,8 +51,6 @@ namespace SixCloud.Controllers
             }
             else
             {
-                //pipeServer = new NamedPipeServerStream("SixCloud", PipeDirection.Out);
-                //pipeServer.Write()
                 using NamedPipeClientStream namedPipeClientStream = new NamedPipeClientStream("localhost", "SixCloud", PipeDirection.Out);
                 namedPipeClientStream.Connect(200);
                 using StreamWriter writer = new StreamWriter(namedPipeClientStream);
