@@ -10,8 +10,7 @@
     xmlns:UserControls="clr-namespace:SixCloud.Views.UserControls"
     mc:Ignorable="d"
     BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
-    ShowInTaskbar="False" Height="720" Width="720"
-    MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
+    ShowInTaskbar="False" MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
     <Window.Resources>
         <Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
@@ -104,6 +103,7 @@
         </Style>
 
         <ViewModels:TaskTypeConverter x:Key="TaskTypeConverter"/>
+
         <UserControls:SizeCalculator x:Key="SizeCalculator"/>
 
         <DataTemplate x:Key="ParseResultTemplate">
@@ -136,7 +136,9 @@
         </DataTemplate>
 
     </Window.Resources>
+    
     <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">
+        
         <TabItem x:Name="NewTaskTabItem"
                  IsSelected="True"
                  Header="新建任务"
@@ -165,6 +167,7 @@
                             </TextBlock>
                         </Grid>
                     </RadioButton>
+
                     <RadioButton x:Name="Torrent" Style="{DynamicResource CardRadioButton}" IsChecked="{Binding TaskType, ConverterParameter=Torrent, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}">
                         <Grid Height="70">
                             <Grid.ColumnDefinitions>
@@ -185,22 +188,18 @@
                             </TextBlock>
                         </Grid>
                     </RadioButton>
+                
                 </StackPanel>
 
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="NewTaskTranslateTransform"/>
                 </Grid.RenderTransform>
             </Grid>
-            
+
             <TabItem.Triggers>
                 <EventTrigger RoutedEvent="Selector.Selected">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
-                                <DoubleAnimation.EasingFunction>
-                                    <BackEase  EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
                             <DoubleAnimation BeginTime="00:00:00"
                                              Duration="00:00:00.500"
                                              Storyboard.TargetName="NewTask"
@@ -223,7 +222,6 @@
             </TabItem.Triggers>
         </TabItem>
 
-
         <TabItem x:Name="CheckFileTabItem"
                  IsSelected="True"
                  Header="文件搜检"
@@ -235,7 +233,7 @@
                     <ItemsControl ItemsSource="{Binding ParseResults}" ItemTemplate="{DynamicResource ParseResultTemplate}" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked"/>
                 </ScrollViewer>
 
-                
+
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="CheckFileTranslateTransform"/>
                 </Grid.RenderTransform>
@@ -245,11 +243,11 @@
                 <EventTrigger RoutedEvent="Selector.Selected">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
+                            <!--<DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
                                 <DoubleAnimation.EasingFunction>
                                     <BackEase  EasingMode="EaseIn"/>
                                 </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
+                            </DoubleAnimation>-->
                             <DoubleAnimation BeginTime="00:00:00"
                                              Duration="00:00:00.500"
                                              Storyboard.TargetName="CheckFile"
@@ -272,7 +270,6 @@
             </TabItem.Triggers>
         </TabItem>
 
-
         <TabItem x:Name="SavingPathTabItem"
                  IsSelected="True"
                  Header="保存路径"
@@ -282,6 +279,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="请选择保存路径" Margin="5" FontSize="24" VerticalAlignment="Top"/>
                 <UserControls:FileGridView Mode="PathSelector"
@@ -291,6 +289,7 @@
                                            Margin="5"
                                            Command="{Binding NavigateCommand}"
                                            CommandParameter="{Binding SelectObject, ElementName=fileList}"/>
+                <Button Content="提交" Grid.Row="2"/>
 
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="SavingPathTranslateTransform"/>
@@ -301,11 +300,11 @@
                 <EventTrigger RoutedEvent="Selector.Selected">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
+                            <!--<DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
                                 <DoubleAnimation.EasingFunction>
                                     <BackEase  EasingMode="EaseIn"/>
                                 </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
+                            </DoubleAnimation>-->
                             <DoubleAnimation BeginTime="00:00:00"
                                              Duration="00:00:00.500"
                                              Storyboard.TargetName="SavingPath"
