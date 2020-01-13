@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Exceptionless;
+using System.Net.Http;
 
 namespace SixCloud.ViewModels
 {
@@ -49,7 +50,7 @@ namespace SixCloud.ViewModels
             Task.Run(async () => await TasksLogger.StartUpRecovery());
             Application.Current.Exit += TasksLogger.ExitEventHandler;
             new TaskBarButton();
-            ThreadPool.QueueUserWorkItem((obj) =>
+            ThreadPool.QueueUserWorkItem((_) =>
             {
                 do
                 {
@@ -58,9 +59,12 @@ namespace SixCloud.ViewModels
                     {
                         authentication.GetUserInformation().Wait();
                     }
+                    catch (HttpRequestException)
+                    {
+#warning 单纯的网络错误无需处理，丢弃
+                    }
                     catch (Exception ex)
                     {
-#warning 在这里检查这个崩溃究竟是什么情况
                         ex.ToExceptionless().AddTags("手工提交的错误日志").Submit();
                     }
                 } while (true);
