@@ -223,7 +223,7 @@
         </TabItem>
 
         <TabItem x:Name="CheckFileTabItem"
-                 IsSelected="True"
+                 IsEnabled="{Binding IsCheckFileTabEnable}"
                  Header="文件搜检"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
@@ -266,7 +266,7 @@
         </TabItem>
 
         <TabItem x:Name="SavingPathTabItem"
-                 IsSelected="True"
+                 IsEnabled="{Binding IsSavingPathTabEnable}"
                  Header="保存路径"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
@@ -295,11 +295,6 @@
                 <EventTrigger RoutedEvent="Selector.Selected">
                     <BeginStoryboard>
                         <Storyboard>
-                            <!--<DoubleAnimation BeginTime="00:00:00" Duration="00:00:00.500" Storyboard.Target="{Binding ElementName=OwnerWindow}" Storyboard.TargetProperty="Height" From="400" To="380">
-                                <DoubleAnimation.EasingFunction>
-                                    <BackEase  EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>-->
                             <DoubleAnimation BeginTime="00:00:00"
                                              Duration="00:00:00.500"
                                              Storyboard.TargetName="SavingPath"
