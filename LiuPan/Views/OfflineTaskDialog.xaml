@@ -202,6 +202,32 @@
                         </RadioButton.Triggers>
                     </RadioButton>
 
+                    <ListBox x:Name="ParsedUrls">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <!--任务类型图标-->
+                                        <ColumnDefinition Width="Auto"/>
+                                        <!--URL-->
+                                        <ColumnDefinition Width="1*"/>
+                                        <!--Password-->
+                                        <ColumnDefinition Width="Auto"/>
+                                        <!--取消按钮-->
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <controls:FontIcon Icon="{Binding Icon}"/>
+                                    <TextBlock Text="{Binding Url}" Grid.Column="1"/>
+                                    <StackPanel Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
+                                        <TextBlock Text="资源密码："/>
+                                        <TextBox Text="{Binding Password,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
+                                    </StackPanel>
+                                    <controls:LightButton FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="3"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    
                     <TextBox AcceptsReturn="True"
                              x:Name="InputBox"
                              Margin="15"

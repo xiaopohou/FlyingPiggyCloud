@@ -10,6 +10,12 @@ namespace SixCloud.ViewModels
     {
         private readonly OfflineDownloader offlineDownloader = new OfflineDownloader();
 
+        private OfflineTaskParseUrl ParseUrl(string url)
+        {
+            throw new System.Exception();
+            //offlineDownloader.ParseUrl(url);
+        }
+
         public string InputUrl { get; set; }
 
         public Stage Stage { get; private set; } = Stage.WhichType;
@@ -137,6 +143,11 @@ namespace SixCloud.ViewModels
 
             }
             #endregion
+        }
+
+        public OfflineTaskDialogViewModel()
+        {
+            UploadTorrentCommand = new DependencyCommand(UploadTorrent, DependencyCommand.AlwaysCan);
         }
     }
 }
