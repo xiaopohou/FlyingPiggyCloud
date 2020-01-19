@@ -201,7 +201,7 @@
                         </RadioButton.Triggers>
                     </RadioButton>
 
-                    <ListBox x:Name="ParsedUrls">
+                    <ListBox x:Name="ParsedUrls" ItemsSource="{Binding ParseResults}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -216,7 +216,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <controls:FontIcon Icon="{Binding Icon}"/>
-                                    <TextBlock Text="{Binding Url}" Grid.Column="1"/>
+                                    <TextBox Text="{Binding Url}" Grid.Column="1"/>
                                     <StackPanel Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
                                         <TextBlock Text="资源密码："/>
                                         <TextBox Text="{Binding Password,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
@@ -227,8 +227,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <TextBox DataContext="{Binding InputUrl}"
-                             AcceptsReturn="True"
+                    <TextBox AcceptsReturn="True"
                              x:Name="InputBox"
                              Margin="15"
                              Height="0"

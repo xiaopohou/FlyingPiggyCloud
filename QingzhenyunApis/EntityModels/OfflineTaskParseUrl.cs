@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
@@ -17,6 +18,6 @@ namespace QingzhenyunApis.EntityModels
         public long Size { get; set; }
 
         [JsonProperty(PropertyName = "files")]
-        public OfflineTaskParseFile[] Files { get; set; }
+        public IList<OfflineTaskParseFile> Files { get; set; }
     }
 }
