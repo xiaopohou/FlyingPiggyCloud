@@ -29,15 +29,9 @@ namespace FileDownloader
                     catch (DownloadException)
                     {
                         error = true;
-                    }
-                    //catch (NullReferenceException ex)
-                    //{
-                    //    error = true;
-                    //}
-                    if (error)
-                    {
                         Thread.Sleep(500);
                     }
+
                 } while (error);
 
             }

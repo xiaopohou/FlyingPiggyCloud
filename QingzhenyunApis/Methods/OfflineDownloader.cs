@@ -19,6 +19,13 @@ namespace QingzhenyunApis.Methods
             return await PostAsync<GenericResult<OfflineTaskParseUrl[]>>(JsonConvert.SerializeObject(data), "/v2/offline/parseUrl", false);
         }
 
+        public async Task<GenericResult<OfflineTaskParseUrl[]>> ParseUrl(string url, string password = null)
+        {
+            var data = password != null ? (object)new { url, password } : new { url };
+            return await PostAsync<GenericResult<OfflineTaskParseUrl[]>>(JsonConvert.SerializeObject(data), "/v2/offline/parseUrl", false);
+        }
+
+
         public async Task<GenericResult<OfflineTaskParseUrl[]>> ParseTorrent(string[] hashs)
         {
             var data = new { hash = hashs };

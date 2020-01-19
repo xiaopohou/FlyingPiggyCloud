@@ -54,9 +54,11 @@ namespace SixCloud.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                OfflineUrlsDialog a = new OfflineUrlsDialog();
+                var a = new OfflineTaskDialog
+                {
+                    DataContext = new OfflineTaskDialogViewModel()
+                };
                 a.Show();
-                a.DataContext = new OfflineUrlsDialogViewModel(a);
             });
         }
 

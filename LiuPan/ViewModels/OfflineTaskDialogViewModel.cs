@@ -1,34 +1,133 @@
-﻿using QingzhenyunApis.EntityModels;
+﻿using Exceptionless;
+using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
+using System;
+using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SixCloud.ViewModels
 {
+    internal class OfflineTaskUrlViewModel : ViewModelBase
+    {
+        private readonly OfflineDownloader offlineDownloader = new OfflineDownloader();
+        private string inputBoxString;
+
+        public ObservableCollection<ParseResult> ParseResults = new ObservableCollection<ParseResult>();
+
+        public string InputBoxString
+        {
+            get => inputBoxString;
+            set
+            {
+                string[] urls = Regex.Split(value, Environment.NewLine);
+                if (urls.Length != 0)
+                {
+                    if (urls.Length > 1)
+                    {
+                        for (int index = 0; index < urls.Length - 1; index++)
+                        {
+                            var x = new ParseResult(urls[index]);
+                            x.Parse();
+                            ParseResults.Add(x);
+                        }
+                    }
+                    inputBoxString = urls[urls.Length - 1];
+                }
+                else
+                {
+                    inputBoxString = string.Empty;
+                }
+                OnPropertyChanged(nameof(InputBoxString));
+            }
+        }
+
+    }
+
+    internal class ParseResult
+    {
+        private static readonly OfflineDownloader offlineDownloader = new OfflineDownloader();
+
+        private OfflineTaskParseUrl parseResult;
+
+        public ParseResultStatus Status { get; private set; }
+
+        public string SourceUrl { get; set; }
+
+        public string SharePassword { get; set; }
+
+        public async void Parse()
+        {
+            GenericResult<OfflineTaskParseUrl[]> x = await offlineDownloader.ParseUrl(SourceUrl, SharePassword);
+            if (x.Result == null)
+            {
+                if(x.Code== "PASSWORD_NEED")
+                {
+                    Status = ParseResultStatus.PasswordRequired;
+                }
+                else
+                {
+                    //其他未知代码上传至Exceptionless
+                    new Exception(x.Code).ToExceptionless();
+                }
+            }
+            else if (x.Result.Length == 0)
+            {
+                Status = ParseResultStatus.InvalidUrl;
+            }
+            else
+            {
+                parseResult = x.Result[0];
+            }
+
+        }
+
+
+        public ParseResult(string source)
+        {
+            SourceUrl = source;
+        }
+    }
+
+    internal enum ParseResultStatus
+    {
+        Success,
+        PasswordRequired,
+        InvalidUrl
+    }
+
     internal class OfflineTaskDialogViewModel : ViewModelBase
     {
         private readonly OfflineDownloader offlineDownloader = new OfflineDownloader();
 
-        private OfflineTaskParseUrl ParseUrl(string url)
-        {
-            throw new System.Exception();
-            //offlineDownloader.ParseUrl(url);
-        }
+        /// <summary>
+        /// 绑定离线下载URL输入框
+        /// </summary>
+        public OfflineTaskUrlViewModel InputUrl { get; private set; } = new OfflineTaskUrlViewModel();
 
-        public string InputUrl { get; set; }
-
+        /// <summary>
+        /// 当前阶段
+        /// </summary>
         public Stage Stage { get; private set; } = Stage.WhichType;
 
+        /// <summary>
+        /// 文件选择选项卡可用性
+        /// </summary>
         public bool IsCheckFileTabEnable => Stage == Stage.CheckFiles || Stage == Stage.SelectSavingPath;
 
+        /// <summary>
+        /// 离线路径选项卡可用性
+        /// </summary>
         public bool IsSavingPathTabEnable => Stage == Stage.SelectSavingPath;
 
+        /// <summary>
+        /// 离线任务解析结果
+        /// </summary>
         public OfflineTaskParseUrl[] ParseResults { get; set; }
 
         public OfflineTaskParameters[] OfflineTaskParameters { get; set; }
-
-        public TaskType TaskType { get; set; }
 
         public FileGridViewModel FileGrid { get; set; } = new FileGridViewModel();
 
