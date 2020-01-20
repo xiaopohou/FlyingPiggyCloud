@@ -258,30 +258,30 @@ namespace SixCloud.ViewModels
         SelectSavingPath
     }
 
-    internal class TaskTypeConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is TaskType type && parameter is string radioButtonName)
-            {
-                return type.ToString() == radioButtonName;
-            }
-            return null;
-        }
+    //internal class TaskTypeConverter : IValueConverter
+    //{
+    //    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        if (value is TaskType type && parameter is string radioButtonName)
+    //        {
+    //            return type.ToString() == radioButtonName;
+    //        }
+    //        return null;
+    //    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            bool isChecked = (bool)value;
-            if (isChecked && parameter is string radioButtonName)
-            {
-                return Enum.Parse(typeof(TaskType), radioButtonName);
-            }
-            else
-            {
-                return null;
-            }
-        }
-    }
+    //    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        bool isChecked = (bool)value;
+    //        if (isChecked && parameter is string radioButtonName)
+    //        {
+    //            return Enum.Parse(typeof(TaskType), radioButtonName);
+    //        }
+    //        else
+    //        {
+    //            return null;
+    //        }
+    //    }
+    //}
 
     internal class StageConverter : IValueConverter
     {

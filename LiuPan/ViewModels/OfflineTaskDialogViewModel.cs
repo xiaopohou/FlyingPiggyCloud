@@ -19,8 +19,6 @@ namespace SixCloud.ViewModels
 
         internal class ParseResult : ViewModelBase
         {
-            //private static readonly OfflineDownloader offlineDownloader = new OfflineDownloader();
-
             private OfflineTaskParseUrl parseResult;
 
             private readonly OfflineTaskDialogViewModel parent;
@@ -62,7 +60,8 @@ namespace SixCloud.ViewModels
 
             public string SharePassword { get; set; }
 
-            public async void Parse()
+            public DependencyCommand ParseCommand { get; set; }
+            public async void Parse(object parameter = null)
             {
                 if (SourceUrl == null)
                 {
@@ -99,6 +98,7 @@ namespace SixCloud.ViewModels
 
 
                 OnPropertyChanged(nameof(Status));
+                parent.UrlParseResultConfirmCommand.OnCanExecutedChanged(this, null);
             }
 
 
@@ -106,14 +106,17 @@ namespace SixCloud.ViewModels
             {
                 SourceUrl = source;
                 parent = p;
+                ParseCommand = new DependencyCommand(Parse, DependencyCommand.AlwaysCan);
             }
 
             public ParseResult(OfflineTaskParseUrl e, OfflineTaskDialogViewModel p)
             {
                 parseResult = e;
                 parent = p;
+                ParseCommand = new DependencyCommand(Parse, DependencyCommand.AlwaysCan);
             }
         }
+
         /// <summary>
         /// Url输入框
         /// </summary>
@@ -170,56 +173,59 @@ namespace SixCloud.ViewModels
 
         #region Commands
 
-        public DependencyCommand NextStageCommand { get; set; }
-        private void NextStage(object parameter)
-        {
-            //switch (Stage)
-            //{
-            //    case Stage.InputUrls:
-            //        string[] urls = System.Text.RegularExpressions.Regex.Split(InputUrl, Environment.NewLine);
-            //        GenericResult<OfflineTaskParseUrl[]> x = await offlineDownloader.ParseUrl(urls);
-            //        ParseResults = x.Result;
-            //        if (CheckParseResults())
-            //        {
-            //            OnPropertyChanged(nameof(ParseResults));
-            //            Stage = Stage.CheckFiles;
-            //        }
-            //        else
-            //        {
-            //            Stage = Stage.SelectSavingPath;
-            //        }
-            //        break;
-            //    case Stage.CheckFiles:
-            //        for (int index = 0; index < ParseResults.Length; index++)
-            //        {
-            //            List<string> ignoreList = new List<string>(ParseResults.Length);
-            //            foreach (OfflineTaskParseFile file in ParseResults[index].Files)
-            //            {
-            //                if (file.IsChecked == false)
-            //                {
-            //                    ignoreList.Add(file.PathIdentity);
-            //                }
-            //            }
-            //            if (ignoreList.Count > 0)
-            //            {
-            //                OfflineTaskParameters[index].IginreFiles = ignoreList.ToArray();
-            //            }
-            //        }
-            //        Stage = Stage.SelectSavingPath;
-            //        break;
-            //    case Stage.SelectSavingPath:
-            //        FileListItemViewModel itemvm = parameter as FileListItemViewModel;
-            //        string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
-            //        GenericResult<OfflineTaskAdd> tasks = await offlineDownloader.Add(savingPath, OfflineTaskParameters);
-            //        if (!tasks.Success)
-            //        {
-            //            App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error));
-            //        }
-            //        System.Windows.Application.Current.Dispatcher.Invoke(() => DataContextHost.Close());
-            //        break;
-            //}
-        }
+        //public DependencyCommand NextStageCommand { get; set; }
+        //private void NextStage(object parameter)
+        //{
+        //    //switch (Stage)
+        //    //{
+        //    //    case Stage.InputUrls:
+        //    //        string[] urls = System.Text.RegularExpressions.Regex.Split(InputUrl, Environment.NewLine);
+        //    //        GenericResult<OfflineTaskParseUrl[]> x = await offlineDownloader.ParseUrl(urls);
+        //    //        ParseResults = x.Result;
+        //    //        if (CheckParseResults())
+        //    //        {
+        //    //            OnPropertyChanged(nameof(ParseResults));
+        //    //            Stage = Stage.CheckFiles;
+        //    //        }
+        //    //        else
+        //    //        {
+        //    //            Stage = Stage.SelectSavingPath;
+        //    //        }
+        //    //        break;
+        //    //    case Stage.CheckFiles:
+        //    //        for (int index = 0; index < ParseResults.Length; index++)
+        //    //        {
+        //    //            List<string> ignoreList = new List<string>(ParseResults.Length);
+        //    //            foreach (OfflineTaskParseFile file in ParseResults[index].Files)
+        //    //            {
+        //    //                if (file.IsChecked == false)
+        //    //                {
+        //    //                    ignoreList.Add(file.PathIdentity);
+        //    //                }
+        //    //            }
+        //    //            if (ignoreList.Count > 0)
+        //    //            {
+        //    //                OfflineTaskParameters[index].IginreFiles = ignoreList.ToArray();
+        //    //            }
+        //    //        }
+        //    //        Stage = Stage.SelectSavingPath;
+        //    //        break;
+        //    //    case Stage.SelectSavingPath:
+        //    //        FileListItemViewModel itemvm = parameter as FileListItemViewModel;
+        //    //        string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
+        //    //        GenericResult<OfflineTaskAdd> tasks = await offlineDownloader.Add(savingPath, OfflineTaskParameters);
+        //    //        if (!tasks.Success)
+        //    //        {
+        //    //            App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error));
+        //    //        }
+        //    //        System.Windows.Application.Current.Dispatcher.Invoke(() => DataContextHost.Close());
+        //    //        break;
+        //    //}
+        //}
 
+        /// <summary>
+        /// 选中后重置Parse序列
+        /// </summary>
         public DependencyCommand ParseUrlCommand { get; set; }
         private void ParseUrl(object parameter)
         {
