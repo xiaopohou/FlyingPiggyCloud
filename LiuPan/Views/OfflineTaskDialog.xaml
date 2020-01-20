@@ -104,7 +104,7 @@
             </Setter>
         </Style>
 
-        <ViewModels:TaskTypeConverter x:Key="TaskTypeConverter"/>
+        <!--<ViewModels:TaskTypeConverter x:Key="TaskTypeConverter"/>-->
 
         <UserControls:SizeCalculator x:Key="SizeCalculator"/>
 
@@ -151,7 +151,7 @@
                 <StackPanel VerticalAlignment="Top" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked">
                     <TextBlock Text="任务类型 " Margin="15" FontSize="24" VerticalAlignment="Top"/>
 
-                    <RadioButton IsChecked="{Binding TaskType, ConverterParameter=Urls, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}" x:Name="Urls" Style="{DynamicResource CardRadioButton}">
+                    <RadioButton x:Name="Urls" Style="{DynamicResource CardRadioButton}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>
@@ -235,7 +235,7 @@
                              materialDesign:HintAssist.Hint="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
                              Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"/>
 
-                    <RadioButton Command="{Binding UploadTorrentCommand}" x:Name="Torrent" Style="{DynamicResource CardRadioButton}" IsChecked="{Binding TaskType, ConverterParameter=Torrent, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}">
+                    <RadioButton Command="{Binding UploadTorrentCommand}" x:Name="Torrent" Style="{DynamicResource CardRadioButton}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>

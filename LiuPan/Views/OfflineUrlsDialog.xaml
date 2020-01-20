@@ -15,7 +15,7 @@
     MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
     <controls:MetroWindow.Resources>
         <ViewModels:StageConverter x:Key="StageConverter"/>
-        <ViewModels:TaskTypeConverter x:Key="TaskTypeConverter"/>
+        <!--<ViewModels:TaskTypeConverter x:Key="TaskTypeConverter"/>-->
         <UserControls:SizeCalculator x:Key="SizeCalculator"/>
 
         <Style x:Key="StageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
@@ -104,7 +104,7 @@
                 <ItemsControl Grid.Row="1" ItemsSource="{Binding Files}" ItemTemplate="{DynamicResource ParseFileTemplate}"/>
             </Grid>
         </DataTemplate>
-        
+
         <DataTemplate x:Key="ParseFileTemplate">
             <Grid x:Name="fileInfoContainer">
                 <Grid.ColumnDefinitions>
@@ -175,7 +175,7 @@
                 </Grid.Triggers>
                 <TextBlock Text="这是什么类型的下载任务？" Margin="15,3" FontSize="24" VerticalAlignment="Top"/>
                 <StackPanel VerticalAlignment="Top" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked" Margin="0,48,0,0">
-                    <RadioButton IsChecked="{Binding TaskType, ConverterParameter=Urls, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}" x:Name="Urls" Style="{DynamicResource CardRadioButton}">
+                    <RadioButton x:Name="Urls" Style="{DynamicResource CardRadioButton}">
                         <Grid Height="70">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>
@@ -195,7 +195,7 @@
                             </TextBlock>
                         </Grid>
                     </RadioButton>
-                    <RadioButton x:Name="Torrent" Style="{DynamicResource CardRadioButton}" IsChecked="{Binding TaskType, ConverterParameter=Torrent, Converter={StaticResource TaskTypeConverter}, Mode=TwoWay}">
+                    <RadioButton x:Name="Torrent" Style="{DynamicResource CardRadioButton}">
                         <Grid Height="70">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>

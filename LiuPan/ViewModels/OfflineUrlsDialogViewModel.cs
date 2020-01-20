@@ -28,7 +28,7 @@ namespace SixCloud.ViewModels
                 for (int index = 0; index < ParseResults.Length; index++)
                 {
                     OfflineTaskParameters[index] = new OfflineTaskParameters(ParseResults[index].Identity);
-                    result = ParseResults[index].Files.Length != 0 || result;
+                    result = ParseResults[index].Files.Count != 0 || result;
                 }
                 return result;
             }
