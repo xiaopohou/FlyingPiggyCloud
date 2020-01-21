@@ -15,7 +15,6 @@
     MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
     <controls:MetroWindow.Resources>
         <ViewModels:StageConverter x:Key="StageConverter"/>
-        <!--<ViewModels:TaskTypeConverter x:Key="TaskTypeConverter"/>-->
         <UserControls:SizeCalculator x:Key="SizeCalculator"/>
 
         <Style x:Key="StageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">

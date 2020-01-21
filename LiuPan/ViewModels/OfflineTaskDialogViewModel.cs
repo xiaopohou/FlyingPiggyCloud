@@ -60,6 +60,9 @@ namespace SixCloud.ViewModels
 
             public string SharePassword { get; set; }
 
+            /// <summary>
+            /// 仅未成功的任务可调用此Command
+            /// </summary>
             public DependencyCommand ParseCommand { get; set; }
             public async void Parse(object parameter = null)
             {
@@ -99,6 +102,17 @@ namespace SixCloud.ViewModels
 
                 OnPropertyChanged(nameof(Status));
                 parent.UrlParseResultConfirmCommand.OnCanExecutedChanged(this, null);
+                ParseCommand.OnCanExecutedChanged(this, null);
+            }
+            private bool CanParse(object parameter)
+            {
+                return Status != ParseResultStatus.Success;
+            }
+
+            public DependencyCommand CancelCommand { get; set; }
+            private void Cancel(object parameter)
+            {
+                parent.ParseResults.Remove(this);
             }
 
 
@@ -106,14 +120,16 @@ namespace SixCloud.ViewModels
             {
                 SourceUrl = source;
                 parent = p;
-                ParseCommand = new DependencyCommand(Parse, DependencyCommand.AlwaysCan);
+                ParseCommand = new DependencyCommand(Parse, CanParse);
+                CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
             }
 
             public ParseResult(OfflineTaskParseUrl e, OfflineTaskDialogViewModel p)
             {
                 parseResult = e;
                 parent = p;
-                ParseCommand = new DependencyCommand(Parse, DependencyCommand.AlwaysCan);
+                ParseCommand = new DependencyCommand(Parse, CanParse);
+                CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
             }
         }
 

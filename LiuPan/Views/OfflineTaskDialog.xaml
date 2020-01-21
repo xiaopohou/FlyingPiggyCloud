@@ -212,6 +212,8 @@
                                         <ColumnDefinition Width="1*"/>
                                         <!--Password-->
                                         <ColumnDefinition Width="Auto"/>
+                                        <!--解析按钮-->
+                                        <ColumnDefinition Width="Auto"/>
                                         <!--取消按钮-->
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
@@ -221,6 +223,7 @@
                                         <TextBlock Text="资源密码："/>
                                         <TextBox Text="{Binding Password,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
                                     </StackPanel>
+                                    <controls:LightButton FontIcon="&#xf7a9;" Command="{Binding ParseCommand}" Grid.Column="3"/>
                                     <controls:LightButton FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="3"/>
                                 </Grid>
                             </DataTemplate>
