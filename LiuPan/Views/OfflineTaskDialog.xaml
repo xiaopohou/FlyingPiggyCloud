@@ -142,7 +142,7 @@
     <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">
 
         <TabItem x:Name="NewTaskTabItem"
-                 IsSelected="True"
+                 IsSelected="{Binding Stage,ConverterParameter=WhichType,Mode=OneWay}"
                  Header="新建任务"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
@@ -176,7 +176,7 @@
                                 <EventTrigger.Actions>
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <DoubleAnimation To="300" Duration="00:00:00.500" Storyboard.TargetName="InputBox" Storyboard.TargetProperty="Height">
+                                            <DoubleAnimation To="300" Duration="00:00:00.500" Storyboard.TargetName="InputArea" Storyboard.TargetProperty="Height">
                                                 <DoubleAnimation.EasingFunction>
                                                     <ElasticEase EasingMode="EaseOut"/>
                                                 </DoubleAnimation.EasingFunction>
@@ -189,7 +189,7 @@
                                 <EventTrigger.Actions>
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <DoubleAnimation To="0" Duration="00:00:00.500" Storyboard.TargetName="InputBox" Storyboard.TargetProperty="Height">
+                                            <DoubleAnimation To="0" Duration="00:00:00.500" Storyboard.TargetName="InputArea" Storyboard.TargetProperty="Height">
                                                 <DoubleAnimation.EasingFunction>
                                                     <ElasticEase EasingMode="EaseOut"/>
                                                 </DoubleAnimation.EasingFunction>
@@ -200,43 +200,47 @@
                             </EventTrigger>
                         </RadioButton.Triggers>
                     </RadioButton>
+                    <Grid x:Name="InputArea" Margin="15" Height="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ItemsControl Grid.Row="0" x:Name="ParsedUrls" ItemsSource="{Binding ParseResults}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <!--任务类型图标-->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!--URL-->
+                                            <ColumnDefinition Width="1*"/>
+                                            <!--Password-->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!--解析按钮-->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!--取消按钮-->
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <controls:FontIcon Icon="{Binding Icon}"/>
+                                        <TextBox Text="{Binding SourceUrl}" Grid.Column="1"/>
+                                        <StackPanel Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
+                                            <TextBlock Text="资源密码："/>
+                                            <TextBox Width="60" Text="{Binding SharePassword,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
+                                        </StackPanel>
+                                        <controls:LightButton FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
+                                        <controls:LightButton FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
-                    <ListBox x:Name="ParsedUrls" ItemsSource="{Binding ParseResults}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <!--任务类型图标-->
-                                        <ColumnDefinition Width="Auto"/>
-                                        <!--URL-->
-                                        <ColumnDefinition Width="1*"/>
-                                        <!--Password-->
-                                        <ColumnDefinition Width="Auto"/>
-                                        <!--解析按钮-->
-                                        <ColumnDefinition Width="Auto"/>
-                                        <!--取消按钮-->
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <controls:FontIcon Icon="{Binding Icon}"/>
-                                    <TextBox Text="{Binding Url}" Grid.Column="1"/>
-                                    <StackPanel Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
-                                        <TextBlock Text="资源密码："/>
-                                        <TextBox Text="{Binding Password,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
-                                    </StackPanel>
-                                    <controls:LightButton FontIcon="&#xf7a9;" Command="{Binding ParseCommand}" Grid.Column="3"/>
-                                    <controls:LightButton FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="3"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-
-                    <TextBox AcceptsReturn="True"
-                             x:Name="InputBox"
-                             Margin="15"
-                             Height="0"
-                             Text="{Binding InputBoxString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                             materialDesign:HintAssist.Hint="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
-                             Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"/>
+                        <TextBox AcceptsReturn="True"
+                                 x:Name="InputBox"
+                                 Grid.Row="1"
+                                 Text="{Binding InputBoxString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                 materialDesign:HintAssist.Hint="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
+                                 Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"/>
+                    </Grid>
 
                     <RadioButton Command="{Binding UploadTorrentCommand}" x:Name="Torrent" Style="{DynamicResource CardRadioButton}">
                         <Grid>
@@ -259,7 +263,7 @@
                         </Grid>
                     </RadioButton>
 
-                    <Button Content="确定" Margin="15" Width="120"/>
+                    <Button Content="确定" Margin="15" Width="120" Command="{Binding UrlParseResultConfirmCommand}"/>
 
                 </StackPanel>
 
@@ -295,16 +299,22 @@
         </TabItem>
 
         <TabItem x:Name="CheckFileTabItem"
+                 IsSelected="{Binding Stage,ConverterParameter=CheckFiles,Mode=OneWay}"
                  IsEnabled="{Binding IsCheckFileTabEnable}"
                  Header="文件搜检"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
             <Grid x:Name="CheckFile" Margin="0 16 0 0" OpacityMask="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <TextBlock Text="如果不希望下载某些文件，请取消勾选" Margin="5" FontSize="24" VerticalAlignment="Top"/>
                 <ScrollViewer Grid.Row="1">
                     <ItemsControl ItemsSource="{Binding ParseResults}" ItemTemplate="{DynamicResource ParseResultTemplate}" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked"/>
                 </ScrollViewer>
-
+                <Button Content="确认" Command="{Binding CheckFilesCommand}"/>
 
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="CheckFileTranslateTransform"/>
@@ -338,6 +348,7 @@
         </TabItem>
 
         <TabItem x:Name="SavingPathTabItem"
+                 IsSelected="{Binding Stage,ConverterParameter=SelectSavingPath,Mode=OneWay}"
                  IsEnabled="{Binding IsSavingPathTabEnable}"
                  Header="保存路径"
                  Background="{x:Null}"
@@ -356,7 +367,7 @@
                                            Margin="5"
                                            Command="{Binding NavigateCommand}"
                                            CommandParameter="{Binding SelectObject, ElementName=fileList}"/>
-                <Button Content="提交" Grid.Row="2"/>
+                <Button Content="提交" Grid.Row="2" Command="{Binding SelectSavingPathCommand}" CommandParameter="{Binding Path=DataContext}"/>
 
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="SavingPathTranslateTransform"/>

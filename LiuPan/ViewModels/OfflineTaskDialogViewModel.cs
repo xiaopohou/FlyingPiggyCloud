@@ -17,6 +17,7 @@ namespace SixCloud.ViewModels
     {
         private readonly OfflineDownloader offlineDownloader = new OfflineDownloader();
         private string inputBoxString;
+        private OfflineUrlsDialogStage stage = OfflineUrlsDialogStage.WhichType;
 
         internal class ParseResult : ViewModelBase
         {
@@ -57,7 +58,29 @@ namespace SixCloud.ViewModels
             /// </summary>
             public ParseResultStatus Status { get; private set; } = ParseResultStatus.Parsing;
 
+            public Visibility PasswordBoxVisibility => Status == ParseResultStatus.PasswordRequired ? Visibility.Visible : Visibility.Collapsed;
+
             public string SourceUrl { get; set; }
+
+            public string Icon
+            {
+                get
+                {
+                    switch (Status)
+                    {
+                        case ParseResultStatus.Parsing:
+                            return "\uf519";
+                        case ParseResultStatus.PasswordRequired:
+                            return "\uf084";
+                        case ParseResultStatus.InvalidUrl:
+                            return "\uf06a";
+                        case ParseResultStatus.Success:
+                            return "\uf058";
+                        default:
+                            return "\uf519";
+                    }
+                }
+            }
 
             public string SharePassword { get; set; }
 
@@ -100,8 +123,9 @@ namespace SixCloud.ViewModels
                     Status = ParseResultStatus.Success;
                 }
 
-
+                OnPropertyChanged(nameof(PasswordBoxVisibility));
                 OnPropertyChanged(nameof(Status));
+                OnPropertyChanged(nameof(Icon));
                 parent.UrlParseResultConfirmCommand.OnCanExecutedChanged(this, null);
                 ParseCommand.OnCanExecutedChanged(this, null);
             }
@@ -167,8 +191,17 @@ namespace SixCloud.ViewModels
         /// <summary>
         /// 当前阶段
         /// </summary>
-        public OfflineUrlsDialogStage Stage { get; private set; } = OfflineUrlsDialogStage.WhichType;
-
+        public OfflineUrlsDialogStage Stage
+        {
+            get => stage;
+            private set
+            {
+                stage = value;
+                OnPropertyChanged(nameof(IsCheckFileTabEnable));
+                OnPropertyChanged(nameof(IsSavingPathTabEnable));
+                OnPropertyChanged(nameof(Stage));
+            }
+        }
         /// <summary>
         /// 文件选择选项卡可用性
         /// </summary>
@@ -204,8 +237,7 @@ namespace SixCloud.ViewModels
             var taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
             OfflineTaskParameters = taskParameters.ToArray();
 
-            Stage = taskParameters.Any() ? OfflineUrlsDialogStage.WhichType : OfflineUrlsDialogStage.CheckFiles;
-            OnPropertyChanged(nameof(Stage));
+            Stage = taskParameters.Any() ? OfflineUrlsDialogStage.CheckFiles : OfflineUrlsDialogStage.WhichType;
         }
         private bool CanUrlParseResultConfirm(object parameter)
         {
@@ -213,23 +245,6 @@ namespace SixCloud.ViewModels
                               where result.Status != ParseResult.ParseResultStatus.Success
                               select result;
             return !unsuccessed.Any();
-        }
-
-        public DependencyCommand CheckFilesCommand { get; set; }
-        private void CheckFiles(object parameter)
-        {
-            var ignoreList = from result in ParseResults
-                             from file in result.Files
-                             where file.IsChecked == false
-                             select new { Index = ParseResults.IndexOf(result), file.PathIdentity };
-            if (ignoreList.Any())
-            {
-                foreach (var ignoreFile in ignoreList)
-                {
-                    OfflineTaskParameters[ignoreFile.Index].IginreFiles = OfflineTaskParameters[ignoreFile.Index].IginreFiles ?? new List<string>();
-                    OfflineTaskParameters[ignoreFile.Index].IginreFiles.Add(ignoreFile.PathIdentity);
-                }
-            }
         }
 
         public DependencyCommand UploadTorrentCommand { get; set; }
@@ -275,10 +290,28 @@ namespace SixCloud.ViewModels
                 var taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
                 OfflineTaskParameters = taskParameters.ToArray();
 
-                Stage = taskParameters.Any() ? OfflineUrlsDialogStage.WhichType : OfflineUrlsDialogStage.CheckFiles;
-                OnPropertyChanged(nameof(Stage));
+                Stage = taskParameters.Any() ? OfflineUrlsDialogStage.CheckFiles : OfflineUrlsDialogStage.WhichType;
             }
             #endregion
+        }
+
+        public DependencyCommand CheckFilesCommand { get; set; }
+        private void CheckFiles(object parameter)
+        {
+            var ignoreList = from result in ParseResults
+                             from file in result.Files
+                             where file.IsChecked == false
+                             select new { Index = ParseResults.IndexOf(result), file.PathIdentity };
+            if (ignoreList.Any())
+            {
+                foreach (var ignoreFile in ignoreList)
+                {
+                    OfflineTaskParameters[ignoreFile.Index].IginreFiles = OfflineTaskParameters[ignoreFile.Index].IginreFiles ?? new List<string>();
+                    OfflineTaskParameters[ignoreFile.Index].IginreFiles.Add(ignoreFile.PathIdentity);
+                }
+            }
+            Stage = OfflineUrlsDialogStage.SelectSavingPath;
+
         }
 
         public DependencyCommand SelectSavingPathCommand { get; set; }
@@ -299,6 +332,7 @@ namespace SixCloud.ViewModels
             ParseUrlCommand = new DependencyCommand(ParseUrl, DependencyCommand.AlwaysCan);
             UrlParseResultConfirmCommand = new DependencyCommand(UrlParseResultConfirm, CanUrlParseResultConfirm);
             CheckFilesCommand = new DependencyCommand(CheckFiles, DependencyCommand.AlwaysCan);
+            SelectSavingPathCommand = new DependencyCommand(SelectSavingPath, DependencyCommand.AlwaysCan);
         }
     }
 }

@@ -17,9 +17,9 @@ namespace SixCloud.ViewModels
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is OfflineUrlsDialogStage type && parameter is string radioButtonName)
+            if (value is OfflineUrlsDialogStage type && parameter is string tabItemName)
             {
-                return type.ToString() == radioButtonName;
+                return type.ToString() == tabItemName;
             }
             return null;
         }
