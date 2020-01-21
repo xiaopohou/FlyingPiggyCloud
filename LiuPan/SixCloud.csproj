@@ -179,6 +179,7 @@
     <Compile Include="ViewModels\MainFrameViewModel.cs" />
     <Compile Include="ViewModels\OfflineTaskDialogViewModel.cs" />
     <Compile Include="ViewModels\OfflineTaskViewModel.cs" />
+    <Compile Include="ViewModels\OfflineUrlsDialogStage.cs" />
     <Compile Include="ViewModels\OfflineUrlsDialogViewModel.cs" />
     <Compile Include="ViewModels\RecoveryBoxViewModel.cs" />
     <Compile Include="ViewModels\TransferListViewModel.cs" />

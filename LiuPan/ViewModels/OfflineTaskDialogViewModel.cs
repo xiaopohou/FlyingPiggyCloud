@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace SixCloud.ViewModels
@@ -166,17 +167,17 @@ namespace SixCloud.ViewModels
         /// <summary>
         /// 当前阶段
         /// </summary>
-        public Stage Stage { get; private set; } = Stage.WhichType;
+        public OfflineUrlsDialogStage Stage { get; private set; } = OfflineUrlsDialogStage.WhichType;
 
         /// <summary>
         /// 文件选择选项卡可用性
         /// </summary>
-        public bool IsCheckFileTabEnable => Stage == Stage.CheckFiles || Stage == Stage.SelectSavingPath;
+        public bool IsCheckFileTabEnable => Stage == OfflineUrlsDialogStage.CheckFiles || Stage == OfflineUrlsDialogStage.SelectSavingPath;
 
         /// <summary>
         /// 离线路径选项卡可用性
         /// </summary>
-        public bool IsSavingPathTabEnable => Stage == Stage.SelectSavingPath;
+        public bool IsSavingPathTabEnable => Stage == OfflineUrlsDialogStage.SelectSavingPath;
 
         /// <summary>
         /// 离线任务解析结果
@@ -188,57 +189,6 @@ namespace SixCloud.ViewModels
         public FileGridViewModel FileGrid { get; set; } = new FileGridViewModel();
 
         #region Commands
-
-        //public DependencyCommand NextStageCommand { get; set; }
-        //private void NextStage(object parameter)
-        //{
-        //    //switch (Stage)
-        //    //{
-        //    //    case Stage.InputUrls:
-        //    //        string[] urls = System.Text.RegularExpressions.Regex.Split(InputUrl, Environment.NewLine);
-        //    //        GenericResult<OfflineTaskParseUrl[]> x = await offlineDownloader.ParseUrl(urls);
-        //    //        ParseResults = x.Result;
-        //    //        if (CheckParseResults())
-        //    //        {
-        //    //            OnPropertyChanged(nameof(ParseResults));
-        //    //            Stage = Stage.CheckFiles;
-        //    //        }
-        //    //        else
-        //    //        {
-        //    //            Stage = Stage.SelectSavingPath;
-        //    //        }
-        //    //        break;
-        //    //    case Stage.CheckFiles:
-        //    //        for (int index = 0; index < ParseResults.Length; index++)
-        //    //        {
-        //    //            List<string> ignoreList = new List<string>(ParseResults.Length);
-        //    //            foreach (OfflineTaskParseFile file in ParseResults[index].Files)
-        //    //            {
-        //    //                if (file.IsChecked == false)
-        //    //                {
-        //    //                    ignoreList.Add(file.PathIdentity);
-        //    //                }
-        //    //            }
-        //    //            if (ignoreList.Count > 0)
-        //    //            {
-        //    //                OfflineTaskParameters[index].IginreFiles = ignoreList.ToArray();
-        //    //            }
-        //    //        }
-        //    //        Stage = Stage.SelectSavingPath;
-        //    //        break;
-        //    //    case Stage.SelectSavingPath:
-        //    //        FileListItemViewModel itemvm = parameter as FileListItemViewModel;
-        //    //        string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
-        //    //        GenericResult<OfflineTaskAdd> tasks = await offlineDownloader.Add(savingPath, OfflineTaskParameters);
-        //    //        if (!tasks.Success)
-        //    //        {
-        //    //            App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error));
-        //    //        }
-        //    //        System.Windows.Application.Current.Dispatcher.Invoke(() => DataContextHost.Close());
-        //    //        break;
-        //    //}
-        //}
-
         /// <summary>
         /// 选中后重置Parse序列
         /// </summary>
@@ -251,7 +201,11 @@ namespace SixCloud.ViewModels
         public DependencyCommand UrlParseResultConfirmCommand { get; set; }
         private void UrlParseResultConfirm(object parameter)
         {
+            var taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
+            OfflineTaskParameters = taskParameters.ToArray();
 
+            Stage = taskParameters.Any() ? OfflineUrlsDialogStage.WhichType : OfflineUrlsDialogStage.CheckFiles;
+            OnPropertyChanged(nameof(Stage));
         }
         private bool CanUrlParseResultConfirm(object parameter)
         {
@@ -259,6 +213,23 @@ namespace SixCloud.ViewModels
                               where result.Status != ParseResult.ParseResultStatus.Success
                               select result;
             return !unsuccessed.Any();
+        }
+
+        public DependencyCommand CheckFilesCommand { get; set; }
+        private void CheckFiles(object parameter)
+        {
+            var ignoreList = from result in ParseResults
+                             from file in result.Files
+                             where file.IsChecked == false
+                             select new { Index = ParseResults.IndexOf(result), file.PathIdentity };
+            if (ignoreList.Any())
+            {
+                foreach (var ignoreFile in ignoreList)
+                {
+                    OfflineTaskParameters[ignoreFile.Index].IginreFiles = OfflineTaskParameters[ignoreFile.Index].IginreFiles ?? new List<string>();
+                    OfflineTaskParameters[ignoreFile.Index].IginreFiles.Add(ignoreFile.PathIdentity);
+                }
+            }
         }
 
         public DependencyCommand UploadTorrentCommand { get; set; }
@@ -301,30 +272,25 @@ namespace SixCloud.ViewModels
                     ParseResults.Add(new ParseResult(result, this));
                 }
 
-                Stage = CheckParseResults() ? Stage.CheckFiles : Stage.SelectSavingPath;
+                var taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
+                OfflineTaskParameters = taskParameters.ToArray();
+
+                Stage = taskParameters.Any() ? OfflineUrlsDialogStage.WhichType : OfflineUrlsDialogStage.CheckFiles;
                 OnPropertyChanged(nameof(Stage));
-
-                bool CheckParseResults()
-                {
-                    if (ParseResults != null)
-                    {
-                        bool result = false;
-                        OfflineTaskParameters = new OfflineTaskParameters[ParseResults.Count];
-                        for (int index = 0; index < ParseResults.Count; index++)
-                        {
-                            OfflineTaskParameters[index] = new OfflineTaskParameters(ParseResults[index].Identity);
-                            result = ParseResults[index].Files.Count != 0 || result;
-                        }
-                        return result;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-
             }
             #endregion
+        }
+
+        public DependencyCommand SelectSavingPathCommand { get; set; }
+        private async void SelectSavingPath(object parameter)
+        {
+            FileListItemViewModel itemvm = parameter as FileListItemViewModel;
+            string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
+            GenericResult<OfflineTaskAdd> tasks = await offlineDownloader.Add(savingPath, OfflineTaskParameters);
+            if (!tasks.Success)
+            {
+                App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error));
+            }
         }
 
         public OfflineTaskDialogViewModel()
@@ -332,6 +298,7 @@ namespace SixCloud.ViewModels
             UploadTorrentCommand = new DependencyCommand(UploadTorrent, DependencyCommand.AlwaysCan);
             ParseUrlCommand = new DependencyCommand(ParseUrl, DependencyCommand.AlwaysCan);
             UrlParseResultConfirmCommand = new DependencyCommand(UrlParseResultConfirm, CanUrlParseResultConfirm);
+            CheckFilesCommand = new DependencyCommand(CheckFiles, DependencyCommand.AlwaysCan);
         }
     }
 }
