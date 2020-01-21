@@ -35,5 +35,9 @@ namespace SixCloud.Views
             UpdateLayout();
         }
 
+        private void SavingPathConfirm_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }
