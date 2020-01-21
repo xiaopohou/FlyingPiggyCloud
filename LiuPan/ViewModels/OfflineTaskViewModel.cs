@@ -29,7 +29,8 @@ namespace SixCloud.ViewModels
             yield break;
         }
 
-        public async void LazyLoad()
+#warning 这里存在线程安全问题
+        public async Task LazyLoad()
         {
             if (listEnumerator == null)
             {
@@ -81,11 +82,11 @@ namespace SixCloud.ViewModels
 
 
         public DependencyCommand RefreshListCommand { get; set; }
-        private void RefreshList(object parameter = null)
+        private async void RefreshList(object parameter = null)
         {
             ObservableCollection.Clear();
             listEnumerator = null;
-            LazyLoad();
+            await LazyLoad();
         }
         #endregion
 
@@ -96,7 +97,7 @@ namespace SixCloud.ViewModels
             NewTaskCommand = new DependencyCommand(NewTask, DependencyCommand.AlwaysCan);
             CancelTaskCommand = new DependencyCommand(CancelTask, DependencyCommand.AlwaysCan);
             RefreshListCommand = new DependencyCommand(RefreshList, DependencyCommand.AlwaysCan);
-            LazyLoad();
+            RefreshList();
         }
     }
 

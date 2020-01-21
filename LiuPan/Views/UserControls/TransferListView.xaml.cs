@@ -100,7 +100,7 @@ namespace SixCloud.Views.UserControls
             }
             //懒加载的业务代码
             TransferListViewModel vm = DataContext as TransferListViewModel;
-            await Task.Run(() => vm.OfflineTask.LazyLoad());
+            await vm.OfflineTask.LazyLoad();
             LazyLoadEventHandler += LazyLoad;
         }
 
