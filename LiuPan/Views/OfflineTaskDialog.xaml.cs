@@ -39,5 +39,15 @@ namespace SixCloud.Views
         {
             Close();
         }
+
+        private void InputBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var urlTextBox = sender as TextBox;
+            var urlText = urlTextBox?.Text;
+            if (!string.IsNullOrWhiteSpace(urlText) && urlText.Last().ToString() != Environment.NewLine)
+            {
+                urlTextBox.Text += Environment.NewLine;
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@
                       xmlns:local="clr-namespace:SixCloud.Views"
                       xmlns:ViewModels="clr-namespace:SixCloud.ViewModels"
                       xmlns:UserControls="clr-namespace:SixCloud.Views.UserControls"
+                      xmlns:ValidationRules="clr-namespace:SixCloud.ViewModels.ValidationRules"
                       mc:Ignorable="d"
                       BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
                       ShowInTaskbar="False" MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
@@ -222,14 +223,22 @@
                                             <!--取消按钮-->
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <controls:FontIcon Margin="2" Icon="{Binding Icon}"/>
-                                        <TextBox Margin="2" Text="{Binding SourceUrl}" Grid.Column="1"/>
-                                        <StackPanel Margin="2" Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
+                                        <controls:FontIcon Margin="3" Icon="{Binding Icon}"/>
+                                        <TextBox Margin="3" Grid.Column="1" IsEnabled="{Binding AllowEdit}">
+                                            <TextBox.Text>
+                                                <Binding Path="SourceUrl" ValidatesOnExceptions="True">
+                                                    <!--<Binding.ValidationRules>
+                                                        <ValidationRules:ParsingUrl x:Name="ParsingRules"/>
+                                                    </Binding.ValidationRules>-->
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+                                        <StackPanel Margin="3" Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
                                             <TextBlock VerticalAlignment="Center" Text="资源密码："/>
                                             <TextBox VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="60" Text="{Binding SharePassword,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
                                         </StackPanel>
-                                        <controls:LightButton ToolTip="解析链接" Margin="2" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
-                                        <controls:LightButton ToolTip="取消任务" Margin="2" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
+                                        <controls:LightButton ToolTip="解析链接" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
+                                        <controls:LightButton ToolTip="取消任务" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -240,7 +249,7 @@
                                  Grid.Row="1"
                                  Text="{Binding InputBoxString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                  materialDesign:HintAssist.Hint="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
-                                 Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"/>
+                                 Style="{StaticResource MaterialDesignFilledTextFieldTextBox}" LostFocus="InputBox_LostFocus"/>
                     </Grid>
 
                     <RadioButton Command="{Binding UploadTorrentCommand}" x:Name="Torrent" Style="{DynamicResource CardRadioButton}">

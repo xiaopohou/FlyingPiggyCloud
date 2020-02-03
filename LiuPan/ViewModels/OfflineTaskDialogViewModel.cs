@@ -4,6 +4,7 @@ using QingzhenyunApis.Methods;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -22,7 +23,6 @@ namespace SixCloud.ViewModels
         internal class ParseResult : ViewModelBase
         {
             private OfflineTaskParseUrl parseResult;
-
             private readonly OfflineTaskDialogViewModel parent;
 
             internal enum ParseResultStatus
@@ -61,6 +61,8 @@ namespace SixCloud.ViewModels
             public Visibility PasswordBoxVisibility => Status == ParseResultStatus.PasswordRequired ? Visibility.Visible : Visibility.Collapsed;
 
             public string SourceUrl { get; set; }
+
+            public bool AllowEdit => Status != ParseResultStatus.Success;
 
             public string Icon
             {
@@ -125,6 +127,7 @@ namespace SixCloud.ViewModels
 
                 OnPropertyChanged(nameof(PasswordBoxVisibility));
                 OnPropertyChanged(nameof(Status));
+                OnPropertyChanged(nameof(AllowEdit));
                 OnPropertyChanged(nameof(Icon));
                 parent.UrlParseResultConfirmCommand.OnCanExecutedChanged(this, null);
                 ParseCommand.OnCanExecutedChanged(this, null);
@@ -241,6 +244,7 @@ namespace SixCloud.ViewModels
         }
         private bool CanUrlParseResultConfirm(object parameter)
         {
+
             var unsuccessed = from result in ParseResults
                               where result.Status != ParseResult.ParseResultStatus.Success
                               select result;

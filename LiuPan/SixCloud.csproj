@@ -180,7 +180,7 @@
     <Compile Include="ViewModels\OfflineTaskDialogViewModel.cs" />
     <Compile Include="ViewModels\OfflineTaskViewModel.cs" />
     <Compile Include="ViewModels\OfflineUrlsDialogStage.cs" />
-    <Compile Include="ViewModels\OfflineUrlsDialogViewModel.cs" />
+    <Compile Include="ViewModels\StageConverter.cs" />
     <Compile Include="ViewModels\RecoveryBoxViewModel.cs" />
     <Compile Include="ViewModels\TransferListViewModel.cs" />
     <Compile Include="ViewModels\UploadedListViewModel.cs" />
@@ -189,6 +189,7 @@
     <Compile Include="ViewModels\UploadingListViewModel.cs" />
     <Compile Include="ViewModels\UploadingTaskViewModel.cs" />
     <Compile Include="ViewModels\UserInformationVIewModel.cs" />
+    <Compile Include="ViewModels\ValidationRules\ParsingUrl.cs" />
     <Compile Include="ViewModels\ValidationRules\PhoneNumber.cs" />
     <Compile Include="ViewModels\ValidationRules\RejectNullOrEmptyString.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
