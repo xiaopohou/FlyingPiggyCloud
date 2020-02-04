@@ -54,18 +54,18 @@ namespace QingzhenyunApis.Methods
                 HttpContentHeaders headers = CreateHeader(data, requestObject);
 
                 //构建签名
-                CreateSignature(uri, isAnonymous, headers);
+                await CreateSignature(uri, isAnonymous, headers);
 
                 //发起请求
                 HttpResponseMessage response = await httpClient.PostAsync(uri, requestObject);
-                string responseBody = await response.Content.ReadAsStringAsync();
                 if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
                 {
                     Token = newToken.FirstOrDefault() ?? Token;
                 }
+                string responseBody = await response.Content.ReadAsStringAsync();
+
                 return JsonConvert.DeserializeObject<T>(responseBody);
             }
-
         }
 
         protected T Post<T>(string data, string uri, bool isAnonymous = true)
@@ -76,7 +76,7 @@ namespace QingzhenyunApis.Methods
                 HttpContentHeaders headers = CreateHeader(data, requestObject);
 
                 //构建签名
-                CreateSignature(uri, isAnonymous, headers);
+                CreateSignature(uri, isAnonymous, headers).Wait();
 
                 //发起请求
                 HttpResponseMessage response = httpClient.PostAsync(uri, requestObject).Result;
@@ -101,21 +101,24 @@ namespace QingzhenyunApis.Methods
             return headers;
         }
 
-        private void CreateSignature(string uri, bool isAnonymous, HttpContentHeaders headers)
+        private async Task CreateSignature(string uri, bool isAnonymous, HttpContentHeaders headers)
         {
-            lock (Token)
+            await Task.Run(() =>
             {
-                string unixDateTimeNow = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds.ToString();
-                string extraHeaders = $"contentmd5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}{(isAnonymous ? "" : $"qingzhen-token: {Token}")}";
-                string signature = HmacSha1(AccessKeySecret, $"POST{unixDateTimeNow}{extraHeaders}{uri}");
-                string authorization = $"{AccessKeyId}:{signature}";
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Qingzhen", authorization);
-
-                if (!isAnonymous)
+                lock (Token)
                 {
-                    headers.Add("qingzhen-token", Token);
+                    string unixDateTimeNow = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds.ToString();
+                    string extraHeaders = $"contentmd5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}{(isAnonymous ? "" : $"qingzhen-token: {Token}")}";
+                    string signature = HmacSha1(AccessKeySecret, $"POST{unixDateTimeNow}{extraHeaders}{uri}");
+                    string authorization = $"{AccessKeyId}:{signature}";
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Qingzhen", authorization);
+
+                    if (!isAnonymous)
+                    {
+                        headers.Add("qingzhen-token", Token);
+                    }
                 }
-            }
+            });
         }
     }
 }

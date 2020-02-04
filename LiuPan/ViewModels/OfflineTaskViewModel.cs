@@ -12,7 +12,7 @@ namespace SixCloud.ViewModels
 {
     internal class OfflineTaskViewModel : ViewModelBase
     {
-        public ObservableCollection<OfflineTask> ObservableCollection { get; } = new ObservableCollection<OfflineTask>();
+        public ObservableCollection<OfflineTask> ObservableCollection { get; private set; } = new ObservableCollection<OfflineTask>();
         private readonly OfflineDownloader downloader = new OfflineDownloader();
 
         private IAsyncEnumerator<OfflineTask[]> listEnumerator;
@@ -32,19 +32,23 @@ namespace SixCloud.ViewModels
 #warning 这里存在线程安全问题
         public async Task LazyLoad()
         {
-            if (listEnumerator == null)
-            {
-                listEnumerator = GetListEnumeratorAsync().GetAsyncEnumerator();
-            }
+
+            listEnumerator ??= GetListEnumeratorAsync().GetAsyncEnumerator();
+
             if (await listEnumerator.MoveNextAsync())
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                //Application.Current.Dispatcher.Invoke(() =>
+                //{
+                //    foreach (OfflineTask a in listEnumerator.Current)
+                //    {
+                //        ObservableCollection.Add(a);
+                //    }
+                //});
+                foreach (OfflineTask a in listEnumerator.Current)
                 {
-                    foreach (OfflineTask a in listEnumerator.Current)
-                    {
-                        ObservableCollection.Add(a);
-                    }
-                });
+                    ObservableCollection.Add(a);
+                }
+
             }
         }
 
@@ -53,14 +57,20 @@ namespace SixCloud.ViewModels
         public DependencyCommand NewTaskCommand { get; set; }
         private void NewTask(object parameters)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            //Application.Current.Dispatcher.Invoke(() =>
+            //{
+            //    OfflineTaskDialog a = new OfflineTaskDialog
+            //    {
+            //        DataContext = new OfflineTaskDialogViewModel()
+            //    };
+            //    a.ShowDialog();
+            //});
+            OfflineTaskDialog a = new OfflineTaskDialog
             {
-                var a = new OfflineTaskDialog
-                {
-                    DataContext = new OfflineTaskDialogViewModel()
-                };
-                a.Show();
-            });
+                DataContext = new OfflineTaskDialogViewModel()
+            };
+            a.ShowDialog();
+            RefreshList();
         }
 
         public DependencyCommand CancelTaskCommand { get; set; }
@@ -84,6 +94,13 @@ namespace SixCloud.ViewModels
         public DependencyCommand RefreshListCommand { get; set; }
         private async void RefreshList(object parameter = null)
         {
+            //ObservableCollection = new ObservableCollection<OfflineTask>();
+            //OnPropertyChanged(nameof(ObservableCollection));
+            //if (listEnumerator != null)
+            //{
+            //    return;
+            //}
+#warning 这里有严重的性能问题
             ObservableCollection.Clear();
             listEnumerator = null;
             await LazyLoad();
