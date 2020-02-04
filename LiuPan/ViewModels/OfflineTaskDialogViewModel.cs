@@ -47,6 +47,28 @@ namespace SixCloud.ViewModels
 
             public string Name => parseResult.Name;
 
+            public string FriendlyErrorInfo
+            {
+                get
+                {
+                    switch (Status)
+                    {
+                        case ParseResultStatus.Success:
+                            return null;
+                        case ParseResultStatus.Parsing:
+                            return "解析中请稍等";
+                        case ParseResultStatus.PasswordRequired:
+                            return "需要密码";
+                        case ParseResultStatus.InvalidUrl:
+                            return "地址解析失败";
+                        default:
+                            return "预期外的任务状态";
+                    }
+                }
+            }
+
+            public Visibility FriendlyErrorInfoVisibility => FriendlyErrorInfo == null ? Visibility.Collapsed : Visibility.Visible;
+
             public string Identity => parseResult.Identity;
 
             public long Size => parseResult.Size;
@@ -129,6 +151,8 @@ namespace SixCloud.ViewModels
                 OnPropertyChanged(nameof(Status));
                 OnPropertyChanged(nameof(AllowEdit));
                 OnPropertyChanged(nameof(Icon));
+                OnPropertyChanged(nameof(FriendlyErrorInfo));
+                OnPropertyChanged(nameof(FriendlyErrorInfoVisibility));
                 parent.UrlParseResultConfirmCommand.OnCanExecutedChanged(this, null);
                 ParseCommand.OnCanExecutedChanged(this, null);
             }

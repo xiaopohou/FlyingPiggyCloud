@@ -9,6 +9,7 @@
                       xmlns:ViewModels="clr-namespace:SixCloud.ViewModels"
                       xmlns:UserControls="clr-namespace:SixCloud.Views.UserControls"
                       xmlns:ValidationRules="clr-namespace:SixCloud.ViewModels.ValidationRules"
+                      xmlns:system="clr-namespace:System;assembly=mscorlib"
                       mc:Ignorable="d"
                       BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
                       ShowInTaskbar="False" MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
@@ -207,42 +208,42 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-                        <ItemsControl Grid.Row="0" x:Name="ParsedUrls" ItemsSource="{Binding ParseResults}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <!--任务类型图标-->
-                                            <ColumnDefinition Width="Auto"/>
-                                            <!--URL-->
-                                            <ColumnDefinition Width="1*"/>
-                                            <!--Password-->
-                                            <ColumnDefinition Width="Auto"/>
-                                            <!--解析按钮-->
-                                            <ColumnDefinition Width="Auto"/>
-                                            <!--取消按钮-->
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <controls:FontIcon Margin="3" Icon="{Binding Icon}"/>
-                                        <TextBox Margin="3" Grid.Column="1" IsEnabled="{Binding AllowEdit}">
-                                            <TextBox.Text>
-                                                <Binding Path="SourceUrl" ValidatesOnExceptions="True">
-                                                    <!--<Binding.ValidationRules>
-                                                        <ValidationRules:ParsingUrl x:Name="ParsingRules"/>
-                                                    </Binding.ValidationRules>-->
-                                                </Binding>
-                                            </TextBox.Text>
-                                        </TextBox>
-                                        <StackPanel Margin="3" Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
-                                            <TextBlock VerticalAlignment="Center" Text="资源密码："/>
-                                            <TextBox VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="60" Text="{Binding SharePassword,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
-                                        </StackPanel>
-                                        <controls:LightButton ToolTip="解析链接" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
-                                        <controls:LightButton ToolTip="取消任务" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                            <ItemsControl x:Name="ParsedUrls" ItemsSource="{Binding ParseResults}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <!--任务类型图标-->
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!--URL-->
+                                                <ColumnDefinition Width="1*"/>
+                                                <!--Password-->
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!--解析按钮-->
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!--取消按钮-->
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <controls:FontIcon Margin="3" Icon="{Binding Icon}"/>
+                                            <TextBox Margin="3" Grid.Column="1" IsEnabled="{Binding AllowEdit}" Text="{Binding SourceUrl}"/>
+                                            <StackPanel Margin="3" Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
+                                                <TextBlock VerticalAlignment="Center" Text="资源密码："/>
+                                                <TextBox VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="60" Text="{Binding SharePassword,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
+                                            </StackPanel>
+                                            <controls:LightButton ToolTip="解析链接" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
+                                            <controls:LightButton ToolTip="取消任务" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
+
+                                            <TextBlock x:Name="FriendlyErrorInfo" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding FriendlyErrorInfo}" Foreground="DarkRed" Visibility="{Binding FriendlyErrorInfoVisibility}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
 
                         <TextBox AcceptsReturn="True"
                                  x:Name="InputBox"
