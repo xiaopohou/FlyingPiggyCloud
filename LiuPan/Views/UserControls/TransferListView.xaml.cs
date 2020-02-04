@@ -53,7 +53,7 @@ namespace SixCloud.Views.UserControls
             {
                 IList list = (IList)e.Parameter;
                 IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
-                foreach (DownloadingTaskViewModel t in downloadingTasks)
+                foreach (DownloadingTaskViewModel t in downloadingTasks.ToArray())
                 {
                     t.Stop();
                 }
