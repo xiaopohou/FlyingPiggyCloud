@@ -20,6 +20,7 @@ namespace SixCloud.ViewModels
         private string inputBoxString;
         private OfflineUrlsDialogStage stage = OfflineUrlsDialogStage.WhichType;
 
+        #region InnerModels
         internal class ParseResult : ViewModelBase
         {
             private OfflineTaskParseUrl parseResult;
@@ -51,19 +52,14 @@ namespace SixCloud.ViewModels
             {
                 get
                 {
-                    switch (Status)
+                    return Status switch
                     {
-                        case ParseResultStatus.Success:
-                            return null;
-                        case ParseResultStatus.Parsing:
-                            return "解析中请稍等";
-                        case ParseResultStatus.PasswordRequired:
-                            return "需要密码";
-                        case ParseResultStatus.InvalidUrl:
-                            return "地址解析失败";
-                        default:
-                            return "预期外的任务状态";
-                    }
+                        ParseResultStatus.Success => null,
+                        ParseResultStatus.Parsing => "解析中请稍等",
+                        ParseResultStatus.PasswordRequired => "需要密码",
+                        ParseResultStatus.InvalidUrl => "地址解析失败",
+                        _ => "预期外的任务状态",
+                    };
                 }
             }
 
@@ -90,19 +86,14 @@ namespace SixCloud.ViewModels
             {
                 get
                 {
-                    switch (Status)
+                    return Status switch
                     {
-                        case ParseResultStatus.Parsing:
-                            return "\uf519";
-                        case ParseResultStatus.PasswordRequired:
-                            return "\uf084";
-                        case ParseResultStatus.InvalidUrl:
-                            return "\uf06a";
-                        case ParseResultStatus.Success:
-                            return "\uf058";
-                        default:
-                            return "\uf519";
-                    }
+                        ParseResultStatus.Parsing => "\uf519",
+                        ParseResultStatus.PasswordRequired => "\uf084",
+                        ParseResultStatus.InvalidUrl => "\uf06a",
+                        ParseResultStatus.Success => "\uf058",
+                        _ => "\uf519",
+                    };
                 }
             }
 
@@ -184,7 +175,9 @@ namespace SixCloud.ViewModels
                 CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
             }
         }
+        #endregion
 
+        #region BindingProperties
         /// <summary>
         /// Url输入框
         /// </summary>
@@ -247,8 +240,10 @@ namespace SixCloud.ViewModels
         public OfflineTaskParameters[] OfflineTaskParameters { get; set; }
 
         public FileGridViewModel FileGrid { get; set; } = new FileGridViewModel();
+        #endregion
 
         #region Commands
+
         /// <summary>
         /// 选中后重置Parse序列
         /// </summary>
@@ -320,7 +315,6 @@ namespace SixCloud.ViewModels
 
                 Stage = taskParameters.Any() ? OfflineUrlsDialogStage.CheckFiles : OfflineUrlsDialogStage.WhichType;
             }
-            #endregion
         }
 
         public DependencyCommand CheckFilesCommand { get; set; }
@@ -353,6 +347,7 @@ namespace SixCloud.ViewModels
                 App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show($"离线任务添加失败，服务器返回：{tasks.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error));
             }
         }
+        #endregion
 
         public OfflineTaskDialogViewModel()
         {

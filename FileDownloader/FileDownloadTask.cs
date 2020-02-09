@@ -111,7 +111,6 @@ namespace FileDownloader
             bool moveSuccess = true;
             do
             {
-                DirectoryNotFoundException ex;
                 try
                 {
                     string targetFileName;
@@ -140,7 +139,6 @@ namespace FileDownloader
 
         public event EventHandler<DownloadFileCompletedArgs> DownloadFileCompleted;
         public event EventHandler<DownloadFileProgressChangedArgs> DownloadProgressChanged;
-
 
         /// <summary>
         /// 取消下载
