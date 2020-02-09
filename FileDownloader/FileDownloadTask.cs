@@ -111,6 +111,7 @@ namespace FileDownloader
             bool moveSuccess = true;
             do
             {
+                DirectoryNotFoundException ex;
                 try
                 {
                     string targetFileName;
@@ -122,7 +123,7 @@ namespace FileDownloader
                     } while (File.Exists(targetFileName));
                     File.Move(LocalFileName + ".ezdlpart", targetFileName);
                 }
-                catch (DirectoryNotFoundException ex)
+                catch (DirectoryNotFoundException)
                 {
 #warning 某些特定的文件名会导致抛出此异常
                     moveSuccess = false;
