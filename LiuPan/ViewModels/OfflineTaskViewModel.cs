@@ -43,7 +43,6 @@ namespace SixCloud.ViewModels
             }
         }
 
-
         #region Commands
         public DependencyCommand NewTaskCommand { get; set; }
         private void NewTask(object parameters)
@@ -83,8 +82,6 @@ namespace SixCloud.ViewModels
             await LazyLoad();
         }
         #endregion
-
-
 
         public OfflineTaskViewModel()
         {

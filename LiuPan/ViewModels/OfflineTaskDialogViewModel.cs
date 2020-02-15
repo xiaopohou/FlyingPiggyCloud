@@ -290,19 +290,27 @@ namespace SixCloud.ViewModels
                 FileSystem fileSystem = new FileSystem();
                 GenericResult<UploadToken> x = await fileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
                 EzWcs.IUploadTask task = EzWcs.EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
+                bool uploadSuccess = true;
                 await Task.Run(() =>
                 {
+#warning 这里需要更好的实现方式
                     int timeoutIndex = 0;
                     while (task.UploadTaskStatus != EzWcs.UploadTaskStatus.Completed)
                     {
                         if (timeoutIndex++ > 50)
                         {
                             App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show("种子文件上传失败"));
+                            uploadSuccess = false;
                             return;
                         }
                         Thread.Sleep(1000);
                     }
                 });
+
+                if (!uploadSuccess)
+                {
+                    return;
+                }
 
                 var parseResult = await offlineDownloader.ParseTorrent(new string[] { task.Hash });
                 foreach (var result in parseResult.Result)

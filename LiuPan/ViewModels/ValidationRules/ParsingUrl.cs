@@ -10,19 +10,14 @@ namespace SixCloud.ViewModels.ValidationRules
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            switch (ParseResultDataContext.Status)
+            return ParseResultDataContext.Status switch
             {
-                case OfflineTaskDialogViewModel.ParseResult.ParseResultStatus.Success:
-                    return new ValidationResult(true, null);
-                case OfflineTaskDialogViewModel.ParseResult.ParseResultStatus.Parsing:
-                    return new ValidationResult(true, "解析中请稍等");
-                case OfflineTaskDialogViewModel.ParseResult.ParseResultStatus.PasswordRequired:
-                    return new ValidationResult(false, "需要密码");
-                case OfflineTaskDialogViewModel.ParseResult.ParseResultStatus.InvalidUrl:
-                    return new ValidationResult(false, "地址解析失败");
-            }
-
-            throw new InvalidOperationException("意料外的任务状态");
+                OfflineTaskDialogViewModel.ParseResult.ParseResultStatus.Success => new ValidationResult(true, null),
+                OfflineTaskDialogViewModel.ParseResult.ParseResultStatus.Parsing => new ValidationResult(true, "解析中请稍等"),
+                OfflineTaskDialogViewModel.ParseResult.ParseResultStatus.PasswordRequired => new ValidationResult(false, "需要密码"),
+                OfflineTaskDialogViewModel.ParseResult.ParseResultStatus.InvalidUrl => new ValidationResult(false, "地址解析失败"),
+                _ => throw new InvalidOperationException("意料外的任务状态"),
+            };
         }
     }
 }
