@@ -1,6 +1,6 @@
 ﻿using SixCloud.Models;
 using SixCloud.ViewModels;
-using SixCloudCustomControlLibrary.Controls;
+using CustomControls.Controls;
 using System.Windows;
 using System.Windows.Controls;
 

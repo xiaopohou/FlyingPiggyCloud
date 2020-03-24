@@ -1,5 +1,5 @@
 ﻿using SixCloud.ViewModels;
-using SixCloudCustomControlLibrary.Controls;
+using CustomControls.Controls;
 using System;
 
 namespace SixCloud.Views

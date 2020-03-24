@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
-                    xmlns:Metro="clr-namespace:SixCloudCustomControlLibrary.Controls"
+                    xmlns:Metro="clr-namespace:CustomControls.Controls"
                     x:Class="CustomControls.Themes.MetroWindow">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroBase.xaml"/>

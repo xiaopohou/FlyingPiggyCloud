@@ -3,9 +3,6 @@ using System.Windows.Controls;
 
 namespace CustomControls.Controls
 {
-    /// <summary>
-    /// 标签页控件
-    /// </summary>
     public class LightTabControl : TabControl
     {
         static LightTabControl()

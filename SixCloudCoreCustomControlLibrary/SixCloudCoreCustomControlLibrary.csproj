@@ -3,6 +3,66 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <RootNamespace>CustomControls</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Fonts\Font Awesome 5 Free-Regular-400.otf" />
+    <None Remove="Resources\Fonts\Font Awesome 5 Free-Solid-900.otf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Fonts\Font Awesome 5 Free-Regular-400.otf" />
+    <Resource Include="Resources\Fonts\Font Awesome 5 Free-Solid-900.otf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Themes\MetroWindow.xaml.cs">
+      <DependentUpon>MetroWindow.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Themes\FontIcon.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Themes\LightButton.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\LightTabControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\LightTabItem.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\LoadingControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\MetroBase.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\MetroFocusButton.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\MetroMenuTabControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\MetroMenuTabItem.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\MetroScrollViewer.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\MetroWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\RenamableTextBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 
 </Project>

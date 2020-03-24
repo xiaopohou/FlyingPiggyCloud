@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace SixCloudCustomControlLibrary.Converters
+namespace CustomControls.Converters
 {
     public class DoubleToThickness : IValueConverter
     {
@@ -14,31 +14,20 @@ namespace SixCloudCustomControlLibrary.Converters
             {
                 if (parameter != null)
                 {
-                    switch (parameter.ToString())
+                    return (parameter.ToString()) switch
                     {
-                        case "Left":
-                            return new Thickness(System.Convert.ToDouble(value), 0, 0, 0);
-                        case "Top":
-                            return new Thickness(0, System.Convert.ToDouble(value), 0, 0);
-                        case "Right":
-                            return new Thickness(0, 0, System.Convert.ToDouble(value), 0);
-                        case "Buttom":
-                            return new Thickness(0, 0, 0, System.Convert.ToDouble(value));
-                        case "LeftTop":
-                            return new Thickness(System.Convert.ToDouble(value), System.Convert.ToDouble(value), 0, 0);
-                        case "LeftButtom":
-                            return new Thickness(System.Convert.ToDouble(value), 0, 0, System.Convert.ToDouble(value));
-                        case "RightTop":
-                            return new Thickness(0, System.Convert.ToDouble(value), System.Convert.ToDouble(value), 0);
-                        case "RigthButtom":
-                            return new Thickness(0, 0, System.Convert.ToDouble(value), System.Convert.ToDouble(value));
-                        case "LeftRight":
-                            return new Thickness(System.Convert.ToDouble(value), 0, System.Convert.ToDouble(value), 0);
-                        case "TopButtom":
-                            return new Thickness(0, System.Convert.ToDouble(value), 0, System.Convert.ToDouble(value));
-                        default:
-                            return new Thickness(System.Convert.ToDouble(value));
-                    }
+                        "Left" => new Thickness(System.Convert.ToDouble(value), 0, 0, 0),
+                        "Top" => new Thickness(0, System.Convert.ToDouble(value), 0, 0),
+                        "Right" => new Thickness(0, 0, System.Convert.ToDouble(value), 0),
+                        "Buttom" => new Thickness(0, 0, 0, System.Convert.ToDouble(value)),
+                        "LeftTop" => new Thickness(System.Convert.ToDouble(value), System.Convert.ToDouble(value), 0, 0),
+                        "LeftButtom" => new Thickness(System.Convert.ToDouble(value), 0, 0, System.Convert.ToDouble(value)),
+                        "RightTop" => new Thickness(0, System.Convert.ToDouble(value), System.Convert.ToDouble(value), 0),
+                        "RigthButtom" => new Thickness(0, 0, System.Convert.ToDouble(value), System.Convert.ToDouble(value)),
+                        "LeftRight" => new Thickness(System.Convert.ToDouble(value), 0, System.Convert.ToDouble(value), 0),
+                        "TopButtom" => new Thickness(0, System.Convert.ToDouble(value), 0, System.Convert.ToDouble(value)),
+                        _ => new Thickness(System.Convert.ToDouble(value)),
+                    };
                 }
                 return new Thickness(System.Convert.ToDouble(value));
             }
@@ -51,19 +40,14 @@ namespace SixCloudCustomControlLibrary.Converters
             {
                 if (parameter != null)
                 {
-                    switch (parameter.ToString())
+                    return (parameter.ToString()) switch
                     {
-                        case "Left":
-                            return ((Thickness)value).Left;
-                        case "Top":
-                            return ((Thickness)value).Top;
-                        case "Right":
-                            return ((Thickness)value).Right;
-                        case "Buttom":
-                            return ((Thickness)value).Bottom;
-                        default:
-                            return ((Thickness)value).Left;
-                    }
+                        "Left" => ((Thickness)value).Left,
+                        "Top" => ((Thickness)value).Top,
+                        "Right" => ((Thickness)value).Right,
+                        "Buttom" => ((Thickness)value).Bottom,
+                        _ => ((Thickness)value).Left,
+                    };
                 }
                 return ((Thickness)value).Left;
             }

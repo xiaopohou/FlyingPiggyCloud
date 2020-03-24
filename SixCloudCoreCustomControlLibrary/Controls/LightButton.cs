@@ -6,9 +6,6 @@ using System.Windows.Input;
 
 namespace CustomControls.Controls
 {
-    /// <summary>
-    /// 字体按钮控件
-    /// </summary>
     public class LightButton : ButtonBase
     {
         public static DependencyProperty FontIconProperty = DependencyProperty.Register("FontIcon", typeof(string), typeof(LightButton), new PropertyMetadata('\uf111'.ToString()));

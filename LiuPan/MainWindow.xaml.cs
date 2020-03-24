@@ -2,7 +2,7 @@
 using SixCloud.Models;
 using SixCloud.ViewModels;
 using SixCloud.Views;
-using SixCloudCustomControlLibrary.Controls;
+using CustomControls.Controls;
 using System.Windows;
 
 namespace SixCloud

@@ -1,4 +1,4 @@
-﻿using SixCloudCustomControlLibrary.Controls;
+﻿using CustomControls.Controls;
 
 namespace SixCloud.Views
 {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SixCloudCustomControlLibrary.Properties
+namespace CustomControls.Properties
 {
     
     
