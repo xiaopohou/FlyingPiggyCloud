@@ -3,6 +3,70 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <RootNamespace>UserControls</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SixCloudCoreCustomControlLibrary\SixCloudCoreCustomControlLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="FileGridView.xaml.cs">
+      <DependentUpon>FileGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FileListItemInformationView.xaml.cs">
+      <DependentUpon>FileListItemInformationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FileListView.xaml.cs">
+      <DependentUpon>FileListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="RecoveryBox.xaml.cs">
+      <DependentUpon>RecoveryBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="SignInView.xaml.cs">
+      <DependentUpon>SignInView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="SignUpView.xaml.cs">
+      <DependentUpon>SignUpView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="TransferListView.xaml.cs">
+      <DependentUpon>TransferListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UserInformationView.xaml.cs">
+      <DependentUpon>UserInformationView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="FileGridView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="FileListItemInformationView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="FileListView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="RecoveryBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SignInView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SignUpView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TransferListView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UserInformationView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 
 </Project>

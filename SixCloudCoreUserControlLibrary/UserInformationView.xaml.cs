@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SixCloudCoreUserControlLibrary
+namespace SixCloud.Views.UserControls
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// UserInformation.xaml 的交互逻辑
     /// </summary>
-    public partial class UserControl1 : UserControl
+    public partial class UserInformationView : UserControl
     {
-        public UserControl1()
+        public UserInformationView()
         {
             InitializeComponent();
         }
