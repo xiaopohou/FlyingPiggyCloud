@@ -1,7 +1,7 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using QingzhenyunApis.EntityModels;
-using SixCloud.Models;
-using SixCloud.Views;
+using SixCloudCore.Models;
+using SixCloudCore.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;

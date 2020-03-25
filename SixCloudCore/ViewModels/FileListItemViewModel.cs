@@ -1,6 +1,6 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Utils;
-using SixCloud.Views;
+using SixCloudCore.Views;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;

@@ -1,10 +1,10 @@
 ﻿//#define Record
-using Exceptionless;
+//using Exceptionless;
 using Newtonsoft.Json;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
-using SixCloud.Models;
-using SixCloud.ViewModels;
+using SixCloudCore.Models;
+using SixCloudCore.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

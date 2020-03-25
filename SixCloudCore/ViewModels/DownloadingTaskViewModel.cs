@@ -1,6 +1,6 @@
 ﻿using QingzhenyunApis.Methods;
-using SixCloud.Controllers;
-using SixCloud.Models;
+using SixCloudCore.Controllers;
+using SixCloudCore.Models;
 using System;
 using System.Globalization;
 using System.Threading;

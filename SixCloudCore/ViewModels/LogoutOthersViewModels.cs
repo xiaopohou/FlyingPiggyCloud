@@ -1,8 +1,8 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Utils;
-using SixCloud.Controllers;
-using SixCloud.Models;
-using SixCloud.Views;
+using SixCloudCore.Controllers;
+using SixCloudCore.Models;
+using SixCloudCore.Views;
 using System.Collections;
 
 namespace SixCloudCore.ViewModels

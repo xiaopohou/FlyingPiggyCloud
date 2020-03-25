@@ -1,5 +1,5 @@
 ﻿using Microsoft.Win32;
-using SixCloud.Views;
+using SixCloudCore.Views;
 
 namespace SixCloudCore.Models
 {

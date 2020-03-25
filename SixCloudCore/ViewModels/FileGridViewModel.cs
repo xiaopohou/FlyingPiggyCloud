@@ -1,6 +1,6 @@
 ﻿using QingzhenyunApis.EntityModels;
-using SixCloud.Models;
-using SixCloud.Views.UserControls;
+using SixCloudCore.Models;
+using SixCloudCore.Views.UserControls;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;

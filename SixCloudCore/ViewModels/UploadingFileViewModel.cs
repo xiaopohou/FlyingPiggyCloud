@@ -1,5 +1,5 @@
-﻿using EzWcs;
-using EzWcs.Calculators;
+﻿using SixCloudCore.FileUploader;
+using SixCloudCore.FileUploader.Calculators;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Utils;
 using System;
@@ -21,7 +21,7 @@ namespace SixCloudCore.ViewModels
                 task = new HashCachedTask();
                 return;
             }
-            task = EzWcs.EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
+            task = EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
         }
 
         private readonly IUploadTask task;

@@ -1,6 +1,8 @@
-﻿using Exceptionless;
+﻿//using Exceptionless;
+using Microsoft.Win32;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
+using SixCloudCore.FileUploader;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -275,21 +277,21 @@ namespace SixCloudCore.ViewModels
         {
             ParseResults.Clear();
 
-            using OpenFileDialog openFileDialog = new OpenFileDialog
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Multiselect = false,
                 Title = "请选择需要离线下载的种子文件",
                 Filter = "BitTorrent种子文件|*.Torrent;*.torrent"
             };
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (openFileDialog.ShowDialog()==true)
             {
                 string Name = openFileDialog.SafeFileName;
                 string targetPath = "/:torrent";
                 string filePath = openFileDialog.FileName;
                 FileSystem fileSystem = new FileSystem();
                 GenericResult<UploadToken> x = await fileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
-                EzWcs.IUploadTask task = EzWcs.EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
+                IUploadTask task = EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
                 bool uploadSuccess = true;
                 await Task.Run(() =>
                 {

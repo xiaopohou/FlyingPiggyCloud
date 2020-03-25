@@ -1,4 +1,4 @@
-﻿using SixCloud.Views;
+﻿using SixCloudCore.Views;
 using System;
 using System.Windows;
 using System.Windows.Forms;

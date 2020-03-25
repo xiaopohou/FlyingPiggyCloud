@@ -1,8 +1,8 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
-using SixCloud.Controllers;
-using SixCloud.Models;
-using SixCloud.Views;
+using SixCloudCore.Controllers;
+using SixCloudCore.Models;
+using SixCloudCore.Views;
 using System;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Exceptionless;
+//using Exceptionless;
 using System.Net.Http;
 
 namespace SixCloudCore.ViewModels
