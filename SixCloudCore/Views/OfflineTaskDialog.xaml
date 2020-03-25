@@ -6,10 +6,9 @@
                       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:local="clr-namespace:SixCloudCore.Views"
-                      xmlns:ViewModels="clr-namespace:SixCloud.ViewModels"
-                      xmlns:UserControls="clr-namespace:SixCloud.Views.UserControls"
+                      xmlns:ViewModels="clr-namespace:SixCloudCore.ViewModels"
+                      xmlns:UserControls="clr-namespace:SixCloudCore.Views.UserControls"
                       xmlns:ValidationRules="clr-namespace:SixCloudCore.ViewModels.ValidationRules"
-                      xmlns:system="clr-namespace:System;assembly=mscorlib"
                       mc:Ignorable="d"
                       BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
                       ShowInTaskbar="False" MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">

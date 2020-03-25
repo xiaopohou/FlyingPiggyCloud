@@ -1,11 +1,11 @@
-﻿using Exceptionless;
+﻿//using Exceptionless;
 using Newtonsoft.Json;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
 using QingzhenyunApis.Utils;
-using SixCloud.Controllers;
-using SixCloud.Models;
-using SixCloud.Views;
+using SixCloudCore.Controllers;
+using SixCloudCore.Models;
+using SixCloudCore.Views;
 using System;
 using System.Threading.Tasks;
 using System.Windows;

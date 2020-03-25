@@ -200,7 +200,7 @@ namespace SixCloudCore.ViewModels
                             ParseResults.Add(x);
                         }
                     }
-                    inputBoxString = urls[urls.Length - 1];
+                    inputBoxString = urls[^1];
                 }
                 else
                 {
@@ -297,7 +297,7 @@ namespace SixCloudCore.ViewModels
                 {
 #warning 这里需要更好的实现方式
                     int timeoutIndex = 0;
-                    while (task.UploadTaskStatus != EzWcs.UploadTaskStatus.Completed)
+                    while (task.UploadTaskStatus != UploadTaskStatus.Completed)
                     {
                         if (timeoutIndex++ > 50)
                         {

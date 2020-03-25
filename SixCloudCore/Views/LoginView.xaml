@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:metro="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
-        xmlns:usercontrols="clr-namespace:SixCloud.Views.UserControls"
+        xmlns:usercontrols="clr-namespace:SixCloudCore.Views.UserControls"
         mc:Ignorable="d"
         Title="用户登录" Height="380" Width="430" x:Name="OwnerWindow" ResizeMode="CanMinimize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" MetroWindowLayout="WideAngle">
     <metro:MetroWindow.Resources>
