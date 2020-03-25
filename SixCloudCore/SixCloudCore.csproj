@@ -7,8 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="MediaResources\666.ico" />
+    <None Remove="MediaResources\link-interface-hyperlink-icon-2770-512x512.png" />
+    <None Remove="MediaResources\torrent-brand-software-icon-7283-512x512.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
     <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
@@ -17,6 +24,69 @@
     <ProjectReference Include="..\FileUploader\FileUploader.csproj" />
     <ProjectReference Include="..\QingzhenyunApis\QingzhenyunApis.csproj" />
     <ProjectReference Include="..\SixCloudCoreCustomControlLibrary\SixCloudCoreCustomControlLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="MediaResources\666.ico" />
+    <Resource Include="MediaResources\link-interface-hyperlink-icon-2770-512x512.png" />
+    <Resource Include="MediaResources\torrent-brand-software-icon-7283-512x512.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\ChangePasswordView.xaml.cs">
+      <DependentUpon>ChangePasswordView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CreateShareItemView.xaml.cs">
+      <DependentUpon>CreateShareItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LoadingView.xaml.cs">
+      <DependentUpon>LoadingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LogoutOthersView.xaml.cs">
+      <DependentUpon>LogoutOthersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainFrame.xaml.cs">
+      <DependentUpon>MainFrame.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\OfflineTaskDialog.xaml.cs">
+      <DependentUpon>OfflineTaskDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\OfflineUrlsDialog.xaml.cs">
+      <DependentUpon>OfflineUrlsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PreView.xaml.cs">
+      <DependentUpon>PreView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TextInputDialog.xaml.cs">
+      <DependentUpon>TextInputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\FileGridView.xaml.cs">
+      <DependentUpon>FileGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\FileListItemInformationView.xaml.cs">
+      <DependentUpon>FileListItemInformationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\FileListView.xaml.cs">
+      <DependentUpon>FileListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\RecoveryBox.xaml.cs">
+      <DependentUpon>RecoveryBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\SignInView.xaml.cs">
+      <DependentUpon>SignInView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\SignUpView.xaml.cs">
+      <DependentUpon>SignUpView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\TransferListView.xaml.cs">
+      <DependentUpon>TransferListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\UserInformationView.xaml.cs">
+      <DependentUpon>UserInformationView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

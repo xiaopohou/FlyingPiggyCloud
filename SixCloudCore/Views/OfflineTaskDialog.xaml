@@ -1,0 +1,415 @@
+﻿<controls:MetroWindow xmlns:controls="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+                      x:Class="SixCloudCore.Views.OfflineTaskDialog"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:local="clr-namespace:SixCloudCore.Views"
+                      xmlns:ViewModels="clr-namespace:SixCloud.ViewModels"
+                      xmlns:UserControls="clr-namespace:SixCloud.Views.UserControls"
+                      xmlns:ValidationRules="clr-namespace:SixCloudCore.ViewModels.ValidationRules"
+                      xmlns:system="clr-namespace:System;assembly=mscorlib"
+                      mc:Ignorable="d"
+                      BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                      ShowInTaskbar="False" MetroWindowLayout="WideAngle" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
+    <Window.Resources>
+        <Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Padding" Value="6,2,6,2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <StackPanel x:Name="templateRoot" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" 
+                                              ContentSource="Header" 
+                                              Focusable="False" 
+                                              Margin="{TemplateBinding Padding}"
+                                              RecognizesAccessKey="True"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <Rectangle x:Name="line" Fill="{DynamicResource PrimaryHueMidBrush}" VerticalAlignment="Bottom" Height="3" Margin="2"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="False"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Foreground" Value="Gray"/>
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CardRadioButton" TargetType="{x:Type RadioButton}">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="Foreground" Value="{Binding (TextElement.Foreground), RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type FrameworkElement}}}"/>
+            <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border x:Name="ContainBorder" CornerRadius="1" Background="White" BorderBrush="LightGray" BorderThickness="1" SnapsToDevicePixels="True">
+                            <Border.Effect>
+                                <DropShadowEffect Color="LightGray" Direction="270" Opacity="0.3" BlurRadius="10" ShadowDepth="4"/>
+                            </Border.Effect>
+                            <Grid x:Name="templateRoot" SnapsToDevicePixels="True">
+                                <Rectangle x:Name="Mask" Fill="{DynamicResource PrimaryHueDarkBrush}" Opacity="0" RadiusX="1" RadiusY="1"/>
+                                <ContentPresenter x:Name="contentPresenter"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Content="{TemplateBinding Content}"
+                                              ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                              Focusable="False"
+                                              Margin="{TemplateBinding Padding}"
+                                              RecognizesAccessKey="True"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="ButtonBase.Click">
+                                <BeginStoryboard>
+                                    <Storyboard/>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <Trigger Property="HasContent" Value="True">
+                                <Setter Property="Padding" Value="1"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.26"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="ContainBorder" Property="Effect" Value="{x:Null}"/>
+                                <Setter TargetName="Mask" Property="Opacity" Value="0.4"/>
+                                <Setter TargetName="ContainBorder" Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+                            </Trigger>
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{DynamicResource ValidationErrorBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--<ViewModels:TaskTypeConverter x:Key="TaskTypeConverter"/>-->
+        <ViewModels:StageConverter x:Key="StageConverter"/>
+
+        <UserControls:SizeCalculator x:Key="SizeCalculator"/>
+
+        <DataTemplate x:Key="ParseResultTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="50"/>
+                    <RowDefinition MinHeight="50"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"/>
+                    <TextBlock Text="("/>
+                    <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
+                    <TextBlock Text=")"/>
+                </StackPanel>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Files}" ItemTemplate="{DynamicResource ParseFileTemplate}"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ParseFileTemplate">
+            <Grid x:Name="fileInfoContainer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding ActualHeight, ElementName=fileInfoContainer}"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                <TextBlock Text="{Binding Size, Converter={StaticResource ResourceKey=SizeCalculator}, Mode=OneWay}" Grid.Column="2"/>
+            </Grid>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">
+
+        <TabItem x:Name="NewTaskTabItem"
+                 IsSelected="{Binding Stage, Converter={StaticResource StageConverter}, ConverterParameter=WhichType,Mode=OneWay}"
+                 Header="新建任务"
+                 Background="{x:Null}"
+                 BorderBrush="{x:Null}">
+            <Grid x:Name="NewTask" Margin="0 16 0 0" OpacityMask="White">
+
+                <StackPanel VerticalAlignment="Top" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked">
+                    <TextBlock Text="任务类型 " Margin="15" FontSize="24" VerticalAlignment="Top"/>
+
+                    <RadioButton x:Name="Urls" Style="{DynamicResource CardRadioButton}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                            </Grid.RowDefinitions>
+                            <Rectangle Grid.RowSpan="2" Fill="LightPink" Opacity="0.5" Margin="10" RadiusX="3" RadiusY="3"/>
+                            <Image Grid.RowSpan="2" Opacity="0.7" Margin="20" UseLayoutRounding="True" Source="/SixCloud;component/MediaResources/link-interface-hyperlink-icon-2770-512x512.png"/>
+
+                            <TextBlock Margin="5,3" VerticalAlignment="Bottom" Text="链接" Grid.Column="1"/>
+                            <TextBlock FontSize="14" Margin="5,0" VerticalAlignment="Top" Text="支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接" Grid.Column="1" Grid.Row="1">
+                                <TextBlock.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                        </Grid>
+                        <RadioButton.Triggers>
+                            <EventTrigger RoutedEvent="RadioButton.Checked">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation To="300" Duration="00:00:00.500" Storyboard.TargetName="InputArea" Storyboard.TargetProperty="Height">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <ElasticEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="RadioButton.Unchecked">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation To="0" Duration="00:00:00.500" Storyboard.TargetName="InputArea" Storyboard.TargetProperty="Height">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <ElasticEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </RadioButton.Triggers>
+                    </RadioButton>
+                    <Grid x:Name="InputArea" Margin="15" Height="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                            <ItemsControl x:Name="ParsedUrls" ItemsSource="{Binding ParseResults}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <!--任务类型图标-->
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!--URL-->
+                                                <ColumnDefinition Width="1*"/>
+                                                <!--Password-->
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!--解析按钮-->
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!--取消按钮-->
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <controls:FontIcon Margin="3" Icon="{Binding Icon}"/>
+                                            <TextBox Margin="3" Grid.Column="1" IsEnabled="{Binding AllowEdit}" Text="{Binding SourceUrl}"/>
+                                            <StackPanel Margin="3" Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
+                                                <TextBlock VerticalAlignment="Center" Text="资源密码："/>
+                                                <TextBox VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="60" Text="{Binding SharePassword,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
+                                            </StackPanel>
+                                            <controls:LightButton ToolTip="解析链接" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
+                                            <controls:LightButton ToolTip="取消任务" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
+
+                                            <TextBlock x:Name="FriendlyErrorInfo" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding FriendlyErrorInfo}" Foreground="DarkRed" Visibility="{Binding FriendlyErrorInfoVisibility}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                        <TextBox AcceptsReturn="True"
+                                 x:Name="InputBox"
+                                 Grid.Row="1"
+                                 Text="{Binding InputBoxString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                 materialDesign:HintAssist.Hint="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
+                                 Style="{StaticResource MaterialDesignFilledTextFieldTextBox}" LostFocus="InputBox_LostFocus"/>
+                    </Grid>
+
+                    <RadioButton Command="{Binding UploadTorrentCommand}" x:Name="Torrent" Style="{DynamicResource CardRadioButton}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                            </Grid.RowDefinitions>
+                            <Rectangle Grid.RowSpan="2" Opacity="0.5" Margin="10" RadiusX="3" RadiusY="3"/>
+                            <Image Grid.RowSpan="2" Margin="15" UseLayoutRounding="True" Source="/SixCloud;component/MediaResources/torrent-brand-software-icon-7283-512x512.png"/>
+                            <TextBlock Margin="5,3" VerticalAlignment="Bottom" Text="种子文件" Grid.Column="1"/>
+                            <TextBlock FontSize="14" Margin="5,0" VerticalAlignment="Top" Text="支持BitTorrent种子文件" Grid.Column="1" Grid.Row="1">
+                                <TextBlock.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                        </Grid>
+                    </RadioButton>
+
+                    <Button Content="确定" Margin="15" Width="120" Command="{Binding UrlParseResultConfirmCommand}"/>
+
+                </StackPanel>
+
+
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="NewTaskTranslateTransform"/>
+                </Grid.RenderTransform>
+            </Grid>
+            <TabItem.Triggers>
+                <EventTrigger RoutedEvent="Selector.Selected">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.500"
+                                             Storyboard.TargetName="NewTask"
+                                             Storyboard.TargetProperty="OpacityMask.Opacity"
+                                             From="0"
+                                             To="1">
+                                <DoubleAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.250"
+                                             Storyboard.TargetName="NewTaskTranslateTransform"
+                                             Storyboard.TargetProperty="X"
+                                             From="-100"
+                                             To="0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TabItem.Triggers>
+        </TabItem>
+
+        <TabItem x:Name="CheckFileTabItem"
+                 IsSelected="{Binding Stage,Converter={StaticResource StageConverter},ConverterParameter=CheckFiles,Mode=OneWay}"
+                 IsEnabled="{Binding IsCheckFileTabEnable}"
+                 Header="文件搜检"
+                 Background="{x:Null}"
+                 BorderBrush="{x:Null}">
+            <Grid x:Name="CheckFile" Margin="0 16 0 0" OpacityMask="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="如果不希望下载某些文件，请取消勾选" Margin="5" FontSize="24" VerticalAlignment="Top"/>
+                <ScrollViewer Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding ParseResults}" ItemTemplate="{DynamicResource ParseResultTemplate}" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked"/>
+                </ScrollViewer>
+                <Button Grid.Row="2" Margin="15" Width="120" Content="确认" Command="{Binding CheckFilesCommand}"/>
+
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="CheckFileTranslateTransform"/>
+                </Grid.RenderTransform>
+            </Grid>
+
+            <TabItem.Triggers>
+                <EventTrigger RoutedEvent="Selector.Selected">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.500"
+                                             Storyboard.TargetName="CheckFile"
+                                             Storyboard.TargetProperty="OpacityMask.Opacity"
+                                             From="0"
+                                             To="1">
+                                <DoubleAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.250"
+                                             Storyboard.TargetName="CheckFileTranslateTransform"
+                                             Storyboard.TargetProperty="X"
+                                             From="-100"
+                                             To="0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TabItem.Triggers>
+        </TabItem>
+
+        <TabItem x:Name="SavingPathTabItem"
+                 IsSelected="{Binding Stage,Converter={StaticResource StageConverter},ConverterParameter=SelectSavingPath,Mode=OneWay}"
+                 IsEnabled="{Binding IsSavingPathTabEnable}"
+                 Header="保存路径"
+                 Background="{x:Null}"
+                 BorderBrush="{x:Null}">
+            <Grid x:Name="SavingPath" Margin="0 16 0 0" OpacityMask="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="请选择保存路径" Margin="5" FontSize="24" VerticalAlignment="Top"/>
+                <UserControls:FileGridView Mode="PathSelector"
+                                           Grid.Row="1"
+                                           DataContext="{Binding FileGrid}"
+                                           x:Name="fileList"
+                                           Margin="5"
+                                           Command="{Binding NavigateCommand}"
+                                           CommandParameter="{Binding SelectObject, ElementName=fileList}"/>
+                <Button x:Name="SavingPathConfirm" Click="SavingPathConfirm_Click" Content="提交" Margin="15" Width="120" Grid.Row="2" Command="{Binding SelectSavingPathCommand}" CommandParameter="{Binding Path=DataContext}"/>
+
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="SavingPathTranslateTransform"/>
+                </Grid.RenderTransform>
+            </Grid>
+
+            <TabItem.Triggers>
+                <EventTrigger RoutedEvent="Selector.Selected">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.500"
+                                             Storyboard.TargetName="SavingPath"
+                                             Storyboard.TargetProperty="OpacityMask.Opacity"
+                                             From="0"
+                                             To="1">
+                                <DoubleAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation BeginTime="00:00:00"
+                                             Duration="00:00:00.250"
+                                             Storyboard.TargetName="SavingPathTranslateTransform"
+                                             Storyboard.TargetProperty="X"
+                                             From="-100"
+                                             To="0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TabItem.Triggers>
+        </TabItem>
+
+    </TabControl>
+</controls:MetroWindow>

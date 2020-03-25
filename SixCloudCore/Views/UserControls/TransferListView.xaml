@@ -1,0 +1,310 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:SixCloudCore.Views.UserControls"
+    xmlns:Controls="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+    xmlns:ViewModels="clr-namespace:SixCloudCore.ViewModels"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    x:Class="SixCloudCore.Views.UserControls.TransferListView"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:SizeCalculator x:Key="SizeCalculator"/>
+        <ViewModels:StatusToVisibility x:Key="StatusToVisibility"/>
+        
+        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignToolToggleListBoxItem}">
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+        
+        <Style x:Key="ProgressBarStyle" TargetType="{x:Type ProgressBar}" BasedOn="{StaticResource MaterialDesignLinearProgressBar}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Style.Triggers>
+                <Trigger Property="Value" Value="100">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Controls:MetroMenuTabControl FontSize="14" BorderBrush="White" IconModeButtonVisibility="Hidden">
+        <!--离线下载列表-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xF381;" IconMove="&#xF381;" Header="离线任务">
+            <Grid DataContext="{Binding OfflineTask}" Background="White" Margin="30,40,15,15">
+                <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
+                    <Button HorizontalAlignment="Left"
+                            Style="{DynamicResource MaterialDesignFlatButton}"
+                            VerticalAlignment="Center" Margin="5,0"
+                            Command="{Binding NewTaskCommand}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF067;" Margin="5,0"/>
+                            <TextBlock Text="新建任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button HorizontalAlignment="Left" 
+                            Style="{DynamicResource MaterialDesignFlatButton}" 
+                            VerticalAlignment="Center" Margin="5,0" 
+                            Command="{Binding CancelTaskCommand}"
+                            CommandParameter="{Binding SelectedItems, ElementName=OfflineList}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF068;" Margin="5,0"/>
+                            <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button HorizontalAlignment="Left" 
+                            Style="{DynamicResource MaterialDesignFlatButton}" 
+                            VerticalAlignment="Center" Margin="5,0" 
+                            Command="{Binding RefreshListCommand}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF2F1;" Margin="5,0"/>
+                            <TextBlock Text="刷新列表" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ListBox x:Name="OfflineList" ScrollViewer.ScrollChanged="OfflineList_ScrollChanged" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="48">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="48" Value="{Binding Progress, Mode=OneWay}" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
+                                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                    <TextBlock Text="任务进度："/>
+                                    <TextBlock Text="{Binding Progress, Mode=OneWay}"/>
+                                    <TextBlock Text="%"/>
+                                </StackPanel>
+                                <Controls:FontIcon Icon="&#xF4DE;" Grid.RowSpan="2"/>
+                                <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding DownloadSize, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
+                                    <TextBlock Text="/"/>
+                                    <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Controls:MetroMenuTabItem>
+
+
+        <!--下载列表-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xF103;" IconMove="&#xF103;" Header="正在下载">
+            <Grid Background="White" Margin="30,40,15,15">
+                <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
+                    <Button HorizontalAlignment="Left"
+                            Style="{DynamicResource MaterialDesignFlatButton}"
+                            VerticalAlignment="Center" Margin="5,0"
+                            Command="MediaCommands.Play"
+                            CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
+                            CommandTarget="{Binding ElementName=DownloadingList}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                            <TextBlock Text="开始/暂停任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button HorizontalAlignment="Left" 
+                            Style="{DynamicResource MaterialDesignFlatButton}" 
+                            VerticalAlignment="Center" Margin="5,0" 
+                            Command="MediaCommands.Stop"
+                            CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
+                            CommandTarget="{Binding ElementName=DownloadingList}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                            <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ListBox SelectionMode="Multiple" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="48">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="48" Value="{Binding Progress, Mode=OneWay}" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
+                                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                    <TextBlock Text="任务进度："/>
+                                    <TextBlock Text="{Binding Progress, Mode=OneWay}"/>
+                                    <TextBlock Text="%"/>
+                                </StackPanel>
+                                <Controls:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
+                                <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <TextBlock Text="暂停，等待中..." Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                                    <TextBlock Text="{Binding Completed, Mode=OneWay}"/>
+                                    <TextBlock Text="/"/>
+                                    <TextBlock Text="{Binding Total, Mode=OneWay}"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.CommandBindings>
+                        <CommandBinding Command="MediaCommands.Play" Executed="DownloadingTaskPause"/>
+                        <CommandBinding Command="MediaCommands.Stop" Executed="DownloadingTaskCancel"/>
+                    </ListBox.CommandBindings>
+                </ListBox>
+            </Grid>
+        </Controls:MetroMenuTabItem>
+
+        <!--下载完成-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xF560;" IconMove="&#xF560;" Header="下载完成">
+            <ListBox ContextMenuOpening="DownloadedList_ContextMenuOpening" x:Name="DownloadedList" DataContext="{Binding DownloadedList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Height="48">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <!--<Image Source="{Binding Icon}" Grid.RowSpan="2"/>-->
+                            <Controls:FontIcon Icon="&#xF46C;" Grid.RowSpan="2"/>
+                            <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                                <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="打开" Command="{Binding OpenCommand}"/>
+                        <MenuItem Header="在文件夹中显示" Command="{Binding ShowCommand}"/>
+                        <MenuItem Header="删除" Command="{Binding DeleteCommand}"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+
+        </Controls:MetroMenuTabItem>
+
+        <!--上传列表-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xF102;" IconMove="&#xF102;" Header="正在上传">
+            <Grid Background="White" Margin="30,40,15,15">
+                <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
+                    <Button HorizontalAlignment="Left"
+                            Style="{DynamicResource MaterialDesignFlatButton}"
+                            VerticalAlignment="Center" Margin="5,0"
+                            Command="MediaCommands.Play"
+                            CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
+                            CommandTarget="{Binding ElementName=UploadingList}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                            <TextBlock Text="开始/暂停任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button HorizontalAlignment="Left" 
+                            Style="{DynamicResource MaterialDesignFlatButton}" 
+                            VerticalAlignment="Center" Margin="5,0" 
+                            Command="MediaCommands.Stop"
+                            CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
+                            CommandTarget="{Binding ElementName=UploadingList}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Controls:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                            <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ListBox x:Name="UploadingList" DataContext="{Binding UploadingList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="48">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="48" Value="{Binding Progress, Mode=OneWay}" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
+                                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                    <TextBlock Text="任务进度："/>
+                                    <TextBlock Text="{Binding Progress, Mode=OneWay}"/>
+                                    <TextBlock Text="%"/>
+                                </StackPanel>
+                                <Controls:FontIcon Icon="&#xF093;" Grid.RowSpan="2"/>
+                                <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Status}" Margin="0,0,5,0"/>
+                                    <TextBlock Text="："/>
+                                    <TextBlock Text="{Binding Uploaded, Mode=OneWay}"/>
+                                    <TextBlock Text="/"/>
+                                    <TextBlock Text="{Binding Total, Mode=OneWay}"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.CommandBindings>
+                        <CommandBinding Command="MediaCommands.Play" Executed="UploadingTaskPause"/>
+                        <CommandBinding Command="MediaCommands.Stop" Executed="UploadingTaskCancel"/>
+                    </ListBox.CommandBindings>
+                </ListBox>
+            </Grid>
+        </Controls:MetroMenuTabItem>
+
+        <!--上传完成-->
+        <Controls:MetroMenuTabItem Foreground="#FF5A5A5A" Icon="&#xF560;" IconMove="&#xF560;" Header="上传完成">
+            <ListBox x:Name="UploadedList" DataContext="{Binding UploadedList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Height="48">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <!--<Image Source="{Binding Icon}" Grid.RowSpan="2"/>-->
+                            <Controls:FontIcon Icon="&#xF46C;" Grid.RowSpan="2"/>
+                            <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                                <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+        </Controls:MetroMenuTabItem>
+
+    </Controls:MetroMenuTabControl>
+</UserControl>

@@ -1,0 +1,22 @@
+﻿<controls:MetroWindow
+    xmlns:controls="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+    x:Class="SixCloudCore.Views.TextInputDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:SixCloudCore.Views"
+    xmlns:mt="http://materialdesigninxaml.net/winfx/xaml/themes"
+    mc:Ignorable="d"
+    BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+    Title="6盘" Height="170" Width="350" WindowStyle="ToolWindow">
+    <StackPanel Margin="15">
+        <!--<TextBlock Name="Message" Text="请输入文本" VerticalAlignment="Top"/>-->
+        <TextBlock Name="HintAssistant" Text="请输入文本" Visibility="Collapsed"/>
+        <TextBox mt:HintAssist.Hint="{Binding Path=Text,ElementName=HintAssistant}" Name="InputBox"/>
+        <StackPanel Margin="0,36,0,0" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Margin="5" Name="Confirm" Content="确认" Click="Confirm_Click"/>
+            <Button Margin="5" Name="Cancel" Content="取消" Click="Cancel_Click"/>
+        </StackPanel>
+    </StackPanel>
+</controls:MetroWindow>
