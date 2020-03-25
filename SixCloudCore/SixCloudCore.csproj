@@ -17,7 +17,6 @@
     <ProjectReference Include="..\FileUploader\FileUploader.csproj" />
     <ProjectReference Include="..\QingzhenyunApis\QingzhenyunApis.csproj" />
     <ProjectReference Include="..\SixCloudCoreCustomControlLibrary\SixCloudCoreCustomControlLibrary.csproj" />
-    <ProjectReference Include="..\SixCloudCoreUserControlLibrary\SixCloudCoreUserControlLibrary.csproj" />
   </ItemGroup>
 
 </Project>
