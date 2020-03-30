@@ -66,7 +66,7 @@ namespace SixCloudCore.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        ex.ToExceptionless().AddTags("手工提交的错误日志").Submit();
+                        //ex.ToExceptionless().AddTags("手工提交的错误日志").Submit();
                     }
                 } while (true);
             });

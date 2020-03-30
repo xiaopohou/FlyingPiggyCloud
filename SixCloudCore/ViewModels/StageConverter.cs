@@ -1,14 +1,6 @@
-﻿using QingzhenyunApis.EntityModels;
-using QingzhenyunApis.Methods;
-using SixCloudCore.Views;
-using SixCloudCore.Views.UserControls;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Threading;
-using System.Windows;
 using System.Windows.Data;
-using System.Windows.Forms;
 
 namespace SixCloudCore.ViewModels
 {

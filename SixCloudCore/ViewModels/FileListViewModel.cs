@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿//using Microsoft.WindowsAPICodePack.Dialogs;
+using Microsoft.Win32;
 using QingzhenyunApis.EntityModels;
 using SixCloudCore.Models;
 using SixCloudCore.Views;
@@ -11,6 +12,9 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace SixCloudCore.ViewModels
 {
@@ -483,20 +487,18 @@ namespace SixCloudCore.ViewModels
         public DependencyCommand UploadFileCommand { get; private set; }
         public async void UploadFile(object parameter)
         {
-            using (CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog
+            OpenFileDialog commonOpenFileDialog = new OpenFileDialog
             {
-                IsFolderPicker = false,
                 Multiselect = true
-            })
+            };
+
+            if (commonOpenFileDialog.ShowDialog() == true)
             {
-                if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+                foreach (string p in commonOpenFileDialog.FileNames)
                 {
-                    foreach (string p in commonOpenFileDialog.FileNames)
+                    if (File.Exists(p))
                     {
-                        if (File.Exists(p))
-                        {
-                            await UploadingListViewModel.NewTask(this, p);
-                        }
+                        await UploadingListViewModel.NewTask(this, p);
                     }
                 }
             }
@@ -507,22 +509,18 @@ namespace SixCloudCore.ViewModels
         public DependencyCommand UploadFolderCommand { get; private set; }
         public async void UploadFolder(object parameter)
         {
-            using (CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog
+            using (FolderBrowserDialog commonOpenFileDialog = new FolderBrowserDialog())
             {
-                IsFolderPicker = true,
-                Multiselect = false
-            })
-            {
-                if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+                if (commonOpenFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (Directory.Exists(commonOpenFileDialog.FileName))
+                    if (Directory.Exists(commonOpenFileDialog.SelectedPath))
                     {
-                        await FoundFolder(new DirectoryInfo(commonOpenFileDialog.FileName), CurrentPath);
+                        await FoundFolder(new DirectoryInfo(commonOpenFileDialog.SelectedPath), CurrentPath);
                     }
                 }
             }
 
-            async Task FoundFolder(DirectoryInfo path, string parentPath)
+            static async Task FoundFolder(DirectoryInfo path, string parentPath)
             {
                 string currentPath = parentPath == "/" ? $"/{path.Name}" : $"{parentPath}/{path.Name}";
                 if (path.Exists)

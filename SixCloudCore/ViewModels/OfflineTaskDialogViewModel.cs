@@ -127,7 +127,7 @@ namespace SixCloudCore.ViewModels
                     {
                         Status = ParseResultStatus.InvalidUrl;
                         //其他未知代码上传至Exceptionless
-                        new Exception(x.Code).ToExceptionless();
+                        //new Exception(x.Code).ToExceptionless();
                     }
                 }
                 else if (x.Result.Length == 0)

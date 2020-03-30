@@ -65,7 +65,7 @@ namespace SixCloudCore.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                ex.ToExceptionless();
+                //ex.ToExceptionless();
             }
         }
 
