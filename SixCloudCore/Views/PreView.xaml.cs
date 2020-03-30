@@ -17,7 +17,7 @@ namespace SixCloudCore.Views
         public static readonly DependencyProperty FullScreenProperty = DependencyProperty.Register("FullScreenProperty", typeof(bool), typeof(PreView), new PropertyMetadata(false));
         public bool FullScreen { get => (bool)GetValue(FullScreenProperty); set => SetValue(FullScreenProperty, value); }
 
-        private object PreviewParameter { get; set; }
+        //private object PreviewParameter { get; set; }
 
         public enum ResourceType
         {
@@ -31,7 +31,7 @@ namespace SixCloudCore.Views
         public PreView(ResourceType type, string uri, object parameter)
         {
             Type = type;
-            PreviewParameter = parameter;
+            //PreviewParameter = parameter;
             InitializeComponent();
             Loaded += (sender, e) =>
               {
