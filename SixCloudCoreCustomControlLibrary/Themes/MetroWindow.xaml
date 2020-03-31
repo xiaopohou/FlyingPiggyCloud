@@ -4,7 +4,7 @@
                     xmlns:Metro="clr-namespace:CustomControls.Controls"
                     x:Class="CustomControls.Themes.MetroWindow">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroBase.xaml"/>
+        <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/MetroBase.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="buttonStyle" TargetType="{x:Type Button}">

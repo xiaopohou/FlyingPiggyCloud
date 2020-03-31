@@ -10,14 +10,14 @@ namespace CustomControls.Controls
     /// 将此 XmlNamespace 特性添加到要使用该特性的标记文件的根 
     /// 元素中: 
     ///
-    ///     xmlns:MyNamespace="clr-namespace:SixCloudCustomControlLibrary.Controls"
+    ///     xmlns:MyNamespace="clr-namespace:SixCloudCoreCustomControlLibrary.Controls"
     ///
     ///
     /// 步骤 1b) 在其他项目中存在的 XAML 文件中使用该自定义控件。
     /// 将此 XmlNamespace 特性添加到要使用该特性的标记文件的根 
     /// 元素中: 
     ///
-    ///     xmlns:MyNamespace="clr-namespace:SixCloudCustomControlLibrary.Controls;assembly=SixCloudCustomControlLibrary.Controls"
+    ///     xmlns:MyNamespace="clr-namespace:SixCloudCoreCustomControlLibrary.Controls;assembly=SixCloudCoreCustomControlLibrary.Controls"
     ///
     /// 您还需要添加一个从 XAML 文件所在的项目到此项目的项目引用，
     /// 并重新生成以避免编译错误: 

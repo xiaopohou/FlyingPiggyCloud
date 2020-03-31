@@ -13,7 +13,7 @@
                 <ControlTemplate TargetType="{x:Type ctl:LightButton}">
                     <TextBlock Text="{TemplateBinding FontIcon}"
                              x:Name="fontIcon"
-                             FontFamily="/SixCloudCustomControlLibrary;component/Resources/Fonts/#Font Awesome 5 Free Solid"
+                             FontFamily="/SixCloudCoreCustomControlLibrary;component/Resources/Fonts/#Font Awesome 5 Free Solid"
                              FontSize="{TemplateBinding FontSize}"
                              Foreground="{TemplateBinding Foreground}">
                         <TextBlock.Effect>

@@ -8,7 +8,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock TextOptions.TextFormattingMode="Display" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Icon}" FontFamily="/SixCloudCustomControlLibrary;component/Resources/Fonts/#Font Awesome 5 Free Solid" FontSize="{TemplateBinding IconSize}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock TextOptions.TextFormattingMode="Display" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Icon}" FontFamily="/SixCloudCoreCustomControlLibrary;component/Resources/Fonts/#Font Awesome 5 Free Solid" FontSize="{TemplateBinding IconSize}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

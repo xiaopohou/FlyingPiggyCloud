@@ -3,7 +3,7 @@
                     xmlns:Converter="clr-namespace:CustomControls.Converters"
                     xmlns:Metro="clr-namespace:CustomControls.Controls">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/SixCloudCustomControlLibrary;component/Themes/MetroBase.xaml"/>
+        <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/MetroBase.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Converter:DoubleToThickness x:Key="DoubleToThickness"/>
