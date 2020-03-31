@@ -9,6 +9,17 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Pivot Title="Pivot" RequestedTheme="Default" TabNavigation="Local" AutomationProperties.LandmarkType="Search" BackgroundSizing="OuterBorderEdge" HighContrastAdjustment="Auto" HeaderFocusVisualPlacement="SelectedItemHeader">
+            <Pivot.Background>
+                <AcrylicBrush/>
+            </Pivot.Background>
+            <PivotItem Header="PivotItem 0">
+                <Grid/>
+            </PivotItem>
+            <PivotItem Header="PivotItem 1">
+                <Grid/>
+            </PivotItem>
+        </Pivot>
 
     </Grid>
 </Page>

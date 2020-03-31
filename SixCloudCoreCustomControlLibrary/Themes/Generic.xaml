@@ -13,6 +13,8 @@
         <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/LightTabItem.xaml"/>
         <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/RenamableTextBox.xaml"/>
         <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/LoadingControl.xaml"/>
+        <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/FluentTabControl.xaml"/>
+        <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/FluentTabItem.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FF61BF83"/>
     <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF75D397"/>
