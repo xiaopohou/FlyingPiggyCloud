@@ -21,6 +21,13 @@
             <TextBox HorizontalAlignment="Left" Margin="5" Text="TextBox" Width="120"
              Style="{StaticResource TextBoxRevealStyle}"/>
         </StackPanel>-->
-        <uwp:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.ProgressBar"/>
+        <uwp:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.Pivot">
+            <uwp:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.PivotItem">
+
+            </uwp:WindowsXamlHost>
+            <uwp:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.PivotItem">
+
+            </uwp:WindowsXamlHost>
+        </uwp:WindowsXamlHost>
     </Grid>
 </fw:AcrylicWindow>
