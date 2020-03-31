@@ -18,6 +18,7 @@
             <Setter Property="IsEnabled" Value="False"/>
             <Setter Property="FontWeight" Value="UltraBlack"/>
             <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
@@ -54,24 +55,38 @@
     </fw:AcrylicWindow.Resources>
 
     <metro:FluentTabControl>
+
         <!--文件列表-->
-        <metro:FluentTabItem  DataContext="{Binding FileVM}" Icon="&#xf07b;" IconMove="&#xf07b;" Header="文件列表">
-            <Grid Background="#FFF3F2F1">
+        <TabItem IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}">
+            <TabItem.Header>
+                <Border Margin="15,15" BorderBrush="{DynamicResource MainForegroundBrush}" BorderThickness="0">
+                    <TextBlock Text="文件列表"/>
+                </Border>
+            </TabItem.Header>
+        </TabItem>
+
+        <metro:FluentTabItem  DataContext="{Binding FileVM}" Icon="&#xf07b;" IconMove="&#xf07b;" Header="所有文件">
+            <Grid Margin="30,40,15,15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <usercontrols:FileListView x:Name="FileListContainer" ListView.SelectionChanged="FileListContainer_SelectionChanged"/>
-
-                <usercontrols:FileListItemInformationView Grid.Row="1" x:Name="InfoView" Width="320" DataContext="{Binding FileListItemInformation}"/>
+                <usercontrols:FileListItemInformationView HorizontalAlignment="Stretch" Background="White" Grid.Row="1" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
             </Grid>
         </metro:FluentTabItem>
 
         <metro:FluentTabItem DataContext="{Binding RecVM}" Header="回收中心">
-            <usercontrols:RecoveryBox x:Name="RecoveryBoxContainer"/>
+            <usercontrols:RecoveryBox Margin="30,40,15,15" x:Name="RecoveryBoxContainer"/>
         </metro:FluentTabItem>
 
-        <TabItem Header="传输列表" IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}"/>
+        <TabItem IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}">
+            <TabItem.Header>
+                <Border Margin="15,15" BorderBrush="{DynamicResource MainForegroundBrush}" BorderThickness="0">
+                    <TextBlock Text="传输任务"/>
+                </Border>
+            </TabItem.Header>
+        </TabItem>
 
         <!--离线下载列表-->
         <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF381;" IconMove="&#xF381;" Header="离线任务">
@@ -210,7 +225,7 @@
 
         <!--下载完成-->
         <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF560;" IconMove="&#xF560;" Header="下载完成">
-            <ListBox ContextMenuOpening="DownloadedList_ContextMenuOpening" x:Name="DownloadedList" DataContext="{Binding DownloadedList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+            <ListBox ContextMenuOpening="DownloadedList_ContextMenuOpening" x:Name="DownloadedList" DataContext="{Binding DownloadedList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="30,40,15,15">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Height="48">
@@ -249,14 +264,14 @@
         <!--上传列表-->
         <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF102;" IconMove="&#xF102;" Header="正在上传">
             <Grid Background="White" Margin="30,40,15,15">
-                <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <Button HorizontalAlignment="Left"
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            VerticalAlignment="Center" Margin="5,0"
+                            Margin="5,0"
                             Command="MediaCommands.Play"
                             CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
                             CommandTarget="{Binding ElementName=UploadingList}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <StackPanel Margin="15" Orientation="Horizontal" HorizontalAlignment="Center">
                             <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
                             <TextBlock Text="开始/暂停任务" HorizontalAlignment="Center"/>
                         </StackPanel>
@@ -316,7 +331,7 @@
 
         <!--上传完成-->
         <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF560;" IconMove="&#xF560;" Header="上传完成">
-            <ListBox x:Name="UploadedList" DataContext="{Binding UploadedList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+            <ListBox x:Name="UploadedList" DataContext="{Binding UploadedList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="30,40,15,15">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Height="48">

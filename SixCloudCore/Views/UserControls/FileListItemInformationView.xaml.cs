@@ -30,11 +30,11 @@ namespace SixCloudCore.Views.UserControls
         {
             if (e.NewValue == null)
             {
-                BeginAnimation(HeightProperty, new DoubleAnimation(0, new Duration(new TimeSpan(0, 0, 0, 0, 100))));
+                BeginAnimation(HeightProperty, new DoubleAnimation(0, new Duration(new TimeSpan(0, 0, 0, 0, 150))));
             }
             else
             {
-                BeginAnimation(HeightProperty, new DoubleAnimation(200, new Duration(new TimeSpan(0, 0, 0, 0, 100))));
+                BeginAnimation(HeightProperty, new DoubleAnimation(150, new Duration(new TimeSpan(0, 0, 0, 0, 150))));
             }
         }
     }

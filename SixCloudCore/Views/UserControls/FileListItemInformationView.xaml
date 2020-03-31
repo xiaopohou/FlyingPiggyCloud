@@ -21,7 +21,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="详细信息" FontSize="24" Margin="15" />
-        <Grid Grid.Row="1" HorizontalAlignment="Left">
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -42,15 +42,15 @@
             <TextBlock Grid.Column="0" Grid.Row="0" Text="文件类型:"/>
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Mime}"/>
             <TextBlock Grid.Column="0" Grid.Row="1" Text="访问时间:"/>
-            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ATime}" Grid.ColumnSpan="2"/>
-            <TextBlock Grid.Column="2" Grid.Row="0" Text="修改时间:"/>
-            <TextBlock Grid.Column="3" Grid.Row="0" Text="{Binding MTime}" Grid.ColumnSpan="2"/>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ATime}"/>
+            <TextBlock Grid.Column="2" Grid.Row="0" Text="大小:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="3" Grid.Row="0" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
             <TextBlock Grid.Column="2" Grid.Row="1" Text="创建时间:"/>
-            <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding CTime}" Grid.ColumnSpan="2"/>
+            <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding CTime}"/>
             <TextBlock Grid.Column="4" Grid.Row="0" Text="可预览:"/>
             <TextBlock Grid.Column="5" Grid.Row="0" Text="{Binding Preview}"/>
-            <TextBlock Grid.Column="4" Grid.Row="1" Text="大小:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
-            <TextBlock Grid.Column="5" Grid.Row="1" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="4" Grid.Row="1" Text="修改时间:"/>
+            <TextBlock Grid.Column="5" Grid.Row="1" Text="{Binding MTime}"/>
         </Grid>
     </Grid>
 </UserControl>

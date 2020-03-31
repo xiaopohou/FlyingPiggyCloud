@@ -20,14 +20,14 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid  VerticalAlignment="Center" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="50"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             
                             <Border x:Name="back" Opacity="0" BorderThickness="5,0,0,0" BorderBrush="{TemplateBinding BorderBrush}" Grid.ColumnSpan="2"/>
 
-                            <ctl:FontIcon Foreground="{TemplateBinding Foreground}" Margin="15,5" x:Name="icon" Icon="{TemplateBinding Icon}"/>
-                            <ctl:FontIcon Foreground="{TemplateBinding Foreground}" Margin="15,5" VerticalAlignment="Center" x:Name="iconMove" Icon="{TemplateBinding IconMove}" Opacity="0"/>
+                            <ctl:FontIcon Foreground="{TemplateBinding Foreground}" x:Name="icon" Icon="{TemplateBinding Icon}"/>
+                            <ctl:FontIcon Foreground="{TemplateBinding Foreground}" x:Name="iconMove" Icon="{TemplateBinding IconMove}" Opacity="0"/>
 
                             <TextBlock Grid.Column="1" x:Name="title" Text="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center"/>
                         </Grid>
