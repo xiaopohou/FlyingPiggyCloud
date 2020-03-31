@@ -4,40 +4,26 @@ namespace SixCloudCore.ViewModels
 {
     internal sealed class MainFrameViewModel : ViewModelBase
     {
-        public DependencyCommand PathNavigateCommand { get; private set; }
-
         public UserInformationViewModel UserInformation { get; set; }
 
-        public ViewModelBase MainContainerContent { get; set; }
+        public RecoveryBoxViewModel RecVM { get; set; } = new RecoveryBoxViewModel();
 
-        private RecoveryBoxViewModel RecVM { get; set; }
-        private FileListViewModel FileVM { get; set; }
+        public FileListViewModel FileVM { get; set; } = new FileListViewModel();
 
-        public TransferListViewModel TransferList { get; set; } = new TransferListViewModel();
+        public DownloadingListViewModel DownloadingList { get; private set; } = new DownloadingListViewModel();
 
-        private async void PathNavigate(object parameter)
-        {
-            string path = parameter as string;
-            if (path == "Recovery")
-            {
-                RecVM ??= new RecoveryBoxViewModel();
-                MainContainerContent = RecVM;
-                await RecVM.LazyLoad();
-            }
-            else
-            {
-                FileVM ??= new FileListViewModel();
-                MainContainerContent = FileVM;
-                await FileVM.NavigateByPath("/" + path, true);
-            }
-            OnPropertyChanged(nameof(MainContainerContent));
-        }
+        public DownloadedListViewModel DownloadedList { get; private set; } = new DownloadedListViewModel();
+
+        public UploadingListViewModel UploadingList { get; private set; } = new UploadingListViewModel();
+
+        public UploadedListViewModel UploadedList { get; private set; } = new UploadedListViewModel();
+
+        public OfflineTaskViewModel OfflineTask { get; private set; } = new OfflineTaskViewModel();
+
 
         public MainFrameViewModel(UserInformation currentUser)
         {
-            PathNavigateCommand = new DependencyCommand(PathNavigate, DependencyCommand.AlwaysCan);
             UserInformation = new UserInformationViewModel(currentUser);
-            MainContainerContent = new FileListViewModel();
         }
     }
 }

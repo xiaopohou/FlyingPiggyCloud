@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -23,6 +24,18 @@ namespace SixCloudCore.Views.UserControls
         public FileListItemInformationView()
         {
             InitializeComponent();
+        }
+
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue == null)
+            {
+                BeginAnimation(HeightProperty, new DoubleAnimation(0, new Duration(new TimeSpan(0, 0, 0, 0, 100))));
+            }
+            else
+            {
+                BeginAnimation(HeightProperty, new DoubleAnimation(200, new Duration(new TimeSpan(0, 0, 0, 0, 100))));
+            }
         }
     }
 }

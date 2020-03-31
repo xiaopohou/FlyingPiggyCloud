@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentWPF" Version="0.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\Fonts\Font Awesome 5 Free-Regular-400.otf" />
     <Resource Include="Resources\Fonts\Font Awesome 5 Free-Solid-900.otf" />
   </ItemGroup>

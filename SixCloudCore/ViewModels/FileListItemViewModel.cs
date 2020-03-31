@@ -13,7 +13,7 @@ namespace SixCloudCore.ViewModels
     internal class FileListItemViewModel : FileSystemViewModel
     {
         private readonly FileListViewModel Parent;
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private static readonly Dictionary<string, string> IconDictionary = new Dictionary<string, string>
             {
                 {"default",'\uf15c'.ToString() },

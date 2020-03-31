@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:SixCloudCore.Views.UserControls"
              xmlns:ViewModels="clr-namespace:SixCloudCore.ViewModels" x:Class="SixCloudCore.Views.UserControls.FileListItemInformationView"
              mc:Ignorable="d" 
-             d:DesignHeight="377" d:DesignWidth="280">
+             d:DesignHeight="200" d:DesignWidth="580" Height="0" HorizontalAlignment="Left" DataContextChanged="UserControl_DataContextChanged">
     <UserControl.Resources>
         <ViewModels:HidingSizeinfoForDirectoryConverter x:Key="HidingSizeinfoForDirectoryConverter"/>
         <Style TargetType="{x:Type TextBlock}">
@@ -25,13 +25,17 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <!--<RowDefinition Height="Auto"/>-->
+                <!--<RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>-->
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -39,14 +43,14 @@
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Mime}"/>
             <TextBlock Grid.Column="0" Grid.Row="1" Text="访问时间:"/>
             <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ATime}" Grid.ColumnSpan="2"/>
-            <TextBlock Grid.Column="0" Grid.Row="2" Text="修改时间:"/>
-            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding MTime}" Grid.ColumnSpan="2"/>
-            <TextBlock Grid.Column="0" Grid.Row="3" Text="创建时间:"/>
-            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding CTime}" Grid.ColumnSpan="2"/>
-            <TextBlock Grid.Column="0" Grid.Row="4" Text="可预览:"/>
-            <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding Preview}"/>
-            <TextBlock Grid.Column="0" Grid.Row="5" Text="大小:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
-            <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="2" Grid.Row="0" Text="修改时间:"/>
+            <TextBlock Grid.Column="3" Grid.Row="0" Text="{Binding MTime}" Grid.ColumnSpan="2"/>
+            <TextBlock Grid.Column="2" Grid.Row="1" Text="创建时间:"/>
+            <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding CTime}" Grid.ColumnSpan="2"/>
+            <TextBlock Grid.Column="4" Grid.Row="0" Text="可预览:"/>
+            <TextBlock Grid.Column="5" Grid.Row="0" Text="{Binding Preview}"/>
+            <TextBlock Grid.Column="4" Grid.Row="1" Text="大小:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="5" Grid.Row="1" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
         </Grid>
     </Grid>
 </UserControl>

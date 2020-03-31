@@ -7,6 +7,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using SourceChord.FluentWPF;
+using System.Windows.Input;
+using System.Collections;
+using System.Collections.Generic;
+using SixCloudCore.Models;
+using System.Linq;
 
 namespace SixCloudCore.Views
 {
@@ -14,9 +20,10 @@ namespace SixCloudCore.Views
     /// <summary>
     /// MainFrame.xaml 的交互逻辑
     /// </summary>
-    public partial class MainFrame : MetroWindow
+    public partial class MainFrame : AcrylicWindow
     {
         private static UserInformation recoveryInfo;
+
         public static Window Recovery()
         {
             if (recoveryInfo != null)
@@ -29,77 +36,20 @@ namespace SixCloudCore.Views
             }
         }
 
-        public static readonly DependencyProperty PageNavigateProperty = DependencyProperty.Register("PageNavigate", typeof(PageNavigate), typeof(MainFrame), new PropertyMetadata((sender, e) =>
-        {
-            if (sender is MainFrame mainFrame)
-            {
-
-            }
-        }));
-        public PageNavigate PageNavigate { get => (PageNavigate)GetValue(PageNavigateProperty); set => SetValue(PageNavigateProperty, value); }
-
-
         public MainFrame(UserInformation currentUser)
         {
             recoveryInfo = currentUser;
             InitializeComponent();
             MainFrameViewModel mainFrameViewModel = new MainFrameViewModel(currentUser);
             DataContext = mainFrameViewModel;
-            if (mainFrameViewModel.MainContainerContent is FileListViewModel fileListViewModel)
+            ThreadPool.QueueUserWorkItem(async (_) =>
             {
-                ThreadPool.QueueUserWorkItem(async(_) =>
-                {
-                    await fileListViewModel.NavigateByPath("/");
-                });
-            }
+                await mainFrameViewModel.FileVM.NavigateByPath("/");
+            });
+            LazyLoadEventHandler += LazyLoad;
         }
 
-        private void MainContainer_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            DoubleAnimation appearAnimation = new DoubleAnimation
-            {
-                From = 0d,
-                To = 1d,
-                Duration = new Duration(TimeSpan.FromMilliseconds(500))
-            };
-            DoubleAnimation moveAnimation = new DoubleAnimation
-            {
-                From = 100,
-                To = 0d,
-                Duration = new Duration(TimeSpan.FromMilliseconds(500))
-            };
-            if (e.NewValue is FileListViewModel)
-            {
-                FileListContainer.Visibility = Visibility.Visible;
-                RecoveryBoxContainer.Visibility = Visibility.Collapsed;
-            }
-            else if (e.NewValue is RecoveryBoxViewModel)
-            {
-                FileListContainer.Visibility = Visibility.Collapsed;
-                RecoveryBoxContainer.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                return;
-            }
-            MainContainer.BeginAnimation(OpacityProperty, appearAnimation);
-            MainContainerTransform.BeginAnimation(TranslateTransform.XProperty, moveAnimation);
-        }
-
-        private void LightButton_Click(object sender, RoutedEventArgs e)
-        {
-            UserInformationMenu.Visibility = Visibility.Visible;
-        }
-
-        private void Grid_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (UserInformationMenu.Visibility == Visibility.Visible)
-            {
-                UserInformationMenu.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void UserInformationMenu_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void UserInformationMenu_MouseUp(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
         }
@@ -119,6 +69,133 @@ namespace SixCloudCore.Views
                 }
             }
         }
+
+
+        private void DownloadingTaskPause(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                IList list = (IList)e.Parameter;
+                IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
+                foreach (DownloadingTaskViewModel t in downloadingTasks)
+                {
+                    if (t.Status == DownloadTask.TaskStatus.Pause)
+                    {
+                        t.Start();
+                    }
+                    else if (t.Status == DownloadTask.TaskStatus.Running)
+                    {
+                        t.Pause();
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void DownloadingTaskCancel(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                IList list = (IList)e.Parameter;
+                IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
+                foreach (DownloadingTaskViewModel t in downloadingTasks.ToArray())
+                {
+                    t.Stop();
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void DownloadedList_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            ListBox list = sender as ListBox;
+            if (list.SelectedItem == null)
+            {
+                e.Handled = true;
+            }
+            else
+            {
+                list.ContextMenu.DataContext = list.SelectedItem;
+            }
+        }
+
+        private void OfflineList_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (e.OriginalSource is ScrollViewer viewer)
+            {
+                double bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
+                if (viewer.VerticalOffset > 0 && bottomOffset < 0.3)
+                {
+                    LazyLoadEventHandler?.Invoke(sender, e);
+                }
+            }
+        }
+
+        private ScrollChangedEventHandler LazyLoadEventHandler;
+
+        private async void LazyLoad(object sender, ScrollChangedEventArgs e)
+        {
+            lock (LazyLoadEventHandler)
+            {
+                LazyLoadEventHandler -= LazyLoad;
+            }
+            //懒加载的业务代码
+            MainFrameViewModel vm = DataContext as MainFrameViewModel;
+            await vm.OfflineTask.LazyLoad();
+            LazyLoadEventHandler += LazyLoad;
+        }
+
+        private void UploadingTaskPause(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                IList list = (IList)e.Parameter;
+                IEnumerable<UploadingTaskViewModel> downloadingTasks = list.Cast<UploadingTaskViewModel>();
+                foreach (UploadingTaskViewModel t in downloadingTasks)
+                {
+                    if (t.Status == UploadingTaskViewModel.UploadStatus.Pause)
+                    {
+                        t.Start();
+                    }
+                    else if (t.Status == UploadingTaskViewModel.UploadStatus.Running)
+                    {
+                        t.Pause();
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void UploadingTaskCancel(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                IList list = (IList)e.Parameter;
+                IEnumerable<UploadingTaskViewModel> downloadingTasks = list.Cast<UploadingTaskViewModel>();
+                foreach (var t in downloadingTasks)
+                {
+                    t.Stop(null);
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
 
     }
 }

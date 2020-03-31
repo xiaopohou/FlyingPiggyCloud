@@ -2,14 +2,62 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ctl="clr-namespace:CustomControls.Controls"
                     xmlns:local="clr-namespace:CustomControls.Themes">
+    
     <Style TargetType="{x:Type ctl:FluentTabItem}">
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Background" Value="Gray"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MainForegroundBrush}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ctl:FluentTabItem}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
+                    <Border x:Name="mainBorder"
+                            Background="Transparent"
+                            BorderBrush="{x:Null}"
                             BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid  VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Border x:Name="back" Opacity="0" BorderThickness="5,0,0,0" BorderBrush="{TemplateBinding BorderBrush}" Grid.ColumnSpan="2"/>
+
+                            <ctl:FontIcon Foreground="{TemplateBinding Foreground}" Margin="15,5" x:Name="icon" Icon="{TemplateBinding Icon}"/>
+                            <ctl:FontIcon Foreground="{TemplateBinding Foreground}" Margin="15,5" VerticalAlignment="Center" x:Name="iconMove" Icon="{TemplateBinding IconMove}" Opacity="0"/>
+
+                            <TextBlock Grid.Column="1" x:Name="title" Text="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center"/>
+                        </Grid>
                     </Border>
+                    
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Selector.IsSelected" Value="True">
+                            <Setter TargetName="icon" Property="Opacity" Value="0"/>
+                            <Setter TargetName="iconMove" Property="Opacity" Value="1"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="00:00:00.100" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="back"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="00:00:00.100" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="back"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="mainBorder" Property="Border.Background" Value="LightGray"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

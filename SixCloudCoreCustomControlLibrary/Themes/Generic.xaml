@@ -15,8 +15,14 @@
         <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/LoadingControl.xaml"/>
         <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/FluentTabControl.xaml"/>
         <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/FluentTabItem.xaml"/>
+
+        <!--  FluentWPF Controls  -->
+        <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
+
     </ResourceDictionary.MergedDictionaries>
     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FF61BF83"/>
     <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF75D397"/>
     <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FF4DAB6F"/>
+    
+    <SolidColorBrush x:Key="MainForegroundBrush" Color="#FF5A5A5A"/>
 </ResourceDictionary>

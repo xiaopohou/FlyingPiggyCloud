@@ -41,6 +41,7 @@ namespace SixCloudCore.Models
                 }
                 Status = TaskStatus.Running;
             }
+
             await Task.Run(() =>
             {
                 fileDownloader.Start();

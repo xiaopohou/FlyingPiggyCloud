@@ -1,26 +1,20 @@
 ﻿<fw:AcrylicWindow x:Class="SixCloudCore.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SixCloudCore"
-        mc:Ignorable="d"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
-        xmlns:uwp="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid fw:PointerTracker.Enabled="True" Background="#01FFFFFF" Margin="3">
-        <!--<StackPanel>
-            <Button Content="Button" HorizontalAlignment="Left" Margin="5" Width="75" Height="32"
-                                    Background="Transparent"
-                Style="{StaticResource ButtonAccentRevealStyle}"/>
-
-            <Button Content="Button" HorizontalAlignment="Left" Margin="5" Width="75" Height="32"
-                Background="Transparent"
-                Style="{StaticResource ButtonRoundRevealStyle}"/>
-
-            <TextBox HorizontalAlignment="Left" Margin="5" Text="TextBox" Width="120"
-             Style="{StaticResource TextBoxRevealStyle}"/>
-        </StackPanel>-->
-        <!--<uwp:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.Pivot" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="300"/>-->
-    </Grid>
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:local="clr-namespace:SixCloudCore"
+                  mc:Ignorable="d"
+                  xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+                  xmlns:uwp="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
+                  xmlns:controls="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+                  Title="MainWindow" Height="720" Width="1140"
+                  fw:PointerTracker.Enabled="True">
+    <controls:FluentTabControl>
+        <controls:FluentTabItem Icon="&#xf111;" IconMove="&#xf122;" Header="helloworld">
+            <Button Style="{StaticResource ButtonRevealStyle}" Margin="0,50,0,0" Height="50" Width="200" Background="Transparent"/>
+        </controls:FluentTabItem>
+        <controls:FluentTabItem Icon="&#xf111;" IconMove="&#xf122;" Header="helloworld"/>
+        <controls:FluentTabItem Icon="&#xf111;" IconMove="&#xf122;" Header="helloworld"/>
+    </controls:FluentTabControl>
 </fw:AcrylicWindow>

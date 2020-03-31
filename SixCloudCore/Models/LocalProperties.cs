@@ -42,17 +42,12 @@ namespace SixCloudCore.Models
             set => ApplicationDictionary.SetValue("IsAutoLogin", value);
         }
 
-        public static PageNavigate DefaultPage
-        {
-            get => ApplicationDictionary.GetValue("DefaultPage") == null ? PageNavigate.Root : (PageNavigate)System.Enum.Parse(typeof(PageNavigate), (string)ApplicationDictionary.GetValue("DefaultPage"));
-            set => ApplicationDictionary.SetValue("DefaultPage", value);
-        }
+        //public static string CurrentUserInformation
+        //{
+        //    get => (string)ApplicationDictionary.GetValue("CurrentUserInformation");
+        //    set => ApplicationDictionary.SetValue("CurrentUserInformation", value);
+        //}
 
-        public static string CurrentUserInformation
-        {
-            get => (string)ApplicationDictionary.GetValue("CurrentUserInformation");
-            set => ApplicationDictionary.SetValue("CurrentUserInformation", value);
-        }
         public static string CountryCode
         {
             get => (string)ApplicationDictionary.GetValue("CountryCode") ?? "(86)中国大陆";

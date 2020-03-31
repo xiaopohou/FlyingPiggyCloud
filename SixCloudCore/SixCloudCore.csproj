@@ -97,9 +97,6 @@
     <Compile Update="Views\UserControls\SignUpView.xaml.cs">
       <DependentUpon>SignUpView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\UserControls\TransferListView.xaml.cs">
-      <DependentUpon>TransferListView.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Views\UserControls\UserInformationView.xaml.cs">
       <DependentUpon>UserInformationView.xaml</DependentUpon>
     </Compile>
