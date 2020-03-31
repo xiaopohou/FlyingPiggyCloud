@@ -22,12 +22,6 @@
             <Setter Property="Margin" Value="5,0"/>
         </Style>
 
-        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonRevealStyle}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Padding" Value="5"/>
-        </Style>
-
-
         <DataTemplate x:Key="MetaName">
             <StackPanel Orientation="Horizontal" x:Name="MetaNameContainer">
                 <controls:FontIcon Foreground="{DynamicResource PrimaryHueMidBrush}" IconSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -90,7 +84,6 @@
                 <TextBlock Foreground="#FF5A5A5A" Text="{Binding MTime}"/>
             </StackPanel>
         </DataTemplate>
-
 
         <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="Transparent"/>
@@ -222,8 +215,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="5,0">
-                        <TextBlock Foreground="#FF5A5A5A" Text="{Binding DataContext, RelativeSource={RelativeSource Self}}" FontWeight="Bold"/>
-                        <controls:FontIcon Icon="&#xF054;" Foreground="#FF5A5A5A" />
+                        <TextBlock Text="{Binding DataContext, RelativeSource={RelativeSource Self}}" FontWeight="Bold"/>
+                        <controls:FontIcon Icon="&#xF054;"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -231,8 +224,8 @@
 
         <!--上方栏-->
         <StackPanel Height="60" Grid.Row="1" HorizontalAlignment="Left" Orientation="Horizontal">
-            <controls:LightButton FontIcon="&#xF053;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FF5A5A5A" x:Name="Previous" Command="{Binding PreviousNavigateCommand}"/>
-            <controls:LightButton FontIcon="&#xF054;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FF5A5A5A" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
+            <controls:LightButton FontIcon="&#xF053;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Previous" Command="{Binding PreviousNavigateCommand}"/>
+            <controls:LightButton FontIcon="&#xF054;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
             <Button x:Name="UploadButton" Command="{Binding UploadFileCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF574;" Foreground="#FF5A5A5A"/>

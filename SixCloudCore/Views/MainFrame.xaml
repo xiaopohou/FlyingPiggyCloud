@@ -10,8 +10,14 @@
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                   xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
                   xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
-                  mc:Ignorable="d" MinHeight="720" MinWidth="1366" AcrylicWindowStyle="NoIcon">
+                  mc:Ignorable="d" MinHeight="720" MinWidth="1366" AcrylicWindowStyle="NoIcon" fw:PointerTracker.Enabled="True">
     <fw:AcrylicWindow.Resources>
+
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonRevealStyle}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
+        </Style>
 
         <!--TabControl分割线-->
         <Style TargetType="TabItem" x:Key="TabItemWithLeftSeparator">
@@ -263,12 +269,13 @@
 
         <!--上传列表-->
         <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF102;" IconMove="&#xF102;" Header="正在上传">
-            <Grid Background="White" Margin="30,40,15,15">
+            <Grid Margin="30,40,15,15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal">
-                    <Button HorizontalAlignment="Left"
-                            Style="{DynamicResource MaterialDesignFlatButton}"
-                            Margin="5,0"
-                            Command="MediaCommands.Play"
+                    <Button Command="MediaCommands.Play"
                             CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
                             CommandTarget="{Binding ElementName=UploadingList}">
                         <StackPanel Margin="15" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -276,10 +283,7 @@
                             <TextBlock Text="开始/暂停任务" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button HorizontalAlignment="Left" 
-                            Style="{DynamicResource MaterialDesignFlatButton}" 
-                            VerticalAlignment="Center" Margin="5,0" 
-                            Command="MediaCommands.Stop"
+                    <Button Command="MediaCommands.Stop"
                             CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
                             CommandTarget="{Binding ElementName=UploadingList}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -288,7 +292,7 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <ListBox x:Name="UploadingList" DataContext="{Binding UploadingList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+                <ListBox Grid.Row="1" x:Name="UploadingList" DataContext="{Binding UploadingList}" ItemsSource="{Binding ObservableCollection}" Background="White">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Height="48">

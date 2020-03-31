@@ -19,7 +19,7 @@
             <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF75D397"/>
             <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FF4DAB6F"/>
 
-            <SolidColorBrush x:Key="MainForegroundBrush" Color="#FF5A5A5A"/>
+            <SolidColorBrush x:Key="MainForegroundBrush" Color="#FF00FFFF"/>
 
 
         </ResourceDictionary>
