@@ -49,8 +49,8 @@ namespace SixCloudCore.ViewModels
             App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             Task.Run(async () => await TasksLogger.StartUpRecovery());
             Application.Current.Exit += TasksLogger.ExitEventHandler;
-#warning 弃用托盘按钮
-            //new TaskBarButton();
+            //#warning 弃用托盘按钮
+            new TaskBarButton();
             ThreadPool.QueueUserWorkItem((_) =>
             {
                 do

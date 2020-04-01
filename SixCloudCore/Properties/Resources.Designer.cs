@@ -61,6 +61,16 @@ namespace SixCloudCore.Properties {
         }
         
         /// <summary>
+        ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Icon _666 {
+            get {
+                object obj = ResourceManager.GetObject("_666", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 &lt;!DOCTYPE html&gt;
         ///&lt;html lang=&quot;zh-cn&quot;&gt;
         ///&lt;head&gt;
