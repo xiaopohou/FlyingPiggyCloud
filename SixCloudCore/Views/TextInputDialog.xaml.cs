@@ -1,11 +1,12 @@
 ﻿using CustomControls.Controls;
+using SourceChord.FluentWPF;
 
 namespace SixCloudCore.Views
 {
     /// <summary>
     /// TextInputDialog.xaml 的交互逻辑
     /// </summary>
-    public sealed partial class TextInputDialog : MetroWindow
+    public sealed partial class TextInputDialog : AcrylicWindow
     {
         private bool _result;
 
@@ -15,7 +16,7 @@ namespace SixCloudCore.Views
         {
             TextInputDialog textInputDialog = new TextInputDialog();
             textInputDialog.Title = title;
-            textInputDialog.HintAssistant.Text = hintText;
+            //textInputDialog.HintAssistant.Text = hintText;
             textInputDialog.ShowDialog();
             UserInput = textInputDialog._userInput;
             return textInputDialog._result;
@@ -24,7 +25,7 @@ namespace SixCloudCore.Views
         public static bool Show(out string UserInput,string hintText)
         {
             TextInputDialog textInputDialog = new TextInputDialog();
-            textInputDialog.HintAssistant.Text = hintText;
+            //textInputDialog.HintAssistant.Text = hintText;
             textInputDialog.ShowDialog();
             UserInput = textInputDialog._userInput;
             return textInputDialog._result;

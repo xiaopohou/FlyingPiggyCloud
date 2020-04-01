@@ -10,7 +10,7 @@
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                   xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
                   xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
-                  mc:Ignorable="d" MinHeight="720" MinWidth="1366" AcrylicWindowStyle="NoIcon" fw:PointerTracker.Enabled="True">
+                  mc:Ignorable="d" MinHeight="720" MinWidth="1366" AcrylicWindowStyle="NoIcon" fw:PointerTracker.Enabled="True" WindowStartupLocation="CenterScreen">
     <fw:AcrylicWindow.Resources>
 
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonRevealStyle}">

@@ -14,13 +14,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SourceChord.FluentWPF;
 
 namespace SixCloudCore.Views
 {
     /// <summary>
     /// ChangePasswordView.xaml 的交互逻辑
     /// </summary>
-    public partial class ChangePasswordView : MetroWindow
+    public partial class ChangePasswordView : AcrylicWindow
     {
         private readonly Authentication authentication = new Authentication();
 
