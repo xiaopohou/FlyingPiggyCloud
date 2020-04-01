@@ -1,8 +1,9 @@
-﻿<Application x:Class="SixCloudCore.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SixCloudCore"
-             StartupUri="Views/LoginView.xaml">
+﻿<Application
+    x:Class="SixCloudCore.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SixCloudCore"
+    StartupUri="Views/LoginView.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,15 +14,13 @@
                 
                 <!--  FluentWPF Controls  -->
                 <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/SixCloudCoreCustomControlLibrary;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FF61BF83"/>
             <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF75D397"/>
             <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FF4DAB6F"/>
-
-            <SolidColorBrush x:Key="MainForegroundBrush" Color="#FF00FFFF"/>
-
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

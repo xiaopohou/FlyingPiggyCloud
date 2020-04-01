@@ -32,10 +32,10 @@
                 </Grid.ColumnDefinitions>
                 <controls:FontIcon Foreground="{DynamicResource MainForegroundBrush}" IconSize="24" Icon="{Binding Icon}"/>
                 <controls:RenamableTextBox Grid.Column="1" x:Name="NameBox" HorizontalAlignment="Left" VerticalAlignment="Center" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
-                <controls:LightButton Grid.Column="2" FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
-                <controls:LightButton Grid.Column="3" FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
+                <controls:LightButton Grid.Column="2" Margin="2,0" FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
+                <controls:LightButton Grid.Column="3" Margin="2,0" FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
                     <controls:LightButton.ContextMenu>
-                        <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource MainForegroundBrush}" Foreground="White">
+                        <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource ImmersiveSystemAccentBrush}" Foreground="White">
                             <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF0C4;"/>

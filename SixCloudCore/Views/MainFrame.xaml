@@ -64,7 +64,7 @@
 
         <TabItem IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}">
             <TabItem.Header>
-                <Border Margin="15,15" BorderBrush="{DynamicResource MainForegroundBrush}" BorderThickness="0">
+                <Border Margin="15,15" BorderThickness="0">
                     <TextBlock Text="文件列表"/>
                 </Border>
             </TabItem.Header>
@@ -88,7 +88,7 @@
 
         <TabItem IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}">
             <TabItem.Header>
-                <Border Margin="15,15" BorderBrush="{DynamicResource MainForegroundBrush}" BorderThickness="0">
+                <Border Margin="15,15" BorderThickness="0">
                     <TextBlock Text="传输任务"/>
                 </Border>
             </TabItem.Header>
