@@ -23,11 +23,17 @@
         </Style>
 
         <DataTemplate x:Key="MetaName">
-            <StackPanel Orientation="Horizontal" x:Name="MetaNameContainer">
-                <controls:FontIcon Foreground="{DynamicResource MainForegroundBrush}" IconSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <controls:RenamableTextBox x:Name="NameBox" HorizontalAlignment="Left" VerticalAlignment="Center" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
-                <controls:LightButton Margin="5" FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
-                <controls:LightButton Margin="5" FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
+            <Grid x:Name="MetaNameContainer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <controls:FontIcon Foreground="{DynamicResource MainForegroundBrush}" IconSize="24" Icon="{Binding Icon}"/>
+                <controls:RenamableTextBox Grid.Column="1" x:Name="NameBox" HorizontalAlignment="Left" VerticalAlignment="Center" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
+                <controls:LightButton Grid.Column="2" FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
+                <controls:LightButton Grid.Column="3" FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
                     <controls:LightButton.ContextMenu>
                         <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource MainForegroundBrush}" Foreground="White">
                             <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
@@ -53,7 +59,7 @@
                         </ContextMenu>
                     </controls:LightButton.ContextMenu>
                 </controls:LightButton>
-            </StackPanel>
+            </Grid>
             <DataTemplate.Triggers>
                 <!--选中时显示附加按钮-->
                 <MultiDataTrigger>
@@ -206,7 +212,7 @@
         </Grid.RowDefinitions>
         
         <!--地址栏-->
-        <ListBox Style="{StaticResource ListBoxRevealStyle}" FontSize="12" x:Name="AddressBar" Height="24" VerticalAlignment="Top" BorderBrush="Black" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
+        <ListBox Style="{StaticResource ListBoxRevealStyle}" FontSize="12" x:Name="AddressBar" Height="24" VerticalAlignment="Top" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
@@ -215,9 +221,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="5,0">
-                        <TextBox Text="HelloWorld" Style="{StaticResource TextBoxRevealStyle}"/>
-                        <TextBlock Text="{Binding DataContext, RelativeSource={RelativeSource Self}}" FontWeight="Bold"/>
-                        <controls:FontIcon Icon="&#xF054;"/>
+                        <TextBlock Foreground="{DynamicResource MainForegroundBrush}" Text="{Binding DataContext, RelativeSource={RelativeSource Self}}" FontWeight="Bold"/>
+                        <controls:FontIcon Foreground="{DynamicResource MainForegroundBrush}" Icon="&#xF054;"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -225,8 +230,8 @@
 
         <!--上方栏-->
         <StackPanel Height="60" Grid.Row="1" HorizontalAlignment="Left" Orientation="Horizontal">
-            <controls:LightButton FontIcon="&#xF053;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Previous" Command="{Binding PreviousNavigateCommand}"/>
-            <controls:LightButton FontIcon="&#xF054;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
+            <controls:LightButton Foreground="{DynamicResource MainForegroundBrush}"  FontIcon="&#xF053;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Previous" Command="{Binding PreviousNavigateCommand}"/>
+            <controls:LightButton Foreground="{DynamicResource MainForegroundBrush}"  FontIcon="&#xF054;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
             <Button x:Name="UploadButton" Command="{Binding UploadFileCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF574;"/>
