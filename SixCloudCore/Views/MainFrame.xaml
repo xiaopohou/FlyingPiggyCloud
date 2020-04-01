@@ -62,7 +62,6 @@
 
     <metro:FluentTabControl>
 
-        <!--文件列表-->
         <TabItem IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}">
             <TabItem.Header>
                 <Border Margin="15,15" BorderBrush="{DynamicResource MainForegroundBrush}" BorderThickness="0">
@@ -71,7 +70,8 @@
             </TabItem.Header>
         </TabItem>
 
-        <metro:FluentTabItem  DataContext="{Binding FileVM}" Icon="&#xf07b;" IconMove="&#xf07b;" Header="所有文件">
+        <!--文件列表-->
+        <metro:FluentTabItem IsSelected="True" DataContext="{Binding FileVM}" Icon="&#xf07b;" IconMove="&#xf07b;" Header="所有文件">
             <Grid Margin="30,40,15,15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
@@ -95,7 +95,7 @@
         </TabItem>
 
         <!--离线下载列表-->
-        <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF381;" IconMove="&#xF381;" Header="离线任务">
+        <metro:FluentTabItem Icon="&#xF381;" IconMove="&#xF381;" Header="离线任务">
             <Grid DataContext="{Binding OfflineTask}" Background="White" Margin="30,40,15,15">
                 <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
                     <Button HorizontalAlignment="Left"
@@ -163,7 +163,7 @@
         </metro:FluentTabItem>
 
         <!--下载列表-->
-        <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF103;" IconMove="&#xF103;" Header="正在下载">
+        <metro:FluentTabItem Icon="&#xF103;" IconMove="&#xF103;" Header="正在下载">
             <Grid Background="White" Margin="30,40,15,15">
                 <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
                     <Button HorizontalAlignment="Left"
@@ -230,7 +230,7 @@
         </metro:FluentTabItem>
 
         <!--下载完成-->
-        <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF560;" IconMove="&#xF560;" Header="下载完成">
+        <metro:FluentTabItem Icon="&#xF560;" IconMove="&#xF560;" Header="下载完成">
             <ListBox ContextMenuOpening="DownloadedList_ContextMenuOpening" x:Name="DownloadedList" DataContext="{Binding DownloadedList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="30,40,15,15">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -268,7 +268,7 @@
         </metro:FluentTabItem>
 
         <!--上传列表-->
-        <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF102;" IconMove="&#xF102;" Header="正在上传">
+        <metro:FluentTabItem Icon="&#xF102;" IconMove="&#xF102;" Header="正在上传">
             <Grid Margin="30,40,15,15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -334,7 +334,7 @@
         </metro:FluentTabItem>
 
         <!--上传完成-->
-        <metro:FluentTabItem Foreground="#FF5A5A5A" Icon="&#xF560;" IconMove="&#xF560;" Header="上传完成">
+        <metro:FluentTabItem Icon="&#xF560;" IconMove="&#xF560;" Header="上传完成">
             <ListBox x:Name="UploadedList" DataContext="{Binding UploadedList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="30,40,15,15">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

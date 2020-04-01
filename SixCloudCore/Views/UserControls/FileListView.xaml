@@ -24,12 +24,12 @@
 
         <DataTemplate x:Key="MetaName">
             <StackPanel Orientation="Horizontal" x:Name="MetaNameContainer">
-                <controls:FontIcon Foreground="{DynamicResource PrimaryHueMidBrush}" IconSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <controls:FontIcon Foreground="{DynamicResource MainForegroundBrush}" IconSize="24" Margin="4" Icon="{Binding Icon}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <controls:RenamableTextBox x:Name="NameBox" HorizontalAlignment="Left" VerticalAlignment="Center" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
                 <controls:LightButton Margin="5" FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
                 <controls:LightButton Margin="5" FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
                     <controls:LightButton.ContextMenu>
-                        <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="White">
+                        <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource MainForegroundBrush}" Foreground="White">
                             <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF0C4;"/>
@@ -59,7 +59,6 @@
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
-                        <!--<Condition Binding="{Binding Directory}" Value="False" />-->
                     </MultiDataTrigger.Conditions>
                     <Setter TargetName="DownloadBotton" Property="Visibility" Value="Visible"/>
                 </MultiDataTrigger>
@@ -75,13 +74,13 @@
 
         <DataTemplate x:Key="MetaSize">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="#FF5A5A5A" Text="{Binding Size}"/>
+                <TextBlock Text="{Binding Size}"/>
             </StackPanel>
         </DataTemplate>
 
         <DataTemplate x:Key="MetaMTime">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="#FF5A5A5A" Text="{Binding MTime}"/>
+                <TextBlock Text="{Binding MTime}"/>
             </StackPanel>
         </DataTemplate>
 
@@ -205,8 +204,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
+        
         <!--地址栏-->
-        <ListBox FontSize="12" x:Name="AddressBar" Height="24" VerticalAlignment="Top" BorderBrush="Black" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
+        <ListBox Style="{StaticResource ListBoxRevealStyle}" FontSize="12" x:Name="AddressBar" Height="24" VerticalAlignment="Top" BorderBrush="Black" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
@@ -215,6 +215,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="5,0">
+                        <TextBox Text="HelloWorld" Style="{StaticResource TextBoxRevealStyle}"/>
                         <TextBlock Text="{Binding DataContext, RelativeSource={RelativeSource Self}}" FontWeight="Bold"/>
                         <controls:FontIcon Icon="&#xF054;"/>
                     </StackPanel>
@@ -228,44 +229,44 @@
             <controls:LightButton FontIcon="&#xF054;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
             <Button x:Name="UploadButton" Command="{Binding UploadFileCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF574;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="上传文件" Foreground="#FF5A5A5A" HorizontalAlignment="Center"/>
+                        <controls:FontIcon Icon="&#xF574;"/>
+                        <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
                     </StackPanel>
             </Button>
             <Button x:Name="UploadFolderButton" Command="{Binding UploadFolderCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF093;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="上传文件夹" Foreground="#FF5A5A5A"/>
+                        <controls:FontIcon Icon="&#xF093;"/>
+                        <TextBlock Text="上传文件夹"/>
                     </StackPanel>
             </Button>
             <Button x:Name="NewFolderButton" Command="{Binding NewFolderCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF65E;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="新建文件夹" Foreground="#FF5A5A5A"/>
+                        <controls:FontIcon Icon="&#xF65E;" />
+                        <TextBlock Text="新建文件夹" />
                     </StackPanel>
             </Button>
             <Button x:Name="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF1F8;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="删除" Foreground="#FF5A5A5A"/>
+                        <controls:FontIcon Icon="&#xF1F8;" />
+                        <TextBlock Text="删除" />
                     </StackPanel>
             </Button>
             <Button x:Name="Cut" Command="{Binding CutCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF0C4;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="剪切" Foreground="#FF5A5A5A"/>
+                        <controls:FontIcon Icon="&#xF0C4;"/>
+                        <TextBlock Text="剪切" />
                     </StackPanel>
             </Button>
             <Button x:Name="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF0C5;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="复制" Foreground="#FF5A5A5A"/>
+                        <controls:FontIcon Icon="&#xF0C5;"/>
+                        <TextBlock Text="复制" />
                     </StackPanel>
             </Button>
             <Button x:Name="Stick" Command="{Binding StickCommand}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <controls:FontIcon Icon="&#xF46C;" Foreground="#FF5A5A5A"/>
-                    <TextBlock Text="粘贴" Foreground="#FF5A5A5A"/>
+                    <controls:FontIcon Icon="&#xF46C;"/>
+                    <TextBlock Text="粘贴"/>
                 </StackPanel>
             </Button>
         </StackPanel>
