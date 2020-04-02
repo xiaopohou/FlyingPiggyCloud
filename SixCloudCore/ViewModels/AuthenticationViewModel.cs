@@ -64,7 +64,7 @@ namespace SixCloudCore.ViewModels
                     {
 #warning 单纯的网络错误无需处理，丢弃
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //ex.ToExceptionless().AddTags("手工提交的错误日志").Submit();
                     }

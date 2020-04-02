@@ -2,7 +2,13 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class FileListPage
+    public class FileListPage : FileList
+    {
+        [JsonProperty(PropertyName = "pageInfo")]
+        public FileListPageInfo FileListPageInfo { get; set; }
+    }
+
+    public class FileListPageInfo
     {
         /// <summary>
         /// 当前页码
@@ -19,7 +25,7 @@ namespace QingzhenyunApis.EntityModels
         /// <summary>
         /// 文件总数
         /// </summary>
-        [JsonProperty(PropertyName = "totalCount")]
+        [JsonProperty(PropertyName = "totalRecord")]
         public int TotalCount { get; set; }
 
         /// <summary>
@@ -28,10 +34,15 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty(PropertyName = "totalPage")]
         public int TotalPage { get; set; }
 
+
+    }
+
+    public class FileList
+    {
         /// <summary>
-        /// 本页目录及文件列表
+        /// 文件夹及文件列表
         /// </summary>
-        [JsonProperty(PropertyName = "list")]
+        [JsonProperty(PropertyName = "dataList")]
         public FileMetaData[] List { get; set; }
 
         /// <summary>
@@ -39,5 +50,6 @@ namespace QingzhenyunApis.EntityModels
         /// </summary>
         [JsonProperty(PropertyName = "parent")]
         public FileMetaData DictionaryInformation { get; set; }
+
     }
 }

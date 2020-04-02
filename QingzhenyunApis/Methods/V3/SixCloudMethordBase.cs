@@ -88,7 +88,7 @@ namespace QingzhenyunApis.Methods.V3
             Token = token ?? Token;
         }
 
-        protected async Task<T> PostAsync<T>(string data, string uri, bool isAnonymous = true)
+        protected async Task<T> PostAsync<T>(string data, string uri, bool isAnonymous = false)
         {
             using (StringContent requestObject = new StringContent(data))
             {
@@ -129,6 +129,21 @@ namespace QingzhenyunApis.Methods.V3
                 }
                 return JsonConvert.DeserializeObject<T>(responseBody);
             }
+        }
+
+
+        protected async Task<T> GetAsync<T>(string uri, bool isAnonymous = false)
+        {
+            //发起请求
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
+
+            if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
+            {
+                Token = newToken.FirstOrDefault() ?? Token;
+            }
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<T>(responseBody);
         }
 
     }

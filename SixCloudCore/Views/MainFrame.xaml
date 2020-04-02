@@ -96,11 +96,15 @@
 
         <!--离线下载列表-->
         <metro:FluentTabItem Icon="&#xF381;" IconMove="&#xF381;" Header="离线任务">
-            <Grid DataContext="{Binding OfflineTask}" Background="White" Margin="30,40,15,15">
-                <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
+            <Grid DataContext="{Binding OfflineTask}" Margin="30,40,15,15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal">
                     <Button HorizontalAlignment="Left"
-                            Style="{DynamicResource MaterialDesignFlatButton}"
-                            VerticalAlignment="Center" Margin="5,0"
+                            VerticalAlignment="Center"
                             Command="{Binding NewTaskCommand}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <metro:FontIcon Icon="&#xF067;" Margin="5,0"/>
@@ -108,8 +112,7 @@
                         </StackPanel>
                     </Button>
                     <Button HorizontalAlignment="Left" 
-                            Style="{DynamicResource MaterialDesignFlatButton}" 
-                            VerticalAlignment="Center" Margin="5,0" 
+                            VerticalAlignment="Center" 
                             Command="{Binding CancelTaskCommand}"
                             CommandParameter="{Binding SelectedItems, ElementName=OfflineList}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -118,8 +121,7 @@
                         </StackPanel>
                     </Button>
                     <Button HorizontalAlignment="Left" 
-                            Style="{DynamicResource MaterialDesignFlatButton}" 
-                            VerticalAlignment="Center" Margin="5,0" 
+                            VerticalAlignment="Center"
                             Command="{Binding RefreshListCommand}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <metro:FontIcon Icon="&#xF2F1;" Margin="5,0"/>
@@ -127,7 +129,13 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <ListBox x:Name="OfflineList" ScrollViewer.ScrollChanged="OfflineList_ScrollChanged" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+                
+                <ListBox Style="{StaticResource ListBoxRevealStyle}"
+                         Grid.Row="1"
+                         x:Name="OfflineList"
+                         ScrollViewer.ScrollChanged="OfflineList_ScrollChanged"
+                         ItemsSource="{Binding ObservableCollection}"
+                         Background="White">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Height="48">

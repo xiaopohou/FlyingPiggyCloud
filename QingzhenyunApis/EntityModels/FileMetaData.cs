@@ -47,6 +47,16 @@ namespace QingzhenyunApis.EntityModels
         public long Size { get; set; }
 
         /// <summary>
+        /// 文件mime，即文件的类型
+        /// </summary>
+        [JsonProperty(PropertyName = "mime")]
+        public string Mime { get; set; }
+
+        [JsonProperty(PropertyName = "deleted")]
+        public bool Deleted { get; set; }
+
+
+        /// <summary>
         /// 父目录id
         /// </summary>
         [JsonProperty(PropertyName = "parent")]
@@ -113,16 +123,19 @@ namespace QingzhenyunApis.EntityModels
         public int PreviewType { get; set; }
 
         /// <summary>
-        /// 文件mime，即文件的类型
-        /// </summary>
-        [JsonProperty(PropertyName = "mime")]
-        public string Mime { get; set; }
-
-        /// <summary>
         /// 总是 0
         /// </summary>
         [JsonProperty(PropertyName = "flag")]
         public int Flag { get; set; }
+
+        [JsonProperty(PropertyName = "uniqueIdentity")]
+        public string UniqueIdentity { get; set; }
+
+        /// <summary>
+        /// 文件的分享状态
+        /// </summary>
+        [JsonProperty(PropertyName = "share")]
+        public bool Share { get; set; }
 
 
         /// <summary>
@@ -138,10 +151,5 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty(PropertyName = "downloadAddress")]
         public string DownloadAddress { get; set; }
 
-        /// <summary>
-        /// 文件的分享状态
-        /// </summary>
-        [JsonProperty(PropertyName = "share")]
-        public bool Share { get; set; }
     }
 }
