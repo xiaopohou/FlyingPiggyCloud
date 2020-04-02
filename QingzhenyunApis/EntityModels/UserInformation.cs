@@ -2,16 +2,26 @@
 
 namespace QingzhenyunApis.EntityModels
 {
+    public class TokenInformation
+    {
+        [JsonProperty(PropertyName = "status")]
+        public int Status { get; set; }
+
+        [JsonProperty(PropertyName = "token")]
+        public string Token { get; set; }
+
+        [JsonProperty(PropertyName = "state")]
+        public string State { get; set; }
+
+    }
+
     public class UserInformation
     {
-        [JsonProperty(PropertyName = "uuid")]
+        [JsonProperty(PropertyName = "identity")]
         public int UUID { get; set; }
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
-
-        [JsonProperty(PropertyName = "email")]
-        public string Email { get; set; }
 
         [JsonProperty(PropertyName = "countryCode")]
         public string CountryCode { get; set; }
@@ -19,14 +29,11 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty(PropertyName = "phone")]
         public string Phone { get; set; }
 
+        [JsonProperty(PropertyName = "email")]
+        public string Email { get; set; }
+
         [JsonProperty(PropertyName = "createTime")]
         public long CreateTime { get; set; }
-
-        [JsonProperty(PropertyName = "createIp")]
-        public string CreateIp { get; set; }
-
-        //[JsonProperty(PropertyName = "ssid")]
-        //public object SSID { get; set; }
 
         [JsonProperty(PropertyName = "icon")]
         public string Icon { get; set; }
@@ -36,11 +43,23 @@ namespace QingzhenyunApis.EntityModels
 
         [JsonProperty(PropertyName = "spaceCapacity")]
         public long SpaceCapacity { get; set; }
-
+ 
         [JsonProperty(PropertyName = "type")]
         public int Type { get; set; }
 
         [JsonProperty(PropertyName = "status")]
         public int Status { get; set; }
+
+        [JsonProperty(PropertyName = "version")]
+        public int Version { get; set; }
+
+        [JsonProperty(PropertyName = "vip")]
+        public int Vip { get; set; }
+
+        [JsonProperty(PropertyName = "vipExpireTime")]
+        public long VipExpireTime { get; set; }
+
+        [JsonProperty(PropertyName = "lastActivateTime")]
+        public long LastActivateTime { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace QingzhenyunApis.Methods.V3
 {
-    public sealed class OfflineDownloader : SixCloudMethordBase
+    public sealed class OfflineDownloader : SixCloudMethodBase
     {
         public async Task<GenericResult<OfflineTaskParseUrl[]>> ParseUrl(string[] urls)
         {

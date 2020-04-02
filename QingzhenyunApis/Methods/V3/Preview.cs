@@ -11,10 +11,10 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="identity"></param>
         /// <returns></returns>
-        public async Task<GenericResult<PreviewVideoInformation>> Video(string identity)
+        public static async Task<GenericResult<PreviewVideoInformation>> Video(string identity)
         {
             var data = new { identity };
-            return await PostAsync<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "/v3/preview/video");
+            return await PostAsync<PreviewVideoInformation>(JsonConvert.SerializeObject(data), "/v3/preview/video");
         }
 
         /// <summary>
@@ -22,10 +22,10 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="identity"></param>
         /// <returns></returns>
-        public async Task<GenericResult<PreviewVideoSubtitleList>> VideoSubtitle(string identity)
+        public static async Task<GenericResult<PreviewVideoSubtitleList>> VideoSubtitle(string identity)
         {
             var data = new { identity };
-            return await PostAsync<GenericResult<PreviewVideoSubtitleList>>(JsonConvert.SerializeObject(data), "/v3/subtitle/get");
+            return await PostAsync<PreviewVideoSubtitleList>(JsonConvert.SerializeObject(data), "/v3/subtitle/get");
         }
 
     }

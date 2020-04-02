@@ -12,113 +12,113 @@ namespace QingzhenyunApis.Methods
     /// <summary>
     /// APP生命周期内，所有派生于此抽象类的对象，均拥有共同的Token字段
     /// </summary>
-    public abstract class SixCloudMethordBase
-    {
-        private const string AccessKeyId = "dingding";
+    //public abstract class SixCloudMethordBase
+    //{
+    //    private const string AccessKeyId = "dingding";
 
-        private const string AccessKeySecret = "张宝华";
+    //    private const string AccessKeySecret = "张宝华";
 
-        private static readonly HttpClient httpClient;
+    //    private static readonly HttpClient httpClient;
 
-        protected static string Token { get; private set; } = string.Empty;
+    //    protected static string Token { get; private set; } = string.Empty;
 
-        static SixCloudMethordBase()
-        {
-            httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://api.6pan.cn")
-            };
-        }
+    //    static SixCloudMethordBase()
+    //    {
+    //        httpClient = new HttpClient
+    //        {
+    //            BaseAddress = new Uri("https://api.6pan.cn")
+    //        };
+    //    }
 
-        private string HmacSha1(string key, string input)
-        {
-            byte[] keyBytes = Encoding.ASCII.GetBytes(key);
-            byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-            using (HMACSHA1 hmac = new HMACSHA1(keyBytes))
-            {
-                byte[] hashBytes = hmac.ComputeHash(inputBytes);
-                return Convert.ToBase64String(hashBytes);
-            }
-        }
+    //    private string HmacSha1(string key, string input)
+    //    {
+    //        byte[] keyBytes = Encoding.ASCII.GetBytes(key);
+    //        byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+    //        using (HMACSHA1 hmac = new HMACSHA1(keyBytes))
+    //        {
+    //            byte[] hashBytes = hmac.ComputeHash(inputBytes);
+    //            return Convert.ToBase64String(hashBytes);
+    //        }
+    //    }
 
-        protected SixCloudMethordBase(string token = null)
-        {
-            Token = token ?? Token;
-        }
+    //    protected SixCloudMethordBase(string token = null)
+    //    {
+    //        Token = token ?? Token;
+    //    }
 
-        protected async Task<T> PostAsync<T>(string data, string uri, bool isAnonymous = true)
-        {
-            using (StringContent requestObject = new StringContent(data))
-            {
-                //构建请求头
-                HttpContentHeaders headers = CreateHeader(data, requestObject);
+    //    protected async Task<T> PostAsync<T>(string data, string uri, bool isAnonymous = true)
+    //    {
+    //        using (StringContent requestObject = new StringContent(data))
+    //        {
+    //            //构建请求头
+    //            HttpContentHeaders headers = CreateHeader(data, requestObject);
 
-                //构建签名
-                await CreateSignature(uri, isAnonymous, headers);
+    //            //构建签名
+    //            await CreateSignature(uri, isAnonymous, headers);
 
-                //发起请求
-                HttpResponseMessage response = await httpClient.PostAsync(uri, requestObject);
-                if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
-                {
-                    Token = newToken.FirstOrDefault() ?? Token;
-                }
-                string responseBody = await response.Content.ReadAsStringAsync();
+    //            //发起请求
+    //            HttpResponseMessage response = await httpClient.PostAsync(uri, requestObject);
+    //            if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
+    //            {
+    //                Token = newToken.FirstOrDefault() ?? Token;
+    //            }
+    //            string responseBody = await response.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<T>(responseBody);
-            }
-        }
+    //            return JsonConvert.DeserializeObject<T>(responseBody);
+    //        }
+    //    }
 
-        protected T Post<T>(string data, string uri, bool isAnonymous = true)
-        {
-            using (StringContent requestObject = new StringContent(data))
-            {
-                //构建请求头
-                HttpContentHeaders headers = CreateHeader(data, requestObject);
+    //    protected T Post<T>(string data, string uri, bool isAnonymous = true)
+    //    {
+    //        using (StringContent requestObject = new StringContent(data))
+    //        {
+    //            //构建请求头
+    //            HttpContentHeaders headers = CreateHeader(data, requestObject);
 
-                //构建签名
-                CreateSignature(uri, isAnonymous, headers).Wait();
+    //            //构建签名
+    //            CreateSignature(uri, isAnonymous, headers).Wait();
 
-                //发起请求
-                HttpResponseMessage response = httpClient.PostAsync(uri, requestObject).Result;
-                string responseBody = response.Content.ReadAsStringAsync().Result;
-                if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
-                {
-                    Token = newToken.FirstOrDefault() ?? Token;
-                }
-                return JsonConvert.DeserializeObject<T>(responseBody);
-            }
-        }
+    //            //发起请求
+    //            HttpResponseMessage response = httpClient.PostAsync(uri, requestObject).Result;
+    //            string responseBody = response.Content.ReadAsStringAsync().Result;
+    //            if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
+    //            {
+    //                Token = newToken.FirstOrDefault() ?? Token;
+    //            }
+    //            return JsonConvert.DeserializeObject<T>(responseBody);
+    //        }
+    //    }
 
-        private static HttpContentHeaders CreateHeader(string data, StringContent requestObject)
-        {
-            HttpContentHeaders headers = requestObject.Headers;
-            headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            using (MD5 md5 = MD5.Create())
-            {
-                headers.ContentMD5 = md5.ComputeHash(Encoding.GetEncoding("UTF-8").GetBytes(data));
-            }
+    //    private static HttpContentHeaders CreateHeader(string data, StringContent requestObject)
+    //    {
+    //        HttpContentHeaders headers = requestObject.Headers;
+    //        headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+    //        using (MD5 md5 = MD5.Create())
+    //        {
+    //            headers.ContentMD5 = md5.ComputeHash(Encoding.GetEncoding("UTF-8").GetBytes(data));
+    //        }
 
-            return headers;
-        }
+    //        return headers;
+    //    }
 
-        private async Task CreateSignature(string uri, bool isAnonymous, HttpContentHeaders headers)
-        {
-            await Task.Run(() =>
-            {
-                lock (Token)
-                {
-                    string unixDateTimeNow = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds.ToString();
-                    string extraHeaders = $"contentmd5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}{(isAnonymous ? "" : $"qingzhen-token: {Token}")}";
-                    string signature = HmacSha1(AccessKeySecret, $"POST{unixDateTimeNow}{extraHeaders}{uri}");
-                    string authorization = $"{AccessKeyId}:{signature}";
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Qingzhen", authorization);
+    //    private async Task CreateSignature(string uri, bool isAnonymous, HttpContentHeaders headers)
+    //    {
+    //        await Task.Run(() =>
+    //        {
+    //            lock (Token)
+    //            {
+    //                string unixDateTimeNow = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds.ToString();
+    //                string extraHeaders = $"contentmd5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}{(isAnonymous ? "" : $"qingzhen-token: {Token}")}";
+    //                string signature = HmacSha1(AccessKeySecret, $"POST{unixDateTimeNow}{extraHeaders}{uri}");
+    //                string authorization = $"{AccessKeyId}:{signature}";
+    //                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Qingzhen", authorization);
 
-                    if (!isAnonymous)
-                    {
-                        headers.Add("qingzhen-token", Token);
-                    }
-                }
-            });
-        }
-    }
+    //                if (!isAnonymous)
+    //                {
+    //                    headers.Add("qingzhen-token", Token);
+    //                }
+    //            }
+    //        });
+    //    }
+    //}
 }
