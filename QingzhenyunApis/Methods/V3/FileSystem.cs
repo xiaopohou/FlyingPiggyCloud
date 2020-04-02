@@ -205,38 +205,21 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v3/file/copy");
         }
 
+        /// <summary>
+        /// 重命名文件夹或文件
+        /// </summary>
+        /// <param name="identity">被重命名的项目</param>
+        /// <param name="name">新名称</param>
+        /// <returns></returns>
         public async Task<GenericResult<bool>> Rename(string identity, string name)
         {
             var data = new { identity, name };
             return await PostAsync<GenericResult<bool>>(JsonConvert.SerializeObject(data), "/v3/file/rename");
         }
 
-        /// <summary>
-        /// 获取视频预览地址
-        /// </summary>
-        /// <param name="identity"></param>
-        /// <returns></returns>
-        public async Task<GenericResult<PreviewVideoInformation>> VideoPreview(string identity)
-        {
-            var data = new { identity };
-            return await PostAsync<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "/v3/preview/video");
-        }
-
-        /// <summary>
-        /// 查询视频预览字幕
-        /// </summary>
-        /// <param name="identity"></param>
-        /// <returns></returns>
-        public async Task<GenericResult<PreviewVideoSubtitleList>> VideoPreviewSubtitle(string identity)
-        {
-            var data = new { identity };
-            return await PostAsync<GenericResult<PreviewVideoSubtitleList>>(JsonConvert.SerializeObject(data), "/v3/subtitle/get");
-        }
 
 
-
-
-#warning 这里的代码还没有写完
+#error 这里的代码还没有写完
 
         /// <summary>
         /// 删除文件夹或文件
@@ -268,36 +251,5 @@ namespace QingzhenyunApis.Methods.V3
 
             return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v2/files/delete", false);
         }
-
-        /// <summary>
-        /// 重命名文件夹或文件
-        /// </summary>
-        /// <param name="SourceMeta">被重命名的项目</param>
-        /// <param name="newName">新名称</param>
-        /// <returns></returns>
-        public async Task<GenericResult<RecoveryBoxPage>> GetRecoveryBoxPage(int page = 1, int pageSize = 20)
-        {
-            var data = new { page, pageSize };
-            return await PostAsync<GenericResult<RecoveryBoxPage>>(JsonConvert.SerializeObject(data), "/v2/trash/page", false);
-        }
-
-
-        //public async Task<GenericResult<PreviewImageInformation>> ImagePreview(string identity)
-        //{
-        //    throw new NotImplementedException();
-        //    //while (string.IsNullOrWhiteSpace(Token))
-        //    //{
-        //    //    LoginView GetToken = new LoginView();
-        //    //    GetToken.ShowDialog();
-        //    //}
-        //    //Dictionary<string, string> data = new Dictionary<string, string>
-        //    //{
-        //    //    { "uuid", UUID },
-        //    //    { "token", Token }
-        //    //};
-        //    //GenericResult<PreviewImageInformation> x = Post<GenericResult<PreviewImageInformation>>(JsonConvert.SerializeObject(data), "v1/preview/image");
-        //    //Token = x.Token;
-        //    //return x;
-        //}
     }
 }

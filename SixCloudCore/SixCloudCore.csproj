@@ -8,6 +8,7 @@
     <StartupObject>SixCloudCore.App</StartupObject>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

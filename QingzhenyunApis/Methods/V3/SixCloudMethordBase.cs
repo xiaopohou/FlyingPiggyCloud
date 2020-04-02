@@ -1,12 +1,14 @@
 ﻿using Newtonsoft.Json;
 using QingzhenyunApis.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace QingzhenyunApis.Methods.V3
 {
@@ -15,11 +17,12 @@ namespace QingzhenyunApis.Methods.V3
     /// </summary>
     public abstract class SixCloudMethodBase
     {
+
         private const string AccessKeyId = "bc088aa5e2ad";
-
         private const string AccessKeySecret = "DyO04JriYoqJ9f57";
+        private static readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
 
-        private string HmacSha1(string key, string input)
+        private static string HmacSha1(string key, string input)
         {
             byte[] keyBytes = Encoding.ASCII.GetBytes(key);
             byte[] inputBytes = Encoding.ASCII.GetBytes(input);
@@ -29,8 +32,6 @@ namespace QingzhenyunApis.Methods.V3
                 return Convert.ToBase64String(hashBytes);
             }
         }
-
-        private static readonly HttpClient httpClient;
 
         private static HttpContentHeaders CreateHeader(string data, StringContent requestObject)
         {
@@ -51,44 +52,44 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="isAnonymous"></param>
         /// <param name="headers"></param>
         /// <returns></returns>
-        private async Task CreateSignature(string uri, bool isAnonymous, HttpContentHeaders headers)
+        private static void CreateSignature(ref string uri, bool isAnonymous, Dictionary<string, string> querys, HttpContentHeaders headers = null)
         {
-            await Task.Run(() =>
+            lock (Token)
             {
-                lock (Token)
+
+                string extraHeaders = $"{(isAnonymous ? "" : $"authorization: Bearer {Token}")}{(headers == null ? "" : $"content-md5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}")}";
+
+                if (querys != null)
                 {
-                    string unixDateTimeNow = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds.ToString();
-                    string extraHeaders = $"contentmd5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}{(isAnonymous ? "" : $"qingzhen-token: {Token}")}";
-                    string signature = HmacSha1(AccessKeySecret, $"POST{unixDateTimeNow}{extraHeaders}{uri}");
-                    Calculators.Base64.Base64Encode(signature);
-
-                    string authorization = $"{AccessKeyId}:{signature}";
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Qingzhen", authorization);
-
-                    if (!isAnonymous)
-                    {
-                        headers.Add("qingzhen-token", Token);
-                    }
+                    querys = new Dictionary<string, string>(3);
                 }
-            });
-        }
+                string unixDateTimeNow = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString();
+                querys["appid"] = AccessKeyId;
+                querys["ts"] = unixDateTimeNow;
+                querys["nonce"] = Guid.NewGuid().ToString();
 
-        static SixCloudMethodBase()
-        {
-            httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://api.6pan.cn")
-            };
+                IOrderedEnumerable<KeyValuePair<string, string>> queryStrings = from kvPair in querys
+                                                                                orderby kvPair.Key
+                                                                                select kvPair;
+                StringBuilder uriBuilder = new StringBuilder(uri);
+                uriBuilder.Append("?");
+                foreach (KeyValuePair<string, string> query in queryStrings)
+                {
+                    uriBuilder.Append($"{query.Key}={HttpUtility.UrlEncode(query.Value)}&");
+                }
+                //移除最后一个&
+                uriBuilder.Remove(uriBuilder.Length - 1, 1);
+
+                string signature = HmacSha1(AccessKeySecret, $"POSTapi.6pan.cn{uriBuilder.ToString()}{extraHeaders}");
+                uriBuilder.Append($"&signature={Calculators.Base64.Base64Encode(signature)}");
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                uri = uriBuilder.ToString();
+            }
         }
 
         protected static string Token { get; private set; } = string.Empty;
 
-        protected SixCloudMethodBase(string token = null)
-        {
-            Token = token ?? Token;
-        }
-
-        protected async Task<T> PostAsync<T>(string data, string uri, bool isAnonymous = false)
+        protected static async Task<T> PostAsync<T>(string data, string uri, bool isAnonymous = false)
         {
             using (StringContent requestObject = new StringContent(data))
             {
@@ -96,11 +97,12 @@ namespace QingzhenyunApis.Methods.V3
                 HttpContentHeaders headers = CreateHeader(data, requestObject);
 
                 //构建签名
-                await CreateSignature(uri, isAnonymous, headers);
+                CreateSignature(ref uri, isAnonymous, null, headers);
 
                 //发起请求
                 HttpResponseMessage response = await httpClient.PostAsync(uri, requestObject);
-                if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
+
+                if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
                 {
                     Token = newToken.FirstOrDefault() ?? Token;
                 }
@@ -110,7 +112,7 @@ namespace QingzhenyunApis.Methods.V3
             }
         }
 
-        protected T Post<T>(string data, string uri, bool isAnonymous = true)
+        protected static T Post<T>(string data, string uri, bool isAnonymous = true)
         {
             using (StringContent requestObject = new StringContent(data))
             {
@@ -118,12 +120,12 @@ namespace QingzhenyunApis.Methods.V3
                 HttpContentHeaders headers = CreateHeader(data, requestObject);
 
                 //构建签名
-                CreateSignature(uri, isAnonymous, headers).Wait();
+                CreateSignature(ref uri, isAnonymous, null, headers);
 
                 //发起请求
                 HttpResponseMessage response = httpClient.PostAsync(uri, requestObject).Result;
                 string responseBody = response.Content.ReadAsStringAsync().Result;
-                if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
+                if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
                 {
                     Token = newToken.FirstOrDefault() ?? Token;
                 }
@@ -131,19 +133,23 @@ namespace QingzhenyunApis.Methods.V3
             }
         }
 
-
-        protected async Task<T> GetAsync<T>(string uri, bool isAnonymous = false)
+        protected static async Task<T> GetAsync<T>(string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
             //发起请求
             HttpResponseMessage response = await httpClient.GetAsync(uri);
 
-            if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
+            if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
             {
                 Token = newToken.FirstOrDefault() ?? Token;
             }
             string responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<T>(responseBody);
+        }
+
+        protected SixCloudMethodBase(string token = null)
+        {
+            Token = token ?? Token;
         }
 
     }
