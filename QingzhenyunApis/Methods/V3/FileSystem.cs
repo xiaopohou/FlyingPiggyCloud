@@ -222,11 +222,21 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "/v3/preview/video");
         }
 
+        /// <summary>
+        /// 查询视频预览字幕
+        /// </summary>
+        /// <param name="identity"></param>
+        /// <returns></returns>
+        public async Task<GenericResult<PreviewVideoSubtitleList>> VideoPreviewSubtitle(string identity)
+        {
+            var data = new { identity };
+            return await PostAsync<GenericResult<PreviewVideoSubtitleList>>(JsonConvert.SerializeObject(data), "/v3/subtitle/get");
+        }
 
 
 
 
-
+#warning 这里的代码还没有写完
 
         /// <summary>
         /// 删除文件夹或文件
@@ -272,7 +282,6 @@ namespace QingzhenyunApis.Methods.V3
         }
 
 
-#warning 这里的代码还没有写完
         //public async Task<GenericResult<PreviewImageInformation>> ImagePreview(string identity)
         //{
         //    throw new NotImplementedException();

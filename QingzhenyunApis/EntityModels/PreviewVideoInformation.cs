@@ -53,5 +53,4 @@ namespace QingzhenyunApis.EntityModels
         //public int Status { get; set; }
 
     }
-
 }
