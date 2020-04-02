@@ -17,7 +17,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="Parent">在UUID为此的文件夹内创建新文件夹</param>
         /// <param name="Path">在此路径下创建新文件夹，如果Name参数为空则创建此路径</param>
         /// <returns></returns>
-        public async Task<GenericResult<FileMetaData>> CreatDirectory(string name = "", string parent = "", string path = "")
+        public static async Task<GenericResult<FileMetaData>> CreatDirectory(string name = "", string parent = "", string path = "")
         {
             dynamic data = new ExpandoObject();
             if (!string.IsNullOrEmpty(name))
@@ -42,9 +42,9 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="identity"></param>
         /// <returns></returns>
-        public async Task<GenericResult<FileMetaData>> GetDetailsByIdentity(string identity)
+        public static async Task<GenericResult<FileMetaData>> GetDetailsByIdentity(string identity)
         {
-            return await GetAsync<GenericResult<FileMetaData>>($"/v3/file/{identity}");
+            return await GetAsync<FileMetaData>($"/v3/file/{identity}");
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="parentIdentity">该文件夹的ID</param>
         /// <param name="path">路径</param>
         /// <returns></returns>
-        public async Task<GenericResult<FileListPage>> GetDirectory(string parentIdentity = "", string path = "")
+        public static async Task<GenericResult<FileListPage>> GetDirectory(string parentIdentity = "", string path = "")
         {
             dynamic data = new ExpandoObject();
             if (!string.IsNullOrEmpty(parentIdentity))
@@ -81,7 +81,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="OrderBy">排序：0按文件名，1按时间</param>
         /// <param name="Type">文件类型：0显示文件，1显示文件夹，-1显示文件和文件夹(默认)</param>
         /// <returns></returns>
-        public async Task<GenericResult<FileListPage>> GetDirectoryAsPage(string parentIdentity = "", string path = "", int page = 0, int pageSize = 20, string[,] orderBy = null)
+        public static async Task<GenericResult<FileListPage>> GetDirectoryAsPage(string parentIdentity = "", string path = "", int page = 0, int pageSize = 20, string[,] orderBy = null)
         {
             dynamic data = new ExpandoObject();
             if (!string.IsNullOrEmpty(parentIdentity))
@@ -112,9 +112,9 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="identity"></param>
         /// <returns></returns>
-        public async Task<GenericResult<FileMetaData>> GetDownloadUrlByIdentity(string identity)
+        public static async Task<GenericResult<FileMetaData>> GetDownloadUrlByIdentity(string identity)
         {
-            return await PostAsync<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(new { identity }), "/v3/file/download");
+            return await PostAsync<FileMetaData>(JsonConvert.SerializeObject(new { identity }), "/v3/file/download");
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="hash">哈希</param>
         /// <param name="originalFilename">保存的源信息的文件名</param>
         /// <returns></returns>
-        public async Task<GenericResult<UploadToken>> UploadFile(string name, string parentUUID = null, string parentPath = null, string hash = null, string originalFilename = null)
+        public static async Task<GenericResult<UploadToken>> UploadFile(string name, string parentUUID = null, string parentPath = null, string hash = null, string originalFilename = null)
         {
             dynamic data = new ExpandoObject();
             data.name = name;
@@ -157,7 +157,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="SourceMeta">被移动的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public async Task<GenericResult<int?>> Move(string sourceUUID, string targetDirectoryUUID)
+        public static async Task<GenericResult<int?>> Move(string sourceUUID, string targetDirectoryUUID)
         {
             return await Move(new string[] { sourceUUID }, targetDirectoryUUID);
         }
@@ -168,14 +168,14 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="sourceUUIDList"></param>
         /// <param name="targetDirectoryUUID"></param>
         /// <returns></returns>
-        public async Task<GenericResult<int?>> Move(string[] sourceUUIDList, string targetDirectoryUUID)
+        public static async Task<GenericResult<int?>> Move(string[] sourceUUIDList, string targetDirectoryUUID)
         {
             var data = new
             {
                 sourceIdentity = sourceUUIDList,
                 identity = targetDirectoryUUID
             };
-            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v3/file/move");
+            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v3/file/move");
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="SourceMeta">被复制的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public async Task<GenericResult<int?>> Copy(string sourceUUID, string targetDirectoryUUID)
+        public static async Task<GenericResult<int?>> Copy(string sourceUUID, string targetDirectoryUUID)
         {
             return await Copy(new string[] { sourceUUID }, targetDirectoryUUID);
         }
@@ -195,14 +195,14 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="sourceUUIDList"></param>
         /// <param name="targetDirectoryUUID"></param>
         /// <returns></returns>
-        public async Task<GenericResult<int?>> Copy(string[] sourceUUIDList, string targetDirectoryUUID)
+        public static async Task<GenericResult<int?>> Copy(string[] sourceUUIDList, string targetDirectoryUUID)
         {
             var data = new
             {
                 sourceIdentity = sourceUUIDList,
                 identity = targetDirectoryUUID
             };
-            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v3/file/copy");
+            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v3/file/copy");
         }
 
         /// <summary>
@@ -211,10 +211,10 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="identity">被重命名的项目</param>
         /// <param name="name">新名称</param>
         /// <returns></returns>
-        public async Task<GenericResult<bool>> Rename(string identity, string name)
+        public static async Task<GenericResult<bool>> Rename(string identity, string name)
         {
             var data = new { identity, name };
-            return await PostAsync<GenericResult<bool>>(JsonConvert.SerializeObject(data), "/v3/file/rename");
+            return await PostAsync<bool>(JsonConvert.SerializeObject(data), "/v3/file/rename");
         }
 
 
@@ -232,7 +232,7 @@ namespace QingzhenyunApis.Methods.V3
             {
                 source = new object[] { new { identity } }
             };
-            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v2/files/delete", false);
+            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v2/files/delete");
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace QingzhenyunApis.Methods.V3
             }
             var data = new { source = list.ToArray() };
 
-            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v2/files/delete", false);
+            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v2/files/delete");
         }
     }
 }
