@@ -211,6 +211,16 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<GenericResult<bool>>(JsonConvert.SerializeObject(data), "/v3/file/rename");
         }
 
+        /// <summary>
+        /// 获取视频预览地址
+        /// </summary>
+        /// <param name="identity"></param>
+        /// <returns></returns>
+        public async Task<GenericResult<PreviewVideoInformation>> VideoPreview(string identity)
+        {
+            var data = new { identity };
+            return await PostAsync<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "/v3/preview/video");
+        }
 
 
 
@@ -261,11 +271,6 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<GenericResult<RecoveryBoxPage>>(JsonConvert.SerializeObject(data), "/v2/trash/page", false);
         }
 
-        public async Task<GenericResult<PreviewVideoInformation>> VideoPreview(string identity)
-        {
-            var data = new { identity };
-            return await PostAsync<GenericResult<PreviewVideoInformation>>(JsonConvert.SerializeObject(data), "/v2/preview/video", false);
-        }
 
 #warning 这里的代码还没有写完
         //public async Task<GenericResult<PreviewImageInformation>> ImagePreview(string identity)
