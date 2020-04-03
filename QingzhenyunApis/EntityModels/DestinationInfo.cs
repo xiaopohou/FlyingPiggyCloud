@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class DestinationInfo
+    public class DestinationInformation
     {
         [JsonProperty(PropertyName = "destination")]
         public string Destination { get; set; }

@@ -23,10 +23,10 @@ namespace QingzhenyunApis.Methods.V3
         /// 获取登陆令牌
         /// </summary>
         /// <returns></returns>
-        public static async Task<GenericResult<DestinationInfo>> CreateDestination()
+        public static async Task<GenericResult<DestinationInformation>> CreateDestination()
         {
             var data = new { ts = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds };
-            return await PostAsync<DestinationInfo>(JsonConvert.SerializeObject(data), "/v3/user/createDestination", isAnonymous: true);
+            return await PostAsync<DestinationInformation>(JsonConvert.SerializeObject(data), "/v3/user/createDestination", isAnonymous: true);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="destinationInfo"></param>
         /// <returns></returns>
-        public static async Task<bool> CheckDestination(DestinationInfo destinationInfo)
+        public static async Task<bool> CheckDestination(DestinationInformation destinationInfo)
         {
             var data = new { destination = destinationInfo.Destination };
             GenericResult<TokenInformation> x;
@@ -58,5 +58,9 @@ namespace QingzhenyunApis.Methods.V3
             return x.Result.Status == 100;
         }
 
+        public static async Task<GenericResult<bool>> ChangeUserName(string newUserName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

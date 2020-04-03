@@ -219,7 +219,7 @@ namespace QingzhenyunApis.Methods.V3
 
 
 
-#error 这里的代码还没有写完
+#warning 这里的代码还没有写完
 
         /// <summary>
         /// 删除文件夹或文件

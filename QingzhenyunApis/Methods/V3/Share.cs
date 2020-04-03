@@ -33,13 +33,13 @@ namespace QingzhenyunApis.Methods.V3
             {
                 data.copyCountLeft = copyCountLeft;
             }
-            return await PostAsync<GenericResult<ShareMetaData>>(JsonConvert.SerializeObject(data), "/v2/share/create", false);
+            return await PostAsync<ShareMetaData>(JsonConvert.SerializeObject(data), "/v2/share/create");
         }
 
         public async Task<GenericResult<ShareMetaData>> Get(string identity)
         {
             var data = new { identity };
-            return await PostAsync<GenericResult<ShareMetaData>>(JsonConvert.SerializeObject(data), "/v2/share/get", false);
+            return await PostAsync<ShareMetaData>(JsonConvert.SerializeObject(data), "/v2/share/get");
         }
 
         public async Task<GenericResult<bool>> Save(string identity, string path, string password = null)
@@ -51,13 +51,13 @@ namespace QingzhenyunApis.Methods.V3
             {
                 data.password = password;
             }
-            return await PostAsync<GenericResult<bool>>(JsonConvert.SerializeObject(data), "/v2/share/get", false);
+            return await PostAsync<bool>(JsonConvert.SerializeObject(data), "/v2/share/get");
         }
 
         public async Task<GenericResult<bool>> Cancel(string path)
         {
             var data = new { path };
-            return await PostAsync<GenericResult<bool>>(JsonConvert.SerializeObject(data), "/v2/share/cancel", false);
+            return await PostAsync<bool>(JsonConvert.SerializeObject(data), "/v2/share/cancel");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <returns></returns>
         public async Task<GenericResult<int?>> Empty()
         {
-            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(new object()), "/v2/trash/truncate", false);
+            return await PostAsync<int?>(JsonConvert.SerializeObject(new object()), "/v2/trash/truncate");
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace QingzhenyunApis.Methods.V3
             {
                 data.path = parentPath;
             }
-            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(data), "/v2/trash/moveFromTrash", false);
+            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v2/trash/moveFromTrash");
         }
 
         /// <summary>
@@ -45,13 +45,13 @@ namespace QingzhenyunApis.Methods.V3
         /// <returns></returns>
         public async Task<GenericResult<int?>> Delete(string[] targetUUID)
         {
-            return await PostAsync<GenericResult<int?>>(JsonConvert.SerializeObject(targetUUID), "/v2/trash/delete", false);
+            return await PostAsync<int?>(JsonConvert.SerializeObject(targetUUID), "/v2/trash/delete");
         }
 
         public async Task<GenericResult<RecoveryBoxPage>> GetList(int page = 1, int pageSize = 20)
         {
             var data = new { page, pageSize };
-            return await PostAsync<GenericResult<RecoveryBoxPage>>(JsonConvert.SerializeObject(data), "v2/trash/page", false);
+            return await PostAsync<RecoveryBoxPage>(JsonConvert.SerializeObject(data), "v2/trash/page");
         }
     }
 }

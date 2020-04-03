@@ -56,9 +56,6 @@
     <Compile Update="Views\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\LoginView.xaml.cs">
-      <DependentUpon>LoginView.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Views\LogoutOthersView.xaml.cs">
       <DependentUpon>LogoutOthersView.xaml</DependentUpon>
     </Compile>

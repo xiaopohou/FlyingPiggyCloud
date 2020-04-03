@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
+using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
 using SixCloudCore.Controllers;
 using SixCloudCore.Models;
@@ -16,7 +17,7 @@ namespace SixCloudCore.ViewModels
 {
     internal sealed class UserInformationViewModel : ViewModelBase
     {
-        private readonly Authentication authentication = new Authentication();
+        //private readonly Authentication authentication = new Authentication();
 
         public ImageSource Icon { get; set; }
 
@@ -36,7 +37,7 @@ namespace SixCloudCore.ViewModels
 
         private void ParseInformation(UserInformation currentUser)
         {
-            string icon = null;
+            string icon;
             try
             {
                 icon = currentUser.Icon;
@@ -75,10 +76,10 @@ namespace SixCloudCore.ViewModels
             TextInputDialog.Show(out string newUserName, "请输入新用户名", "更改用户名");
             if (!string.IsNullOrWhiteSpace(newUserName))
             {
-                var x = await Task.Run(() => authentication.ChangeUserName(newUserName));
+                var x = await Task.Run(() => Authentication.ChangeUserName(newUserName));
                 if (x.Success)
                 {
-                    ParseInformation((await Task.Run(() => authentication.GetUserInformation())).Result);
+                    ParseInformation((await Task.Run(async () => await Authentication.GetUserInformation())).Result);
                 }
                 else
                 {

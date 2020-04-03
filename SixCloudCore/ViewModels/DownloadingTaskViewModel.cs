@@ -1,4 +1,5 @@
 ﻿using QingzhenyunApis.Methods;
+using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Controllers;
 using SixCloudCore.Models;
 using System;
@@ -11,7 +12,7 @@ namespace SixCloudCore.ViewModels
 {
     internal class DownloadingTaskViewModel : ViewModelBase
     {
-        private static readonly FileSystem fs = new FileSystem();
+        //private static readonly FileSystem fs = new FileSystem();
 
         private readonly DownloadTask downloadTask;
 
@@ -60,7 +61,7 @@ namespace SixCloudCore.ViewModels
             SavedLocalPath = localPath;
             downloadTask = new DownloadTask(localPath, name, () =>
              {
-                 return new Uri(fs.GetDetailsByUUID(targetUUID).Result.Result.DownloadAddress);
+                 return new Uri(FileSystem.GetDetailsByIdentity(targetUUID).Result.Result.DownloadAddress);
              }, (sender, e) =>
              {
                  if (e.State == FileDownloader.CompletedState.Succeeded)

@@ -23,8 +23,6 @@ namespace SixCloudCore.Views
     /// </summary>
     public partial class ChangePasswordView : AcrylicWindow
     {
-        private readonly Authentication authentication = new Authentication();
-
         public ChangePasswordView()
         {
             InitializeComponent();
@@ -32,16 +30,17 @@ namespace SixCloudCore.Views
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            var x = await Task.Run(() => authentication.ChangePasswordByOldPassword(Authentication.UserMd5(OldValue.Password), Authentication.UserMd5(NewValue.Password)));
-            if(x.Success)
-            {
-                Close();
-            }
-            else
-            {
-                MessageBox.Show($"修改失败，服务器返回{x.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-            }
+#warning 此处功能尚未实现
+            //var x = await Task.Run(() => authentication.ChangePasswordByOldPassword(Authentication.UserMd5(OldValue.Password), Authentication.UserMd5(NewValue.Password)));
+            //if(x.Success)
+            //{
+            //    Close();
+            //}
+            //else
+            //{
+            //    MessageBox.Show($"修改失败，服务器返回{x.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    Close();
+            //}
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SixCloudCore.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -15,7 +16,7 @@ namespace SixCloudCore
     {
         public App()
         {
-
+            new LoginWebViewModel();
         }
     }
 }
