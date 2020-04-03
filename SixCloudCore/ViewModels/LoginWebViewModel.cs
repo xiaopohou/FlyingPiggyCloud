@@ -13,7 +13,9 @@ namespace SixCloudCore.ViewModels
 
         private async void InitializeComponent()
         {
-            DestinationInfo = (await Authentication.CreateDestination()).Result;
+            var x = await Authentication.CreateDestination();
+            DestinationInfo = x.Result;
+
             LoginUrl = Authentication.GetLoginUrl(DestinationInfo.Destination, out string _);
 
             Application.Current.Dispatcher.Invoke(() =>

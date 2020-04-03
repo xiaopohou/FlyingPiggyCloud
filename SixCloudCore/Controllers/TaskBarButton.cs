@@ -45,8 +45,7 @@ namespace SixCloudCore.Controllers
             Window MainWindow = System.Windows.Application.Current.MainWindow;
             if (MainWindow == null)
             {
-                MainWindow = MainFrame.Recovery();
-                MainWindow.Show();
+                MainFrame.Recovery();
             }
             else
             {

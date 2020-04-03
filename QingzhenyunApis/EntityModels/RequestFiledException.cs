@@ -1,14 +1,15 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public abstract class ResultBase
+    public class RequestFiledException : Exception
     {
         [JsonProperty(PropertyName = "success")]
         public bool Success { get; set; }
 
         [JsonProperty(PropertyName = "message")]
-        public string Message { get; set; }
+        public new string Message { get; set; }
 
         [JsonProperty(PropertyName = "code")]
         public string Code { get; set; }
@@ -16,4 +17,5 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty(PropertyName = "status")]
         public string Status { get; set; }
     }
+
 }

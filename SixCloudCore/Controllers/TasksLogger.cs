@@ -51,7 +51,6 @@ namespace SixCloudCore.Controllers
 
                 if (File.Exists(downloadingRecordsPath))
                 {
-                    FileSystem fs = new FileSystem();
                     string s = File.ReadAllText(downloadingRecordsPath);
                     DownloadTaskRecord[] list = JsonConvert.DeserializeObject<DownloadTaskRecord[]>(s);
                     if (list != null && list.Length > 0)

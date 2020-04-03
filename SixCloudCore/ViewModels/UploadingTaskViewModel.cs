@@ -4,7 +4,7 @@ using System.Windows.Threading;
 
 namespace SixCloudCore.ViewModels
 {
-    internal abstract class UploadingTaskViewModel : FileSystemViewModel
+    internal abstract class UploadingTaskViewModel:ViewModelBase
     {
         /// <summary>
         /// 用于定时刷新任务进度

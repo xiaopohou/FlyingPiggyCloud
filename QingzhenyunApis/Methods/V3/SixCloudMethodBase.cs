@@ -58,13 +58,13 @@ namespace QingzhenyunApis.Methods.V3
 
                 string extraHeaders = $"{(isAnonymous ? "" : $"authorization: Bearer {Token}")}{(headers == null ? "" : $"content-md5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}")}";
 
-                if (querys != null)
+                if (querys == null)
                 {
                     querys = new Dictionary<string, string>(3);
                 }
-                string unixDateTimeNow = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString();
+                long unixDateTimeNow = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
                 querys["appid"] = AccessKeyId;
-                querys["ts"] = unixDateTimeNow;
+                querys["ts"] = unixDateTimeNow.ToString();
                 querys["nonce"] = Guid.NewGuid().ToString();
 
                 IOrderedEnumerable<KeyValuePair<string, string>> queryStrings = from kvPair in querys
@@ -88,7 +88,7 @@ namespace QingzhenyunApis.Methods.V3
 
         protected static string Token { get; private set; } = string.Empty;
 
-        protected static async Task<GenericResult<T>> PostAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
+        protected static async Task<T> PostAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
             using StringContent requestObject = new StringContent(data);
             //构建请求头
@@ -106,11 +106,10 @@ namespace QingzhenyunApis.Methods.V3
             }
 
             string responseBody = await response.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<GenericResult<T>>(responseBody);
+            return ParseResult<T>(responseBody);
         }
 
-        protected static GenericResult<T> Post<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
+        protected static T Post<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
             using StringContent requestObject = new StringContent(data);
             //构建请求头
@@ -127,11 +126,26 @@ namespace QingzhenyunApis.Methods.V3
             }
 
             string responseBody = response.Content.ReadAsStringAsync().Result;
-
-            return JsonConvert.DeserializeObject<GenericResult<T>>(responseBody);
+            return ParseResult<T>(responseBody);
         }
 
-        protected static async Task<GenericResult<T>> GetAsync<T>(string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
+        private static T ParseResult<T>(string responseBody)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                MissingMemberHandling = MissingMemberHandling.Error
+            };
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(responseBody);
+            }
+            catch (JsonSerializationException)
+            {
+                throw JsonConvert.DeserializeObject<RequestFiledException>(responseBody, settings);
+            }
+        }
+
+        protected static async Task<T> GetAsync<T>(string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
             //构建签名
             CreateSignature("GET", ref uri, isAnonymous, querys);
@@ -145,8 +159,7 @@ namespace QingzhenyunApis.Methods.V3
             }
 
             string responseBody = await response.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<GenericResult<T>>(responseBody);
+            return ParseResult<T>(responseBody);
         }
 
         protected SixCloudMethodBase(string token = null)

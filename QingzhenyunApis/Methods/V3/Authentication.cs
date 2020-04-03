@@ -8,7 +8,7 @@ namespace QingzhenyunApis.Methods.V3
 {
     public sealed class Authentication : SixCloudMethodBase
     {
-        public static async Task<GenericResult<UserInformation>> GetUserInformation()
+        public static async Task<UserInformation> GetUserInformation()
         {
             return await GetAsync<UserInformation>("/v3/user/info");
         }
@@ -23,7 +23,7 @@ namespace QingzhenyunApis.Methods.V3
         /// 获取登陆令牌
         /// </summary>
         /// <returns></returns>
-        public static async Task<GenericResult<DestinationInformation>> CreateDestination()
+        public static async Task<DestinationInformation> CreateDestination()
         {
             var data = new { ts = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds };
             return await PostAsync<DestinationInformation>(JsonConvert.SerializeObject(data), "/v3/user/createDestination", isAnonymous: true);
@@ -49,16 +49,16 @@ namespace QingzhenyunApis.Methods.V3
         public static async Task<bool> CheckDestination(DestinationInformation destinationInfo)
         {
             var data = new { destination = destinationInfo.Destination };
-            GenericResult<TokenInformation> x;
+            TokenInformation x;
             do
             {
                 Thread.Sleep(100);
                 x = await PostAsync<TokenInformation>(JsonConvert.SerializeObject(data), "/v3/user/checkDestination", isAnonymous: true);
-            } while (x.Result.Status == 10);
-            return x.Result.Status == 100;
+            } while (x.Status == 10);
+            return x.Status == 100;
         }
 
-        public static async Task<GenericResult<bool>> ChangeUserName(string newUserName)
+        public static async Task<bool> ChangeUserName(string newUserName)
         {
             throw new NotImplementedException();
         }

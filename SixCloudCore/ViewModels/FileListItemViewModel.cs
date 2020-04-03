@@ -1,4 +1,5 @@
 ﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
 using SixCloudCore.Views;
 using Syroot.Windows.IO;
@@ -10,7 +11,7 @@ using System.Windows.Controls.Primitives;
 
 namespace SixCloudCore.ViewModels
 {
-    internal class FileListItemViewModel : FileSystemViewModel
+    internal class FileListItemViewModel
     {
         private readonly FileListViewModel Parent;
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
@@ -134,7 +135,7 @@ namespace SixCloudCore.ViewModels
             {
                 GenericResult<PreviewVideoInformation> x = await Task.Run(() =>
                 {
-                    return fileSystem.VideoPreview(UUID);
+                    return QingzhenyunApis.Methods.V3.Preview.Video(UUID);
                 });
                 if (x.Success)
                 {
@@ -174,7 +175,7 @@ namespace SixCloudCore.ViewModels
 
         private async void Delete(object parameter)
         {
-            await fileSystem.Remove(UUID);
+            await FileSystem.Remove(UUID);
         }
         #endregion
 
@@ -197,7 +198,7 @@ namespace SixCloudCore.ViewModels
         {
             if (parameter is string newName)
             {
-                await fileSystem.Rename(UUID, newName);
+                await FileSystem.Rename(UUID, newName);
             }
         }
 
@@ -257,10 +258,10 @@ namespace SixCloudCore.ViewModels
                         int totalPage;
                         do
                         {
-                            GenericResult<FileListPage> x = await fileSystem.GetDirectory(uuid, page: ++currentPage);
+                            GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
                             if (x.Success)
                             {
-                                totalPage = x.Result.TotalPage;
+                                totalPage = x.Result.FileListPageInfo.TotalPage;
                                 foreach (FileMetaData item in x.Result.List)
                                 {
                                     yield return item;

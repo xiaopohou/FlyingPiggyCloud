@@ -1,5 +1,6 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
+using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Views;
 using System.Collections;
 using System.Collections.Generic;

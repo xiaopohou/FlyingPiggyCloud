@@ -1,4 +1,5 @@
 ﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Models;
 using SixCloudCore.Views.UserControls;
 using System.Collections.Generic;
@@ -22,10 +23,10 @@ namespace SixCloudCore.ViewModels
                 int totalPage;
                 do
                 {
-                    GenericResult<FileListPage> x = await fileSystem.GetDirectory(path: path, page: ++currentPage);
+                    GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(path: path, page: ++currentPage);
                     if (x.Success && x.Result.DictionaryInformation != null)
                     {
-                        totalPage = x.Result.TotalPage;
+                        totalPage = x.Result.FileListPageInfo.TotalPage;
                         CurrentPath = x.Result.DictionaryInformation.Path;
                         CurrentUUID = x.Result.DictionaryInformation.UUID;
                         CreatePathArray(CurrentPath);
@@ -64,10 +65,10 @@ namespace SixCloudCore.ViewModels
                     int totalPage;
                     do
                     {
-                        GenericResult<FileListPage> x = await fileSystem.GetDirectory(uuid, page: ++currentPage);
+                        GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
                         if (x.Success)
                         {
-                            totalPage = x.Result.TotalPage;
+                            totalPage = x.Result.FileListPageInfo.TotalPage;
                             CurrentPath = x.Result.DictionaryInformation.Path;
                             CurrentUUID = x.Result.DictionaryInformation.UUID;
                             CreatePathArray(CurrentPath);

@@ -24,15 +24,15 @@ namespace SixCloudCore.Views
     {
         private static UserInformation recoveryInfo;
 
-        public static Window Recovery()
+        public static void Recovery()
         {
             if (recoveryInfo != null)
             {
-                return new MainFrame(recoveryInfo);
+                new MainFrame(recoveryInfo).Show();
             }
             else
             {
-                return new LoginView();
+                new LoginWebViewModel();
             }
         }
 

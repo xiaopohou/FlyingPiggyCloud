@@ -1,6 +1,7 @@
 ﻿//using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.Win32;
 using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Models;
 using SixCloudCore.Views;
 using System;
@@ -18,7 +19,7 @@ using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace SixCloudCore.ViewModels
 {
-    internal class FileListViewModel : FileSystemViewModel
+    internal class FileListViewModel :ViewModelBase
     {
         private bool canNavigate = true;
         public static string[] CopyList
@@ -117,7 +118,7 @@ namespace SixCloudCore.ViewModels
                 {
                     if (autoCreate)
                     {
-                        GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(path: path));
+                        GenericResult<FileMetaData> x = await Task.Run(() => FileSystem.CreatDirectory(path: path));
                         if (x.Success)
                         {
                             await GetFileListByPath(x.Result.Path);
@@ -152,10 +153,10 @@ namespace SixCloudCore.ViewModels
                 int totalPage;
                 do
                 {
-                    GenericResult<FileListPage> x = await fileSystem.GetDirectory(path: path, page: ++currentPage);
+                    GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(path: path, page: ++currentPage);
                     if (x.Success && x.Result.DictionaryInformation != null)
                     {
-                        totalPage = x.Result.TotalPage;
+                        totalPage = x.Result.FileListPageInfo.TotalPage;
                         CurrentPath = x.Result.DictionaryInformation.Path;
                         CurrentUUID = x.Result.DictionaryInformation.UUID;
                         CreatePathArray(CurrentPath);
@@ -196,10 +197,10 @@ namespace SixCloudCore.ViewModels
                 int totalPage;
                 do
                 {
-                    GenericResult<FileListPage> x = await fileSystem.GetDirectory(uuid, page: ++currentPage);
+                    GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
                     if (x.Success)
                     {
-                        totalPage = x.Result.TotalPage;
+                        totalPage = x.Result.FileListPageInfo.TotalPage;
                         CurrentPath = x.Result.DictionaryInformation.Path;
                         CurrentUUID = x.Result.DictionaryInformation.UUID;
                         CreatePathArray(CurrentPath);
@@ -370,7 +371,7 @@ namespace SixCloudCore.ViewModels
         {
             if (TextInputDialog.Show(out string FolderName, "请输入新文件夹的名字", "新建文件夹") && !FolderName.Contains("/"))
             {
-                GenericResult<FileMetaData> x = await Task.Run(() => fileSystem.CreatDirectory(FolderName, CurrentUUID));
+                GenericResult<FileMetaData> x = await Task.Run(() => FileSystem.CreatDirectory(FolderName, CurrentUUID));
                 if (!x.Success)
                 {
                     MessageBox.Show("创建失败：" + x.Message);
@@ -393,14 +394,14 @@ namespace SixCloudCore.ViewModels
                      string[] copyList = CopyList;
                      CopyList = null;
                      StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                     await fileSystem.Copy(copyList, CurrentUUID);
+                     await FileSystem.Copy(copyList, CurrentUUID);
                  }
                  else if (CutList != null && CutList.Length > 0)
                  {
                      string[] cutList = CutList;
                      CutList = null;
                      StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                     await fileSystem.Move(cutList, CurrentUUID);
+                     await FileSystem.Move(cutList, CurrentUUID);
                  }
                  else
                  {
@@ -457,7 +458,7 @@ namespace SixCloudCore.ViewModels
                 {
                     list.Add(a.UUID);
                 }
-                await fileSystem.Remove(list.ToArray());
+                await FileSystem.Remove(list.ToArray());
                 NavigateByUUID(CurrentUUID);
             }
         }

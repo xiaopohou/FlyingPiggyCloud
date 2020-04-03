@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
+using QingzhenyunApis.Methods.V3;
 using SixCloudCore.FileUploader;
 using System;
 using System.Collections.Generic;
@@ -289,8 +290,7 @@ namespace SixCloudCore.ViewModels
                 string Name = openFileDialog.SafeFileName;
                 string targetPath = "/:torrent";
                 string filePath = openFileDialog.FileName;
-                FileSystem fileSystem = new FileSystem();
-                GenericResult<UploadToken> x = await fileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
+                GenericResult<UploadToken> x = await FileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
                 IUploadTask task = EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
                 bool uploadSuccess = true;
                 await Task.Run(() =>

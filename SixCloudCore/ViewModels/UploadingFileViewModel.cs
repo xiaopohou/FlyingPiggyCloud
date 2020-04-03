@@ -4,6 +4,7 @@ using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Utils;
 using System;
 using System.IO;
+using QingzhenyunApis.Methods.V3;
 
 namespace SixCloudCore.ViewModels
 {
@@ -15,7 +16,7 @@ namespace SixCloudCore.ViewModels
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
             string hash = ETag.ComputeEtag(filePath);
-            GenericResult<UploadToken> x = fileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
+            GenericResult<UploadToken> x = FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
             if (x.Result.HashCached)
             {
                 task = new HashCachedTask();
