@@ -76,14 +76,15 @@ namespace SixCloudCore.ViewModels
             TextInputDialog.Show(out string newUserName, "请输入新用户名", "更改用户名");
             if (!string.IsNullOrWhiteSpace(newUserName))
             {
-                var x = await Task.Run(() => Authentication.ChangeUserName(newUserName));
-                if (x.Success)
+                try
                 {
-                    ParseInformation((await Task.Run(async () => await Authentication.GetUserInformation())).Result);
+                    var x = await Task.Run(() => Authentication.ChangeUserName(newUserName));
+                    ParseInformation((await Task.Run(async () => await Authentication.GetUserInformation())));
+
                 }
-                else
+                catch (RequestFiledException ex)
                 {
-                    MessageBox.Show($"未能成功修改用户名，原因：{x.Message}", "更改失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"未能成功修改用户名，原因：{ex.Message}", "更改失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

@@ -34,7 +34,7 @@ namespace QingzhenyunApis.Methods.V3
                 data.path = path;
             }
 
-            return await PostAsync<GenericResult<FileMetaData>>(JsonConvert.SerializeObject(data), "/v3/file");
+            return await PostAsync<FileMetaData>(JsonConvert.SerializeObject(data), "/v3/file");
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace QingzhenyunApis.Methods.V3
             {
                 data.parentPath = "/";
             }
-            return await PostAsync<GenericResult<FileList>>(JsonConvert.SerializeObject(data), "/v3/files/list");
+            return await PostAsync<FileList>(JsonConvert.SerializeObject(data), "/v3/files/list");
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace QingzhenyunApis.Methods.V3
                 data.orderBy = orderBy;
             }
 
-            return await PostAsync<GenericResult<FileListPage>>(JsonConvert.SerializeObject(data), "/v3/files/page");
+            return await PostAsync<FileListPage>(JsonConvert.SerializeObject(data), "/v3/files/page");
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace QingzhenyunApis.Methods.V3
                 data.hash = hash;
             }
 
-            return await PostAsync<GenericResult<UploadToken>>(JsonConvert.SerializeObject(data), "/v3/file/uploadToken");
+            return await PostAsync<UploadToken>(JsonConvert.SerializeObject(data), "/v3/file/uploadToken");
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="uuid">被删除的项目</param>
         /// <returns></returns>
-        public static async Task<GenericResult<int?>> Remove(string[] uuids)
+        public static async Task<int?> Remove(string[] uuids)
         {
             List<object> list = new List<object>(uuids.Length);
             foreach (string uuid in uuids)

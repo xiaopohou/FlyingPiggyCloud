@@ -77,9 +77,9 @@ namespace SixCloudCore.ViewModels
             int totalPage;
             do
             {
-                GenericResult<RecoveryBoxPage> x = await recoveryBox.GetList(++currentPage);
-                totalPage = x.Result.TotalPage;
-                yield return x.Result.List;
+                var x = await recoveryBox.GetList(++currentPage);
+                totalPage = x.TotalPage;
+                yield return x.List;
             } while (currentPage < totalPage);
             yield break;
         }

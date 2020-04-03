@@ -1,6 +1,5 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods.V3;
-using SixCloudCore.Models;
 using SixCloudCore.Views.UserControls;
 using System.Collections.Generic;
 using System.IO;
@@ -20,22 +19,32 @@ namespace SixCloudCore.ViewModels
             async IAsyncEnumerable<FileMetaData[]> GetFileListAsync()
             {
                 int currentPage = 0;
-                int totalPage;
+                int totalPage = 0;
+                FileListPage x;
                 do
                 {
-                    GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(path: path, page: ++currentPage);
-                    if (x.Success && x.Result.DictionaryInformation != null)
+                    try
                     {
-                        totalPage = x.Result.FileListPageInfo.TotalPage;
-                        CurrentPath = x.Result.DictionaryInformation.Path;
-                        CurrentUUID = x.Result.DictionaryInformation.UUID;
+                        x = await FileSystem.GetDirectoryAsPage(path: path, page: ++currentPage);
+                    }
+                    catch (RequestFiledException ex)
+                    {
+                        throw new DirectoryNotFoundException(ex.Message);
+                    }
+
+                    if (x.DictionaryInformation != null)
+                    {
+                        totalPage = x.FileListPageInfo.TotalPage;
+                        CurrentPath = x.DictionaryInformation.Path;
+                        CurrentUUID = x.DictionaryInformation.UUID;
                         CreatePathArray(CurrentPath);
-                        yield return x.Result.List;
+                        yield return x.List;
                     }
                     else
                     {
-                        throw new DirectoryNotFoundException(x.Message);
+                        throw new DirectoryNotFoundException();
                     }
+
                 } while (currentPage < totalPage);
                 yield break;
             }
@@ -63,21 +72,31 @@ namespace SixCloudCore.ViewModels
                 {
                     int currentPage = 0;
                     int totalPage;
+                    FileListPage x;
                     do
                     {
-                        GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
-                        if (x.Success)
+                        try
                         {
-                            totalPage = x.Result.FileListPageInfo.TotalPage;
-                            CurrentPath = x.Result.DictionaryInformation.Path;
-                            CurrentUUID = x.Result.DictionaryInformation.UUID;
+                            x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
+                        }
+                        catch (RequestFiledException ex)
+                        {
+                            throw new DirectoryNotFoundException(ex.Message);
+                        }
+
+                        if (x.DictionaryInformation != null)
+                        {
+                            totalPage = x.FileListPageInfo.TotalPage;
+                            CurrentPath = x.DictionaryInformation.Path;
+                            CurrentUUID = x.DictionaryInformation.UUID;
                             CreatePathArray(CurrentPath);
-                            yield return x.Result.List;
+                            yield return x.List;
                         }
                         else
                         {
-                            throw new DirectoryNotFoundException(x.Message);
+                            throw new DirectoryNotFoundException();
                         }
+
                     } while (currentPage < totalPage);
                     yield break;
                 }
@@ -103,7 +122,7 @@ namespace SixCloudCore.ViewModels
         public DependencyCommand NavigateCommand { get; set; }
         private async void Navigate(object parameter)
         {
-            var selectObject = (FileListItemViewModel)parameter;
+            FileListItemViewModel selectObject = (FileListItemViewModel)parameter;
             await GetFileListByUUID(selectObject.UUID);
             await LazyLoad();
         }

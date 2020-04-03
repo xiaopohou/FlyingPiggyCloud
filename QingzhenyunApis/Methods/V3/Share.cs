@@ -17,7 +17,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="expire">过期时间，默认为不限</param>
         /// <param name="copyCountLeft">可转存次数，默认为不限</param>
         /// <returns></returns>
-        public async Task<GenericResult<ShareMetaData>> CreateByPath(string path, string password = null, long expire = 0, long copyCountLeft = 0)
+        public async Task<ShareMetaData> CreateByPath(string path, string password = null, long expire = 0, long copyCountLeft = 0)
         {
             dynamic data = new ExpandoObject();
             data.path = path;
@@ -36,13 +36,13 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<ShareMetaData>(JsonConvert.SerializeObject(data), "/v2/share/create");
         }
 
-        public async Task<GenericResult<ShareMetaData>> Get(string identity)
+        public async Task<ShareMetaData> Get(string identity)
         {
             var data = new { identity };
             return await PostAsync<ShareMetaData>(JsonConvert.SerializeObject(data), "/v2/share/get");
         }
 
-        public async Task<GenericResult<bool>> Save(string identity, string path, string password = null)
+        public async Task<bool> Save(string identity, string path, string password = null)
         {
             dynamic data = new ExpandoObject();
             data.identity = identity;
@@ -54,7 +54,7 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<bool>(JsonConvert.SerializeObject(data), "/v2/share/get");
         }
 
-        public async Task<GenericResult<bool>> Cancel(string path)
+        public async Task<bool> Cancel(string path)
         {
             var data = new { path };
             return await PostAsync<bool>(JsonConvert.SerializeObject(data), "/v2/share/cancel");

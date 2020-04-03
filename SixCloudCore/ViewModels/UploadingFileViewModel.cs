@@ -16,13 +16,13 @@ namespace SixCloudCore.ViewModels
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
             string hash = ETag.ComputeEtag(filePath);
-            GenericResult<UploadToken> x = FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
-            if (x.Result.HashCached)
+            var x = FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
+            if (x.HashCached)
             {
                 task = new HashCachedTask();
                 return;
             }
-            task = EzWcs.NewTask(filePath, x.Result.UploadInfo.Token, x.Result.UploadInfo.UploadUrl);
+            task = EzWcs.NewTask(filePath, x.UploadInfo.Token, x.UploadInfo.UploadUrl);
         }
 
         private readonly IUploadTask task;

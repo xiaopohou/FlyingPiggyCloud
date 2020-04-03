@@ -11,7 +11,7 @@ namespace QingzhenyunApis.Methods.V3
         /// 清空当前用户的回收站
         /// </summary>
         /// <returns></returns>
-        public async Task<GenericResult<int?>> Empty()
+        public async Task<int?> Empty()
         {
             return await PostAsync<int?>(JsonConvert.SerializeObject(new object()), "/v2/trash/truncate");
         }
@@ -23,7 +23,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="parentUUID">恢复到其他文件夹</param>
         /// <param name="parentPath">恢复到其他路径</param>
         /// <returns></returns>
-        public async Task<GenericResult<int?>> Restore(string[] targetUUID, string parentUUID = null, string parentPath = null)
+        public async Task<int?> Restore(string[] targetUUID, string parentUUID = null, string parentPath = null)
         {
             dynamic data = new ExpandoObject();
             data.source = targetUUID;
@@ -43,12 +43,12 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="targetUUID"></param>
         /// <returns></returns>
-        public async Task<GenericResult<int?>> Delete(string[] targetUUID)
+        public async Task<int?> Delete(string[] targetUUID)
         {
             return await PostAsync<int?>(JsonConvert.SerializeObject(targetUUID), "/v2/trash/delete");
         }
 
-        public async Task<GenericResult<RecoveryBoxPage>> GetList(int page = 1, int pageSize = 20)
+        public async Task<RecoveryBoxPage> GetList(int page = 1, int pageSize = 20)
         {
             var data = new { page, pageSize };
             return await PostAsync<RecoveryBoxPage>(JsonConvert.SerializeObject(data), "v2/trash/page");

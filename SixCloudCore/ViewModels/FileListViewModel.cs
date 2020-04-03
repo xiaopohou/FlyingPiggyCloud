@@ -1,8 +1,6 @@
 ﻿//using Microsoft.WindowsAPICodePack.Dialogs;
-using Microsoft.Win32;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods.V3;
-using SixCloudCore.Models;
 using SixCloudCore.Views;
 using System;
 using System.Collections;
@@ -19,7 +17,7 @@ using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace SixCloudCore.ViewModels
 {
-    internal class FileListViewModel :ViewModelBase
+    internal class FileListViewModel : ViewModelBase
     {
         private bool canNavigate = true;
         public static string[] CopyList
@@ -118,14 +116,15 @@ namespace SixCloudCore.ViewModels
                 {
                     if (autoCreate)
                     {
-                        GenericResult<FileMetaData> x = await Task.Run(() => FileSystem.CreatDirectory(path: path));
-                        if (x.Success)
+                        try
                         {
-                            await GetFileListByPath(x.Result.Path);
+                            FileMetaData x = await Task.Run(() => FileSystem.CreatDirectory(path: path));
+                            await GetFileListByPath(x.Path);
+
                         }
-                        else
+                        catch (RequestFiledException requestFiledException)
                         {
-                            MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它既不能找到也无法创建您想要的对象。服务器返回：{x.Message}", "找不到对象", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它既不能找到也无法创建您想要的对象。服务器返回：{requestFiledException.Message}", "找不到对象", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     else
@@ -151,24 +150,31 @@ namespace SixCloudCore.ViewModels
             {
                 int currentPage = 0;
                 int totalPage;
+                FileListPage x;
                 do
                 {
-                    GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(path: path, page: ++currentPage);
-                    if (x.Success && x.Result.DictionaryInformation != null)
+                    try
                     {
-                        totalPage = x.Result.FileListPageInfo.TotalPage;
-                        CurrentPath = x.Result.DictionaryInformation.Path;
-                        CurrentUUID = x.Result.DictionaryInformation.UUID;
-                        CreatePathArray(CurrentPath);
-                        yield return x.Result.List;
+                        x = await FileSystem.GetDirectoryAsPage(path: path, page: ++currentPage);
+
                     }
-                    else if (x.Success)
+                    catch (RequestFiledException ex)
                     {
-                        break;
+                        throw new DirectoryNotFoundException(ex.Message);
+                    }
+
+
+                    if (x.DictionaryInformation != null)
+                    {
+                        totalPage = x.FileListPageInfo.TotalPage;
+                        CurrentPath = x.DictionaryInformation.Path;
+                        CurrentUUID = x.DictionaryInformation.UUID;
+                        CreatePathArray(CurrentPath);
+                        yield return x.List;
                     }
                     else
                     {
-                        throw new DirectoryNotFoundException(x.Message);
+                        throw new DirectoryNotFoundException();
                     }
                 } while (currentPage < totalPage);
                 yield break;
@@ -195,21 +201,24 @@ namespace SixCloudCore.ViewModels
             {
                 int currentPage = 0;
                 int totalPage;
+                FileListPage x;
                 do
                 {
-                    GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
-                    if (x.Success)
+                    try
                     {
-                        totalPage = x.Result.FileListPageInfo.TotalPage;
-                        CurrentPath = x.Result.DictionaryInformation.Path;
-                        CurrentUUID = x.Result.DictionaryInformation.UUID;
-                        CreatePathArray(CurrentPath);
-                        yield return x.Result.List;
+                        x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
                     }
-                    else
+                    catch (RequestFiledException ex)
                     {
-                        throw new DirectoryNotFoundException(x.Message);
+                        throw new DirectoryNotFoundException(ex.Message);
                     }
+
+                    totalPage = x.FileListPageInfo.TotalPage;
+                    CurrentPath = x.DictionaryInformation.Path;
+                    CurrentUUID = x.DictionaryInformation.UUID;
+                    CreatePathArray(CurrentPath);
+                    yield return x.List;
+
                 } while (currentPage < totalPage);
 
                 yield break;
@@ -371,12 +380,17 @@ namespace SixCloudCore.ViewModels
         {
             if (TextInputDialog.Show(out string FolderName, "请输入新文件夹的名字", "新建文件夹") && !FolderName.Contains("/"))
             {
-                GenericResult<FileMetaData> x = await Task.Run(() => FileSystem.CreatDirectory(FolderName, CurrentUUID));
-                if (!x.Success)
+                try
                 {
-                    MessageBox.Show("创建失败：" + x.Message);
+                    var x = await Task.Run(() => FileSystem.CreatDirectory(FolderName, CurrentUUID));
+
+                }
+                catch (RequestFiledException ex)
+                {
+                    MessageBox.Show("创建失败：" + ex.Message);
                     return;
                 }
+
                 NavigateByUUID(CurrentUUID);
             }
         }

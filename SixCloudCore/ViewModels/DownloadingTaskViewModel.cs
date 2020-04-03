@@ -61,7 +61,7 @@ namespace SixCloudCore.ViewModels
             SavedLocalPath = localPath;
             downloadTask = new DownloadTask(localPath, name, () =>
              {
-                 return new Uri(FileSystem.GetDetailsByIdentity(targetUUID).Result.Result.DownloadAddress);
+                 return new Uri(FileSystem.GetDetailsByIdentity(targetUUID).Result.DownloadAddress);
              }, (sender, e) =>
              {
                  if (e.State == FileDownloader.CompletedState.Succeeded)

@@ -23,9 +23,9 @@ namespace SixCloudCore.ViewModels
             int totalPage;
             do
             {
-                GenericResult<OfflineTaskList> x = await downloader.GetList(++currentPage);
-                totalPage = x.Result.TotalPage;
-                yield return x.Result.List;
+                var x = await downloader.GetList(++currentPage);
+                totalPage = x.TotalPage;
+                yield return x.List;
             } while (currentPage < totalPage);
             yield break;
         }

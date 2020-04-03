@@ -1,6 +1,7 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Views;
+using System.Threading;
 using System.Windows;
 
 namespace SixCloudCore.ViewModels
@@ -14,7 +15,7 @@ namespace SixCloudCore.ViewModels
         private async void InitializeComponent()
         {
             var x = await Authentication.CreateDestination();
-            DestinationInfo = x.Result;
+            DestinationInfo = x;
 
             LoginUrl = Authentication.GetLoginUrl(DestinationInfo.Destination, out string _);
 
@@ -24,6 +25,7 @@ namespace SixCloudCore.ViewModels
                 {
                     DataContext = this
                 };
+                LoginWebView.Show();
             });
 
             if (await Authentication.CheckDestination(DestinationInfo))
@@ -31,15 +33,14 @@ namespace SixCloudCore.ViewModels
                 var userInfo = await Authentication.GetUserInformation();
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    new MainFrame(userInfo.Result).Show();
+                    new MainFrame(userInfo).Show();
                     LoginWebView.Close();
                 });
             }
             else
             {
-
+#warning 失败了应该做点啥
             }
-
         }
 
         public string LoginUrl { get; private set; }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SixCloudCore.Controllers
 {
-    internal class TasksLogger
+    internal partial class TasksLogger
     {
         private static readonly string rootDirectory;
         private static readonly string uploadingRecordsPath;
@@ -104,25 +104,6 @@ namespace SixCloudCore.Controllers
                 string s = JsonConvert.SerializeObject(taskList);
                 writer.Write(s);
             }
-        }
-
-        private class DownloadTaskRecord
-        {
-            public string LocalPath { get; set; }
-
-            public string TargetUUID { get; set; }
-
-            public string Name { get; set; }
-
-            public long BytesReceived { get; set; }
-
-        }
-
-        private class UploadTaskRecord
-        {
-            public string LocalFilePath { get; set; }
-
-            public string TargetPath { get; set; }
         }
     }
 }

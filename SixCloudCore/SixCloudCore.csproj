@@ -56,9 +56,6 @@
     <Compile Update="Views\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\LogoutOthersView.xaml.cs">
-      <DependentUpon>LogoutOthersView.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Views\MainFrame.xaml.cs">
       <DependentUpon>MainFrame.xaml</DependentUpon>
     </Compile>
@@ -85,12 +82,6 @@
     </Compile>
     <Compile Update="Views\UserControls\RecoveryBox.xaml.cs">
       <DependentUpon>RecoveryBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\UserControls\SignInView.xaml.cs">
-      <DependentUpon>SignInView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\UserControls\SignUpView.xaml.cs">
-      <DependentUpon>SignUpView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\UserControls\UserInformationView.xaml.cs">
       <DependentUpon>UserInformationView.xaml</DependentUpon>

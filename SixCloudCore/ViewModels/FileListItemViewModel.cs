@@ -121,27 +121,14 @@ namespace SixCloudCore.ViewModels
         internal async void NewPreView()
         {
 #warning 这里的代码还没有完成
-            //if (Preview == 300)
-            //{
-            //    GenericResult<PreviewImageInformation> x = await Task.Run(() =>
-            //    {
-            //        return fileSystem.ImagePreview(UUID);
-            //    });
-
-            //    PreView preView = new PreView(PreView.ResourceType.Picture, x.Result.Url, x.Result,x.Token);
-            //    preView.Show();
-            //}
             if (PreviewType == 3010)
             {
-                GenericResult<PreviewVideoInformation> x = await Task.Run(() =>
+                PreviewVideoInformation x = await Task.Run(() =>
                 {
                     return QingzhenyunApis.Methods.V3.Preview.Video(UUID);
                 });
-                if (x.Success)
-                {
-                    PreView preView = new PreView(PreView.ResourceType.Video, x.Result.PreviewHlsAddress, x.Result);
-                    preView.Show();
-                }
+                PreView preView = new PreView(PreView.ResourceType.Video, x.PreviewHlsAddress, x);
+                preView.Show();
             }
         }
 
@@ -256,20 +243,22 @@ namespace SixCloudCore.ViewModels
                     {
                         int currentPage = 0;
                         int totalPage;
+                        FileListPage x;
                         do
                         {
-                            GenericResult<FileListPage> x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
-                            if (x.Success)
+                            try
                             {
-                                totalPage = x.Result.FileListPageInfo.TotalPage;
-                                foreach (FileMetaData item in x.Result.List)
-                                {
-                                    yield return item;
-                                }
+                                x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
                             }
-                            else
+                            catch (RequestFiledException ex)
                             {
-                                throw new DirectoryNotFoundException(x.Message);
+                                throw new DirectoryNotFoundException(ex.Message);
+                            }
+
+                            totalPage = x.FileListPageInfo.TotalPage;
+                            foreach (FileMetaData item in x.List)
+                            {
+                                yield return item;
                             }
                         } while (currentPage < totalPage);
                         yield break;
