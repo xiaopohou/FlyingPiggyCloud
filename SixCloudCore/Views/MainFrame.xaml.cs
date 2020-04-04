@@ -24,6 +24,9 @@ namespace SixCloudCore.Views
     {
         private static UserInformation recoveryInfo;
 
+        /// <summary>
+        /// 从后台恢复前台窗口
+        /// </summary>
         public static void Recovery()
         {
             if (recoveryInfo != null)
@@ -174,7 +177,7 @@ namespace SixCloudCore.Views
             }
             catch (Exception)
             {
-
+                return;
             }
         }
 
