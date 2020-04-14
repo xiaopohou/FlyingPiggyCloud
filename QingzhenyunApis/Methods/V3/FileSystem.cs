@@ -53,7 +53,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="parentIdentity">该文件夹的ID</param>
         /// <param name="path">路径</param>
         /// <returns></returns>
-        public static async Task<FileListPage> GetDirectory(string parentIdentity = "", string path = "")
+        public static async Task<FileList> GetDirectory(string parentIdentity = "", string path = "", int start = 0, int limit = 20)
         {
             dynamic data = new ExpandoObject();
             if (!string.IsNullOrEmpty(parentIdentity))
@@ -68,43 +68,10 @@ namespace QingzhenyunApis.Methods.V3
             {
                 data.parentPath = "/";
             }
+
+            data.start = start;
+            data.limit = limit;
             return await PostAsync<FileList>(JsonConvert.SerializeObject(data), "/v3/files/list");
-        }
-
-        /// <summary>
-        /// 以分页的方式获取目录
-        /// </summary>
-        /// <param name="parent">该文件夹的ID</param>
-        /// <param name="path">路径</param>
-        /// <param name="page">第几页</param>
-        /// <param name="pageSize">列表大小，最大值999</param>
-        /// <param name="OrderBy">排序：0按文件名，1按时间</param>
-        /// <param name="Type">文件类型：0显示文件，1显示文件夹，-1显示文件和文件夹(默认)</param>
-        /// <returns></returns>
-        public static async Task<FileListPage> GetDirectoryAsPage(string parentIdentity = "", string path = "", int page = 0, int pageSize = 20, string[,] orderBy = null)
-        {
-            dynamic data = new ExpandoObject();
-            if (!string.IsNullOrEmpty(parentIdentity))
-            {
-                data.parentIdentity = parentIdentity;
-            }
-            else if (!string.IsNullOrEmpty(path))
-            {
-                data.parentPath = path;
-            }
-            else
-            {
-                data.parentPath = "/";
-            }
-
-            data.page = page;
-            data.pageSize = pageSize;
-            if (orderBy != null)
-            {
-                data.orderBy = orderBy;
-            }
-
-            return await PostAsync<FileListPage>(JsonConvert.SerializeObject(data), "/v3/files/page");
         }
 
         /// <summary>
@@ -157,7 +124,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="SourceMeta">被移动的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public static async Task<int?> Move(string sourceUUID, string targetDirectoryUUID)
+        public static async Task<SuccessCount> Move(string sourceUUID, string targetDirectoryUUID)
         {
             return await Move(new string[] { sourceUUID }, targetDirectoryUUID);
         }
@@ -168,14 +135,14 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="sourceUUIDList"></param>
         /// <param name="targetDirectoryUUID"></param>
         /// <returns></returns>
-        public static async Task<int?> Move(string[] sourceUUIDList, string targetDirectoryUUID)
+        public static async Task<SuccessCount> Move(string[] sourceUUIDList, string targetDirectoryUUID)
         {
             var data = new
             {
                 sourceIdentity = sourceUUIDList,
                 identity = targetDirectoryUUID
             };
-            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v3/file/move");
+            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/file/move");
         }
 
         /// <summary>
@@ -184,7 +151,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="SourceMeta">被复制的项目</param>
         /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
         /// <returns></returns>
-        public static async Task<int?> Copy(string sourceUUID, string targetDirectoryUUID)
+        public static async Task<SuccessCount> Copy(string sourceUUID, string targetDirectoryUUID)
         {
             return await Copy(new string[] { sourceUUID }, targetDirectoryUUID);
         }
@@ -195,14 +162,14 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="sourceUUIDList"></param>
         /// <param name="targetDirectoryUUID"></param>
         /// <returns></returns>
-        public static async Task<int?> Copy(string[] sourceUUIDList, string targetDirectoryUUID)
+        public static async Task<SuccessCount> Copy(string[] sourceIdentity, string identity)
         {
             var data = new
             {
-                sourceIdentity = sourceUUIDList,
-                identity = targetDirectoryUUID
+                sourceIdentity,
+                identity
             };
-            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v3/file/copy");
+            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/file/copy");
         }
 
         /// <summary>
@@ -211,10 +178,10 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="identity">被重命名的项目</param>
         /// <param name="name">新名称</param>
         /// <returns></returns>
-        public static async Task<bool> Rename(string identity, string name)
+        public static async Task<FileMetaData> Rename(string identity, string name)
         {
             var data = new { identity, name };
-            return await PostAsync<bool>(JsonConvert.SerializeObject(data), "/v3/file/rename");
+            return await PostAsync<FileMetaData>(JsonConvert.SerializeObject(data), "/v3/file/rename");
         }
 
         /// <summary>
@@ -222,7 +189,7 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="uuid">被删除的项目</param>
         /// <returns></returns>
-        public static async Task<int?> Remove(string identity)
+        public static async Task<SuccessCount> Remove(string identity)
         {
             return await Remove(new string[] { identity });
         }
@@ -232,11 +199,11 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="uuid">被删除的项目</param>
         /// <returns></returns>
-        public static async Task<int?> Remove(string[] sourceIdentity)
+        public static async Task<SuccessCount> Remove(string[] sourceIdentity)
         {
             var data = new { sourceIdentity };
 
-            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v3/file/trash");
+            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/file/trash");
         }
     }
 }
