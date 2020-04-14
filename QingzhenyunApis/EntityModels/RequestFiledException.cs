@@ -3,7 +3,7 @@ using System;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class RequestFiledException : Exception
+    public class RequestFailedException : Exception
     {
         [JsonProperty(PropertyName = "success")]
         public bool Success { get; set; }

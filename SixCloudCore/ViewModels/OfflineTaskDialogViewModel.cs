@@ -112,7 +112,7 @@ namespace SixCloudCore.ViewModels
                         Status = ParseResultStatus.Success;
                     }
                 }
-                catch (RequestFiledException ex)
+                catch (RequestFailedException ex)
                 {
                     if (ex.Code == "PASSWORD_NEED")
                     {
@@ -343,7 +343,7 @@ namespace SixCloudCore.ViewModels
                 var tasks = await offlineDownloader.Add(savingPath, OfflineTaskParameters);
 
             }
-            catch (RequestFiledException ex)
+            catch (RequestFailedException ex)
             {
                 Application.Current.Dispatcher.Invoke(() => MessageBox.Show($"离线任务添加失败，服务器返回：{ex.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error));
             }

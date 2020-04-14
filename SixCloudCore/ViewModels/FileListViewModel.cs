@@ -1,11 +1,11 @@
-﻿//using Microsoft.WindowsAPICodePack.Dialogs;
-using QingzhenyunApis.EntityModels;
+﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -20,6 +20,7 @@ namespace SixCloudCore.ViewModels
     internal class FileListViewModel : ViewModelBase
     {
         private bool canNavigate = true;
+
         public static string[] CopyList
         {
             get => s_copyList;
@@ -85,185 +86,35 @@ namespace SixCloudCore.ViewModels
         public string CurrentUUID { get; set; }
 
         #region FileListViewModelFunctions
+        [DisallowNull]
         /// <summary>
         /// 保存LazyLoad状态的枚举器
         /// </summary>
-        protected IAsyncEnumerator<FileMetaData[]> fileMetaDataEnumerator;
+        protected IAsyncEnumerable<FileMetaData> fileMetaDataEnumerator;
 
-        public async void NavigateByUUID(string uuid)
+        /// <summary>
+        /// 创建指定路径或uuid目录内容的枚举器
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="identity"></param>
+        /// <exception cref="RequestFailedException">未能找到目录</exception>
+        /// <returns></returns>
+        protected virtual async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(string path = null, string identity = null)
         {
-            previousPath.Push(CurrentPath);
-            PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
-            await GetFileListByUUID(uuid);
-        }
-
-        public async Task NavigateByPath(string path, bool autoCreate = false)
-        {
-            if (!canNavigate)
+            int start = 0;
+            const int limit = 20;
+            int count;
+            do
             {
-                return;
-            }
-            canNavigate = false;
-            try
-            {
-                previousPath.Push(CurrentPath);
-                PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
-                try
+                var x = await FileSystem.GetDirectory(identity, path, start, limit);
+                count = x.List.Length;
+                foreach (var item in x.List)
                 {
-                    await GetFileListByPath(path);
+                    yield return item;
                 }
-                catch (DirectoryNotFoundException ex)
-                {
-                    if (autoCreate)
-                    {
-                        try
-                        {
-                            FileMetaData x = await Task.Run(() => FileSystem.CreatDirectory(path: path));
-                            await GetFileListByPath(x.Path);
-
-                        }
-                        catch (RequestFiledException requestFiledException)
-                        {
-                            MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它既不能找到也无法创建您想要的对象。服务器返回：{requestFiledException.Message}", "找不到对象", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show($"打开{path}文件夹失败，SixCloud表示它找不到这个目录。服务器返回：{ex.Message}", "错误");
-                    }
-                }
-            }
-            finally
-            {
-                canNavigate = true;
-            }
-        }
-
-        public async void NavigateByPathAsync(string path, bool autoCreate = false)
-        {
-            await NavigateByPath(path, autoCreate);
-        }
-
-        protected virtual async Task GetFileListByPath(string path)
-        {
-            async IAsyncEnumerable<FileMetaData[]> GetFileListAsync()
-            {
-                int currentPage = 0;
-                int totalPage;
-                FileListPage x;
-                do
-                {
-                    try
-                    {
-                        x = await FileSystem.GetDirectoryAsPage(path: path, page: ++currentPage);
-
-                    }
-                    catch (RequestFiledException ex)
-                    {
-                        throw new DirectoryNotFoundException(ex.Message);
-                    }
-
-
-                    if (x.DictionaryInformation != null)
-                    {
-                        totalPage = x.FileListPageInfo.TotalPage;
-                        CurrentPath = x.DictionaryInformation.Path;
-                        CurrentUUID = x.DictionaryInformation.UUID;
-                        CreatePathArray(CurrentPath);
-                        yield return x.List;
-                    }
-                    else
-                    {
-                        throw new DirectoryNotFoundException();
-                    }
-                } while (currentPage < totalPage);
-                yield break;
-            }
-
-            App.Current.Dispatcher.Invoke(() => FileList.Clear());
-
-            fileMetaDataEnumerator = GetFileListAsync().GetAsyncEnumerator();
-            if (await fileMetaDataEnumerator.MoveNextAsync())
-            {
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    foreach (FileMetaData a in fileMetaDataEnumerator.Current)
-                    {
-                        FileList.Add(new FileListItemViewModel(this, a));
-                    }
-                });
-            }
-        }
-
-        protected virtual async Task GetFileListByUUID(string uuid)
-        {
-            async IAsyncEnumerable<FileMetaData[]> GetFileListAsync()
-            {
-                int currentPage = 0;
-                int totalPage;
-                FileListPage x;
-                do
-                {
-                    try
-                    {
-                        x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
-                    }
-                    catch (RequestFiledException ex)
-                    {
-                        throw new DirectoryNotFoundException(ex.Message);
-                    }
-
-                    totalPage = x.FileListPageInfo.TotalPage;
-                    CurrentPath = x.DictionaryInformation.Path;
-                    CurrentUUID = x.DictionaryInformation.UUID;
-                    CreatePathArray(CurrentPath);
-                    yield return x.List;
-
-                } while (currentPage < totalPage);
-
-                yield break;
-            }
-
-
-            App.Current.Dispatcher.Invoke(() => FileList.Clear());
-            fileMetaDataEnumerator = GetFileListAsync().GetAsyncEnumerator();
-            await fileMetaDataEnumerator.MoveNextAsync();
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                foreach (FileMetaData a in fileMetaDataEnumerator.Current)
-                {
-                    FileList.Add(new FileListItemViewModel(this, a));
-                }
-            });
-        }
-
-        public async Task LazyLoad()
-        {
-            if (fileMetaDataEnumerator != null)
-            {
-                try
-                {
-                    if (await fileMetaDataEnumerator.MoveNextAsync())
-                    {
-                        App.Current.Dispatcher.Invoke(() =>
-                        {
-                            foreach (FileMetaData a in fileMetaDataEnumerator.Current)
-                            {
-                                FileList.Add(new FileListItemViewModel(this, a));
-                            }
-                        });
-                    }
-                    else
-                    {
-                        fileMetaDataEnumerator = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "加载文件列表失败");
-                }
-            }
-
+                start += limit;
+            } while (count == limit);
+            yield break;
         }
 
         protected void CreatePathArray(string path)
@@ -286,6 +137,56 @@ namespace SixCloudCore.ViewModels
             }
             OnPropertyChanged(nameof(PathArray));
         }
+
+        public async void NavigateByUUID(string uuid)
+        {
+            previousPath.Push(CurrentPath);
+            fileMetaDataEnumerator = CreateFileListEnumerator(identity: uuid);
+            var directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
+            CurrentPath = directoryInfo.Path;
+            CurrentUUID = directoryInfo.UUID;
+            CreatePathArray(CurrentPath);
+            await LazyLoad();
+            PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+        }
+
+        public async Task NavigateByPath(string path)
+        {
+            previousPath.Push(CurrentPath);
+            fileMetaDataEnumerator = CreateFileListEnumerator(path);
+            var directoryInfo = (await FileSystem.GetDirectory(path: path, start: 0, limit: 1)).DictionaryInformation;
+            CurrentPath = directoryInfo.Path;
+            CurrentUUID = directoryInfo.UUID;
+            CreatePathArray(CurrentPath);
+            await LazyLoad();
+            PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+        }
+
+        public async void NavigateByPathAsync(string path)
+        {
+            await NavigateByPath(path);
+        }
+
+        public async Task LazyLoad()
+        {
+            try
+            {
+                int count = 0;
+                await foreach (var item in fileMetaDataEnumerator)
+                {
+                    count++;
+                    App.Current.Dispatcher.Invoke(() => FileList.Add(new FileListItemViewModel(this, item)));
+                    if (count >= 20)
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (RequestFailedException ex)
+            {
+                MessageBox.Show($"加载目录失败，由于{ex.Message}");
+            }
+        }
         #endregion
 
         #region NavigationCommand
@@ -298,21 +199,8 @@ namespace SixCloudCore.ViewModels
             nextPath.Push(CurrentPath);
             if (previousPath.Count > 0)
             {
-                bool success;
-                do
-                {
-                    try
-                    {
-                        string path = previousPath.Pop();
-                        await GetFileListByPath(path);
-                        success = true;
-                        //CreatePathArray(path);
-                    }
-                    catch (DirectoryNotFoundException)
-                    {
-                        success = false;
-                    }
-                } while (!success && previousPath.Count != 0);
+                string path = previousPath.Pop();
+                await NavigateByPath(path);
             }
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
             NextNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
@@ -337,21 +225,8 @@ namespace SixCloudCore.ViewModels
             previousPath.Push(CurrentPath);
             if (nextPath.Count > 0)
             {
-                bool success;
-                do
-                {
-                    try
-                    {
-                        string path = nextPath.Pop();
-                        await GetFileListByPath(path);
-                        success = true;
-                        //CreatePathArray(path);
-                    }
-                    catch (DirectoryNotFoundException)
-                    {
-                        success = false;
-                    }
-                } while (!success && nextPath.Count != 0);
+                string path = nextPath.Pop();
+                await NavigateByPath(path);
             }
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
             NextNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
@@ -385,7 +260,7 @@ namespace SixCloudCore.ViewModels
                     var x = await Task.Run(() => FileSystem.CreatDirectory(FolderName, CurrentUUID));
 
                 }
-                catch (RequestFiledException ex)
+                catch (RequestFailedException ex)
                 {
                     MessageBox.Show("创建失败：" + ex.Message);
                     return;

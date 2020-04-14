@@ -82,7 +82,7 @@ namespace SixCloudCore.ViewModels
                     ParseInformation((await Task.Run(async () => await Authentication.GetUserInformation())));
 
                 }
-                catch (RequestFiledException ex)
+                catch (RequestFailedException ex)
                 {
                     MessageBox.Show($"未能成功修改用户名，原因：{ex.Message}", "更改失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 }

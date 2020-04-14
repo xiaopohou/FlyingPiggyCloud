@@ -98,7 +98,7 @@ namespace QingzhenyunApis.Methods.V3
             }
             catch (JsonSerializationException)
             {
-                throw JsonConvert.DeserializeObject<RequestFiledException>(responseBody, settings);
+                throw JsonConvert.DeserializeObject<RequestFailedException>(responseBody, settings);
             }
         }
 

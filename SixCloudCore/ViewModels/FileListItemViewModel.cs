@@ -250,7 +250,7 @@ namespace SixCloudCore.ViewModels
                             {
                                 x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
                             }
-                            catch (RequestFiledException ex)
+                            catch (RequestFailedException ex)
                             {
                                 throw new DirectoryNotFoundException(ex.Message);
                             }
