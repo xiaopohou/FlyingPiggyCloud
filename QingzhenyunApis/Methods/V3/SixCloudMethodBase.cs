@@ -85,6 +85,22 @@ namespace QingzhenyunApis.Methods.V3
                 uri = uriBuilder.ToString();
             }
         }
+       
+        private static T ParseResult<T>(string responseBody)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                MissingMemberHandling = MissingMemberHandling.Error
+            };
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(responseBody);
+            }
+            catch (JsonSerializationException)
+            {
+                throw JsonConvert.DeserializeObject<RequestFiledException>(responseBody, settings);
+            }
+        }
 
         protected static string Token { get; private set; } = string.Empty;
 
@@ -129,22 +145,6 @@ namespace QingzhenyunApis.Methods.V3
             return ParseResult<T>(responseBody);
         }
 
-        private static T ParseResult<T>(string responseBody)
-        {
-            JsonSerializerSettings settings = new JsonSerializerSettings
-            {
-                MissingMemberHandling = MissingMemberHandling.Error
-            };
-            try
-            {
-                return JsonConvert.DeserializeObject<T>(responseBody);
-            }
-            catch (JsonSerializationException)
-            {
-                throw JsonConvert.DeserializeObject<RequestFiledException>(responseBody, settings);
-            }
-        }
-
         protected static async Task<T> GetAsync<T>(string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
             //构建签名
@@ -166,6 +166,5 @@ namespace QingzhenyunApis.Methods.V3
         {
             Token = token ?? Token;
         }
-
     }
 }

@@ -217,10 +217,6 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<bool>(JsonConvert.SerializeObject(data), "/v3/file/rename");
         }
 
-
-
-#warning 这里的代码还没有写完
-
         /// <summary>
         /// 删除文件夹或文件
         /// </summary>
@@ -228,11 +224,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <returns></returns>
         public static async Task<int?> Remove(string identity)
         {
-            var data = new
-            {
-                source = new object[] { new { identity } }
-            };
-            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v2/files/delete");
+            return await Remove(new string[] { identity });
         }
 
         /// <summary>
@@ -240,16 +232,11 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="uuid">被删除的项目</param>
         /// <returns></returns>
-        public static async Task<int?> Remove(string[] uuids)
+        public static async Task<int?> Remove(string[] sourceIdentity)
         {
-            List<object> list = new List<object>(uuids.Length);
-            foreach (string uuid in uuids)
-            {
-                list.Add(new { identity = uuid });
-            }
-            var data = new { source = list.ToArray() };
+            var data = new { sourceIdentity };
 
-            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v2/files/delete");
+            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v3/file/trash");
         }
     }
 }
