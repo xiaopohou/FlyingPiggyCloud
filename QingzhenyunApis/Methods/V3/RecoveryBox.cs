@@ -11,9 +11,9 @@ namespace QingzhenyunApis.Methods.V3
         /// 清空当前用户的回收站
         /// </summary>
         /// <returns></returns>
-        public static async Task<int?> Empty()
+        public static async Task<SuccessCount> Empty()
         {
-            return await PostAsync<int?>(JsonConvert.SerializeObject(new object()), "/v2/trash/truncate");
+            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(new object()), "/v3/trash/clear");
         }
 
         /// <summary>
@@ -23,10 +23,10 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="parentUUID">恢复到其他文件夹</param>
         /// <param name="parentPath">恢复到其他路径</param>
         /// <returns></returns>
-        public static async Task<int?> Restore(string[] targetUUID, string parentUUID = null, string parentPath = null)
+        public static async Task<SuccessCount> Restore(string[] sourceIdentity, string parentUUID = null, string parentPath = null)
         {
             dynamic data = new ExpandoObject();
-            data.source = targetUUID;
+            data.sourceIdentity = sourceIdentity;
             if (parentUUID != null)
             {
                 data.identity = parentUUID;
@@ -35,9 +35,16 @@ namespace QingzhenyunApis.Methods.V3
             {
                 data.path = parentPath;
             }
-            return await PostAsync<int?>(JsonConvert.SerializeObject(data), "/v2/trash/moveFromTrash");
+            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/trash/recover");
         }
 
+        public static async Task<RecoveryBoxPage> GetList(int start = 0, int limit = 20)
+        {
+            var data = new { start, limit };
+            return await PostAsync<RecoveryBoxPage>(JsonConvert.SerializeObject(data), "/v3/trashCan/list/");
+        }
+
+#warning 这个方法还没有实现
         /// <summary>
         /// 从回收站删除文件
         /// </summary>
@@ -46,12 +53,6 @@ namespace QingzhenyunApis.Methods.V3
         public static async Task<int?> Delete(string[] targetUUID)
         {
             return await PostAsync<int?>(JsonConvert.SerializeObject(targetUUID), "/v2/trash/delete");
-        }
-
-        public static async Task<RecoveryBoxPage> GetList(int start = 0, int limit = 20)
-        {
-            var data = new { start, limit };
-            return await PostAsync<RecoveryBoxPage>(JsonConvert.SerializeObject(data), "/v3/trashCan/list/");
         }
     }
 }
