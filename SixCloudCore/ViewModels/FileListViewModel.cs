@@ -99,7 +99,7 @@ namespace SixCloudCore.ViewModels
         /// <param name="identity"></param>
         /// <exception cref="RequestFailedException">未能找到目录</exception>
         /// <returns></returns>
-        protected virtual async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(string path = null, string identity = null)
+        public static async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(string path = null, string identity = null)
         {
             int start = 0;
             const int limit = 20;
@@ -107,7 +107,7 @@ namespace SixCloudCore.ViewModels
             do
             {
                 var x = await FileSystem.GetDirectory(identity, path, start, limit);
-                count = x.List.Length;
+                count = x.List.Count;
                 foreach (var item in x.List)
                 {
                     yield return item;
@@ -138,7 +138,7 @@ namespace SixCloudCore.ViewModels
             OnPropertyChanged(nameof(PathArray));
         }
 
-        public async void NavigateByUUID(string uuid)
+        public async void NavigateByUUIDAsync(string uuid)
         {
             previousPath.Push(CurrentPath);
             fileMetaDataEnumerator = CreateFileListEnumerator(identity: uuid);
@@ -266,7 +266,7 @@ namespace SixCloudCore.ViewModels
                     return;
                 }
 
-                NavigateByUUID(CurrentUUID);
+                NavigateByUUIDAsync(CurrentUUID);
             }
         }
         #endregion
@@ -348,7 +348,7 @@ namespace SixCloudCore.ViewModels
                     list.Add(a.UUID);
                 }
                 await FileSystem.Remove(list.ToArray());
-                NavigateByUUID(CurrentUUID);
+                NavigateByUUIDAsync(CurrentUUID);
             }
         }
 

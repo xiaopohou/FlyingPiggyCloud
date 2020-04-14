@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
@@ -43,7 +44,7 @@ namespace QingzhenyunApis.EntityModels
         /// 文件夹及文件列表
         /// </summary>
         [JsonProperty(PropertyName = "dataList")]
-        public FileMetaData[] List { get; set; }
+        public List<FileMetaData> List { get; set; }
 
         /// <summary>
         /// 当前目录MetaData

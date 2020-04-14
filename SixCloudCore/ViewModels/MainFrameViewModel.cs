@@ -18,7 +18,8 @@ namespace SixCloudCore.ViewModels
 
         public UploadedListViewModel UploadedList { get; private set; } = new UploadedListViewModel();
 
-        public OfflineTaskViewModel OfflineTask { get; private set; } = new OfflineTaskViewModel();
+#warning 此处暂未实现
+        //public OfflineTaskViewModel OfflineTask { get; private set; } = new OfflineTaskViewModel();
 
 
         public MainFrameViewModel(UserInformation currentUser)

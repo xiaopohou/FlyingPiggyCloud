@@ -13,21 +13,19 @@ namespace SixCloudCore.ViewModels
 {
     internal class RecoveryBoxViewModel : ViewModelBase
     {
-        private static readonly RecoveryBox recoveryBox = new RecoveryBox();
-
         public RecoveryBoxViewModel()
         {
             EmptyCommand = new DependencyCommand(Empty, DependencyCommand.AlwaysCan);
             DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
             RecoveryCommand = new DependencyCommand(Recovery, DependencyCommand.AlwaysCan);
-            recoveryBoxItemsEnumerator = LoadList().GetAsyncEnumerator();
+            recoveryBoxItemsEnumerator = CreateRecoveryBoxListEnumerator();
         }
 
         #region Empty
         public DependencyCommand EmptyCommand { get; private set; }
         private async void Empty(object parameter)
         {
-            await recoveryBox.Empty();
+            await RecoveryBox.Empty();
             App.Current.Dispatcher.Invoke(() => Refresh());
         }
         #endregion
@@ -44,7 +42,7 @@ namespace SixCloudCore.ViewModels
                 {
                     list.Add(a.Identity);
                 }
-                await recoveryBox.Delete(list.ToArray());
+                await RecoveryBox.Delete(list.ToArray());
                 Refresh();
             }
         }
@@ -62,7 +60,7 @@ namespace SixCloudCore.ViewModels
                 {
                     list.Add(a.Identity);
                 }
-                await recoveryBox.Restore(list.ToArray());
+                await RecoveryBox.Restore(list.ToArray());
                 Refresh();
             }
         }
@@ -70,28 +68,43 @@ namespace SixCloudCore.ViewModels
 
         public ObservableCollection<RecoveryBoxItem> RecoveryList { get; private set; } = new ObservableCollection<RecoveryBoxItem>();
 
-        private int currentPage = 0;
-        private IAsyncEnumerator<RecoveryBoxItem[]> recoveryBoxItemsEnumerator;
-        private async IAsyncEnumerable<RecoveryBoxItem[]> LoadList()
+        private IAsyncEnumerable<RecoveryBoxItem> recoveryBoxItemsEnumerator;
+        private async IAsyncEnumerable<RecoveryBoxItem> CreateRecoveryBoxListEnumerator()
         {
-            int totalPage;
+            int start = 0;
+            const int limit = 20;
+            int count;
             do
             {
-                var x = await recoveryBox.GetList(++currentPage);
-                totalPage = x.TotalPage;
-                yield return x.List;
-            } while (currentPage < totalPage);
+                var x = await RecoveryBox.GetList(start, limit);
+                count = x.List.Count;
+                foreach (var item in x.List)
+                {
+                    yield return item;
+                }
+                start += limit;
+            } while (count == limit);
             yield break;
         }
+
         public async Task LazyLoad()
         {
-            if (await recoveryBoxItemsEnumerator.MoveNextAsync())
+            try
             {
-                RecoveryBoxItem[] x = recoveryBoxItemsEnumerator.Current;
-                foreach (RecoveryBoxItem a in x)
+                int count = 0;
+                await foreach (var item in recoveryBoxItemsEnumerator)
                 {
-                    Application.Current.Dispatcher.Invoke(() => RecoveryList.Add(a));
+                    count++;
+                    App.Current.Dispatcher.Invoke(() => RecoveryList.Add(item));
+                    if (count >= 20)
+                    {
+                        break;
+                    }
                 }
+            }
+            catch (RequestFailedException ex)
+            {
+                MessageBox.Show($"加载目录失败，由于{ex.Message}");
             }
         }
 
@@ -99,8 +112,7 @@ namespace SixCloudCore.ViewModels
         {
             lock(RecoveryList)
             {
-                currentPage = 0;
-                recoveryBoxItemsEnumerator = LoadList().GetAsyncEnumerator();
+                recoveryBoxItemsEnumerator = CreateRecoveryBoxListEnumerator();
                 RecoveryList.Clear();
                 LazyLoad().Wait();
             }

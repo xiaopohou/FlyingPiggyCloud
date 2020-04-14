@@ -152,7 +152,7 @@ namespace SixCloudCore.Views
             }
             //懒加载的业务代码
             MainFrameViewModel vm = DataContext as MainFrameViewModel;
-            await vm.OfflineTask.LazyLoad();
+            //await vm.OfflineTask.LazyLoad();
             LazyLoadEventHandler += LazyLoad;
         }
 

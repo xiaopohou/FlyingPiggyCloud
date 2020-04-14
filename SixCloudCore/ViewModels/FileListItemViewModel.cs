@@ -5,7 +5,7 @@ using SixCloudCore.Views;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 
@@ -14,7 +14,6 @@ namespace SixCloudCore.ViewModels
     internal class FileListItemViewModel
     {
         private readonly FileListViewModel Parent;
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private static readonly Dictionary<string, string> IconDictionary = new Dictionary<string, string>
             {
                 {"default",'\uf15c'.ToString() },
@@ -217,7 +216,7 @@ namespace SixCloudCore.ViewModels
 
                     async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
                     {
-                        await foreach (FileMetaData child in GetChild(uuid))
+                        await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(identity: uuid))
                         {
                             if (!child.Directory)
                             {
@@ -233,35 +232,10 @@ namespace SixCloudCore.ViewModels
                                 }
                                 else
                                 {
-                                    System.Threading.ThreadPool.QueueUserWorkItem((state) => DownloadHelper(child.UUID, nextPath, 0).Wait(), null);
+                                    ThreadPool.QueueUserWorkItem((state) => DownloadHelper(child.UUID, nextPath, 0).Wait(), null);
                                 }
                             }
                         }
-                    }
-
-                    static async IAsyncEnumerable<FileMetaData> GetChild(string uuid)
-                    {
-                        int currentPage = 0;
-                        int totalPage;
-                        FileListPage x;
-                        do
-                        {
-                            try
-                            {
-                                x = await FileSystem.GetDirectoryAsPage(uuid, page: ++currentPage);
-                            }
-                            catch (RequestFailedException ex)
-                            {
-                                throw new DirectoryNotFoundException(ex.Message);
-                            }
-
-                            totalPage = x.FileListPageInfo.TotalPage;
-                            foreach (FileMetaData item in x.List)
-                            {
-                                yield return item;
-                            }
-                        } while (currentPage < totalPage);
-                        yield break;
                     }
                 }
                 else

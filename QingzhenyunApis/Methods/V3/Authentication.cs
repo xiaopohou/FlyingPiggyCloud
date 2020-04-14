@@ -55,7 +55,15 @@ namespace QingzhenyunApis.Methods.V3
                 Thread.Sleep(100);
                 x = await PostAsync<TokenInformation>(JsonConvert.SerializeObject(data), "/v3/user/checkDestination", isAnonymous: true);
             } while (x.Status == 10);
-            return x.Status == 100;
+            if (x.Status == 100)
+            {
+                Token = x.Token;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static async Task<bool> ChangeUserName(string newUserName)

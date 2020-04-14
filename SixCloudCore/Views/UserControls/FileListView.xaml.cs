@@ -24,7 +24,7 @@ namespace SixCloudCore.Views.UserControls
                 {
                     if (fileListItem.Directory)
                     {
-                        dataContext.NavigateByUUID(fileListItem.UUID);
+                        dataContext.NavigateByUUIDAsync(fileListItem.UUID);
                     }
                     else if (fileListItem.Preview)
                     {
