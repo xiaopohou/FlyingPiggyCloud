@@ -28,5 +28,15 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<PreviewVideoSubtitleList>(JsonConvert.SerializeObject(data), "/v3/subtitle/get");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="identity"></param>
+        /// <returns>和Video共用实体类，Height等字段将总是为0</returns>
+        public static async Task<PreviewVideoInformation> Audio(string identity)
+        {
+            var data = new { identity };
+            return await PostAsync<PreviewVideoInformation>(JsonConvert.SerializeObject(data), "/v3/preview/audio");
+        }
     }
 }
