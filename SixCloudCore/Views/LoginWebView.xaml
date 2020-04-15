@@ -7,9 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:SixCloudCore.Views"
     xmlns:controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
+    xmlns:userControl="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
     mc:Ignorable="d"
-    Title="登陆" Height="450" Width="800">
+    Title="登陆" Height="650" Width="400" AcrylicWindowStyle="NoIcon" WindowStartupLocation="CenterScreen">
     <Grid>
+        <userControl:LoadingControl HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <controls:WebView Source="{Binding LoginUrl,Mode=OneWay}" x:Name="mainContainer"/>
     </Grid>
 </fw:AcrylicWindow>
