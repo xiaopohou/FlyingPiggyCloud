@@ -19,8 +19,6 @@ namespace SixCloudCore.ViewModels
 {
     internal class FileListViewModel : ViewModelBase
     {
-        private bool canNavigate = true;
-
         public static string[] CopyList
         {
             get => s_copyList;
@@ -106,9 +104,9 @@ namespace SixCloudCore.ViewModels
             int count;
             do
             {
-                var x = await FileSystem.GetDirectory(identity, path, start, limit);
+                FileList x = await FileSystem.GetDirectory(identity, path, start, limit);
                 count = x.List.Count;
-                foreach (var item in x.List)
+                foreach (FileMetaData item in x.List)
                 {
                     yield return item;
                 }
@@ -138,25 +136,32 @@ namespace SixCloudCore.ViewModels
             OnPropertyChanged(nameof(PathArray));
         }
 
-        public async void NavigateByUUIDAsync(string uuid)
+        public async Task NavigateByUUID(string uuid)
         {
             previousPath.Push(CurrentPath);
             fileMetaDataEnumerator = CreateFileListEnumerator(identity: uuid);
-            var directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
+            FileMetaData directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
             CurrentPath = directoryInfo.Path;
             CurrentUUID = directoryInfo.UUID;
+            App.Current.Dispatcher.Invoke(() => FileList.Clear());
             CreatePathArray(CurrentPath);
             await LazyLoad();
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+        }
+
+        public async void NavigateByUUIDAsync(string uuid)
+        {
+            await NavigateByUUID(uuid);
         }
 
         public async Task NavigateByPath(string path)
         {
             previousPath.Push(CurrentPath);
             fileMetaDataEnumerator = CreateFileListEnumerator(path);
-            var directoryInfo = (await FileSystem.GetDirectory(path: path, start: 0, limit: 1)).DictionaryInformation;
+            FileMetaData directoryInfo = (await FileSystem.GetDirectory(path: path, start: 0, limit: 1)).DictionaryInformation;
             CurrentPath = directoryInfo.Path;
             CurrentUUID = directoryInfo.UUID;
+            App.Current.Dispatcher.Invoke(() => FileList.Clear());
             CreatePathArray(CurrentPath);
             await LazyLoad();
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
@@ -172,7 +177,7 @@ namespace SixCloudCore.ViewModels
             try
             {
                 int count = 0;
-                await foreach (var item in fileMetaDataEnumerator)
+                await foreach (FileMetaData item in fileMetaDataEnumerator)
                 {
                     count++;
                     App.Current.Dispatcher.Invoke(() => FileList.Add(new FileListItemViewModel(this, item)));
@@ -257,7 +262,7 @@ namespace SixCloudCore.ViewModels
             {
                 try
                 {
-                    var x = await Task.Run(() => FileSystem.CreatDirectory(FolderName, CurrentUUID));
+                    FileMetaData x = await Task.Run(() => FileSystem.CreatDirectory(FolderName, CurrentUUID));
 
                 }
                 catch (RequestFailedException ex)
