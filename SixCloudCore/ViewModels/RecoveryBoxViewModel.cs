@@ -18,7 +18,7 @@ namespace SixCloudCore.ViewModels
             EmptyCommand = new DependencyCommand(Empty, DependencyCommand.AlwaysCan);
             DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
             RecoveryCommand = new DependencyCommand(Recovery, DependencyCommand.AlwaysCan);
-            recoveryBoxItemsEnumerator = CreateRecoveryBoxListEnumerator();
+            Refresh();
         }
 
         #region Empty
@@ -110,12 +110,9 @@ namespace SixCloudCore.ViewModels
 
         public void Refresh()
         {
-            lock(RecoveryList)
-            {
-                recoveryBoxItemsEnumerator = CreateRecoveryBoxListEnumerator();
-                RecoveryList.Clear();
-                LazyLoad().Wait();
-            }
+            recoveryBoxItemsEnumerator = CreateRecoveryBoxListEnumerator();
+            RecoveryList.Clear();
+            Task.Run(LazyLoad);
         }
 
     }
