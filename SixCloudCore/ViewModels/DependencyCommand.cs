@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace SixCloudCore.ViewModels
@@ -10,14 +11,17 @@ namespace SixCloudCore.ViewModels
     /// <typeparam name="T2">CanExecute Parameter Type</typeparam>
     public class DependencyCommand : ICommand
     {
+        private bool IsAutoTryCatch { get; }
+
         protected readonly Action<object> ExecuteAction;
 
         protected readonly Func<object, bool> CanExecuteAction;
 
-        public DependencyCommand(Action<object> executeAction, Func<object, bool> canExecuteAction)
+        public DependencyCommand(Action<object> executeAction, Func<object, bool> canExecuteAction, bool isAutoTryCatch = true)
         {
             ExecuteAction = executeAction;
             CanExecuteAction = canExecuteAction;
+            IsAutoTryCatch = isAutoTryCatch;
         }
 
         public event EventHandler CanExecuteChanged;
@@ -56,6 +60,19 @@ namespace SixCloudCore.ViewModels
         /// <param name="parameter"></param>
         public virtual void Execute(object parameter)
         {
+            if (IsAutoTryCatch)
+            {
+                try
+                {
+                    ExecuteAction?.Invoke(parameter);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"失败，由于{ex.Message}", "请求失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                return;
+            }
+
             ExecuteAction?.Invoke(parameter);
         }
 
