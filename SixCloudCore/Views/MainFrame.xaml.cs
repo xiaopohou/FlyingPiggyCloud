@@ -49,7 +49,6 @@ namespace SixCloudCore.Views
             {
                 await mainFrameViewModel.FileVM.NavigateByPath("/");
             });
-            LazyLoadEventHandler += LazyLoad;
         }
 
         private void UserInformationMenu_MouseUp(object sender, MouseButtonEventArgs e)
@@ -127,75 +126,6 @@ namespace SixCloudCore.Views
             else
             {
                 list.ContextMenu.DataContext = list.SelectedItem;
-            }
-        }
-
-        private void OfflineList_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (e.OriginalSource is ScrollViewer viewer)
-            {
-                double bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
-                if (viewer.VerticalOffset > 0 && bottomOffset < 0.3)
-                {
-                    LazyLoadEventHandler?.Invoke(sender, e);
-                }
-            }
-        }
-
-        private ScrollChangedEventHandler LazyLoadEventHandler;
-
-        private async void LazyLoad(object sender, ScrollChangedEventArgs e)
-        {
-            lock (LazyLoadEventHandler)
-            {
-                LazyLoadEventHandler -= LazyLoad;
-            }
-            //懒加载的业务代码
-            MainFrameViewModel vm = DataContext as MainFrameViewModel;
-            //await vm.OfflineTask.LazyLoad();
-            LazyLoadEventHandler += LazyLoad;
-        }
-
-        private void UploadingTaskPause(object sender, ExecutedRoutedEventArgs e)
-        {
-            try
-            {
-                IList list = (IList)e.Parameter;
-                IEnumerable<UploadingTaskViewModel> downloadingTasks = list.Cast<UploadingTaskViewModel>();
-                foreach (UploadingTaskViewModel t in downloadingTasks)
-                {
-                    if (t.Status == UploadingTaskViewModel.UploadStatus.Pause)
-                    {
-                        t.Start();
-                    }
-                    else if (t.Status == UploadingTaskViewModel.UploadStatus.Running)
-                    {
-                        t.Pause();
-                    }
-                }
-
-            }
-            catch (Exception)
-            {
-                return;
-            }
-        }
-
-        private void UploadingTaskCancel(object sender, ExecutedRoutedEventArgs e)
-        {
-            try
-            {
-                IList list = (IList)e.Parameter;
-                IEnumerable<UploadingTaskViewModel> downloadingTasks = list.Cast<UploadingTaskViewModel>();
-                foreach (var t in downloadingTasks)
-                {
-                    t.Stop(null);
-                }
-
-            }
-            catch (Exception)
-            {
-
             }
         }
 
