@@ -120,7 +120,7 @@ namespace SixCloudCore.ViewModels
         internal async void NewPreView()
         {
 #warning 这里的代码还没有完成
-            if (PreviewType == 3010)
+            if (PreviewType == 3010 || Mime.Contains("video"))
             {
                 PreviewVideoInformation x = await Task.Run(() =>
                 {
