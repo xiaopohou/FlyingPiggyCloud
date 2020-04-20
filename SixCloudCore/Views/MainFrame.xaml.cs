@@ -73,49 +73,6 @@ namespace SixCloudCore.Views
         }
 
 
-        private void DownloadingTaskPause(object sender, ExecutedRoutedEventArgs e)
-        {
-            try
-            {
-                IList list = (IList)e.Parameter;
-                IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
-                foreach (DownloadingTaskViewModel t in downloadingTasks)
-                {
-                    if (t.Status == DownloadTask.TaskStatus.Pause)
-                    {
-                        t.Start();
-                    }
-                    else if (t.Status == DownloadTask.TaskStatus.Running)
-                    {
-                        t.Pause();
-                    }
-                }
-
-            }
-            catch (Exception)
-            {
-
-            }
-        }
-
-        private void DownloadingTaskCancel(object sender, ExecutedRoutedEventArgs e)
-        {
-            try
-            {
-                IList list = (IList)e.Parameter;
-                IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
-                foreach (DownloadingTaskViewModel t in downloadingTasks.ToArray())
-                {
-                    t.Stop();
-                }
-
-            }
-            catch (Exception)
-            {
-
-            }
-        }
-
         private void DownloadedList_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             ListBox list = sender as ListBox;

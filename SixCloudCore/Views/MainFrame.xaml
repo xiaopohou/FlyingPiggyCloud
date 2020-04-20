@@ -38,7 +38,6 @@
 
         <usercontrols:SizeCalculator x:Key="SizeCalculator"/>
 
-        <vm:StatusToVisibility x:Key="StatusToVisibility"/>
 
         <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignToolToggleListBoxItem}">
             <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -91,69 +90,7 @@
 
         <!--下载列表-->
         <metro:FluentTabItem Icon="&#xF103;" IconMove="&#xF103;" Header="正在下载">
-            <Grid Background="White" Margin="30,40,15,15">
-                <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
-                    <Button HorizontalAlignment="Left"
-                            Style="{DynamicResource MaterialDesignFlatButton}"
-                            VerticalAlignment="Center" Margin="5,0"
-                            Command="MediaCommands.Play"
-                            CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
-                            CommandTarget="{Binding ElementName=DownloadingList}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                            <TextBlock Text="开始/暂停任务" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button HorizontalAlignment="Left" 
-                            Style="{DynamicResource MaterialDesignFlatButton}" 
-                            VerticalAlignment="Center" Margin="5,0" 
-                            Command="MediaCommands.Stop"
-                            CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
-                            CommandTarget="{Binding ElementName=DownloadingList}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                            <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-                <ListBox SelectionMode="Multiple" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Height="48">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="1*"/>
-                                    <RowDefinition Height="1*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="48"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
-                                <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="48" Value="{Binding Progress, Mode=OneWay}" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
-                                <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                    <TextBlock Text="任务进度："/>
-                                    <TextBlock Text="{Binding Progress, Mode=OneWay}"/>
-                                    <TextBlock Text="%"/>
-                                </StackPanel>
-                                <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
-                                <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                    <TextBlock Text="暂停，等待中..." Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
-                                    <TextBlock Text="{Binding Completed, Mode=OneWay}"/>
-                                    <TextBlock Text="/"/>
-                                    <TextBlock Text="{Binding Total, Mode=OneWay}"/>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.CommandBindings>
-                        <CommandBinding Command="MediaCommands.Play" Executed="DownloadingTaskPause"/>
-                        <CommandBinding Command="MediaCommands.Stop" Executed="DownloadingTaskCancel"/>
-                    </ListBox.CommandBindings>
-                </ListBox>
-            </Grid>
+            <usercontrols:DownloadingTaskView Background="White" Margin="30,40,15,15"/>
         </metro:FluentTabItem>
 
         <!--下载完成-->
