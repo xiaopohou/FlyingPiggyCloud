@@ -76,7 +76,18 @@ namespace SixCloudCore.FileUploader
 
         public bool TaskOperate(UploadTaskStatus todo)
         {
-            throw new System.NotImplementedException();
+            switch (todo)
+            {
+                case UploadTaskStatus.Abort:
+                case UploadTaskStatus.Pause:
+                    SixUploader.Status = UploadTaskStatusEnum.Paused;
+                    break;
+                default:
+                    SixUploader.Status = UploadTaskStatusEnum.Uploading;
+                    break;
+            }
+            return true;
+            //throw new System.NotImplementedException();
         }
     }
 

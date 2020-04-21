@@ -79,11 +79,11 @@ namespace SixCloudCore.FileUploader
         private UploadTaskStatus uploadTaskStatus;
         private readonly object syncUploadTaskStatusObject = new object();
 
-        public SliceUploadTask(string filePath, string token, Uri uploadUrl)
+        public SliceUploadTask(string filePath, string token, string uploadUrl)
         {
             FilePath = filePath;
             Token = token;
-            Address = uploadUrl.AbsoluteUri;
+            Address = uploadUrl;
             UploadBatch = Guid.NewGuid().ToString();
             TotalBytes = new FileInfo(filePath).Length;
             TotalBlockCount = (TotalBytes + SliceUploadWorker.BLOCKSIZE - 1) / SliceUploadWorker.BLOCKSIZE;

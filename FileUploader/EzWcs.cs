@@ -10,7 +10,7 @@ namespace SixCloudCore.FileUploader
 
         private static readonly SimpleUploadWorker simpleUploadWorker = new SimpleUploadWorker();
 
-        public static IUploadTask NewTask(string filePath, string token, Uri directAddress,Uri partedAddress)
+        public static IUploadTask NewTask(string filePath, string token, Uri directAddress, Uri partedAddress)
         {
             //var taskInfo = new UploadTaskInfo()
             //{
@@ -31,17 +31,17 @@ namespace SixCloudCore.FileUploader
             ////Console.WriteLine("Upload speed: " + task.Speed); //获取上传速度
             ////Console.WriteLine("Upload progress rate: " + (task.UploadedSize / (float)task.Info.FileSize * 100).ToString("F") + "%"); //进度需要自己计算
             //task.StartUpload();
-            //return task;
+            //return new UploadTask(task);
             FileInfo fileInfo = new FileInfo(filePath);
             if (fileInfo.Length < SliceUploadWorker.BLOCKSIZE)
             {
-                SimpleUploadTask task = new SimpleUploadTask(filePath, token, directAddress);
+                SimpleUploadTask task = new SimpleUploadTask(filePath, token, partedAddress.AbsoluteUri.Remove(partedAddress.AbsoluteUri.Length - 1));
                 simpleUploadWorker.AddTask(task);
                 return task;
             }
             else
             {
-                SliceUploadTask task = new SliceUploadTask(filePath, token, partedAddress);
+                SliceUploadTask task = new SliceUploadTask(filePath, token, partedAddress.AbsoluteUri.Remove(partedAddress.AbsoluteUri.Length - 1));
                 sliceUploadWorker.AddTask(task);
                 return task;
             }

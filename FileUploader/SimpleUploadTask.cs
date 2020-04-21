@@ -53,11 +53,11 @@ namespace SixCloudCore.FileUploader
         private UploadTaskStatus uploadTaskStatus;
         private readonly object syncUploadTaskStatusObject = new object();
 
-        public SimpleUploadTask(string filePath, string token, Uri uploadUrl)
+        public SimpleUploadTask(string filePath, string token, string uploadUrl)
         {
             FilePath = filePath;
             Token = token;
-            Address = uploadUrl.AbsoluteUri;
+            Address = uploadUrl;
             TotalBytes = new FileInfo(filePath).Length;
             UploadTaskStatus = UploadTaskStatus.Active;
         }
