@@ -115,7 +115,8 @@ namespace QingzhenyunApis.Methods.V3
                 data.hash = hash;
             }
 
-            return await PostAsync<UploadToken>(JsonConvert.SerializeObject(data), "/v3/file/uploadToken");
+            var x = await PostAsync<UploadToken>(JsonConvert.SerializeObject(data), "/v3/file/uploadToken");
+            return x;
         }
 
         /// <summary>

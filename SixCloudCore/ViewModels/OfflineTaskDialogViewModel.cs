@@ -278,7 +278,7 @@ namespace SixCloudCore.ViewModels
                 string targetPath = "/:torrent";
                 string filePath = openFileDialog.FileName;
                 var x = await FileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
-                IUploadTask task = EzWcs.NewTask(filePath, x.UploadInfo.Token, x.UploadInfo.UploadUrl);
+                IUploadTask task = EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl,x.PartUploadUrl);
                 bool uploadSuccess = true;
                 await Task.Run(() =>
                 {

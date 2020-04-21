@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace SixCloudCore.FileUploader
 {
@@ -52,11 +53,11 @@ namespace SixCloudCore.FileUploader
         private UploadTaskStatus uploadTaskStatus;
         private readonly object syncUploadTaskStatusObject = new object();
 
-        public SimpleUploadTask(string filePath, string token, string uploadUrl)
+        public SimpleUploadTask(string filePath, string token, Uri uploadUrl)
         {
             FilePath = filePath;
             Token = token;
-            Address = uploadUrl;
+            Address = uploadUrl.AbsoluteUri;
             TotalBytes = new FileInfo(filePath).Length;
             UploadTaskStatus = UploadTaskStatus.Active;
         }

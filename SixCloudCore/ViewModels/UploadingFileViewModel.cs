@@ -1,10 +1,10 @@
-﻿using SixCloudCore.FileUploader;
-using SixCloudCore.FileUploader.Calculators;
-using QingzhenyunApis.EntityModels;
+﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
+using SixCloudCore.FileUploader;
+using SixCloudCore.FileUploader.Calculators;
 using System;
 using System.IO;
-using QingzhenyunApis.Methods.V3;
 
 namespace SixCloudCore.ViewModels
 {
@@ -16,13 +16,13 @@ namespace SixCloudCore.ViewModels
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
             string hash = ETag.ComputeEtag(filePath);
-            var x = FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
-            if (x.HashCached)
-            {
-                task = new HashCachedTask();
-                return;
-            }
-            task = EzWcs.NewTask(filePath, x.UploadInfo.Token, x.UploadInfo.UploadUrl);
+            UploadToken x = FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
+            //if (x.HashCached)
+            //{
+            //    task = new HashCachedTask();
+            //    return;
+            //}
+            task = EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
         }
 
         private readonly IUploadTask task;
