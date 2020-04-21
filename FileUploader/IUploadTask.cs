@@ -1,4 +1,7 @@
-﻿namespace SixCloudCore.FileUploader
+﻿using SixTransporter.UploadEngine;
+using System;
+
+namespace SixCloudCore.FileUploader
 {
     public interface IUploadTask
     {
@@ -31,6 +34,50 @@
         /// <param name="todo">可选的取值：Active/Pause/Abort</param>
         /// <returns>指示状态变更是否成功</returns>
         bool TaskOperate(UploadTaskStatus todo);
+    }
+
+    public class UploadTask : IUploadTask
+    {
+        private SixUploader SixUploader { get; }
+
+        public string FilePath => SixUploader.Info.FilePath;
+
+        public string Token => SixUploader.Info.Token;
+
+        public string Address => SixUploader.Info.UploadUrl;
+
+        public long CompletedBytes => SixUploader.UploadedSize;
+
+        public string Hash => SixUploader.Info.FileHash;
+
+        public long TotalBytes => SixUploader.Info.FileSize;
+
+        public UploadTaskStatus UploadTaskStatus
+        {
+            get
+            {
+                return SixUploader.Status switch
+                {
+                    UploadTaskStatusEnum.Completed => UploadTaskStatus.Completed,
+                    UploadTaskStatusEnum.Faulted => UploadTaskStatus.Error,
+                    UploadTaskStatusEnum.Hashing => UploadTaskStatus.Active,
+                    UploadTaskStatusEnum.Paused => UploadTaskStatus.Pause,
+                    UploadTaskStatusEnum.Uploading => UploadTaskStatus.Active,
+                    UploadTaskStatusEnum.Waiting => UploadTaskStatus.Active,
+                    _ => throw new ArgumentException(),
+                };
+            }
+        }
+
+        internal UploadTask(SixUploader sixUploader)
+        {
+            SixUploader = sixUploader;
+        }
+
+        public bool TaskOperate(UploadTaskStatus todo)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     public enum UploadTaskStatus
