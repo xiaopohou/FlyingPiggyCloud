@@ -8,10 +8,6 @@
              xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <vm:StatusToVisibility x:Key="StatusToVisibility"/>
-    </UserControl.Resources>
-
     <Grid>
         <ListBox ContextMenuOpening="DownloadedList_ContextMenuOpening" x:Name="DownloadedList" DataContext="{Binding DownloadedList}" ItemsSource="{Binding ObservableCollection}">
             <ListBox.ItemTemplate>
