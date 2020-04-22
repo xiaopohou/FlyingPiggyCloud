@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Utils;
 using System;
 using System.Collections.Generic;

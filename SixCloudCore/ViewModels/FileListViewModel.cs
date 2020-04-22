@@ -1,4 +1,5 @@
 ﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Views;
 using System;

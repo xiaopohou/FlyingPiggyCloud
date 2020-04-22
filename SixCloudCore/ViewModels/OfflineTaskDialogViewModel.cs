@@ -1,6 +1,7 @@
 ﻿//using Exceptionless;
 using Microsoft.Win32;
 using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.FileUploader;
 using System;
