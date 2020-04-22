@@ -18,18 +18,4 @@ namespace QingzhenyunApis.Exceptions
         public string Status { get; set; }
     }
 
-
-    public sealed class NeedPasswordException : Exception
-    {
-        internal NeedPasswordException(string message) : base(message) { }
-        internal NeedPasswordException(string message, Exception inner) : base(message, inner) { }
-    }
-
-
-    public sealed class UnsupportUrlException : Exception
-    {
-        internal UnsupportUrlException(string message) : base(message) { }
-        internal UnsupportUrlException(string message, Exception inner) : base(message, inner) { }
-    }
-
 }
