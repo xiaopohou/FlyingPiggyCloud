@@ -104,7 +104,7 @@
         </metro:FluentTabItem>
 
         <!--上传完成-->
-        <metro:FluentTabItem Icon="&#xF560;" IconMove="&#xF560;" Header="上传完成">
+        <metro:FluentTabItem  DataContext="{Binding UploadedList}" Icon="&#xF560;" IconMove="&#xF560;" Header="上传完成">
             <usercontrols:UploadedListView  Background="White" Margin="30,40,15,15"/>
         </metro:FluentTabItem>
 
