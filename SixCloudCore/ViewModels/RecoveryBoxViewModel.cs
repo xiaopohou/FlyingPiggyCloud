@@ -68,21 +68,21 @@ namespace SixCloudCore.ViewModels
 
         public ObservableCollection<RecoveryBoxItem> RecoveryList { get; private set; } = new ObservableCollection<RecoveryBoxItem>();
 
-        private IAsyncEnumerable<RecoveryBoxItem> recoveryBoxItemsEnumerator;
+        private IAsyncEnumerator<RecoveryBoxItem> recoveryBoxItemsEnumerator;
         private async IAsyncEnumerable<RecoveryBoxItem> CreateRecoveryBoxListEnumerator()
         {
-            int start = 0;
+            int skip = 0;
             const int limit = 20;
             int count;
             do
             {
-                var x = await RecoveryBox.GetList(start, limit);
+                var x = await RecoveryBox.GetList(skip, limit);
                 count = x.List.Count;
                 foreach (var item in x.List)
                 {
                     yield return item;
                 }
-                start += limit;
+                skip += limit;
             } while (count == limit);
             yield break;
         }
@@ -91,12 +91,13 @@ namespace SixCloudCore.ViewModels
         {
             try
             {
-                int count = 0;
-                await foreach (var item in recoveryBoxItemsEnumerator)
+                for (int count = 0; count < 20; count++)
                 {
-                    count++;
-                    App.Current.Dispatcher.Invoke(() => RecoveryList.Add(item));
-                    if (count >= 20)
+                    if (await recoveryBoxItemsEnumerator.MoveNextAsync())
+                    {
+                        App.Current.Dispatcher.Invoke(() => RecoveryList.Add(recoveryBoxItemsEnumerator.Current));
+                    }
+                    else
                     {
                         break;
                     }
@@ -110,7 +111,7 @@ namespace SixCloudCore.ViewModels
 
         public void Refresh()
         {
-            recoveryBoxItemsEnumerator = CreateRecoveryBoxListEnumerator();
+            recoveryBoxItemsEnumerator = CreateRecoveryBoxListEnumerator().GetAsyncEnumerator();
             RecoveryList.Clear();
             Task.Run(LazyLoad);
         }

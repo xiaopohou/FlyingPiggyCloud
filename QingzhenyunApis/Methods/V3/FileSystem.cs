@@ -69,7 +69,7 @@ namespace QingzhenyunApis.Methods.V3
                 data.parentPath = "/";
             }
 
-            data.start = start;
+            data.skip = start;
             data.limit = limit;
             return await PostAsync<FileList>(JsonConvert.SerializeObject(data), "/v3/files/list");
         }

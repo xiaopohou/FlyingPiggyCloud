@@ -38,9 +38,9 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/trash/recover");
         }
 
-        public static async Task<RecoveryBoxPage> GetList(int start = 0, int limit = 20)
+        public static async Task<RecoveryBoxPage> GetList(int skip = 0, int limit = 20)
         {
-            var data = new { start, limit };
+            var data = new { skip, limit };
             return await PostAsync<RecoveryBoxPage>(JsonConvert.SerializeObject(data), "/v3/trashCan/list/");
         }
 
