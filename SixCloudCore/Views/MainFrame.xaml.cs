@@ -51,10 +51,10 @@ namespace SixCloudCore.Views
             });
         }
 
-        private void UserInformationMenu_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-        }
+        //private void UserInformationMenu_MouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    e.Handled = true;
+        //}
 
         private void FileListContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
