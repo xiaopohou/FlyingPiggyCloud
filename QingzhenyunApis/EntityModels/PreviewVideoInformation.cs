@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class PreviewVideoInformation
+    public class PreviewInformation
     {
         /// <summary>
         /// 高度

@@ -7,7 +7,9 @@ namespace QingzhenyunApis.Methods.V3
 {
     public sealed class OfflineDownloader : SixCloudMethodBase
     {
-        public async Task<OfflineTaskParseUrl[]> ParseUrl(string[] urls)
+
+
+        public static async Task<OfflineTaskParseUrl[]> ParseUrl(string[] urls)
         {
             StringBuilder stringBuilder = new StringBuilder();
             foreach (string url in urls)
@@ -18,33 +20,27 @@ namespace QingzhenyunApis.Methods.V3
             var data = new { url = stringBuilder.ToString() };
             return await PostAsync<OfflineTaskParseUrl[]>(JsonConvert.SerializeObject(data), "/v2/offline/parseUrl");
         }
-
-        public async Task<OfflineTaskParseUrl[]> ParseUrl(string url, string password = null)
+        public static async Task<OfflineTaskParseUrl[]> ParseUrl(string url, string password = null)
         {
             var data = password != null ? (object)new { url, password } : new { url };
             return await PostAsync<OfflineTaskParseUrl[]>(JsonConvert.SerializeObject(data), "/v2/offline/parseUrl");
         }
-
-
-        public async Task<OfflineTaskParseUrl[]> ParseTorrent(string[] hashs)
+        public static async Task<OfflineTaskParseUrl[]> ParseTorrent(string[] hashs)
         {
             var data = new { hash = hashs };
             return await PostAsync<OfflineTaskParseUrl[]>(JsonConvert.SerializeObject(data), "/v2/offline/parseTorrent");
         }
-
-        public async Task<OfflineTaskAdd> Add(string path, OfflineTaskParameters[] taskParameters)
+        public static async Task<OfflineTaskAdd> Add(string path, OfflineTaskParameters[] taskParameters)
         {
             var data = new { path, task = taskParameters };
             return await PostAsync<OfflineTaskAdd>(JsonConvert.SerializeObject(data), "/v2/offline/add");
         }
-
-        public async Task<OfflineTaskList> GetList(int page = 1, int pageSize = 20)
+        public static async Task<OfflineTaskList> GetList(int page = 1, int pageSize = 20)
         {
             var data = new { page, pageSize };
             return await PostAsync<OfflineTaskList>(JsonConvert.SerializeObject(data), "/v2/offline/page");
         }
-
-        public async Task<int> DeleteTask(string[] identities)
+        public static async Task<int> DeleteTask(string[] identities)
         {
             var data = new { identities };
             return await PostAsync<int>(JsonConvert.SerializeObject(data), "/v2/offline/delete");

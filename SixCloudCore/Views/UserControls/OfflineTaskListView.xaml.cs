@@ -34,6 +34,7 @@ namespace SixCloudCore.Views.UserControls
             {
                 LazyLoadEventHandler -= LazyLoad;
             }
+#warning 离线下载接口尚未完成
             //懒加载的业务代码
             //await (DataContext as OfflineTaskViewModel)?.LazyLoad();
             LazyLoadEventHandler += LazyLoad;

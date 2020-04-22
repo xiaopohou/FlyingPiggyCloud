@@ -122,7 +122,7 @@ namespace SixCloudCore.ViewModels
 #warning 这里的代码还没有完成
             if (PreviewType == 3010 || Mime.Contains("video"))
             {
-                PreviewVideoInformation x = await Task.Run(() =>
+                PreviewInformation x = await Task.Run(() =>
                 {
                     return QingzhenyunApis.Methods.V3.Preview.Video(UUID);
                 });

@@ -11,10 +11,10 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="identity"></param>
         /// <returns></returns>
-        public static async Task<PreviewVideoInformation> Video(string identity)
+        public static async Task<PreviewInformation> Video(string identity)
         {
             var data = new { identity };
-            return await PostAsync<PreviewVideoInformation>(JsonConvert.SerializeObject(data), "/v3/preview/video");
+            return await PostAsync<PreviewInformation>(JsonConvert.SerializeObject(data), "/v3/preview/video");
         }
 
         /// <summary>
@@ -29,14 +29,25 @@ namespace QingzhenyunApis.Methods.V3
         }
 
         /// <summary>
-        /// 
+        /// 获取音频预览地址
         /// </summary>
         /// <param name="identity"></param>
         /// <returns>和Video共用实体类，Height等字段将总是为0</returns>
-        public static async Task<PreviewVideoInformation> Audio(string identity)
+        public static async Task<PreviewInformation> Audio(string identity)
         {
             var data = new { identity };
-            return await PostAsync<PreviewVideoInformation>(JsonConvert.SerializeObject(data), "/v3/preview/audio");
+            return await PostAsync<PreviewInformation>(JsonConvert.SerializeObject(data), "/v3/preview/audio");
+        }
+
+        /// <summary>
+        /// 获取图片预览地址
+        /// </summary>
+        /// <param name="identity"></param>
+        /// <returns></returns>
+        public static async Task<PreviewInformation> Picture(string identity)
+        {
+            var data = new { identity };
+            return await PostAsync<PreviewInformation>(JsonConvert.SerializeObject(data), "/v3/preview/image");
         }
     }
 }

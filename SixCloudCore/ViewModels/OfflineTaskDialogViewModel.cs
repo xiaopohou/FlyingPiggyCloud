@@ -18,7 +18,6 @@ namespace SixCloudCore.ViewModels
 {
     internal class OfflineTaskDialogViewModel : ViewModelBase
     {
-        private readonly OfflineDownloader offlineDownloader = new OfflineDownloader();
         private string inputBoxString;
         private OfflineUrlsDialogStage stage = OfflineUrlsDialogStage.WhichType;
 
@@ -102,7 +101,7 @@ namespace SixCloudCore.ViewModels
                 OfflineTaskParseUrl[] x;
                 try
                 {
-                    x = await parent.offlineDownloader.ParseUrl(SourceUrl, SharePassword);
+                    x = await OfflineDownloader.ParseUrl(SourceUrl, SharePassword);
                     if (x.Length == 0)
                     {
                         Status = ParseResultStatus.InvalidUrl;
@@ -289,7 +288,7 @@ namespace SixCloudCore.ViewModels
                     {
                         if (timeoutIndex++ > 50)
                         {
-                            App.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show("种子文件上传失败"));
+                            App.Current.Dispatcher.Invoke(() => MessageBox.Show("种子文件上传失败"));
                             uploadSuccess = false;
                             return;
                         }
@@ -302,7 +301,7 @@ namespace SixCloudCore.ViewModels
                     return;
                 }
 
-                OfflineTaskParseUrl[] parseResult = await offlineDownloader.ParseTorrent(new string[] { task.Hash });
+                OfflineTaskParseUrl[] parseResult = await OfflineDownloader.ParseTorrent(new string[] { task.Hash });
                 foreach (OfflineTaskParseUrl result in parseResult)
                 {
                     ParseResults.Add(new ParseResult(result, this));
@@ -341,7 +340,7 @@ namespace SixCloudCore.ViewModels
             string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
             try
             {
-                var tasks = await offlineDownloader.Add(savingPath, OfflineTaskParameters);
+                var tasks = await OfflineDownloader.Add(savingPath, OfflineTaskParameters);
 
             }
             catch (RequestFailedException ex)

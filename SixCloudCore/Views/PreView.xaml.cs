@@ -50,7 +50,7 @@ namespace SixCloudCore.Views
                           }
                       case ResourceType.Video:
                           {
-                              PreviewVideoInformation p = parameter as PreviewVideoInformation;
+                              PreviewInformation p = parameter as PreviewInformation;
                               ImageContainer.Visibility = Visibility.Collapsed;
                               string address = uri;
                               string content = Properties.Resources.PreviewContainer.Replace("{{uri}}", address);
