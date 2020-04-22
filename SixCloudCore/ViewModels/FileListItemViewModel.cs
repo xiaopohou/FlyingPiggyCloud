@@ -216,7 +216,7 @@ namespace SixCloudCore.ViewModels
 
                     async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
                     {
-                        await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(identity: uuid))
+                        await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(0, identity: uuid))
                         {
                             if (!child.Directory)
                             {

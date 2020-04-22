@@ -88,7 +88,7 @@ namespace SixCloudCore.ViewModels
         /// <summary>
         /// 保存LazyLoad状态的枚举器
         /// </summary>
-        protected IAsyncEnumerable<FileMetaData> fileMetaDataEnumerator;
+        protected IAsyncEnumerator<FileMetaData> fileMetaDataEnumerator;
 
         /// <summary>
         /// 创建指定路径或uuid目录内容的枚举器
@@ -97,9 +97,9 @@ namespace SixCloudCore.ViewModels
         /// <param name="identity"></param>
         /// <exception cref="RequestFailedException">未能找到目录</exception>
         /// <returns></returns>
-        public static async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(string path = null, string identity = null)
+        public static async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(int skip, string path = null, string identity = null)
         {
-            int start = 0;
+            int start = skip;
             const int limit = 20;
             int count;
             do
@@ -139,7 +139,7 @@ namespace SixCloudCore.ViewModels
         public async Task NavigateByUUID(string uuid)
         {
             previousPath.Push(CurrentPath);
-            fileMetaDataEnumerator = CreateFileListEnumerator(identity: uuid);
+            fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: uuid).GetAsyncEnumerator();
             FileMetaData directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
             CurrentPath = directoryInfo.Path;
             CurrentUUID = directoryInfo.UUID;
@@ -157,7 +157,7 @@ namespace SixCloudCore.ViewModels
         public async Task NavigateByPath(string path)
         {
             previousPath.Push(CurrentPath);
-            fileMetaDataEnumerator = CreateFileListEnumerator(path);
+            fileMetaDataEnumerator = CreateFileListEnumerator(0, path).GetAsyncEnumerator();
             FileMetaData directoryInfo = (await FileSystem.GetDirectory(path: path, start: 0, limit: 1)).DictionaryInformation;
             CurrentPath = directoryInfo.Path;
             CurrentUUID = directoryInfo.UUID;
@@ -176,12 +176,13 @@ namespace SixCloudCore.ViewModels
         {
             try
             {
-                int count = 0;
-                await foreach (FileMetaData item in fileMetaDataEnumerator)
+                for (int count = 0; count < 20; count++)
                 {
-                    count++;
-                    App.Current.Dispatcher.Invoke(() => FileList.Add(new FileListItemViewModel(this, item)));
-                    if (count >= 20)
+                    if (await fileMetaDataEnumerator.MoveNextAsync())
+                    {
+                        App.Current.Dispatcher.Invoke(() => FileList.Add(new FileListItemViewModel(this, fileMetaDataEnumerator.Current)));
+                    }
+                    else
                     {
                         break;
                     }
