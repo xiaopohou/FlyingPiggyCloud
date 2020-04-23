@@ -47,7 +47,7 @@ namespace SixCloudCore.ViewModels
                 InvalidUrl
             }
 
-            public string Name => parseResult.Name;
+            public string Name => parseResult.Info.Name;
 
             public string FriendlyErrorInfo => Status switch
             {
@@ -60,11 +60,11 @@ namespace SixCloudCore.ViewModels
 
             public Visibility FriendlyErrorInfoVisibility => FriendlyErrorInfo == null ? Visibility.Collapsed : Visibility.Visible;
 
-            public string Identity => parseResult.Identity;
+            public string Identity => parseResult.Info.Identity;
 
-            public long Size => parseResult.Size;
+            public long Size => parseResult.Info.Size;
 
-            public IList<OfflineTaskParseFile> Files => parseResult.Files;
+            public IList<OfflineTaskParseFile> Files => parseResult.Info.DataList;
 
             /// <summary>
             /// 任务解析状态
@@ -278,7 +278,7 @@ namespace SixCloudCore.ViewModels
                 string targetPath = "/:torrent";
                 string filePath = openFileDialog.FileName;
                 var x = await FileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
-                IUploadTask task = EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl,x.PartUploadUrl);
+                IUploadTask task = EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
                 bool uploadSuccess = true;
                 await Task.Run(() =>
                 {
