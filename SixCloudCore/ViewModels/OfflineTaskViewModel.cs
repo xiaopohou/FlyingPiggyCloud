@@ -14,7 +14,6 @@ namespace SixCloudCore.ViewModels
     internal class OfflineTaskViewModel : ViewModelBase
     {
         public ObservableCollection<OfflineTask> ObservableCollection { get; private set; } = new ObservableCollection<OfflineTask>();
-        private readonly OfflineDownloader downloader = new OfflineDownloader();
 
         private IAsyncEnumerator<OfflineTask[]> listEnumerator;
         private async IAsyncEnumerable<OfflineTask[]> GetListEnumeratorAsync()
@@ -23,7 +22,7 @@ namespace SixCloudCore.ViewModels
             int totalPage;
             do
             {
-                var x = await downloader.GetList(++currentPage);
+                var x = await OfflineDownloader.GetList(++currentPage);
                 totalPage = x.TotalPage;
                 yield return x.List;
             } while (currentPage < totalPage);
@@ -68,7 +67,7 @@ namespace SixCloudCore.ViewModels
                 {
                     taskID.Add(task.Identity);
                 }
-                await Task.Run(() => downloader.DeleteTask(taskID.ToArray()));
+                await Task.Run(() => OfflineDownloader.DeleteTask(taskID.ToArray()));
                 RefreshList();
             }
         }
