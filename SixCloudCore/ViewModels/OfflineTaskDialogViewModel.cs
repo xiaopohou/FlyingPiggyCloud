@@ -98,27 +98,23 @@ namespace SixCloudCore.ViewModels
                 {
                     throw new InvalidOperationException("Url为空");
                 }
-                OfflineTaskParseUrl[] x;
+
                 try
                 {
-                    x = await OfflineDownloader.ParseUrl(SourceUrl, SharePassword);
-                    if (x.Length == 0)
-                    {
-                        Status = ParseResultStatus.InvalidUrl;
-                    }
-                    else
-                    {
-                        parseResult = x[0];
-                        Status = ParseResultStatus.Success;
-                    }
+                    parseResult = await OfflineDownloader.ParseUrl(SourceUrl, password: SharePassword);
+                    Status = ParseResultStatus.Success;
+                }
+                catch (NeedPasswordException)
+                {
+                    Status = ParseResultStatus.PasswordRequired;
+                }
+                catch (UnsupportUrlException)
+                {
+                    Status = ParseResultStatus.InvalidUrl;
                 }
                 catch (RequestFailedException ex)
                 {
-                    if (ex.Code == "PASSWORD_NEED")
-                    {
-                        Status = ParseResultStatus.PasswordRequired;
-                    }
-                    else if (ex.Code == "SHARE_IS_EMPTY")
+                    if (ex.Code == "SHARE_IS_EMPTY")
                     {
                         Status = ParseResultStatus.InvalidUrl;
                     }

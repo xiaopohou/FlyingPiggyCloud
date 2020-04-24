@@ -11,11 +11,11 @@ namespace QingzhenyunApis.Exceptions
         [JsonProperty(PropertyName = "message")]
         public new string Message { get; set; }
 
-        [JsonProperty(PropertyName = "code")]
+        [JsonProperty(PropertyName = "reference")]
         public string Code { get; set; }
 
         [JsonProperty(PropertyName = "status")]
-        public string Status { get; set; }
+        public int Status { get; set; }
     }
 
 }
