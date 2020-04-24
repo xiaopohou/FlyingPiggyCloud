@@ -297,12 +297,7 @@ namespace SixCloudCore.ViewModels
                     return;
                 }
 
-                OfflineTaskParseUrl[] parseResult = await OfflineDownloader.ParseTorrent(new string[] { task.Hash });
-                foreach (OfflineTaskParseUrl result in parseResult)
-                {
-                    ParseResults.Add(new ParseResult(result, this));
-                }
-
+                ParseResults.Add(new ParseResult(await OfflineDownloader.ParseUrl(fileHash: task.Hash), this));
                 IEnumerable<OfflineTaskParameters> taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
                 OfflineTaskParameters = taskParameters.ToArray();
 
@@ -321,8 +316,8 @@ namespace SixCloudCore.ViewModels
             {
                 foreach (var ignoreFile in ignoreList)
                 {
-                    OfflineTaskParameters[ignoreFile.Index].IginreFiles = OfflineTaskParameters[ignoreFile.Index].IginreFiles ?? new List<string>();
-                    OfflineTaskParameters[ignoreFile.Index].IginreFiles.Add(ignoreFile.PathIdentity);
+                    OfflineTaskParameters[ignoreFile.Index].Ignores = OfflineTaskParameters[ignoreFile.Index].Ignores ?? new List<string>();
+                    OfflineTaskParameters[ignoreFile.Index].Ignores.Add(ignoreFile.PathIdentity);
                 }
             }
             Stage = OfflineUrlsDialogStage.SelectSavingPath;
