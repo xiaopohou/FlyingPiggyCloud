@@ -101,7 +101,7 @@ namespace SixCloudCore.ViewModels
 
                 try
                 {
-                    parseResult = await OfflineDownloader.ParseUrl(SourceUrl, password: SharePassword);
+                    parseResult = await OfflineDownloader.Parse(SourceUrl, password: SharePassword);
                     Status = ParseResultStatus.Success;
                 }
                 catch (NeedPasswordException)
@@ -297,7 +297,7 @@ namespace SixCloudCore.ViewModels
                     return;
                 }
 
-                ParseResults.Add(new ParseResult(await OfflineDownloader.ParseUrl(fileHash: task.Hash), this));
+                ParseResults.Add(new ParseResult(await OfflineDownloader.Parse(fileHash: task.Hash), this));
                 IEnumerable<OfflineTaskParameters> taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
                 OfflineTaskParameters = taskParameters.ToArray();
 

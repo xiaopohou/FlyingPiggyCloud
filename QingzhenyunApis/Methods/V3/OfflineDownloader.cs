@@ -22,7 +22,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <exception cref="UnsupportUrlException">不支持的链接</exception>
         /// <exception cref="NeedPasswordException">需要密码</exception>
         /// <returns></returns>
-        public static async Task<OfflineTaskParseUrl> ParseUrl(string textLink = null, string fileHash = null, string username = null, string password = null, int? type = null)
+        public static async Task<OfflineTaskParseUrl> Parse(string textLink = null, string fileHash = null, string username = null, string password = null, int? type = null)
         {
             dynamic data = new ExpandoObject();
             if (!string.IsNullOrWhiteSpace(textLink))
