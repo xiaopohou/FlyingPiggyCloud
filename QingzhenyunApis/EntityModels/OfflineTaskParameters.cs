@@ -5,19 +5,19 @@ namespace QingzhenyunApis.EntityModels
 {
     public class OfflineTaskParameters
     {
-        public OfflineTaskParameters(string identity, string[] iginreFiles=null)
+        public OfflineTaskParameters(string hash, string[] ignoreFiles=null)
         {
-            Identity = identity;
-            IginreFiles = iginreFiles;
+            Hash = hash;
+            Ignores = ignoreFiles;
         }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "identity")]
-        public string Identity { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "hash")]
+        public string Hash { get; set; }
 
         /// <summary>
         /// 所在文件的 PathIdentity
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "iginreFiles")]
-        public IList<string> IginreFiles { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "ignore")]
+        public IList<string> Ignores { get; set; }
     }
 }

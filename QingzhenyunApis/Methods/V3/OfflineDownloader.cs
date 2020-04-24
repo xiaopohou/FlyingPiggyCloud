@@ -73,24 +73,16 @@ namespace QingzhenyunApis.Methods.V3
 
             }
         }
-        //public static async Task<OfflineTaskParseUrl[]> ParseUrl(string url, string password = null)
-        //{
-        //    var data = password != null ? (object)new { url, password } : new { url };
-        //    return await PostAsync<OfflineTaskParseUrl[]>(JsonConvert.SerializeObject(data), "/v2/offline/parseUrl");
-        //}
 
-
-
-        public static async Task<OfflineTaskParseUrl[]> ParseTorrent(string[] hashs)
+        public static async Task<OfflineTaskAdd> Add(string savePath, OfflineTaskParameters[] task)
         {
-            var data = new { hash = hashs };
-            return await PostAsync<OfflineTaskParseUrl[]>(JsonConvert.SerializeObject(data), "/v2/offline/parseTorrent");
+            var data = new { savePath, task };
+            return await PostAsync<OfflineTaskAdd>(JsonConvert.SerializeObject(data), "/v3/offline/add");
         }
-        public static async Task<OfflineTaskAdd> Add(string path, OfflineTaskParameters[] taskParameters)
-        {
-            var data = new { path, task = taskParameters };
-            return await PostAsync<OfflineTaskAdd>(JsonConvert.SerializeObject(data), "/v2/offline/add");
-        }
+
+
+
+
         public static async Task<OfflineTaskList> GetList(int page = 1, int pageSize = 20)
         {
             var data = new { page, pageSize };
