@@ -80,18 +80,16 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<OfflineTaskAdd>(JsonConvert.SerializeObject(data), "/v3/offline/add");
         }
 
-
-
-
-        public static async Task<OfflineTaskList> GetList(int page = 1, int pageSize = 20)
+        public static async Task<OfflineTaskList> GetList(int skip = 1, int limit = 20)
         {
-            var data = new { page, pageSize };
-            return await PostAsync<OfflineTaskList>(JsonConvert.SerializeObject(data), "/v2/offline/page");
+            var data = new { skip, limit };
+            return await PostAsync<OfflineTaskList>(JsonConvert.SerializeObject(data), "/v3/offline/list");
         }
-        public static async Task<int> DeleteTask(string[] identities)
+
+        public static async Task<SuccessCount> DeleteTask(string[] taskIdentity, bool deleteFile = false)
         {
-            var data = new { identities };
-            return await PostAsync<int>(JsonConvert.SerializeObject(data), "/v2/offline/delete");
+            var data = new { taskIdentity, deleteFile };
+            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/offline/delete");
         }
     }
 }

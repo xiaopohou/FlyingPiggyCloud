@@ -1,40 +1,83 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace QingzhenyunApis.EntityModels
 {
     public class OfflineTask
     {
-        [JsonProperty(PropertyName = "identity")]
-        public string Identity { get; set; }
+        [JsonProperty("taskIdentity")]
+        public string TaskIdentity { get; set; }
 
-        [JsonProperty(PropertyName = "userIdentity")]
-        public int UserIdentity { get; set; }
+        [JsonProperty("userIdentity")]
+        public long UserIdentity { get; set; }
 
-        [JsonProperty(PropertyName = "createTime")]
+        [JsonProperty("createTime")]
         public long CreateTime { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "type")]
-        public int Type { get; set; }
+        [JsonProperty("type")]
+        public long Type { get; set; }
 
-        [JsonProperty(PropertyName = "status")]
-        public int Status { get; set; }
+        [JsonProperty("status")]
+        public long Status { get; set; }
 
-        [JsonProperty(PropertyName = "size")]
+        [JsonProperty("size")]
         public long Size { get; set; }
 
-        [JsonProperty(PropertyName = "downloadSize")]
+        [JsonProperty("downloadSize")]
         public long DownloadSize { get; set; }
 
-        [JsonProperty(PropertyName = "progress")]
-        public double Progress { get; set; }
+        [JsonProperty("progress")]
+        public long Progress { get; set; }
 
-        [JsonProperty(PropertyName = "cip")]
-        public string Cip { get; set; }
+        [JsonProperty("errorCode")]
+        public long ErrorCode { get; set; }
 
-        [JsonProperty(PropertyName = "data")]
+        [JsonProperty("errorMessage")]
+        public string ErrorMessage { get; set; }
+
+        [JsonProperty("savePath")]
+        public string SavePath { get; set; }
+
+        [JsonProperty("saveIdentity")]
+        public string SaveIdentity { get; set; }
+
+        [JsonProperty("accessPath")]
+        public string AccessPath { get; set; }
+
+        [JsonProperty("accessIdentity")]
+        public string AccessIdentity { get; set; }
+
+        [JsonProperty("fileMime")]
+        public string FileMime { get; set; }
+
+        [JsonProperty("fileType")]
+        public long FileType { get; set; }
+
+        [JsonProperty("createAddress")]
+        public string CreateAddress { get; set; }
+
+        [JsonProperty("data")]
         public string Data { get; set; }
+
+        [JsonProperty("textLink")]
+        public Uri TextLink { get; set; }
+
+        [JsonProperty("fileHash")]
+        public string FileHash { get; set; }
+
+        [JsonProperty("op")]
+        public long Op { get; set; }
+
+        [JsonProperty("username")]
+        public string Username { get; set; }
+
+        [JsonProperty("password")]
+        public string Password { get; set; }
+
+        [JsonProperty("kind")]
+        public long Kind { get; set; }
     }
 }

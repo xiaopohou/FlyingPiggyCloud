@@ -1,4 +1,5 @@
 ﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Views;
@@ -15,31 +16,44 @@ namespace SixCloudCore.ViewModels
     {
         public ObservableCollection<OfflineTask> ObservableCollection { get; private set; } = new ObservableCollection<OfflineTask>();
 
-        private IAsyncEnumerator<OfflineTask[]> listEnumerator;
-        private async IAsyncEnumerable<OfflineTask[]> GetListEnumeratorAsync()
+        private IAsyncEnumerator<OfflineTask> taskEnumerator;
+        private async IAsyncEnumerable<OfflineTask> GetTaskEnumeratorAsync()
         {
-            int currentPage = 0;
-            int totalPage;
+            int skip = 0;
+            const int limit = 20;
+            int count;
             do
             {
-                var x = await OfflineDownloader.GetList(++currentPage);
-                totalPage = x.TotalPage;
-                yield return x.List;
-            } while (currentPage < totalPage);
+                var x = await OfflineDownloader.GetList(skip, limit);
+                count = x.List.Count;
+                foreach (var item in x.List)
+                {
+                    yield return item;
+                }
+                skip += limit;
+            } while (count == limit);
             yield break;
         }
 
         public async Task LazyLoad()
         {
-            listEnumerator ??= GetListEnumeratorAsync().GetAsyncEnumerator();
-
-            if (await listEnumerator.MoveNextAsync())
+            try
             {
-                foreach (OfflineTask a in listEnumerator.Current)
+                for (int count = 0; count < 20; count++)
                 {
-                    ObservableCollection.Add(a);
+                    if (await taskEnumerator.MoveNextAsync())
+                    {
+                        App.Current.Dispatcher.Invoke(() => ObservableCollection.Add(taskEnumerator.Current));
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
-
+            }
+            catch (RequestFailedException ex)
+            {
+                MessageBox.Show($"加载目录失败，由于{ex.Message}");
             }
         }
 
@@ -65,7 +79,7 @@ namespace SixCloudCore.ViewModels
                 List<string> taskID = new List<string>(list.Count);
                 foreach (OfflineTask task in cancellingTasks)
                 {
-                    taskID.Add(task.Identity);
+                    taskID.Add(task.TaskIdentity);
                 }
                 await Task.Run(() => OfflineDownloader.DeleteTask(taskID.ToArray()));
                 RefreshList();
@@ -74,12 +88,11 @@ namespace SixCloudCore.ViewModels
 
 
         public DependencyCommand RefreshListCommand { get; set; }
-        private async void RefreshList(object parameter = null)
+        private void RefreshList(object parameter = null)
         {
-#warning 这里有严重的性能问题
+            taskEnumerator = GetTaskEnumeratorAsync().GetAsyncEnumerator();
             ObservableCollection.Clear();
-            listEnumerator = null;
-            await LazyLoad();
+            Task.Run(LazyLoad);
         }
         #endregion
 
