@@ -14,16 +14,16 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
             <Button Command="MediaCommands.Play"
-                            CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
-                            CommandTarget="{Binding ElementName=UploadingList}">
-                <StackPanel Margin="15" Orientation="Horizontal" HorizontalAlignment="Center">
+                    CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
+                    CommandTarget="{Binding ElementName=UploadingList}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                    <TextBlock Text="开始/暂停任务" HorizontalAlignment="Center"/>
+                    <TextBlock Text="开始暂停" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button Command="MediaCommands.Stop"
-                            CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
-                            CommandTarget="{Binding ElementName=UploadingList}">
+                    CommandParameter="{Binding SelectedItems, ElementName=UploadingList}"
+                    CommandTarget="{Binding ElementName=UploadingList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
                     <TextBlock Text="取消任务" HorizontalAlignment="Center"/>

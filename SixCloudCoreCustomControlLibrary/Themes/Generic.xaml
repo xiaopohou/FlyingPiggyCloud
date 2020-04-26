@@ -26,11 +26,11 @@
     <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FF4DAB6F"/>
 
     <SolidColorBrush x:Key="MainForegroundBrush" Color="#FF5A5A5A"/>
-    <SolidColorBrush x:Key="ImmersiveSystemAccentLight3Brush" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentLight3)}"/>
-    <SolidColorBrush x:Key="ImmersiveSystemAccentLight2Brush" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentLight2)}"/>
-    <SolidColorBrush x:Key="ImmersiveSystemAccentLight1Brush" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentLight1)}"/>
+    <SolidColorBrush x:Key="ImmersiveSystemAccentBrushLight3" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentLight3)}"/>
+    <SolidColorBrush x:Key="ImmersiveSystemAccentBrushLight2" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentLight2)}"/>
+    <SolidColorBrush x:Key="ImmersiveSystemAccentBrushLight1" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentLight1)}"/>
     <SolidColorBrush x:Key="ImmersiveSystemAccentBrush" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccent)}"/>
-    <SolidColorBrush x:Key="ImmersiveSystemAccentBrusDark1h" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentDark1)}"/>
-    <SolidColorBrush x:Key="ImmersiveSystemAccentBrusDark2h" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentDark2)}"/>
-    <SolidColorBrush x:Key="ImmersiveSystemAccentBrusDark3h" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentDark3)}"/>
+    <SolidColorBrush x:Key="ImmersiveSystemAccentBrushDark1" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentDark1)}"/>
+    <SolidColorBrush x:Key="ImmersiveSystemAccentBrushDark2" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentDark2)}"/>
+    <SolidColorBrush x:Key="ImmersiveSystemAccentBrushDark3" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentDark3)}"/>
 </ResourceDictionary>

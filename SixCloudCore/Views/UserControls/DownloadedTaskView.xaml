@@ -9,7 +9,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListBox ContextMenuOpening="DownloadedList_ContextMenuOpening" x:Name="DownloadedList" DataContext="{Binding DownloadedList}" ItemsSource="{Binding ObservableCollection}">
+        <ListBox ContextMenuOpening="DownloadedList_ContextMenuOpening"
+                 x:Name="DownloadedList"
+                 DataContext="{Binding DownloadedList}"
+                 ItemsSource="{Binding ObservableCollection}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="48">

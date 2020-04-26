@@ -28,6 +28,12 @@
                 </Style.Triggers>
             </Style>
 
+            <Style TargetType="ListBox">
+                <!--<Setter Property="BorderBrush" Value="{DynamicResource ImmersiveSystemAccentBrushDark1}"/>-->
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="0,5"/>
+            </Style>
+
             <vm:StatusToVisibility x:Key="StatusToVisibility"/>
         </ResourceDictionary>
 

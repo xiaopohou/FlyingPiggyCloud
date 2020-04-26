@@ -90,7 +90,7 @@
 
         <!--下载列表-->
         <metro:FluentTabItem Icon="&#xF103;" IconMove="&#xF103;" Header="正在下载">
-            <usercontrols:DownloadingTaskView Background="White" Margin="30,40,15,15"/>
+            <usercontrols:DownloadingTaskView Margin="30,40,15,15"/>
         </metro:FluentTabItem>
 
         <!--下载完成-->

@@ -25,26 +25,20 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal">
-            <Button HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Command="{Binding NewTaskCommand}">
+            <Button Command="{Binding NewTaskCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF067;" Margin="5,0"/>
                     <TextBlock Text="新建任务" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button HorizontalAlignment="Left" 
-                            VerticalAlignment="Center" 
-                            Command="{Binding CancelTaskCommand}"
-                            CommandParameter="{Binding SelectedItems, ElementName=OfflineList}">
+            <Button Command="{Binding CancelTaskCommand}"
+                    CommandParameter="{Binding SelectedItems, ElementName=OfflineList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF068;" Margin="5,0"/>
                     <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button HorizontalAlignment="Left" 
-                            VerticalAlignment="Center"
-                            Command="{Binding RefreshListCommand}">
+            <Button Command="{Binding RefreshListCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF2F1;" Margin="5,0"/>
                     <TextBlock Text="刷新列表" HorizontalAlignment="Center"/>
@@ -52,12 +46,11 @@
             </Button>
         </StackPanel>
 
-        <ListBox Style="{StaticResource ListBoxRevealStyle}"
-                         Grid.Row="1"
-                         x:Name="OfflineList"
-                         ScrollViewer.ScrollChanged="OfflineList_ScrollChanged"
-                         ItemsSource="{Binding ObservableCollection}"
-                         Background="White">
+        <ListBox Grid.Row="1"
+                 x:Name="OfflineList"
+                 ScrollViewer.ScrollChanged="OfflineList_ScrollChanged"
+                 ItemsSource="{Binding ObservableCollection}"
+                 Background="White">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="48">

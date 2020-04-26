@@ -9,9 +9,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <StackPanel Height="42" VerticalAlignment="Top" Orientation="Horizontal">
-            <Button Style="{StaticResource ButtonRevealStyle}"
-                    Command="MediaCommands.Play"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Command="MediaCommands.Play"
                     CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
                     CommandTarget="{Binding ElementName=DownloadingList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -19,8 +22,7 @@
                     <TextBlock Text="开始暂停" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button Style="{DynamicResource ButtonRevealStyle}" 
-                    Command="MediaCommands.Stop"
+            <Button Command="MediaCommands.Stop"
                     CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
                     CommandTarget="{Binding ElementName=DownloadingList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -29,7 +31,7 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        <ListBox SelectionMode="Multiple" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" Background="White" Margin="0,42,0,0">
+        <ListBox Grid.Row="1" SelectionMode="Multiple" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" Background="White">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="48">
