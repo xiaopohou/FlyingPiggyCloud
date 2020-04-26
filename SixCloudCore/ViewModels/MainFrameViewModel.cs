@@ -4,8 +4,6 @@ namespace SixCloudCore.ViewModels
 {
     internal sealed class MainFrameViewModel : ViewModelBase
     {
-        public UserInformationViewModel UserInformation { get; set; }
-
         public RecoveryBoxViewModel RecVM { get; set; } = new RecoveryBoxViewModel();
 
         public FileListViewModel FileVM { get; set; } = new FileListViewModel();
@@ -22,9 +20,8 @@ namespace SixCloudCore.ViewModels
         //public OfflineTaskViewModel OfflineTask { get; private set; } = new OfflineTaskViewModel();
 
 
-        public MainFrameViewModel(UserInformation currentUser)
+        public MainFrameViewModel()
         {
-            UserInformation = new UserInformationViewModel(currentUser);
         }
     }
 }

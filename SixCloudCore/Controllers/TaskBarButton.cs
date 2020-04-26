@@ -4,6 +4,8 @@ using System;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Controls;
+using QingzhenyunApis.Methods.V3;
+using System.Threading.Tasks;
 
 namespace SixCloudCore.Controllers
 {
@@ -42,16 +44,16 @@ namespace SixCloudCore.Controllers
 
         private void ShowMainWindow(object sender, EventArgs e)
         {
-            Window MainWindow = System.Windows.Application.Current.MainWindow;
-            if (MainWindow == null)
+            var c = System.Windows.Application.Current.MainWindow;
+            if (c != null)
             {
-                MainFrame.Recovery();
+                c.Activate();
             }
             else
             {
-                MainWindow.WindowState = WindowState.Normal;
-                MainWindow.Activate();
+                new MainFrame().Show();
             }
+
         }
 
         private void Quit(object sender, EventArgs e)

@@ -1,18 +1,12 @@
 ﻿using QingzhenyunApis.EntityModels;
 using SixCloudCore.ViewModels;
-using CustomControls.Controls;
+using SourceChord.FluentWPF;
 using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using SourceChord.FluentWPF;
-using System.Windows.Input;
-using System.Collections;
-using System.Collections.Generic;
-using SixCloudCore.Models;
-using System.Linq;
 
 namespace SixCloudCore.Views
 {
@@ -22,39 +16,33 @@ namespace SixCloudCore.Views
     /// </summary>
     public partial class MainFrame : AcrylicWindow
     {
-        private static UserInformation recoveryInfo;
+        //private static UserInformation recoveryInfo;
 
-        /// <summary>
-        /// 从后台恢复前台窗口
-        /// </summary>
-        public static void Recovery()
-        {
-            if (recoveryInfo != null)
-            {
-                new MainFrame(recoveryInfo).Show();
-            }
-            else
-            {
-                new LoginWebViewModel();
-            }
-        }
+        ///// <summary>
+        ///// 从后台恢复前台窗口
+        ///// </summary>
+        //public static void Recovery()
+        //{
+        //    if (recoveryInfo != null)
+        //    {
+        //        new MainFrame(recoveryInfo).Show();
+        //    }
+        //    else
+        //    {
+        //        new LoginWebViewModel();
+        //    }
+        //}
 
-        public MainFrame(UserInformation currentUser)
+        public MainFrame()
         {
-            recoveryInfo = currentUser;
             InitializeComponent();
-            MainFrameViewModel mainFrameViewModel = new MainFrameViewModel(currentUser);
+            MainFrameViewModel mainFrameViewModel = new MainFrameViewModel();
             DataContext = mainFrameViewModel;
             ThreadPool.QueueUserWorkItem(async (_) =>
             {
                 await mainFrameViewModel.FileVM.NavigateByPath("/");
             });
         }
-
-        //private void UserInformationMenu_MouseUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    e.Handled = true;
-        //}
 
         private void FileListContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -72,5 +60,10 @@ namespace SixCloudCore.Views
             }
         }
 
+        //protected override void OnClosing(CancelEventArgs e)
+        //{
+        //    Hide();
+        //    e.Cancel = true;
+        //}
     }
 }

@@ -1,5 +1,6 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods.V3;
+using SixCloudCore.Controllers;
 using SixCloudCore.Views;
 using System.Threading;
 using System.Windows;
@@ -30,11 +31,12 @@ namespace SixCloudCore.ViewModels
 
             if (await Authentication.CheckDestination(DestinationInfo))
             {
-                var userInfo = await Authentication.GetUserInformation();
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    new MainFrame(userInfo).Show();
+                    new MainFrame().Show();
                     LoginWebView.Close();
+                    Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                    new TaskBarButton();
                 });
             }
             else
