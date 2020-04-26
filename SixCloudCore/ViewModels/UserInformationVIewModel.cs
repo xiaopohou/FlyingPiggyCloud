@@ -54,6 +54,7 @@ namespace SixCloudCore.ViewModels
                 //检查导致解析头像崩溃的原因
                 //ex.ToExceptionless().AddObject(icon).AddObject(currentUser).Submit();
             }
+
             try
             {
                 AvailableRate = currentUser.SpaceUsed * 100 / currentUser.SpaceCapacity;

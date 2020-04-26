@@ -229,7 +229,7 @@
         </ListBox>
 
         <!--上方栏-->
-        <StackPanel Height="60" Grid.Row="1" HorizontalAlignment="Left" Orientation="Horizontal">
+        <StackPanel Grid.Row="1" HorizontalAlignment="Left" Orientation="Horizontal">
             <controls:LightButton Foreground="{DynamicResource MainForegroundBrush}"  FontIcon="&#xF053;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Previous" Command="{Binding PreviousNavigateCommand}"/>
             <controls:LightButton Foreground="{DynamicResource MainForegroundBrush}"  FontIcon="&#xF054;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
             <Button x:Name="UploadButton" Command="{Binding UploadFileCommand}">
