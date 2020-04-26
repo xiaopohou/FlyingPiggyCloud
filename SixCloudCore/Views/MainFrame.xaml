@@ -38,7 +38,6 @@
 
         <usercontrols:SizeCalculator x:Key="SizeCalculator"/>
 
-
         <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignToolToggleListBoxItem}">
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
@@ -46,70 +45,92 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         </Style>
 
-
+        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource AcrylicMenuItemStyle}">
+            <Setter Property="Template" Value="{StaticResource AcrylicMenuItemTemplateStyle}"/>
+        </Style>
     </fw:AcrylicWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="0,0,15,0" HorizontalAlignment="Right">
+            <!--<Image Source="/MediaResources/666.ico"/>-->
+            <Button Height="40" Width="40">
+                <metro:FontIcon Icon="&#xf141;"/>
+                <Button.ContextMenu>
+                    <fw:AcrylicContextMenu>
+                        <MenuItem />
+                        <MenuItem />
+                        <MenuItem />
+                        <MenuItem />
+                    </fw:AcrylicContextMenu>
+                </Button.ContextMenu>
+            </Button>
+        </StackPanel>
 
-    <metro:FluentTabControl>
+        <metro:FluentTabControl Grid.Row="1">
+            
+            <TabItem IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}">
+                <TabItem.Header>
+                    <Border Margin="15,15" BorderThickness="0">
+                        <TextBlock Text="文件列表"/>
+                    </Border>
+                </TabItem.Header>
+            </TabItem>
 
-        <TabItem IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}">
-            <TabItem.Header>
-                <Border Margin="15,15" BorderThickness="0">
-                    <TextBlock Text="文件列表"/>
-                </Border>
-            </TabItem.Header>
-        </TabItem>
+            <!--文件列表-->
+            <metro:FluentTabItem IsSelected="True" DataContext="{Binding FileVM}" Icon="&#xf07b;" IconMove="&#xf07b;" Header="所有文件">
+                <Grid Margin="30,0,15,15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <usercontrols:FileListView x:Name="FileListContainer" ListView.SelectionChanged="FileListContainer_SelectionChanged"/>
+                    <usercontrols:FileListItemInformationView HorizontalAlignment="Stretch" Background="White" Grid.Row="1" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
+                </Grid>
+            </metro:FluentTabItem>
 
-        <!--文件列表-->
-        <metro:FluentTabItem IsSelected="True" DataContext="{Binding FileVM}" Icon="&#xf07b;" IconMove="&#xf07b;" Header="所有文件">
-            <Grid Margin="30,40,15,15">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <usercontrols:FileListView x:Name="FileListContainer" ListView.SelectionChanged="FileListContainer_SelectionChanged"/>
-                <usercontrols:FileListItemInformationView HorizontalAlignment="Stretch" Background="White" Grid.Row="1" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
-            </Grid>
-        </metro:FluentTabItem>
+            <metro:FluentTabItem DataContext="{Binding RecVM}" Icon="&#xf1f8;" IconMove="&#xf1f8;" Header="回收中心">
+                <usercontrols:RecoveryBox Margin="30,0,15,15" x:Name="RecoveryBoxContainer"/>
+            </metro:FluentTabItem>
 
-        <metro:FluentTabItem DataContext="{Binding RecVM}" Header="回收中心">
-            <usercontrols:RecoveryBox Margin="30,40,15,15" x:Name="RecoveryBoxContainer"/>
-        </metro:FluentTabItem>
+            <TabItem IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}">
+                <TabItem.Header>
+                    <Border Margin="15,15" BorderThickness="0">
+                        <TextBlock Text="传输任务"/>
+                    </Border>
+                </TabItem.Header>
+            </TabItem>
 
-        <TabItem IsEnabled="False" Style="{StaticResource TabItemWithLeftSeparator}">
-            <TabItem.Header>
-                <Border Margin="15,15" BorderThickness="0">
-                    <TextBlock Text="传输任务"/>
-                </Border>
-            </TabItem.Header>
-        </TabItem>
+            <!--离线下载列表-->
+            <metro:FluentTabItem Icon="&#xF381;" IconMove="&#xF381;" Header="离线任务">
+                <usercontrols:OfflineTaskListView DataContext="{Binding OfflineTask}" Margin="30,0,15,15"/>
+            </metro:FluentTabItem>
 
-        <!--离线下载列表-->
-        <metro:FluentTabItem Icon="&#xF381;" IconMove="&#xF381;" Header="离线任务">
-            <usercontrols:OfflineTaskListView DataContext="{Binding OfflineTask}" Margin="30,40,15,15"/>
-        </metro:FluentTabItem>
+            <!--下载列表-->
+            <metro:FluentTabItem Icon="&#xF103;" IconMove="&#xF103;" Header="正在下载">
+                <usercontrols:DownloadingTaskView Margin="30,0,15,15"/>
+            </metro:FluentTabItem>
 
-        <!--下载列表-->
-        <metro:FluentTabItem Icon="&#xF103;" IconMove="&#xF103;" Header="正在下载">
-            <usercontrols:DownloadingTaskView Margin="30,40,15,15"/>
-        </metro:FluentTabItem>
+            <!--下载完成-->
+            <metro:FluentTabItem Icon="&#xF560;" IconMove="&#xF560;" Header="下载完成">
+                <usercontrols:DownloadedTaskView Background="White" Margin="30,0,15,15"/>
+            </metro:FluentTabItem>
 
-        <!--下载完成-->
-        <metro:FluentTabItem Icon="&#xF560;" IconMove="&#xF560;" Header="下载完成">
-            <usercontrols:DownloadedTaskView Background="White" Margin="30,40,15,15"/>
-        </metro:FluentTabItem>
+            <!--上传列表-->
+            <metro:FluentTabItem Icon="&#xF102;" IconMove="&#xF102;" Header="正在上传">
+                <usercontrols:UploadingListView Margin="30,0,15,15"/>
+            </metro:FluentTabItem>
 
-        <!--上传列表-->
-        <metro:FluentTabItem Icon="&#xF102;" IconMove="&#xF102;" Header="正在上传">
-            <usercontrols:UploadingListView Margin="30,40,15,15"/>
-        </metro:FluentTabItem>
-
-        <!--上传完成-->
-        <metro:FluentTabItem  DataContext="{Binding UploadedList}" Icon="&#xF560;" IconMove="&#xF560;" Header="上传完成">
-            <usercontrols:UploadedListView  Background="White" Margin="30,40,15,15"/>
-        </metro:FluentTabItem>
+            <!--上传完成-->
+            <metro:FluentTabItem  DataContext="{Binding UploadedList}" Icon="&#xF560;" IconMove="&#xF560;" Header="上传完成">
+                <usercontrols:UploadedListView  Background="White" Margin="30,0,15,15"/>
+            </metro:FluentTabItem>
 
 
-        <!--分享功能（V1接口未实现）-->
-        <!--<metro:FluentTabItem Icon="&#xf1e0;" Header="分享设置"/>-->
-    </metro:FluentTabControl>
+            <!--分享功能（V1接口未实现）-->
+            <!--<metro:FluentTabItem Icon="&#xf1e0;" Header="分享设置"/>-->
+        </metro:FluentTabControl>
+    </Grid>
 </fw:AcrylicWindow>

@@ -212,7 +212,7 @@
         </Grid.RowDefinitions>
         
         <!--地址栏-->
-        <ListBox Style="{StaticResource ListBoxRevealStyle}" FontSize="12" x:Name="AddressBar" Height="24" VerticalAlignment="Top" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
+        <ListBox Background="Transparent" BorderThickness="0" FontSize="12" x:Name="AddressBar" Height="24" VerticalAlignment="Top" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
