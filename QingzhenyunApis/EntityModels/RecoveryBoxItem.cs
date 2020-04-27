@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class RecoveryBoxItem
+    public class RecoveryBoxItem : EntityBodyBase
     {
         [JsonProperty(PropertyName = "identity")]
         public string Identity { get; set; }

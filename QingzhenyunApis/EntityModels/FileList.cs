@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class FileList
+    public class FileList : EntityBodyBase
     {
         /// <summary>
         /// 文件夹及文件列表

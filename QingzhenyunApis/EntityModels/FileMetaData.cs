@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class FileMetaData
+    public class FileMetaData : EntityBodyBase
     {
         /// <summary>
         /// 该文件/文件夹的唯一ID

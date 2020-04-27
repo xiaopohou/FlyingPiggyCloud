@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class OfflineTaskParameters
+    public class OfflineTaskParameters : EntityBodyBase
     {
         public OfflineTaskParameters(string hash, string[] ignoreFiles=null)
         {

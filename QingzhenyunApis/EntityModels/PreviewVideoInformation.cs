@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class PreviewInformation
+    public class PreviewInformation : EntityBodyBase
     {
         /// <summary>
         /// 高度
@@ -16,16 +16,16 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty(PropertyName = "width")]
         public int Width { get; set; }
 
-        [JsonProperty(PropertyName ="rotate")]
+        [JsonProperty(PropertyName = "rotate")]
         public int Rotate { get; set; }
 
         [JsonProperty(PropertyName = "duration")]
         public int Duration { get; set; }
 
-        [JsonProperty(PropertyName ="sourceWidth")]
+        [JsonProperty(PropertyName = "sourceWidth")]
         public int SourceWidth { get; set; }
 
-        [JsonProperty(PropertyName ="sourceHeight")]
+        [JsonProperty(PropertyName = "sourceHeight")]
         public int SourceHeight { get; set; }
 
 

@@ -273,7 +273,7 @@ namespace SixCloudCore.ViewModels
                 string Name = openFileDialog.SafeFileName;
                 string targetPath = "/:torrent";
                 string filePath = openFileDialog.FileName;
-                var x = await FileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
+                UploadToken x = await FileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
                 IUploadTask task = EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
                 bool uploadSuccess = true;
                 await Task.Run(() =>
@@ -331,7 +331,7 @@ namespace SixCloudCore.ViewModels
             string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
             try
             {
-                var tasks = await OfflineDownloader.Add(savingPath, OfflineTaskParameters);
+                OfflineTaskAdd tasks = await OfflineDownloader.Add(savingPath, OfflineTaskParameters);
 
             }
             catch (RequestFailedException ex)

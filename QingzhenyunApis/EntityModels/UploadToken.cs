@@ -3,9 +3,9 @@ using System;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class UploadToken
+    public class UploadToken : EntityBodyBase
     {
-        [JsonProperty("uploadToken",Required = Required.Always)]
+        [JsonProperty("uploadToken", Required = Required.Always)]
         public string UploadTokenUploadToken { get; set; }
 
         [JsonProperty("type")]
@@ -22,28 +22,5 @@ namespace QingzhenyunApis.EntityModels
 
         [JsonProperty("directUploadUrl")]
         public Uri DirectUploadUrl { get; set; }
-
-
-
-        //[JsonProperty(PropertyName = "uploadInfo")]
-        //public Information UploadInfo { get; set; }
-
-        //[JsonProperty(PropertyName = "hashCached")]
-        //public bool HashCached { get; set; }
-
-        //public class Information
-        //{
-        //    [JsonProperty(PropertyName = "uploadToken")]
-        //    public string Token { get; set; }
-
-        //    [JsonProperty(PropertyName = "type")]
-        //    public string Type { get; set; }
-
-        //    [JsonProperty(PropertyName = "uploadUrl")]
-        //    public string UploadUrl { get; set; }
-
-        //    [JsonProperty(PropertyName = "filePath")]
-        //    public string FilePath { get; set; }
-        //}
     }
 }

@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class SelfClient
+    public class SelfClient : EntityBodyBase
     {
         [JsonProperty(PropertyName = "identity")]
         public int Identity { get; set; }

@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class ShareMetaData
+    public class ShareMetaData : EntityBodyBase
     {
         /// <summary>
         /// 该分享的唯一ID

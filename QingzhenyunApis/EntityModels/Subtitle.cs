@@ -2,9 +2,9 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class Subtitle
+    public class Subtitle : EntityBodyBase
     {
-        [JsonProperty(PropertyName ="identity")]
+        [JsonProperty(PropertyName = "identity")]
         public string Identity { get; set; }
 
         [JsonProperty(PropertyName = "hash")]

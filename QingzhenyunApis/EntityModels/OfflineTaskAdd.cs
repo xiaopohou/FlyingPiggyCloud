@@ -2,11 +2,8 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class OfflineTaskAdd
+    public class OfflineTaskAdd : EntityBodyBase
     {
-        [JsonProperty(PropertyName = "success")]
-        public bool Success { get; set; }
-
         [JsonProperty(PropertyName = "count")]
         public int Count { get; set; }
     }

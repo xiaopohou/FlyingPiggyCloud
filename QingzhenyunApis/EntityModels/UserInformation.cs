@@ -2,20 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class TokenInformation
-    {
-        [JsonProperty(PropertyName = "status")]
-        public int Status { get; set; }
-
-        [JsonProperty(PropertyName = "token")]
-        public string Token { get; set; }
-
-        [JsonProperty(PropertyName = "state")]
-        public string State { get; set; }
-
-    }
-
-    public class UserInformation
+    public class UserInformation : EntityBodyBase
     {
         [JsonProperty(PropertyName = "identity")]
         public int UUID { get; set; }
@@ -43,7 +30,7 @@ namespace QingzhenyunApis.EntityModels
 
         [JsonProperty(PropertyName = "spaceCapacity")]
         public long SpaceCapacity { get; set; }
- 
+
         [JsonProperty(PropertyName = "type")]
         public int Type { get; set; }
 

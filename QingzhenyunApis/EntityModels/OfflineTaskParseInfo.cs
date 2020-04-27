@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class OfflineTaskParseInfo
+    public class OfflineTaskParseInfo : EntityBodyBase
     {
         [JsonProperty("textLink")]
         public Uri TextLink { get; set; }

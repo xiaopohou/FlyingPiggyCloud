@@ -85,20 +85,16 @@ namespace QingzhenyunApis.Methods.V3
                 uri = uriBuilder.ToString();
             }
         }
-       
+
         private static T ParseResult<T>(string responseBody)
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings
-            {
-                MissingMemberHandling = MissingMemberHandling.Error
-            };
             try
             {
                 return JsonConvert.DeserializeObject<T>(responseBody);
             }
             catch (JsonSerializationException)
             {
-                throw JsonConvert.DeserializeObject<RequestFailedException>(responseBody, settings);
+                throw JsonConvert.DeserializeObject<RequestFailedException>(responseBody);
             }
         }
 

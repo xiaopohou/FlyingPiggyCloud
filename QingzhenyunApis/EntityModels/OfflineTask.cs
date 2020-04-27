@@ -3,7 +3,7 @@ using System;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class OfflineTask
+    public class OfflineTask : EntityBodyBase
     {
         [JsonProperty("taskIdentity")]
         public string TaskIdentity { get; set; }

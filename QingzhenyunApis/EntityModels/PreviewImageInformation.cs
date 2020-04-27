@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class PreviewImageInformation
+    public class PreviewImageInformation : EntityBodyBase
     {
         [JsonProperty(PropertyName = "fileHash")]
         public string FileHash { get; set; }

@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class DailyQuota
+    public class DailyQuota : EntityBodyBase
     {
         [JsonProperty("dailyQuota")]
         public long DailyQuotaDailyQuota { get; set; }
@@ -10,5 +10,4 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty("dailyUsed")]
         public long DailyUsed { get; set; }
     }
-
 }

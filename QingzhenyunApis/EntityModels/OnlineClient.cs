@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class OnlineClient
+    public class OnlineClient : EntityBodyBase
     {
         [JsonProperty(PropertyName = "device")]
         public string Device { get; set; }

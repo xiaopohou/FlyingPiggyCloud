@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class OnlineDeviceList
+    public class OnlineDeviceList : EntityBodyBase
     {
         [JsonProperty(PropertyName = "self")]
         public SelfClient Self { get; set; }
