@@ -26,7 +26,7 @@
                                               Margin="{TemplateBinding Padding}"
                                               RecognizesAccessKey="True"
                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                            <Rectangle x:Name="line" Fill="{DynamicResource PrimaryHueMidBrush}" VerticalAlignment="Bottom" Height="3" Margin="2"/>
+                            <Rectangle x:Name="line" Fill="{DynamicResource ImmersiveSystemAccentBrush}" VerticalAlignment="Bottom" Height="3" Margin="2"/>
                         </StackPanel>
                         <ControlTemplate.Triggers>
                             <MultiDataTrigger>
