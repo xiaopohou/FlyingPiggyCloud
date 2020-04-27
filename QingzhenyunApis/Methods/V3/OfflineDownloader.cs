@@ -91,5 +91,10 @@ namespace QingzhenyunApis.Methods.V3
             var data = new { taskIdentity, deleteFile };
             return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/offline/delete");
         }
+
+        public static async Task<DailyQuota> GetQuotaInformation()
+        {
+            return await PostAsync<DailyQuota>(JsonConvert.SerializeObject(new { }), "/v3/offline/quota");
+        }
     }
 }
