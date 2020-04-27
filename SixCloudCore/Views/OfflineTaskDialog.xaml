@@ -77,6 +77,13 @@
 
         <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxRevealStyle}"/>
 
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonRevealStyle}">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
+        </Style>
+
+
     </fw:AcrylicWindow.Resources>
 
     <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">

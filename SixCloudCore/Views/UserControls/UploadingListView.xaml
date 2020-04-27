@@ -30,7 +30,7 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        <ListBox Grid.Row="1" x:Name="UploadingList" DataContext="{Binding UploadingList}" ItemsSource="{Binding ObservableCollection}" Background="White">
+        <ListBox Grid.Row="1" x:Name="UploadingList" DataContext="{Binding UploadingList}" ItemsSource="{Binding ObservableCollection}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="48">

@@ -26,6 +26,7 @@
     <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FF4DAB6F"/>
 
     <SolidColorBrush x:Key="MainForegroundBrush" Color="#FF5A5A5A"/>
+    <SolidColorBrush x:Key="MainBackgroundBrush" Color="#FFF0F0F0"/>
     <SolidColorBrush x:Key="ImmersiveSystemAccentBrushLight3" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentLight3)}"/>
     <SolidColorBrush x:Key="ImmersiveSystemAccentBrushLight2" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentLight2)}"/>
     <SolidColorBrush x:Key="ImmersiveSystemAccentBrushLight1" Color="{Binding Path=(fw:AccentColors.ImmersiveSystemAccentLight1)}"/>

@@ -31,7 +31,7 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        <ListBox Grid.Row="1" SelectionMode="Multiple" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" Background="White">
+        <ListBox Grid.Row="1" SelectionMode="Multiple" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="48">

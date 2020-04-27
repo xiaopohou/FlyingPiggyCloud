@@ -49,8 +49,7 @@
         <ListBox Grid.Row="1"
                  x:Name="OfflineList"
                  ScrollViewer.ScrollChanged="OfflineList_ScrollChanged"
-                 ItemsSource="{Binding ObservableCollection}"
-                 Background="White">
+                 ItemsSource="{Binding ObservableCollection}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="48">

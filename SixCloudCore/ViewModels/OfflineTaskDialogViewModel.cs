@@ -60,7 +60,7 @@ namespace SixCloudCore.ViewModels
 
             public Visibility FriendlyErrorInfoVisibility => FriendlyErrorInfo == null ? Visibility.Collapsed : Visibility.Visible;
 
-            public string Identity => parseResult.Info.Identity;
+            public string Identity => parseResult.Hash;
 
             public long Size => parseResult.Info.Size;
 

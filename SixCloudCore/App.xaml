@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:SixCloudCore"
     xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
-    xmlns:vm="clr-namespace:SixCloudCore.ViewModels">
+    xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
+    xmlns:usercontrols="clr-namespace:SixCloudCore.Views.UserControls">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,7 +13,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
-                
+
                 <!--  FluentWPF Controls  -->
                 <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
 
@@ -29,18 +30,15 @@
             </Style>
 
             <Style TargetType="ListBox">
-                <!--<Setter Property="BorderBrush" Value="{DynamicResource ImmersiveSystemAccentBrushDark1}"/>-->
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="Margin" Value="0,5"/>
+                <Setter Property="Background" Value="Transparent"/>
             </Style>
 
             <vm:StatusToVisibility x:Key="StatusToVisibility"/>
+            <usercontrols:SizeCalculator x:Key="SizeCalculator"/>
         </ResourceDictionary>
 
-        <!--<Style TargetType="{x:Type fw:AcrylicWindow}">
-            <Setter Property="WindowStartupLocation" Value="CenterScreen"/>
-        </Style>-->
-        
-        
+
     </Application.Resources>
 </Application>
