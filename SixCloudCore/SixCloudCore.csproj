@@ -62,9 +62,6 @@
     <Compile Update="Views\OfflineTaskDialog.xaml.cs">
       <DependentUpon>OfflineTaskDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\OfflineUrlsDialog.xaml.cs">
-      <DependentUpon>OfflineUrlsDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Views\PreView.xaml.cs">
       <DependentUpon>PreView.xaml</DependentUpon>
     </Compile>

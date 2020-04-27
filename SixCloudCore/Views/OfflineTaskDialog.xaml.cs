@@ -1,4 +1,5 @@
 ﻿using CustomControls.Controls;
+using SourceChord.FluentWPF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace SixCloudCore.Views
     /// <summary>
     /// OfflineTaskDialog.xaml 的交互逻辑
     /// </summary>
-    public partial class OfflineTaskDialog : MetroWindow
+    public partial class OfflineTaskDialog : AcrylicWindow
     {
         public OfflineTaskDialog()
         {
