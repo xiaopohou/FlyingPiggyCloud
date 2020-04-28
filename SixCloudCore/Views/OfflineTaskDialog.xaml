@@ -10,6 +10,7 @@
                   xmlns:ViewModels="clr-namespace:SixCloudCore.ViewModels"
                   xmlns:UserControls="clr-namespace:SixCloudCore.Views.UserControls"
                   mc:Ignorable="d"
+                  fw:PointerTracker.Enabled="True"
                   AcrylicWindowStyle="NoIcon" Title="新建任务" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <fw:AcrylicWindow.Resources>
         <ViewModels:StageConverter x:Key="StageConverter"/>
@@ -46,12 +47,6 @@
         </DataTemplate>
 
         <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxRevealStyle}"/>
-
-        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonRevealStyle}">
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
-        </Style>
 
 
     </fw:AcrylicWindow.Resources>

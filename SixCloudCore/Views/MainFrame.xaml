@@ -10,30 +10,11 @@
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                   xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
                   xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
-                  mc:Ignorable="d" MinHeight="720" MinWidth="800" AcrylicWindowStyle="NoIcon" fw:PointerTracker.Enabled="True" WindowStartupLocation="CenterScreen">
+                  mc:Ignorable="d" MinHeight="720" MinWidth="800" AcrylicWindowStyle="NoIcon"
+                  Title="6盘，祝你越来越6"
+                  fw:PointerTracker.Enabled="True"
+                  WindowStartupLocation="CenterScreen">
     <fw:AcrylicWindow.Resources>
-
-        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonRevealStyle}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
-        </Style>
-
-        <!--TabControl分割线-->
-        <Style TargetType="TabItem" x:Key="TabItemWithLeftSeparator">
-            <Setter Property="IsEnabled" Value="False"/>
-            <Setter Property="FontWeight" Value="UltraBlack"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
-                        <ContentPresenter x:Name="ContentSite" ContentSource="Header"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>
 
         <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignToolToggleListBoxItem}">
@@ -46,28 +27,34 @@
         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource AcrylicMenuItemStyle}">
             <Setter Property="Template" Value="{StaticResource AcrylicMenuItemTemplateStyle}"/>
         </Style>
+
     </fw:AcrylicWindow.Resources>
     <Grid Background="{DynamicResource MainBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <StackPanel Margin="0,0,15,0" HorizontalAlignment="Right">
-            <!--<Image Source="/MediaResources/666.ico"/>-->
-            <Button Height="40" Width="40">
-                <metro:FontIcon Icon="&#xf141;"/>
-                <Button.ContextMenu>
-                    <fw:AcrylicContextMenu>
-                        <MenuItem />
-                        <MenuItem />
-                        <MenuItem />
-                        <MenuItem />
-                    </fw:AcrylicContextMenu>
-                </Button.ContextMenu>
-            </Button>
-        </StackPanel>
 
-        <TabControl Margin="15,0,15,15" BorderThickness="0" Grid.Row="1" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}">
+        <TabControl Margin="10" BorderThickness="0" Grid.Row="1" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}">
+            <TabItem IsEnabled="False" HorizontalAlignment="Right">
+                <TabItem.Header>
+                    <StackPanel Margin="0,0,15,0" HorizontalAlignment="Right">
+                        <!--<Image Source="/MediaResources/666.ico"/>-->
+                        <Button Height="40" Width="40">
+                            <metro:FontIcon Icon="&#xf141;"/>
+                            <Button.ContextMenu>
+                                <fw:AcrylicContextMenu>
+                                    <MenuItem />
+                                    <MenuItem />
+                                    <MenuItem />
+                                    <MenuItem />
+                                </fw:AcrylicContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
+            
             <!--文件列表-->
             <TabItem IsSelected="True" DataContext="{Binding FileVM}" Header="所有文件">
                 <Grid Margin="15">
