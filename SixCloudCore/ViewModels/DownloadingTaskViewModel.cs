@@ -10,10 +10,8 @@ using System.Windows.Data;
 
 namespace SixCloudCore.ViewModels
 {
-    internal class DownloadingTaskViewModel : ViewModelBase
+    internal class DownloadingTaskViewModel : ViewModelBase, ITransferItemViewModel
     {
-        //private static readonly FileSystem fs = new FileSystem();
-
         private readonly DownloadTask downloadTask;
 
         public string Icon { get; } = "\uf019";
@@ -32,26 +30,55 @@ namespace SixCloudCore.ViewModels
 
         public double Progress => downloadTask.DownloadProgress;
 
-        public DownloadTask.TaskStatus Status => downloadTask.Status;
+        public TransferTaskStatus Status => downloadTask.Status switch
+        {
+            DownloadTask.TaskStatus.Running => TransferTaskStatus.Running,
+            DownloadTask.TaskStatus.Pause => TransferTaskStatus.Pause,
+            DownloadTask.TaskStatus.Cancel => TransferTaskStatus.Stop,
+            _ => TransferTaskStatus.Stop
+        };
 
-        public void Start()
+        public string Speed => throw new NotImplementedException();
+
+        public DependencyCommand RecoveryCommand { get; }
+        private void Recovery(object parameter)
         {
             downloadTask.Start();
             OnPropertyChanged(nameof(Status));
+            RecoveryCommand.OnCanExecutedChanged(this, null);
+            PauseCommand.OnCanExecutedChanged(this, null);
+        }
+        private bool CanRecovery(object parameter)
+        {
+            return Status == TransferTaskStatus.Pause;
         }
 
-        public void Stop()
+
+        public DependencyCommand PauseCommand { get; }
+        private async void Pause(object parameter)
+        {
+            await downloadTask.Pause();
+            OnPropertyChanged(nameof(Status));
+            RecoveryCommand.OnCanExecutedChanged(this, null);
+            PauseCommand.OnCanExecutedChanged(this, null);
+        }
+        private bool CanPause(object parameter)
+        {
+            return Status == TransferTaskStatus.Running;
+        }
+
+
+        public DependencyCommand CancelCommand { get; }
+        private void Cancel(object parameter)
         {
             DownloadCompleted?.Invoke(this, new EventArgs());
             downloadTask.Stop();
             OnPropertyChanged(nameof(Status));
+            RecoveryCommand.OnCanExecutedChanged(this, null);
+            PauseCommand.OnCanExecutedChanged(this, null);
         }
 
-        public async void Pause()
-        {
-            await downloadTask.Pause();
-            OnPropertyChanged(nameof(Status));
-        }
+
 
         public event EventHandler<EventArgs> DownloadCompleted;
 
@@ -59,6 +86,10 @@ namespace SixCloudCore.ViewModels
         {
             TargetUUID = targetUUID;
             SavedLocalPath = localPath;
+            RecoveryCommand = new DependencyCommand(Recovery, CanRecovery);
+            PauseCommand = new DependencyCommand(Pause, CanPause);
+            CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
+
             downloadTask = new DownloadTask(localPath, name, () =>
              {
                  return new Uri(FileSystem.GetDownloadUrlByIdentity(targetUUID).Result.DownloadAddress);
@@ -68,12 +99,12 @@ namespace SixCloudCore.ViewModels
                  {
                      DownloadCompleted?.Invoke(this, new EventArgs());
                  }
-             },(sender, e) =>
-             {
-                 OnPropertyChanged(nameof(Completed));
-                 OnPropertyChanged(nameof(Total));
-                 OnPropertyChanged(nameof(Progress));
-             });
+             }, (sender, e) =>
+              {
+                  OnPropertyChanged(nameof(Completed));
+                  OnPropertyChanged(nameof(Total));
+                  OnPropertyChanged(nameof(Progress));
+              });
         }
 
     }

@@ -45,6 +45,10 @@ namespace SixCloudCore.ViewModels
                 {
                     UploadAborted?.Invoke(this, new EventArgs());
                 }
+
+                RecoveryCommand.OnCanExecutedChanged(this, null);
+                PauseCommand.OnCanExecutedChanged(this, null);
+
             }
         }
 

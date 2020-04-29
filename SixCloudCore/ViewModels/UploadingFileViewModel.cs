@@ -8,7 +8,7 @@ using System.IO;
 
 namespace SixCloudCore.ViewModels
 {
-    internal class UploadingFileViewModel : UploadingTaskViewModel
+    internal partial class UploadingFileViewModel : UploadingTaskViewModel
     {
         public UploadingFileViewModel(string targetPath, string filePath) : base()
         {
@@ -26,6 +26,30 @@ namespace SixCloudCore.ViewModels
         }
 
         private readonly IUploadTask task;
+
+        private DateTime lastTime;
+        private long lastCompletedBytes;
+
+        public override string Speed
+        {
+            get
+            {
+                if (lastTime == default || lastCompletedBytes == default)
+                {
+                    lastTime = DateTime.Now;
+                    lastCompletedBytes = task.CompletedBytes;
+                    return "0B/秒";
+                }
+                else
+                {
+                    var span = DateTime.Now - lastTime;
+                    lastTime += span;
+                    var intervalCompleted = task.CompletedBytes - lastCompletedBytes;
+                    lastCompletedBytes += intervalCompleted;
+                    return Calculators.SizeCalculator((long)Math.Round(span.TotalSeconds == 0 ? 0 : intervalCompleted / span.TotalSeconds, 0)) + "/秒";
+                }
+            }
+        }
 
         public override string Completed => Calculators.SizeCalculator(task.CompletedBytes);
 
@@ -60,72 +84,17 @@ namespace SixCloudCore.ViewModels
         public override void Stop(object parameter)
         {
             task.TaskOperate(UploadTaskStatus.Abort);
+
         }
 
-        internal override void Pause()
+        protected override void Pause(object parameter)
         {
             task.TaskOperate(UploadTaskStatus.Pause);
         }
 
-        internal override void Recovery()
+        protected override void Recovery(object parameter)
         {
             task.TaskOperate(UploadTaskStatus.Active);
-        }
-
-        /// <summary>
-        /// 一个可以秒传的上传任务
-        /// </summary>
-        private class HashCachedTask : IUploadTask
-        {
-            public string FilePath { get; set; }
-
-            public HashCachedTask()
-            {
-                CompletedBytes = 999;
-                TotalBytes = 999;
-            }
-
-            public string Token { get; set; }
-
-            public string Address { get; set; }
-
-            public long CompletedBytes { get; set; }
-
-            public string Hash { get; set; }
-
-            public long TotalBytes { get; set; }
-
-            public UploadTaskStatus UploadTaskStatus => UploadTaskStatus.Completed;
-
-            public bool TaskOperate(UploadTaskStatus todo)
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 表示一个错误的无法进行的上传任务
-        /// </summary>
-        private class ErrorTask : IUploadTask
-        {
-            public string FilePath { get; set; }
-
-            public string Token { get; set; }
-
-            public string Address { get; set; }
-
-            public long CompletedBytes => 0;
-
-            public string Hash => null;
-
-            public long TotalBytes => 999;
-
-            public UploadTaskStatus UploadTaskStatus => UploadTaskStatus.Error;
-
-            public bool TaskOperate(UploadTaskStatus todo)
-            {
-                return false;
-            }
         }
 
 #if DEBUG
