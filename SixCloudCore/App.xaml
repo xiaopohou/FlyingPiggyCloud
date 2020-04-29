@@ -5,7 +5,8 @@
     xmlns:local="clr-namespace:SixCloudCore"
     xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
     xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
-    xmlns:usercontrols="clr-namespace:SixCloudCore.Views.UserControls">
+    xmlns:usercontrols="clr-namespace:SixCloudCore.Views.UserControls"
+    xmlns:metro="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -75,7 +76,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
         </ResourceDictionary>
 
 
