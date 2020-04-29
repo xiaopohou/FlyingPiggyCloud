@@ -52,13 +52,14 @@
     <ScrollViewer>
         <StackPanel Orientation="Vertical">
             <!--在下载队列中-->
-            <TextBlock Style="{StaticResource Title}" Text=""/>
-            <ListBox Grid.Row="1" SelectionMode="Extended" x:Name="DownloadingList" ItemsSource="{Binding DownloadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
+            <TextBlock Style="{StaticResource Title}" Text="{Binding DownloadingListTitle}"/>
+            <ListBox SelectionMode="Extended" x:Name="DownloadingList" ItemsSource="{Binding DownloadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
             <!--在上传队列中-->
-            <TextBlock Style="{StaticResource Title}" Text=""/>
-            <ListBox Grid.Row="1" SelectionMode="Extended" x:Name="UploadingList" ItemsSource="{Binding UploadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
+            <TextBlock Style="{StaticResource Title}" Text="{Binding UploadingListTitle}"/>
+            <ListBox SelectionMode="Extended" x:Name="UploadingList" ItemsSource="{Binding UploadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
             <!--最近活动-->
-            <TextBlock Style="{StaticResource Title}" Text=""/>
+            <TextBlock Style="{StaticResource Title}" Text="最近活动"/>
+            <ListBox SelectionMode="Extended" x:Name="CompletedList" ItemsSource="{Binding CompletedList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

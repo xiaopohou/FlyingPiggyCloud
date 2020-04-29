@@ -11,23 +11,26 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ctl:LightButton}">
-                    <TextBlock Text="{TemplateBinding FontIcon}"
+                    <Grid>
+                        <Rectangle x:Name="ground" Fill="Transparent"/>
+                        <TextBlock Text="{TemplateBinding FontIcon}"
                              x:Name="fontIcon"
                              FontFamily="/SixCloudCoreCustomControlLibrary;component/Resources/Fonts/#Font Awesome 5 Free Solid"
                              FontSize="{TemplateBinding FontSize}"
                              Foreground="{TemplateBinding Foreground}">
-                        <TextBlock.Effect>
-                            <DropShadowEffect x:Name="buttonShadow" Opacity="0" ShadowDepth="0" BlurRadius="0"/>
-                        </TextBlock.Effect>
-                    </TextBlock>
+                            <TextBlock.Effect>
+                                <DropShadowEffect x:Name="buttonShadow" Opacity="0" ShadowDepth="0" BlurRadius="0"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Foreground" TargetName="fontIcon" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=BorderBrush}"/>
+                            <Setter Property="Fill" TargetName="ground" Value="#FFE6E6E6"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Foreground" TargetName="fontIcon" Value="White"/>
+                            <Setter Property="Fill" TargetName="ground" Value="#FFCCCCCC"/>
                         </Trigger>
-                        <EventTrigger RoutedEvent="ctl:LightButton.Click">
+                        <!--<EventTrigger RoutedEvent="ctl:LightButton.Click">
                             <BeginStoryboard>
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetName="buttonShadow"
@@ -44,7 +47,7 @@
                                                      AutoReverse="True"/>
                                 </Storyboard>
                             </BeginStoryboard>
-                        </EventTrigger>
+                        </EventTrigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
