@@ -4,41 +4,44 @@ using System.Windows.Threading;
 
 namespace SixCloudCore.ViewModels
 {
-    internal abstract class UploadingTaskViewModel:ViewModelBase
+    /// <summary>
+    /// 上传任务的抽象类，用于派生单例上传任务和文件夹上传任务
+    /// </summary>
+    internal abstract class UploadingTaskViewModel : ViewModelBase, ITransferItemViewModel
     {
         /// <summary>
         /// 用于定时刷新任务进度
         /// </summary>
-        private static readonly DispatcherTimer timer;
+        private static readonly DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher)
+        {
+            Interval = TimeSpan.FromSeconds(0.5d)
+        };
 
         static UploadingTaskViewModel()
         {
-            timer = new DispatcherTimer(DispatcherPriority.Normal, App.Current.Dispatcher)
-            {
-                Interval = TimeSpan.FromSeconds(0.5d)
-            };
             timer.Start();
         }
 
         protected UploadingTaskViewModel()
         {
-            ChangeStatusCommand = new DependencyCommand(ChangeStatus, DependencyCommand.AlwaysCan);
-            StopCommand = new DependencyCommand(Stop, DependencyCommand.AlwaysCan);
+            RecoveryCommand = new DependencyCommand(Recovery, CanRecovery);
+            PauseCommand = new DependencyCommand(Pause, CanPause);
+            CancelCommand = new DependencyCommand(Stop, DependencyCommand.AlwaysCan);
+
             WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(timer, nameof(timer.Tick), Callback);
 
             void Callback(object sender, EventArgs e)
             {
                 OnPropertyChanged(nameof(Name));
                 OnPropertyChanged(nameof(Status));
-                //OnPropertyChanged(nameof(Uploaded));
                 OnPropertyChanged(nameof(Total));
-                OnPropertyChanged(nameof(Uploaded));
+                OnPropertyChanged(nameof(Completed));
                 OnPropertyChanged(nameof(Progress));
-                if (Status == UploadStatus.Completed)
+                if (Status == TransferTaskStatus.Completed)
                 {
                     UploadCompleted?.Invoke(this, new EventArgs());
                 }
-                else if (Status == UploadStatus.Stop)
+                else if (Status == TransferTaskStatus.Stop)
                 {
                     UploadAborted?.Invoke(this, new EventArgs());
                 }
@@ -49,41 +52,29 @@ namespace SixCloudCore.ViewModels
 
         public string Name { get; protected set; }
 
-        public enum UploadStatus
-        {
-            Running,
-            Pause,
-            Stop,
-            Completed,
-        }
-        public virtual UploadStatus Status { get; }
+        public virtual TransferTaskStatus Status { get; }
 
-        public abstract string Uploaded { get; }
+        public abstract string Completed { get; }
 
         public abstract string Total { get; }
 
         public abstract double Progress { get; }
 
-        public DependencyCommand ChangeStatusCommand { get; protected set; }
-        private void ChangeStatus(object parameter)
+        public DependencyCommand PauseCommand { get; protected set; }
+        protected abstract void Pause(object parameter);
+        protected virtual bool CanPause(object parameter)
         {
-            switch (Status)
-            {
-                case UploadStatus.Running:
-                    Pause();
-                    break;
-                case UploadStatus.Pause:
-                    Start();
-                    break;
-                case UploadStatus.Stop:
-                    return;
-            }
-            OnPropertyChanged(nameof(Status));
+            return Status == TransferTaskStatus.Running;
         }
-        internal abstract void Pause();
-        internal abstract void Start();
 
-        public DependencyCommand StopCommand { get; protected set; }
+        public DependencyCommand RecoveryCommand { get; protected set; }
+        protected abstract void Recovery(object parameter);
+        protected virtual bool CanRecovery(object parameter)
+        {
+            return Status == TransferTaskStatus.Pause;
+        }
+
+        public DependencyCommand CancelCommand { get; protected set; }
         public abstract void Stop(object parameter);
 
         public event EventHandler UploadCompleted;
@@ -93,5 +84,6 @@ namespace SixCloudCore.ViewModels
         public string LocalFilePath { get; protected set; }
 
         public string TargetPath { get; protected set; }
+        public abstract string Speed { get; }
     }
 }

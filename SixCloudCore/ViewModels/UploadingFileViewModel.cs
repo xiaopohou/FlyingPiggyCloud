@@ -27,33 +27,33 @@ namespace SixCloudCore.ViewModels
 
         private readonly IUploadTask task;
 
-        public override string Uploaded => Calculators.SizeCalculator(task.CompletedBytes);
+        public override string Completed => Calculators.SizeCalculator(task.CompletedBytes);
 
         public override string Total => Calculators.SizeCalculator(task.TotalBytes);
 
         public override double Progress => task.CompletedBytes * 100 / task.TotalBytes;
 
-        public override UploadStatus Status
+        public override TransferTaskStatus Status
         {
             get
             {
                 if (task == null)
                 {
-                    return UploadStatus.Pause;
+                    return TransferTaskStatus.Pause;
                 }
                 switch (task.UploadTaskStatus)
                 {
                     case UploadTaskStatus.Active:
-                        return UploadStatus.Running;
+                        return TransferTaskStatus.Running;
                     case UploadTaskStatus.Pause:
                     case UploadTaskStatus.Error:
-                        return UploadStatus.Pause;
+                        return TransferTaskStatus.Pause;
                     case UploadTaskStatus.Abort:
-                        return UploadStatus.Stop;
+                        return TransferTaskStatus.Stop;
                     case UploadTaskStatus.Completed:
-                        return UploadStatus.Completed;
+                        return TransferTaskStatus.Completed;
                 }
-                return UploadStatus.Running;
+                return TransferTaskStatus.Running;
             }
         }
 
@@ -67,7 +67,7 @@ namespace SixCloudCore.ViewModels
             task.TaskOperate(UploadTaskStatus.Pause);
         }
 
-        internal override void Start()
+        internal override void Recovery()
         {
             task.TaskOperate(UploadTaskStatus.Active);
         }

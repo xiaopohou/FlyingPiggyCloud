@@ -95,7 +95,7 @@ namespace SixCloudCore.Controllers
             using (StreamWriter writer = new StreamWriter(File.Create(uploadingRecordsPath)))
             {
                 IEnumerable<UploadTaskRecord> taskList = from record in uploadingList
-                                                         where record.Status == UploadingTaskViewModel.UploadStatus.Running || record.Status == UploadingTaskViewModel.UploadStatus.Pause
+                                                         where record.Status == UploadingTaskViewModel.TaskStatus.Running || record.Status == UploadingTaskViewModel.TaskStatus.Pause
                                                          select new UploadTaskRecord
                                                          {
                                                              LocalFilePath = record.LocalFilePath,
