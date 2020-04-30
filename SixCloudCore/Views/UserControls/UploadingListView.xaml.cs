@@ -34,13 +34,13 @@ namespace SixCloudCore.Views.UserControls
                 IEnumerable<UploadingTaskViewModel> downloadingTasks = list.Cast<UploadingTaskViewModel>();
                 foreach (UploadingTaskViewModel t in downloadingTasks)
                 {
-                    if (t.Status == UploadingTaskViewModel.TaskStatus.Pause)
+                    if (t.Status == TransferTaskStatus.Pause)
                     {
-                        t.Recovery();
+                        t.RecoveryCommand.Execute(null);
                     }
-                    else if (t.Status == UploadingTaskViewModel.TaskStatus.Running)
+                    else if (t.Status == TransferTaskStatus.Running)
                     {
-                        t.Pause();
+                        t.PauseCommand.Execute(null);
                     }
                 }
 

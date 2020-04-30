@@ -8,11 +8,13 @@ namespace SixCloudCore.ViewModels
 
         public FileListViewModel FileVM { get; set; } = new FileListViewModel();
 
-        public DownloadingListViewModel DownloadingList { get; private set; } = new DownloadingListViewModel();
+        //public DownloadingListViewModel DownloadingList { get; private set; } = new DownloadingListViewModel();
 
         public DownloadedListViewModel DownloadedList { get; private set; } = new DownloadedListViewModel();
 
-        public UploadingListViewModel UploadingList { get; private set; } = new UploadingListViewModel();
+        //public UploadingListViewModel UploadingList { get; private set; } = new UploadingListViewModel();
+
+        public TransferListViewModel TransferList { get; private set; } = new TransferListViewModel();
 
         public UploadedListViewModel UploadedList { get; private set; } = new UploadedListViewModel();
 

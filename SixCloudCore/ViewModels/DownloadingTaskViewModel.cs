@@ -1,5 +1,6 @@
 ﻿using QingzhenyunApis.Methods;
 using QingzhenyunApis.Methods.V3;
+using QingzhenyunApis.Utils;
 using SixCloudCore.Controllers;
 using SixCloudCore.Models;
 using System;
@@ -38,7 +39,31 @@ namespace SixCloudCore.ViewModels
             _ => TransferTaskStatus.Stop
         };
 
-        public string Speed => throw new NotImplementedException();
+        private DateTime lastTime;
+        private long lastCompletedBytes;
+        private double lastSpeed;
+        public string Speed
+        {
+            get
+            {
+                if (lastTime == default || lastCompletedBytes == default)
+                {
+                    lastTime = DateTime.Now;
+                    lastCompletedBytes = downloadTask.CompletedBytes;
+                    lastSpeed = 0;
+                    return "0B/秒";
+                }
+                else
+                {
+                    var span = DateTime.Now - lastTime;
+                    lastTime += span;
+                    var intervalCompleted = downloadTask.CompletedBytes - lastCompletedBytes;
+                    lastCompletedBytes += intervalCompleted;
+                    lastSpeed += Math.Round(((span.TotalSeconds == 0 ? 0 : intervalCompleted / span.TotalSeconds) - lastSpeed) / 100, 0);
+                    return Calculators.SizeCalculator((long)lastSpeed) + "/秒";
+                }
+            }
+        }
 
         public DependencyCommand RecoveryCommand { get; }
         private void Recovery(object parameter)
@@ -102,6 +127,7 @@ namespace SixCloudCore.ViewModels
              }, (sender, e) =>
               {
                   OnPropertyChanged(nameof(Completed));
+                  OnPropertyChanged(nameof(Speed));
                   OnPropertyChanged(nameof(Total));
                   OnPropertyChanged(nameof(Progress));
               });

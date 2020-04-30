@@ -81,7 +81,7 @@ namespace SixCloudCore.Controllers
             using (StreamWriter writer = new StreamWriter(File.Create(downloadingRecordsPath)))
             {
                 IEnumerable<DownloadTaskRecord> taskList = from record in downloadingList
-                                                           where record.Status == DownloadTask.TaskStatus.Running || record.Status == DownloadTask.TaskStatus.Pause
+                                                           where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
                                                            select new DownloadTaskRecord
                                                            {
                                                                LocalPath = record.SavedLocalPath,
@@ -95,7 +95,7 @@ namespace SixCloudCore.Controllers
             using (StreamWriter writer = new StreamWriter(File.Create(uploadingRecordsPath)))
             {
                 IEnumerable<UploadTaskRecord> taskList = from record in uploadingList
-                                                         where record.Status == UploadingTaskViewModel.TaskStatus.Running || record.Status == UploadingTaskViewModel.TaskStatus.Pause
+                                                         where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
                                                          select new UploadTaskRecord
                                                          {
                                                              LocalFilePath = record.LocalFilePath,

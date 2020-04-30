@@ -31,6 +31,8 @@ namespace SixCloudCore.Models
 
         public string CurrentFileFullPath => fileDownloader.LocalFileName;
 
+        public long CompletedBytes => fileDownloader.BytesReceived;
+
         public async void Start()
         {
             lock (statusSyncRoot)

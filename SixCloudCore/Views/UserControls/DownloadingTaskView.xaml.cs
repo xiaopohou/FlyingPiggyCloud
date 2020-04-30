@@ -35,13 +35,13 @@ namespace SixCloudCore.Views.UserControls
                 IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
                 foreach (DownloadingTaskViewModel t in downloadingTasks)
                 {
-                    if (t.Status == DownloadTask.TaskStatus.Pause)
+                    if (t.Status == TransferTaskStatus.Pause)
                     {
-                        t.Start();
+                        t.RecoveryCommand.Execute(null);
                     }
-                    else if (t.Status == DownloadTask.TaskStatus.Running)
+                    else if (t.Status == TransferTaskStatus.Running)
                     {
-                        t.Pause();
+                        t.PauseCommand.Execute(null);
                     }
                 }
 
@@ -60,7 +60,7 @@ namespace SixCloudCore.Views.UserControls
                 IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
                 foreach (DownloadingTaskViewModel t in downloadingTasks.ToArray())
                 {
-                    t.Stop();
+                    t.CancelCommand.Execute(null);
                 }
 
             }

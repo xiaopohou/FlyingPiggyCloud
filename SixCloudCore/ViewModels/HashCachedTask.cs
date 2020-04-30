@@ -34,7 +34,6 @@ namespace SixCloudCore.ViewModels
                 return false;
             }
         }
-#endif
 
     }
 

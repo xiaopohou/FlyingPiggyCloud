@@ -76,10 +76,14 @@
                 <usercontrols:OfflineTaskListView DataContext="{Binding OfflineTask}" Margin="15"/>
             </TabItem>
 
-            <!--下载列表-->
-            <TabItem Header="正在下载">
-                <usercontrols:DownloadingTaskView Margin="15"/>
+            <TabItem Header="传输列表">
+                <usercontrols:TransferListView DataContext="{Binding TransferList}" Margin="15"/>
             </TabItem>
+
+            <!--下载列表-->
+            <!--<TabItem Header="正在下载">
+                <usercontrols:DownloadingTaskView Margin="15"/>
+            </TabItem>-->
 
             <!--下载完成-->
             <TabItem Header="下载完成">
@@ -87,9 +91,9 @@
             </TabItem>
 
             <!--上传列表-->
-            <TabItem Header="正在上传">
+            <!--<TabItem Header="正在上传">
                 <usercontrols:UploadingListView Margin="15"/>
-            </TabItem>
+            </TabItem>-->
 
             <!--上传完成-->
             <TabItem DataContext="{Binding UploadedList}" Header="上传完成">
