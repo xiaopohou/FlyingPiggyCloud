@@ -58,6 +58,7 @@
                 <usercontrols:OfflineTaskListView DataContext="{Binding OfflineTask}" Margin="15"/>
             </TabItem>
 
+            <!--整合全部传输项目的列表-->
             <TabItem Header="传输列表">
                 <usercontrols:TransferListView DataContext="{Binding TransferList}" Margin="15"/>
             </TabItem>
@@ -75,10 +76,11 @@
 
             <!--分享功能（V1接口未实现）-->
             <!--<metro:FluentTabItem Icon="&#xf1e0;" Header="分享设置"/>-->
-            <TabItem IsEnabled="False" HorizontalAlignment="Right">
+            
+            <!--<TabItem IsEnabled="False" HorizontalAlignment="Right">
                 <TabItem.Header>
                     <StackPanel Margin="0,0,15,0" HorizontalAlignment="Right">
-                        <!--<Image Source="/MediaResources/666.ico"/>-->
+                        <Image Source="/MediaResources/666.ico"/>
                         <Button Height="40" Width="40">
                             <metro:FontIcon Icon="&#xf141;"/>
                             <Button.ContextMenu>
@@ -92,7 +94,7 @@
                         </Button>
                     </StackPanel>
                 </TabItem.Header>
-            </TabItem>
+            </TabItem>-->
         </TabControl>
     </Grid>
 </fw:AcrylicWindow>

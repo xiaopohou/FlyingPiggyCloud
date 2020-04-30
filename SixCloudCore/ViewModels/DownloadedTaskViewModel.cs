@@ -6,9 +6,11 @@ using System.Windows.Input;
 
 namespace SixCloudCore.ViewModels
 {
-    internal class DownloadedTaskViewModel : ViewModelBase
+    internal class DownloadedTaskViewModel : ViewModelBase, ITransferCompletedTaskViewModel
     {
         private readonly string fullPath;
+
+        public string Icon => "\uf46c";
 
         public string Name { get; private set; }
 
@@ -31,7 +33,7 @@ namespace SixCloudCore.ViewModels
         public ICommand ShowCommand { get; private set; }
         private void Show(object parameter)
         {
-            if(!File.Exists(fullPath))
+            if (!File.Exists(fullPath))
             {
                 MessageBox.Show("找不到文件，可能已被删除", "打开文件失败");
                 Deleted?.Invoke(this, new EventArgs());
