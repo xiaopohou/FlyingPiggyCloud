@@ -15,7 +15,8 @@
         </Style>
 
         <DataTemplate x:Key="TransferItemDataTemplate">
-            <Grid Height="48">
+            <Border Background="White" Name="ground" Opacity="0.9">
+            <Grid Height="48" Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
@@ -40,12 +41,19 @@
 
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Speed}"/>
 
-                <StackPanel Orientation="Horizontal">
-                    <metro:LightButton Command="{Binding RecoveryCommand}"/>
-                    <metro:LightButton Command="{Binding PauseCommand}"/>
-                    <metro:LightButton Command="{Binding CancelCommand}"/>
+                <StackPanel Grid.RowSpan="3" Grid.Column="3" Orientation="Horizontal">
+                    <metro:LightButton Height="48" Width="48" Command="{Binding RecoveryCommand}"/>
+                    <metro:LightButton Height="48" Width="48" Command="{Binding PauseCommand}"/>
+                    <metro:LightButton Height="48" Width="48" Command="{Binding CancelCommand}"/>
                 </StackPanel>
             </Grid>
+                
+            </Border>
+            <DataTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" TargetName="ground" Value="1"/>
+                </Trigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
 
     </UserControl.Resources>
@@ -53,10 +61,10 @@
         <StackPanel Orientation="Vertical">
             <!--在下载队列中-->
             <TextBlock Style="{StaticResource Title}" Text="{Binding DownloadingListTitle}"/>
-            <ListBox SelectionMode="Extended" x:Name="DownloadingList" ItemsSource="{Binding DownloadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
+            <ItemsControl x:Name="DownloadingList" ItemsSource="{Binding DownloadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
             <!--在上传队列中-->
             <TextBlock Style="{StaticResource Title}" Text="{Binding UploadingListTitle}"/>
-            <ListBox SelectionMode="Extended" x:Name="UploadingList" ItemsSource="{Binding UploadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
+            <ItemsControl x:Name="UploadingList" ItemsSource="{Binding UploadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
             <!--最近活动-->
             <TextBlock Style="{StaticResource Title}" Text="最近活动"/>
             <ListBox SelectionMode="Extended" x:Name="CompletedList" ItemsSource="{Binding CompletedList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>

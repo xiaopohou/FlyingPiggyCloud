@@ -36,24 +36,6 @@
         </Grid.RowDefinitions>
 
         <TabControl Margin="10" BorderThickness="0" Grid.Row="1" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}">
-            <TabItem IsEnabled="False" HorizontalAlignment="Right">
-                <TabItem.Header>
-                    <StackPanel Margin="0,0,15,0" HorizontalAlignment="Right">
-                        <!--<Image Source="/MediaResources/666.ico"/>-->
-                        <Button Height="40" Width="40">
-                            <metro:FontIcon Icon="&#xf141;"/>
-                            <Button.ContextMenu>
-                                <fw:AcrylicContextMenu>
-                                    <MenuItem />
-                                    <MenuItem />
-                                    <MenuItem />
-                                    <MenuItem />
-                                </fw:AcrylicContextMenu>
-                            </Button.ContextMenu>
-                        </Button>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>
             
             <!--文件列表-->
             <TabItem IsSelected="True" DataContext="{Binding FileVM}" Header="所有文件">
@@ -80,20 +62,10 @@
                 <usercontrols:TransferListView DataContext="{Binding TransferList}" Margin="15"/>
             </TabItem>
 
-            <!--下载列表-->
-            <!--<TabItem Header="正在下载">
-                <usercontrols:DownloadingTaskView Margin="15"/>
-            </TabItem>-->
-
             <!--下载完成-->
             <TabItem Header="下载完成">
                 <usercontrols:DownloadedTaskView Margin="15"/>
             </TabItem>
-
-            <!--上传列表-->
-            <!--<TabItem Header="正在上传">
-                <usercontrols:UploadingListView Margin="15"/>
-            </TabItem>-->
 
             <!--上传完成-->
             <TabItem DataContext="{Binding UploadedList}" Header="上传完成">
@@ -103,6 +75,24 @@
 
             <!--分享功能（V1接口未实现）-->
             <!--<metro:FluentTabItem Icon="&#xf1e0;" Header="分享设置"/>-->
+            <TabItem IsEnabled="False" HorizontalAlignment="Right">
+                <TabItem.Header>
+                    <StackPanel Margin="0,0,15,0" HorizontalAlignment="Right">
+                        <!--<Image Source="/MediaResources/666.ico"/>-->
+                        <Button Height="40" Width="40">
+                            <metro:FontIcon Icon="&#xf141;"/>
+                            <Button.ContextMenu>
+                                <fw:AcrylicContextMenu>
+                                    <MenuItem />
+                                    <MenuItem />
+                                    <MenuItem />
+                                    <MenuItem />
+                                </fw:AcrylicContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
         </TabControl>
     </Grid>
 </fw:AcrylicWindow>
