@@ -27,6 +27,51 @@
         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource AcrylicMenuItemStyle}">
             <Setter Property="Template" Value="{StaticResource AcrylicMenuItemTemplateStyle}"/>
         </Style>
+        <ControlTemplate x:Key="TabControlTemplate" TargetType="{x:Type TabControl}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TabPanel Grid.Row="0" Grid.Column="0" x:Name="headerPanel" IsItemsHost="true"/>
+                <StackPanel MaxHeight="40" Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
+                    <Image Source="/MediaResources/666.ico"/>
+                    <Button x:Name="contextMenuButton" Height="40" Width="40">
+                        <metro:FontIcon Icon="&#xf141;"/>
+                    </Button>
+                </StackPanel>
+                
+                <ContentPresenter Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"  x:Name="content" ContentSource="SelectedContent"/>
+
+                <Border BorderBrush="{DynamicResource ImmersiveSystemAccentBrush}" BorderThickness="1" Background="White" x:Name="contextMenu" Height="0" Width="280" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <StackPanel>
+                        <Button Content="Hello World" Height="50" Width="280"/>
+                        <Button Content="Hello World" Height="50" Width="280"/>
+                        <Button Content="Hello World" Height="50" Width="280"/>
+                        <Button Content="Hello World" Height="50" Width="280"/>
+                        <Button Content="Hello World" Height="50" Width="280"/>
+                    </StackPanel>
+                </Border>
+
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Button.Click" SourceName="contextMenuButton">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Duration="00:00:00.200" To="400" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
+                                    <DoubleAnimation.EasingFunction>
+                                        <BackEase EasingMode="EaseIn"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+            </Grid>
+        </ControlTemplate>
 
     </fw:AcrylicWindow.Resources>
     <Grid Background="{DynamicResource MainBackgroundBrush}">
@@ -35,8 +80,8 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <TabControl Margin="10" BorderThickness="0" Grid.Row="1" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}">
-            
+        <TabControl Template="{DynamicResource TabControlTemplate}" Margin="10" BorderThickness="0" Grid.Row="1" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}">
+
             <!--文件列表-->
             <TabItem IsSelected="True" DataContext="{Binding FileVM}" Header="所有文件">
                 <Grid Margin="15">
@@ -72,29 +117,6 @@
             <TabItem DataContext="{Binding UploadedList}" Header="上传完成">
                 <usercontrols:UploadedListView Margin="15"/>
             </TabItem>
-
-
-            <!--分享功能（V1接口未实现）-->
-            <!--<metro:FluentTabItem Icon="&#xf1e0;" Header="分享设置"/>-->
-            
-            <!--<TabItem IsEnabled="False" HorizontalAlignment="Right">
-                <TabItem.Header>
-                    <StackPanel Margin="0,0,15,0" HorizontalAlignment="Right">
-                        <Image Source="/MediaResources/666.ico"/>
-                        <Button Height="40" Width="40">
-                            <metro:FontIcon Icon="&#xf141;"/>
-                            <Button.ContextMenu>
-                                <fw:AcrylicContextMenu>
-                                    <MenuItem />
-                                    <MenuItem />
-                                    <MenuItem />
-                                    <MenuItem />
-                                </fw:AcrylicContextMenu>
-                            </Button.ContextMenu>
-                        </Button>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>-->
         </TabControl>
     </Grid>
 </fw:AcrylicWindow>
