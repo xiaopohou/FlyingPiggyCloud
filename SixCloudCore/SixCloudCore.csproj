@@ -80,9 +80,6 @@
     <Compile Update="Views\UserControls\RecoveryBox.xaml.cs">
       <DependentUpon>RecoveryBox.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\UserControls\UserInformationView.xaml.cs">
-      <DependentUpon>UserInformationView.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>

@@ -66,9 +66,21 @@ namespace QingzhenyunApis.Methods.V3
             }
         }
 
-        public static async Task<bool> ChangeUserName(string newUserName)
+        public static async Task<UserInformation> ChangeUserName(string name)
         {
-            throw new NotImplementedException();
+            return await PatchAsync<UserInformation>(JsonConvert.SerializeObject(new { name }), "/v3/user/update");
         }
+
+        /// <summary>
+        /// 修改密码，传入值必须为md5
+        /// </summary>
+        /// <param name="oldPassword"></param>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
+        public static async Task<UserInformation> ChangePassword(string oldPassword, string newPassword)
+        {
+            return await PostAsync<UserInformation>(JsonConvert.SerializeObject(new { oldPassword, newPassword }), "/v3/user/changePassword");
+        }
+
     }
 }

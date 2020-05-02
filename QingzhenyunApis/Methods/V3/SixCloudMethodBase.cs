@@ -158,6 +158,27 @@ namespace QingzhenyunApis.Methods.V3
             return ParseResult<T>(responseBody);
         }
 
+        protected static async Task<T> PatchAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
+        {
+            using StringContent requestObject = new StringContent(data);
+            //构建请求头
+            HttpContentHeaders headers = CreateHeader(data, requestObject);
+
+            //构建签名
+            CreateSignature("PATCH", ref uri, isAnonymous, querys, headers);
+
+            //发起请求
+            HttpResponseMessage response = await httpClient.PatchAsync(uri, requestObject);
+
+            if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
+            {
+                Token = newToken.FirstOrDefault() ?? Token;
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+            return ParseResult<T>(responseBody);
+        }
+
         protected SixCloudMethodBase(string token = null)
         {
             Token = token ?? Token;
