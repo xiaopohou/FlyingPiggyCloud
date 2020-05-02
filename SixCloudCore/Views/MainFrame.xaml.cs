@@ -60,6 +60,19 @@ namespace SixCloudCore.Views
             }
         }
 
+        private void TabControl_Click(object sender, RoutedEventArgs e)
+        {
+            if ((e.OriginalSource as Button)?.Name != "contextMenuButton")
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void ContextMenu_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
         //protected override void OnClosing(CancelEventArgs e)
         //{
         //    Hide();
