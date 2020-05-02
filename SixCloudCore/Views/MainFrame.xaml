@@ -91,13 +91,14 @@
         </TabControl>
 
         <Border Margin="0,50,10,0"
+                DataContext="{Binding UserInformation}"
                 BorderBrush="{DynamicResource ImmersiveSystemAccentBrush}" 
                 BorderThickness="1"
                 Background="White" 
                 x:Name="contextMenu" Height="0" Width="280" HorizontalAlignment="Right" VerticalAlignment="Top" MouseDown="ContextMenu_MouseDown">
             <StackPanel>
-                <Button Content="Hello World" Height="50" Width="280"/>
-                <Button Content="Hello World" Height="50" Width="280"/>
+                <TextBlock Text="{Binding Name}" Height="50" Width="280"/>
+                <ProgressBar Value="{Binding Rate}" ToolTip="{Binding CapabilityToolTip}" Height="50" Width="280"/>
                 <Button Content="Hello World" Height="50" Width="280"/>
                 <Button Content="修改密码" Height="50" Width="280"/>
                 <Button Content="注销登录" Height="50" Width="280"/>
