@@ -1,5 +1,4 @@
-﻿using CustomControls.Controls;
-using SourceChord.FluentWPF;
+﻿using SourceChord.FluentWPF;
 
 namespace SixCloudCore.Views
 {
@@ -12,17 +11,19 @@ namespace SixCloudCore.Views
 
         private string _userInput;
 
-        public static bool Show(out string UserInput, string hintText,string title)
+        public static bool Show(out string UserInput, string hintText, string title)
         {
-            TextInputDialog textInputDialog = new TextInputDialog();
-            textInputDialog.Title = title;
+            TextInputDialog textInputDialog = new TextInputDialog
+            {
+                Title = title
+            };
             //textInputDialog.HintAssistant.Text = hintText;
             textInputDialog.ShowDialog();
             UserInput = textInputDialog._userInput;
             return textInputDialog._result;
         }
 
-        public static bool Show(out string UserInput,string hintText)
+        public static bool Show(out string UserInput, string hintText)
         {
             TextInputDialog textInputDialog = new TextInputDialog();
             //textInputDialog.HintAssistant.Text = hintText;

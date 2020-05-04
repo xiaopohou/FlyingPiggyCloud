@@ -2,7 +2,6 @@
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Views;
-using SixCloudCore.Views.UserControls;
 using System;
 using System.Collections;
 using System.Collections.Generic;

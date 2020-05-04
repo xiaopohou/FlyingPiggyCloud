@@ -1,9 +1,6 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
-using QingzhenyunApis.Methods;
 using QingzhenyunApis.Methods.V3;
-using SixCloudCore.Controllers;
-using SixCloudCore.Models;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -77,9 +74,9 @@ namespace SixCloudCore.ViewModels
             int count;
             do
             {
-                var x = await RecoveryBox.GetList(skip, limit);
+                RecoveryBoxPage x = await RecoveryBox.GetList(skip, limit);
                 count = x.List.Count;
-                foreach (var item in x.List)
+                foreach (RecoveryBoxItem item in x.List)
                 {
                     yield return item;
                 }

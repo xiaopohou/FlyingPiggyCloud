@@ -1,24 +1,11 @@
-﻿using QingzhenyunApis.Methods;
-using SixCloudCore.Controllers;
-using CustomControls.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using SourceChord.FluentWPF;
+﻿using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
-using QingzhenyunApis.Exceptions;
 using SixCloudCore.ViewModels;
+using SourceChord.FluentWPF;
+using System;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace SixCloudCore.Views
 {

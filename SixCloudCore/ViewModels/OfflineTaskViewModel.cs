@@ -1,6 +1,5 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
-using QingzhenyunApis.Methods;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Views;
 using System.Collections;
@@ -24,9 +23,9 @@ namespace SixCloudCore.ViewModels
             int count;
             do
             {
-                var x = await OfflineDownloader.GetList(skip, limit);
+                OfflineTaskList x = await OfflineDownloader.GetList(skip, limit);
                 count = x.List.Count;
-                foreach (var item in x.List)
+                foreach (OfflineTask item in x.List)
                 {
                     yield return item;
                 }

@@ -1,12 +1,4 @@
-﻿using QingzhenyunApis.EntityModels;
-using QingzhenyunApis.Methods.V3;
-using SixCloudCore.Views.UserControls;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace SixCloudCore.ViewModels
+﻿namespace SixCloudCore.ViewModels
 {
     internal class FileGridViewModel : FileListViewModel
     {

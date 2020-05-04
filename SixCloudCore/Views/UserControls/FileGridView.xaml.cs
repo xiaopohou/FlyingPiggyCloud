@@ -1,26 +1,19 @@
 ﻿using SixCloudCore.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SixCloudCore.Views.UserControls
 {
     /// <summary>
     /// FileGridView.xaml 的交互逻辑
     /// </summary>
-    public partial class FileGridView : UserControl,ICommandSource
+    public partial class FileGridView : UserControl, ICommandSource
     {
 
         public static readonly DependencyProperty SelectObjectProperty = DependencyProperty.Register("SelectObject", typeof(object), typeof(FileGridView));
@@ -160,8 +153,8 @@ namespace SixCloudCore.Views.UserControls
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var mode = (Mode)value;
-            if(mode==Mode.FileListContainer)
+            Mode mode = (Mode)value;
+            if (mode == Mode.FileListContainer)
             {
                 return true;
             }

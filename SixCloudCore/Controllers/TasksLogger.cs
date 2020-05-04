@@ -1,8 +1,6 @@
 ﻿//#define Record
 //using Exceptionless;
 using Newtonsoft.Json;
-using QingzhenyunApis.EntityModels;
-using QingzhenyunApis.Methods;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Models;
 using SixCloudCore.ViewModels;
@@ -11,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SixCloudCore.Controllers
 {
@@ -63,7 +60,7 @@ namespace SixCloudCore.Controllers
                     }
                 }
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 //ex.ToExceptionless();
             }

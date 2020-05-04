@@ -3,7 +3,6 @@ using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
-using SixCloudCore.Models;
 using SixCloudCore.Views;
 using System;
 using System.Threading.Tasks;
@@ -33,7 +32,7 @@ namespace SixCloudCore.ViewModels
 
         private async void ParseInformation(UserInformation user = null)
         {
-            var currentUser = user ?? await Authentication.GetUserInformation();
+            UserInformation currentUser = user ?? await Authentication.GetUserInformation();
             string icon;
             try
             {
@@ -46,7 +45,7 @@ namespace SixCloudCore.ViewModels
                 Icon = new BitmapImage(new Uri(icon));
 
             }
-            catch (UriFormatException ex)
+            catch (UriFormatException)
             {
                 //检查导致解析头像崩溃的原因
                 //ex.ToExceptionless().AddObject(icon).AddObject(currentUser).Submit();
@@ -77,7 +76,7 @@ namespace SixCloudCore.ViewModels
             {
                 try
                 {
-                    var x = await Task.Run(() => Authentication.ChangeUserName(newUserName));
+                    UserInformation x = await Task.Run(() => Authentication.ChangeUserName(newUserName));
                     ParseInformation((await Task.Run(async () => await Authentication.GetUserInformation())));
 
                 }

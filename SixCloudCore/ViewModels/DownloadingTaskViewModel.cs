@@ -1,11 +1,8 @@
-﻿using QingzhenyunApis.Methods;
-using QingzhenyunApis.Methods.V3;
+﻿using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
-using SixCloudCore.Controllers;
 using SixCloudCore.Models;
 using System;
 using System.Globalization;
-using System.Threading;
 using System.Windows;
 using System.Windows.Data;
 
@@ -55,9 +52,9 @@ namespace SixCloudCore.ViewModels
                 }
                 else
                 {
-                    var span = DateTime.Now - lastTime;
+                    TimeSpan span = DateTime.Now - lastTime;
                     lastTime += span;
-                    var intervalCompleted = downloadTask.CompletedBytes - lastCompletedBytes;
+                    long intervalCompleted = downloadTask.CompletedBytes - lastCompletedBytes;
                     lastCompletedBytes += intervalCompleted;
                     lastSpeed += Math.Round(((span.TotalSeconds == 0 ? 0 : intervalCompleted / span.TotalSeconds) - lastSpeed) / 100, 0);
                     return Calculators.SizeCalculator((long)lastSpeed) + "/秒";

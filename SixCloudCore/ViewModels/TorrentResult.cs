@@ -14,7 +14,10 @@ namespace SixCloudCore.ViewModels
             {
                 throw new NotImplementedException();
             }
-            protected override bool CanParse(object parameter) => false;
+            protected override bool CanParse(object parameter)
+            {
+                return false;
+            }
 
             public TorrentResult(OfflineTaskParseUrl parseUrl, OfflineTaskDialogViewModel p) : base(parseUrl, p)
             {

@@ -3,10 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace SixCloudCore.Controllers
 {
@@ -26,7 +23,7 @@ namespace SixCloudCore.Controllers
                     {
                         pipeServer.WaitForConnection();
                         using StreamReader reader = new StreamReader(pipeServer);
-                        var newMessage = JsonConvert.DeserializeObject<IList<string>>(reader.ReadLine());
+                        IList<string> newMessage = JsonConvert.DeserializeObject<IList<string>>(reader.ReadLine());
                         NewMessage?.Invoke(new CrossProcessMessageEventArgs
                         {
                             Message = newMessage

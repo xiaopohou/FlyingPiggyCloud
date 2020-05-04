@@ -1,6 +1,4 @@
-﻿using QingzhenyunApis.EntityModels;
-
-namespace SixCloudCore.ViewModels
+﻿namespace SixCloudCore.ViewModels
 {
     internal sealed class MainFrameViewModel : ViewModelBase
     {

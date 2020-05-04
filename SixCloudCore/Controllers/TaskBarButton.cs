@@ -1,11 +1,7 @@
 ﻿using SixCloudCore.Views;
-using SourceChord.FluentWPF;
 using System;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Controls;
-using QingzhenyunApis.Methods.V3;
-using System.Threading.Tasks;
 
 namespace SixCloudCore.Controllers
 {
@@ -17,7 +13,7 @@ namespace SixCloudCore.Controllers
         {
             //菜单项在这里
             ContextMenuStrip contextMenu = new ContextMenuStrip();
-            var menuItem = new ToolStripMenuItem
+            ToolStripMenuItem menuItem = new ToolStripMenuItem
             {
                 Text = "退出"
             };
@@ -44,7 +40,7 @@ namespace SixCloudCore.Controllers
 
         private void ShowMainWindow(object sender, EventArgs e)
         {
-            var c = System.Windows.Application.Current.MainWindow;
+            Window c = System.Windows.Application.Current.MainWindow;
             if (c != null)
             {
                 c.Activate();

@@ -6,7 +6,6 @@ using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
 using SixCloudCore.FileUploader;
 using SixCloudCore.FileUploader.Calculators;
-using SixCloudCore.Views.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -170,7 +169,7 @@ namespace SixCloudCore.ViewModels
                 {
                     return;
                 }
-                var parsedTorrent = new TorrentResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
+                TorrentResult parsedTorrent = new TorrentResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
                 ParseResults.Add(parsedTorrent);
             }
         }
