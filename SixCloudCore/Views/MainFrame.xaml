@@ -99,9 +99,16 @@
                 Background="White"
                 x:Name="contextMenu" Height="0" Width="280" HorizontalAlignment="Right" VerticalAlignment="Top" MouseDown="ContextMenu_MouseDown">
             <StackPanel>
-                <TextBlock Text="{Binding Name}" Height="50" Width="280"/>
-                <ProgressBar Value="{Binding AvailableRate}" ToolTip="{Binding FrendlySpaceCapacity}" Height="50" Width="280"/>
-                <Button Content="修改用户名" Height="50" Width="280"/>
+                <Grid Height="100" Width="280" ToolTip="{Binding FrendlySpaceCapacity}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" FontSize="20" VerticalAlignment="Bottom" Text="{Binding Name}" Margin="15"/>
+                <ProgressBar Grid.Row="1" VerticalAlignment="Top" Value="{Binding AvailableRate}" Style="{StaticResource ProgressBarStyle}" Margin="15" Background="LightGray"/>
+                    
+                </Grid>
+                <Button Content="修改用户名" Command="{Binding ChangeUserNameCommand}" Height="50" Width="280"/>
                 <Button Content="修改密码" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
                 <Button Content="注销登录" Command="{Binding LogoutCommand}" Height="50" Width="280"/>
             </StackPanel>
