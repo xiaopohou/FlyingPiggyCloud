@@ -289,33 +289,29 @@ namespace SixCloudCore.ViewModels
         #region Stick
         public DependencyCommand StickCommand { get; private set; }
 
-        private void Stick(object parameter)
+        private async void Stick(object parameter)
         {
-            new LoadingView(parameter as Window, async () =>
-             {
-                 if (CopyList != null && CopyList.Length > 0)
-                 {
-                     string[] copyList = CopyList;
-                     CopyList = null;
-                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                     await FileSystem.Copy(copyList, CurrentUUID);
-                 }
-                 else if (CutList != null && CutList.Length > 0)
-                 {
-                     string[] cutList = CutList;
-                     CutList = null;
-                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                     await FileSystem.Move(cutList, CurrentUUID);
-                 }
-                 else
-                 {
-                     CutList = null;
-                     CopyList = null;
-                     StickCommand.OnCanExecutedChanged(this, new EventArgs());
-                 }
-                 await NavigateByPath(CurrentPath);
-             }, "正在与服务器py，SixCloud处理中").Show();
-
+            if (CopyList != null && CopyList.Length > 0)
+            {
+                string[] copyList = CopyList;
+                CopyList = null;
+                StickCommand.OnCanExecutedChanged(this, new EventArgs());
+                await FileSystem.Copy(copyList, CurrentUUID);
+            }
+            else if (CutList != null && CutList.Length > 0)
+            {
+                string[] cutList = CutList;
+                CutList = null;
+                StickCommand.OnCanExecutedChanged(this, new EventArgs());
+                await FileSystem.Move(cutList, CurrentUUID);
+            }
+            else
+            {
+                CutList = null;
+                CopyList = null;
+                StickCommand.OnCanExecutedChanged(this, new EventArgs());
+            }
+            await NavigateByPath(CurrentPath);
         }
 
         private bool CanStick(object parameter)

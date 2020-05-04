@@ -92,6 +92,7 @@ namespace SixCloudCore.ViewModels
             {
 
             }
+
             else if (File.Exists(path))
             {
                 UploadingFileViewModel task = new UploadingFileViewModel(targetPath, path);

@@ -60,8 +60,8 @@ namespace SixCloudCore.ViewModels
                     Application.Current.DispatcherUnhandledException += (sender, e) =>
                     {
                         TasksLogger.ExitEventHandler(sender, e);
-                        System.Windows.Forms.Application.Restart();
-                        Application.Current.Shutdown();
+                        //System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                        //Application.Current.Shutdown();
                     };
                 });
                 TasksLogger.StartUpRecovery();
