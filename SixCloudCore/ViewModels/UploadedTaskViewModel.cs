@@ -8,6 +8,6 @@ namespace SixCloudCore.ViewModels
 
         public DateTime CompletedTime { get; set; }
 
-        public string Icon => throw new NotImplementedException();
+        public string Icon => "\uf382";
     }
 }

@@ -10,7 +10,7 @@ namespace SixCloudCore.ViewModels
     {
         private readonly string fullPath;
 
-        public string Icon => "\uf46c";
+        public string Icon => "\uf381";
 
         public string Name { get; private set; }
 

@@ -15,7 +15,7 @@ namespace SixCloudCore.ViewModels
             TargetPath = targetPath;
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
-            string hash = ETag.ComputeEtag(filePath);
+            string hash = $"{ETag.ComputeEtag(filePath)}{Calculators.LongTo36(new FileInfo(filePath).Length)}";
             UploadToken x = FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
             //if (x.HashCached)
             //{

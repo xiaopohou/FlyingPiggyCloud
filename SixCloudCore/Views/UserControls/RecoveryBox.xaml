@@ -23,8 +23,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <controls:FontIcon Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                   IconSize="24"
+                <controls:FontIcon IconSize="24"
                                    Margin="4"
                                    Icon="{Binding Directory, Converter={StaticResource FontIconConverter}, Mode=OneWay}"
                                    HorizontalAlignment="Center"

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:SixCloudCore.Views.UserControls"
              xmlns:metro="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
              mc:Ignorable="d" 
+             xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <Style x:Key="Title" TargetType="TextBlock">
@@ -14,40 +15,41 @@
             <Setter Property="Margin" Value="0,15"/>
         </Style>
 
+        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}"/>
+
         <DataTemplate x:Key="TransferItemDataTemplate">
             <Border Background="White" Name="ground" Opacity="0.9">
-            <Grid Height="48" Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="48"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="3"/>
-                <TextBlock Grid.RowSpan="3" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="3" Value="{Binding Progress, Mode=OneWay}" Grid.Column="2"  Grid.Row="1"/>
+                <Grid Height="48" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="3"/>
+                    <TextBlock Grid.RowSpan="3" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="3" Value="{Binding Progress, Mode=OneWay}" Grid.Column="2"  Grid.Row="1"/>
 
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <TextBlock Text="{Binding Status}"/>
-                    <TextBlock Text="{Binding Completed}"/>
-                    <TextBlock Text="，共"/>
-                    <TextBlock Text="{Binding Total}"/>
-                </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <TextBlock Text="{Binding Status}"/>
+                        <TextBlock Text="{Binding Completed}"/>
+                        <TextBlock Text="，共"/>
+                        <TextBlock Text="{Binding Total}"/>
+                    </StackPanel>
 
-                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Speed}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Speed}"/>
 
-                <StackPanel Grid.RowSpan="3" Grid.Column="3" Orientation="Horizontal">
-                    <metro:LightButton Height="48" Width="48" Command="{Binding RecoveryCommand}"/>
-                    <metro:LightButton Height="48" Width="48" Command="{Binding PauseCommand}"/>
-                    <metro:LightButton Height="48" Width="48" Command="{Binding CancelCommand}"/>
-                </StackPanel>
-            </Grid>
-                
+                    <StackPanel Grid.RowSpan="3" Grid.Column="3" Orientation="Horizontal">
+                        <metro:LightButton Height="48" Width="48" Command="{Binding RecoveryCommand}"/>
+                        <metro:LightButton Height="48" Width="48" Command="{Binding PauseCommand}"/>
+                        <metro:LightButton Height="48" Width="48" Command="{Binding CancelCommand}"/>
+                    </StackPanel>
+                </Grid>
             </Border>
             <DataTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -55,6 +57,65 @@
                 </Trigger>
             </DataTemplate.Triggers>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:UploadedTaskViewModel}">
+            <Border Margin="0,1" Background="White" Name="ground" Opacity="0.9">
+                <Grid Height="48" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
+                    <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                        <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:DownloadedTaskViewModel}">
+            <Border Margin="0,1" Background="White" Name="ground" Opacity="0.9">
+                <Grid Height="48" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Rectangle Fill="White" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
+                    <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
+                <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                    <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
+                </StackPanel>
+                <Grid.ContextMenu>
+                    <ContextMenu Style="{StaticResource MaterialDesignContextMenu}">
+                        <MenuItem Header="打开" Command="{Binding OpenCommand}"/>
+                        <MenuItem Header="在文件夹中显示" Command="{Binding ShowCommand}"/>
+                        <MenuItem Header="删除" Command="{Binding DeleteCommand}"/>
+                    </ContextMenu>
+                </Grid.ContextMenu>
+            </Grid>
+                
+            </Border>
+
+        </DataTemplate>
+
 
     </UserControl.Resources>
     <ScrollViewer>
@@ -67,7 +128,7 @@
             <ItemsControl x:Name="UploadingList" ItemsSource="{Binding UploadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
             <!--最近活动-->
             <TextBlock Style="{StaticResource Title}" Text="最近活动"/>
-            <ListBox SelectionMode="Extended" x:Name="CompletedList" ItemsSource="{Binding CompletedList}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
+            <ItemsControl DataContext="{Binding TransferCompletedList}" x:Name="CompletedList" ItemsSource="{Binding TransferCompletedList}"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

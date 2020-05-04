@@ -10,13 +10,15 @@ namespace SixCloudCore.ViewModels
 {
     internal class TransferListViewModel : ViewModelBase
     {
-        public string DownloadingListTitle => DownloadingList.Count==0?string.Empty:$"在下载队列中（{DownloadingList.Count}）";
+        public string DownloadingListTitle => DownloadingList.Count == 0 ? string.Empty : $"在下载队列中（{DownloadingList.Count}）";
 
         public string UploadingListTitle => UploadingList.Count == 0 ? string.Empty : $"在上传队列中（{UploadingList.Count}）";
 
         public ObservableCollection<DownloadingTaskViewModel> DownloadingList => downloadingList;
 
         public ObservableCollection<UploadingTaskViewModel> UploadingList => uploadingList;
+
+        public TransferCompletedListViewModel TransferCompletedList { get; private set; } = new TransferCompletedListViewModel();
 
         #region FromDownloadingListViewModel
 
@@ -43,7 +45,7 @@ namespace SixCloudCore.ViewModels
                         downloadingList.Remove(task);
                         if (File.Exists(task.CurrentFileFullPath))
                         {
-                            DownloadedListViewModel.NewCompleted(task);
+                            TransferCompletedListViewModel.NewDownloadedTask(task);
                         }
                     }
                     catch (Exception)
@@ -94,7 +96,7 @@ namespace SixCloudCore.ViewModels
                 {
                     task.UploadCompleted -= CompletedEventHandler;
                     uploadingList.Remove(task);
-                    UploadedListViewModel.NewTask(task);
+                    TransferCompletedListViewModel.NewUploadedTask(task);
                 };
                 task.UploadAborted += AbortedEventHandler;
                 void AbortedEventHandler(object sender, EventArgs e)

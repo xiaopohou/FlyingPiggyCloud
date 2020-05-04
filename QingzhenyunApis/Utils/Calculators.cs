@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -55,6 +56,26 @@ namespace QingzhenyunApis.Utils
                 }
                 return sBuilder.ToString();
             }
+        }
+
+        public static string LongTo36(long num)
+        {
+            var str = "0123456789abcdefghijklmnopqrstuvwxyz";
+            var numList = new List<char>();
+
+
+            do
+            {
+                var remainder = (int)(num % 36);
+                numList.Add(str[remainder]);
+
+                num /= 36;
+
+                if (num != 0) continue;
+
+                numList.Reverse();
+                return new string(numList.ToArray());
+            } while (true);
         }
 
         internal class Base64
