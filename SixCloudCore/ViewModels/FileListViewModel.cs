@@ -86,7 +86,17 @@ namespace SixCloudCore.ViewModels
 
         public string CurrentPath { get; set; }
 
-        public string CurrentUUID { get; set; }
+        public string CurrentUUID
+        {
+            get => currentUUID; set
+            {
+                currentUUID = value;
+                NewFolderCommand.OnCanExecutedChanged(this, null);
+                CopyCommand.OnCanExecutedChanged(this, null);
+                StickCommand.OnCanExecutedChanged(this, null);
+
+            }
+        }
 
         #region FileListViewModelFunctions
         [DisallowNull]
@@ -259,6 +269,24 @@ namespace SixCloudCore.ViewModels
         private static string[] s_copyList;
         private static string[] _cutList;
         private int _selectedIndex;
+        private string currentUUID;
+        #endregion
+
+        #region NavigateCommand
+        public DependencyCommand NavigateCommand { get; set; }
+        private async void Navigate(object parameter)
+        {
+            CurrentPath = parameter as string;
+            fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: ":all", mode: Mode).GetAsyncEnumerator();
+            //FileMetaData directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
+            CurrentUUID = default;
+            App.Current.Dispatcher.Invoke(() => FileList.Clear());
+            CreatePathArray(CurrentPath);
+            await LazyLoad();
+            PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+
+        }
+
         #endregion
         #endregion
 
@@ -283,6 +311,10 @@ namespace SixCloudCore.ViewModels
 
                 NavigateByUUIDAsync(CurrentUUID);
             }
+        }
+        private bool CanNewFolder(object parameter)
+        {
+            return CurrentUUID != default;
         }
         #endregion
 
@@ -316,6 +348,11 @@ namespace SixCloudCore.ViewModels
 
         private bool CanStick(object parameter)
         {
+            if (CurrentUUID == default)
+            {
+                return false;
+            }
+
             if ((CopyList != null && CopyList.Length > 0) || (CutList != null && CutList.Length > 0))
             {
                 return true;
@@ -464,9 +501,10 @@ namespace SixCloudCore.ViewModels
             CutCommand = new DependencyCommand(Cut, DependencyCommand.AlwaysCan);
             DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
             CopyCommand = new DependencyCommand(Copy, DependencyCommand.AlwaysCan);
-            NewFolderCommand = new DependencyCommand(NewFolder, DependencyCommand.AlwaysCan);
+            NewFolderCommand = new DependencyCommand(NewFolder, CanNewFolder);
             UploadFileCommand = new DependencyCommand(UploadFile, DependencyCommand.AlwaysCan);
             UploadFolderCommand = new DependencyCommand(UploadFolder, DependencyCommand.AlwaysCan);
+            NavigateCommand = new DependencyCommand(Navigate, DependencyCommand.AlwaysCan);
         }
     }
 

@@ -62,8 +62,18 @@
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <usercontrols:FileListView x:Name="FileListContainer" ListView.SelectionChanged="FileListContainer_SelectionChanged"/>
-                    <usercontrols:FileListItemInformationView HorizontalAlignment="Stretch" Grid.Row="1" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.RowSpan="2" Grid.Column="0" DataContext="{Binding FileListItemInformation}">
+                        <CheckBox IsChecked="True" Command="{Binding NavigatiCommand}" CommandParameter="/" Content="所有文件"/>
+                        <CheckBox Command="{Binding NavigateCommand}" CommandParameter="" Content="所有视频"/>
+                        <CheckBox Command="{Binding NavigateCommand}" CommandParameter="" Content="所有音频"/>
+                        <CheckBox Command="{Binding NavigateCommand}" CommandParameter="" Content="所有图片"/>
+                    </StackPanel>
+                    <usercontrols:FileListView x:Name="FileListContainer" ListView.SelectionChanged="FileListContainer_SelectionChanged" Grid.Column="1"/>
+                    <usercontrols:FileListItemInformationView HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
                 </Grid>
             </TabItem>
 
