@@ -1,6 +1,7 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
+using Sentry;
 using SixCloudCore.Controllers;
 using SixCloudCore.Models;
 using SixCloudCore.Views;
@@ -60,6 +61,7 @@ namespace SixCloudCore.ViewModels
                     Application.Current.DispatcherUnhandledException += (sender, e) =>
                     {
                         TasksLogger.ExitEventHandler(sender, e);
+                        SentrySdk.CaptureException(e.Exception);
                         //System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
                         //Application.Current.Shutdown();
                     };

@@ -1,4 +1,5 @@
-﻿using SixCloudCore.ViewModels;
+﻿using Sentry;
+using SixCloudCore.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -16,6 +17,7 @@ namespace SixCloudCore
     {
         public App()
         {
+            SentrySdk.Init("https://aa9303eba050450187a9c04653e74be5@o387540.ingest.sentry.io/5222970");
             new LoginWebViewModel();
         }
     }
