@@ -7,14 +7,15 @@ namespace SixCloudCore.ViewModels
         /// <summary>
         /// 一个可以秒传的上传任务
         /// </summary>
-        private class HashCachedTask : IUploadTask
+        internal class HashCachedTask : IUploadTask
         {
             public string FilePath { get; set; }
 
-            public HashCachedTask()
+            public HashCachedTask(string hash)
             {
                 CompletedBytes = 999;
                 TotalBytes = 999;
+                Hash = hash;
             }
 
             public string Token { get; set; }

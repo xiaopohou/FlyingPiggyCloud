@@ -32,7 +32,7 @@ namespace SixCloudCore.Controllers
         }
         private static ObservableCollection<DownloadingTaskViewModel> downloadingList;
 
-        public static async Task StartUpRecovery()
+        public static void StartUpRecovery()
         {
             try
             {
@@ -44,7 +44,7 @@ namespace SixCloudCore.Controllers
                     {
                         foreach (UploadTaskRecord record in list)
                         {
-                            await App.Current.Dispatcher.Invoke(async () => await UploadingListViewModel.NewTask(record.TargetPath, record.LocalFilePath));
+                            App.Current.Dispatcher.Invoke(() => UploadingListViewModel.NewTask(record.TargetPath, record.LocalFilePath));
                         }
                     }
                 }

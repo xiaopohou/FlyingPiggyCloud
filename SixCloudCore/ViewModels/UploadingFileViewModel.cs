@@ -1,4 +1,5 @@
 ﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
 using SixCloudCore.FileUploader;
@@ -21,8 +22,16 @@ namespace SixCloudCore.ViewModels
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
             string hash = $"{ETag.ComputeEtag(filePath)}{Calculators.LongTo36(new FileInfo(filePath).Length)}";
-            UploadToken x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name);
-            task = x.Created ? new HashCachedTask() : EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
+            try
+            {
+                UploadToken x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name);
+                task = x.Created ? new HashCachedTask(hash) : EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
+
+            }
+            catch (RequestFailedException ex) when (ex.Code == "FILE_ALREADY_EXISTS")
+            {
+                task = new HashCachedTask(hash);
+            }
         }
 
         private IUploadTask task;

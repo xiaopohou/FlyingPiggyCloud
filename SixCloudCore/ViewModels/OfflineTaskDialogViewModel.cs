@@ -3,10 +3,13 @@ using Microsoft.Win32;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
+using QingzhenyunApis.Utils;
 using SixCloudCore.FileUploader;
+using SixCloudCore.FileUploader.Calculators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -161,6 +164,11 @@ namespace SixCloudCore.ViewModels
                 CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
             }
         }
+
+        internal class TorrentResult : ViewModelBase
+        {
+
+        }
         #endregion
 
         #region BindingProperties
@@ -273,8 +281,21 @@ namespace SixCloudCore.ViewModels
                 string Name = openFileDialog.SafeFileName;
                 string targetPath = "/:torrent";
                 string filePath = openFileDialog.FileName;
-                UploadToken x = await FileSystem.UploadFile(Name, parentPath: targetPath, originalFilename: Name);
-                IUploadTask task = EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
+
+                Name = Path.GetFileName(filePath);
+                string hash = $"{ETag.ComputeEtag(filePath)}{Calculators.LongTo36(new FileInfo(filePath).Length)}";
+                IUploadTask task;
+                try
+                {
+                    UploadToken x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name);
+                    task = x.Created ? new UploadingFileViewModel.HashCachedTask(hash) : EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
+
+                }
+                catch (RequestFailedException ex) when (ex.Code == "FILE_ALREADY_EXISTS")
+                {
+                    task = new UploadingFileViewModel.HashCachedTask(hash);
+                }
+
                 bool uploadSuccess = true;
                 await Task.Run(() =>
                 {
@@ -296,8 +317,9 @@ namespace SixCloudCore.ViewModels
                 {
                     return;
                 }
-
-                ParseResults.Add(new ParseResult(await OfflineDownloader.Parse(fileHash: task.Hash), this));
+                var parsedTorrent = new ParseResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
+                parsedTorrent.Parse();
+                ParseResults.Add(parsedTorrent);
                 IEnumerable<OfflineTaskParameters> taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
                 OfflineTaskParameters = taskParameters.ToArray();
 
