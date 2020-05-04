@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace QingzhenyunApis.Utils
@@ -35,6 +36,25 @@ namespace QingzhenyunApis.Utils
         {
             return TimeZoneInfo.ConvertTimeFromUtc((new DateTime(1970, 1, 1)).AddMilliseconds(UnixTimeStamp), TimeZoneInfo.Local).ToString("yyyy/MM/dd HH:mm:ss");
             //return TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)).AddMilliseconds(UnixTimeStamp).ToString("yyyy/MM/dd HH:mm:ss");
+        }
+
+        /// <summary>
+        /// 用户输入的密码通过此方法转换为MD5值
+        /// </summary>
+        /// <param name="input">用户输入</param>
+        /// <returns></returns>
+        public static string UserMd5(string input)
+        {
+            using (var md5 = MD5.Create())
+            {
+                byte[] bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+                StringBuilder sBuilder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    sBuilder.Append(bytes[i].ToString("x2"));
+                }
+                return sBuilder.ToString();
+            }
         }
 
         internal class Base64

@@ -15,6 +15,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SourceChord.FluentWPF;
+using QingzhenyunApis.Methods.V3;
+using QingzhenyunApis.Utils;
+using QingzhenyunApis.Exceptions;
+using SixCloudCore.ViewModels;
 
 namespace SixCloudCore.Views
 {
@@ -30,17 +34,19 @@ namespace SixCloudCore.Views
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-#warning 此处功能尚未实现
-            //var x = await Task.Run(() => authentication.ChangePasswordByOldPassword(Authentication.UserMd5(OldValue.Password), Authentication.UserMd5(NewValue.Password)));
-            //if(x.Success)
-            //{
-            //    Close();
-            //}
-            //else
-            //{
-            //    MessageBox.Show($"修改失败，服务器返回{x.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    Close();
-            //}
+            try
+            {
+                await Task.Run(() => Authentication.ChangePassword(Calculators.UserMd5(OldValue.Password), Calculators.UserMd5(NewValue.Password)));
+                new LoginWebViewModel(false);
+            }
+            catch (RequestFailedException ex)
+            {
+                MessageBox.Show($"修改失败，服务器返回{ex.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                Close();
+            }
         }
     }
 }

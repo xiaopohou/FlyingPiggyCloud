@@ -9,6 +9,8 @@ namespace SixCloudCore.ViewModels
 {
     internal class LoginWebViewModel : ViewModelBase
     {
+        bool createMainFrame;
+
         private DestinationInformation DestinationInfo { get; set; }
 
         private LoginWebView LoginWebView { get; set; }
@@ -29,7 +31,7 @@ namespace SixCloudCore.ViewModels
                 LoginWebView.Show();
             });
 
-            if (await Authentication.CheckDestination(DestinationInfo))
+            if (await Authentication.CheckDestination(DestinationInfo) && createMainFrame)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -47,8 +49,9 @@ namespace SixCloudCore.ViewModels
 
         public string LoginUrl { get; private set; }
 
-        public LoginWebViewModel()
+        public LoginWebViewModel(bool createMainFrame = true)
         {
+            this.createMainFrame = createMainFrame;
             InitializeComponent();
         }
     }

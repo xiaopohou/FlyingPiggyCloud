@@ -15,8 +15,6 @@ namespace SixCloudCore.ViewModels
 {
     internal sealed class UserInformationViewModel : ViewModelBase
     {
-        //private readonly Authentication authentication = new Authentication();
-
         public ImageSource Icon { get; set; }
 
         public double AvailableRate { get; set; }
@@ -41,8 +39,9 @@ namespace SixCloudCore.ViewModels
                 icon = currentUser.Icon;
                 if (string.IsNullOrEmpty(icon) || icon == "default.jpg" || icon == "default")
                 {
-                    icon = "http://qc.cdorey.net/default.jpg";
+                    icon = "/MediaResources/666.ico";
                 }
+
                 Icon = new BitmapImage(new Uri(icon));
 
             }
@@ -95,8 +94,9 @@ namespace SixCloudCore.ViewModels
         }
 
         public DependencyCommand LogoutCommand { get; set; }
-        private void Logout(object parameter)
+        private async void Logout(object parameter)
         {
+            await Authentication.Logout();
             LocalProperties.Token = "";
             LocalProperties.IsAutoLogin = false;
             Application.Current.Shutdown();

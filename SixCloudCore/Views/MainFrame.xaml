@@ -42,8 +42,10 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
                         <TabPanel Grid.Row="0" Grid.Column="0" x:Name="headerPanel" IsItemsHost="true"/>
-                        <StackPanel MaxHeight="40" Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
-                            <Image Source="/MediaResources/666.ico"/>
+
+                        <StackPanel DataContext="{Binding UserInformation}"
+                                    MaxHeight="40" Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
+                            <Image Source="{Binding Icon}"/>
                             <Button x:Name="contextMenuButton" Height="40" Width="40">
                                 <metro:FontIcon Icon="&#xf141;"/>
                             </Button>
@@ -94,14 +96,14 @@
                 DataContext="{Binding UserInformation}"
                 BorderBrush="{DynamicResource ImmersiveSystemAccentBrush}" 
                 BorderThickness="1"
-                Background="White" 
+                Background="White"
                 x:Name="contextMenu" Height="0" Width="280" HorizontalAlignment="Right" VerticalAlignment="Top" MouseDown="ContextMenu_MouseDown">
             <StackPanel>
                 <TextBlock Text="{Binding Name}" Height="50" Width="280"/>
-                <ProgressBar Value="{Binding Rate}" ToolTip="{Binding CapabilityToolTip}" Height="50" Width="280"/>
-                <Button Content="Hello World" Height="50" Width="280"/>
-                <Button Content="修改密码" Height="50" Width="280"/>
-                <Button Content="注销登录" Height="50" Width="280"/>
+                <ProgressBar Value="{Binding AvailableRate}" ToolTip="{Binding FrendlySpaceCapacity}" Height="50" Width="280"/>
+                <Button Content="修改用户名" Height="50" Width="280"/>
+                <Button Content="修改密码" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
+                <Button Content="注销登录" Command="{Binding LogoutCommand}" Height="50" Width="280"/>
             </StackPanel>
         </Border>
 
@@ -130,7 +132,7 @@
             </EventTrigger>
 
         </Grid.Triggers>
-        
+
 
     </Grid>
 </fw:AcrylicWindow>
