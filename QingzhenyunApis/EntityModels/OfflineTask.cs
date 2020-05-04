@@ -26,8 +26,8 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty("size")]
         public long Size { get; set; }
 
-        [JsonProperty("downloadSize")]
-        public long DownloadSize { get; set; }
+        [JsonProperty("processedSize")]
+        public long ProcessedSize { get; set; }
 
         [JsonProperty("progress")]
         public long Progress { get; set; }
@@ -63,7 +63,7 @@ namespace QingzhenyunApis.EntityModels
         public string Data { get; set; }
 
         [JsonProperty("textLink")]
-        public Uri TextLink { get; set; }
+        public string TextLink { get; set; }
 
         [JsonProperty("fileHash")]
         public string FileHash { get; set; }

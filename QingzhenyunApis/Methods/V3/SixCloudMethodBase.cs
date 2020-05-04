@@ -92,7 +92,7 @@ namespace QingzhenyunApis.Methods.V3
             {
                 return JsonConvert.DeserializeObject<T>(responseBody);
             }
-            catch (JsonSerializationException)
+            catch (JsonSerializationException ex)
             {
                 throw JsonConvert.DeserializeObject<RequestFailedException>(responseBody);
             }

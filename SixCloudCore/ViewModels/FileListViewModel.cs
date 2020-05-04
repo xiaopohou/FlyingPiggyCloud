@@ -2,6 +2,7 @@
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Views;
+using SixCloudCore.Views.UserControls;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,9 @@ namespace SixCloudCore.ViewModels
 {
     internal class FileListViewModel : ViewModelBase
     {
+        public Mode Mode { get; set; } = Mode.FileListContainer;
+
+
         public static string[] CopyList
         {
             get => s_copyList;
@@ -98,7 +102,7 @@ namespace SixCloudCore.ViewModels
         /// <param name="identity"></param>
         /// <exception cref="RequestFailedException">未能找到目录</exception>
         /// <returns></returns>
-        public static async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(int skip, string path = null, string identity = null)
+        public static async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(int skip, string path = null, string identity = null, Mode mode = Mode.FileListContainer)
         {
             int start = skip;
             const int limit = 20;
@@ -109,6 +113,10 @@ namespace SixCloudCore.ViewModels
                 count = x.List.Count;
                 foreach (FileMetaData item in x.List)
                 {
+                    if (mode == Mode.PathSelector && !item.Directory)
+                    {
+                        continue;
+                    }
                     yield return item;
                 }
                 start += limit;
@@ -140,7 +148,7 @@ namespace SixCloudCore.ViewModels
         public async Task NavigateByUUID(string uuid)
         {
             previousPath.Push(CurrentPath);
-            fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: uuid).GetAsyncEnumerator();
+            fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: uuid, mode: Mode).GetAsyncEnumerator();
             FileMetaData directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
             CurrentPath = directoryInfo.Path;
             CurrentUUID = directoryInfo.UUID;
@@ -158,7 +166,7 @@ namespace SixCloudCore.ViewModels
         public async Task NavigateByPath(string path)
         {
             previousPath.Push(CurrentPath);
-            fileMetaDataEnumerator = CreateFileListEnumerator(0, path).GetAsyncEnumerator();
+            fileMetaDataEnumerator = CreateFileListEnumerator(0, path, mode: Mode).GetAsyncEnumerator();
             FileMetaData directoryInfo = (await FileSystem.GetDirectory(path: path, start: 0, limit: 1)).DictionaryInformation;
             CurrentPath = directoryInfo.Path;
             CurrentUUID = directoryInfo.UUID;
@@ -464,6 +472,12 @@ namespace SixCloudCore.ViewModels
             UploadFileCommand = new DependencyCommand(UploadFile, DependencyCommand.AlwaysCan);
             UploadFolderCommand = new DependencyCommand(UploadFolder, DependencyCommand.AlwaysCan);
         }
+    }
+
+    public enum Mode
+    {
+        FileListContainer,
+        PathSelector
     }
 
     public class TooLongStringConverter : IValueConverter

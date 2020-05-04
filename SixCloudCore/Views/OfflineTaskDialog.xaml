@@ -72,40 +72,41 @@
 
                 <TextBlock Margin="0,5" Grid.ColumnSpan="3" Grid.Row="0" Text="请输入链接"/>
                 <TextBox Grid.ColumnSpan="3" Grid.Row="1" AcceptsReturn="True" x:Name="InputBox"
+                         Height="150" Margin="0,0,0,30"
                          Text="{Binding InputBoxString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          fw:Extensions.PlaceholderText="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
                          LostFocus="InputBox_LostFocus"/>
 
                 <ScrollViewer Grid.ColumnSpan="3" Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                    <ItemsControl x:Name="ParsedUrls" ItemsSource="{Binding ParseResults}">
+                    <ItemsControl FocusVisualStyle="{x:Null}" x:Name="ParsedUrls" ItemsSource="{Binding ParseResults}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <!--任务类型图标-->
-                                        <ColumnDefinition Width="Auto"/>
                                         <!--URL-->
                                         <ColumnDefinition Width="1*"/>
                                         <!--Password-->
                                         <ColumnDefinition Width="Auto"/>
+                                        <!--任务类型图标-->
+                                        <ColumnDefinition Width="38"/>
                                         <!--解析按钮-->
-                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="38"/>
                                         <!--取消按钮-->
-                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="38"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
+                                        <RowDefinition Height="38"/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <controls:FontIcon Margin="3" Icon="{Binding Icon}"/>
-                                    <TextBox Margin="3" Grid.Column="1" IsEnabled="{Binding AllowEdit}" Text="{Binding SourceUrl}"/>
-                                    <StackPanel Margin="3" Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="2">
+                                    <TextBox Grid.Column="0" IsEnabled="{Binding AllowEdit}" Text="{Binding SourceUrl}" VerticalContentAlignment="Center"/>
+                                    <StackPanel Margin="3,0" Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="1">
                                         <TextBlock VerticalAlignment="Center" Text="资源密码："/>
                                         <TextBox VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="60" Text="{Binding SharePassword,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
                                     </StackPanel>
-                                    <controls:LightButton ToolTip="解析链接" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
-                                    <controls:LightButton ToolTip="取消任务" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
-                                    <TextBlock x:Name="FriendlyErrorInfo" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding FriendlyErrorInfo}" Foreground="DarkRed" Visibility="{Binding FriendlyErrorInfoVisibility}"/>
+                                    <controls:FontIcon Grid.Column="2" Icon="{Binding Icon}"/>
+                                    <controls:LightButton HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="解析链接" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
+                                    <controls:LightButton  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="取消任务" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
+                                    <TextBlock x:Name="FriendlyErrorInfo" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding FriendlyInfo}" Foreground="DarkRed"/>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -209,8 +210,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="请选择保存路径" Margin="5" FontSize="24" VerticalAlignment="Top"/>
-                <UserControls:FileGridView Mode="PathSelector"
-                                           Grid.Row="1"
+                <UserControls:FileGridView Grid.Row="1"
                                            DataContext="{Binding FileGrid}"
                                            x:Name="fileList"
                                            Margin="5"

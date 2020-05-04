@@ -22,11 +22,35 @@ namespace SixCloudCore.Views.UserControls
     /// </summary>
     public partial class FileGridView : UserControl,ICommandSource
     {
-        public static readonly DependencyProperty ModeProperty = DependencyProperty.Register("Mode", typeof(Mode), typeof(FileGridView), new PropertyMetadata(Mode.FileListContainer));
-        public Mode Mode { get => (Mode)GetValue(ModeProperty); set => SetValue(ModeProperty, value); }
 
         public static readonly DependencyProperty SelectObjectProperty = DependencyProperty.Register("SelectObject", typeof(object), typeof(FileGridView));
         public object SelectObject { get => GetValue(SelectObjectProperty); set => SetValue(SelectObjectProperty, value); }
+
+        private void AddressBar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ListBox listBox && DataContext is FileListViewModel viewmodel)
+            {
+                int i = listBox.SelectedIndex;
+                if (i == 0)
+                {
+                    viewmodel.NavigateByPathAsync("/");
+                }
+                else if (i != -1)
+                {
+                    string[] pathArray = new string[i];
+                    viewmodel.PathArray.CopyTo(1, pathArray, 0, i);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    foreach (string path in pathArray)
+                    {
+                        stringBuilder.Append("/");
+                        stringBuilder.Append(path);
+                    }
+                    viewmodel.NavigateByPathAsync(stringBuilder.ToString());
+                }
+                listBox.SelectedIndex = -1;
+            }
+        }
+
 
         #region ICommandSource
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", typeof(ICommand), typeof(FileGridView), new PropertyMetadata(null, new PropertyChangedCallback(CommandChanged)));
@@ -151,11 +175,5 @@ namespace SixCloudCore.Views.UserControls
         {
             throw new NotImplementedException();
         }
-    }
-
-    public enum Mode
-    {
-        FileListContainer,
-        PathSelector
     }
 }

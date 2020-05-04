@@ -6,6 +6,7 @@ using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
 using SixCloudCore.FileUploader;
 using SixCloudCore.FileUploader.Calculators;
+using SixCloudCore.Views.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,157 +20,10 @@ using System.Windows;
 
 namespace SixCloudCore.ViewModels
 {
-    internal class OfflineTaskDialogViewModel : ViewModelBase
+    internal partial class OfflineTaskDialogViewModel : ViewModelBase
     {
         private string inputBoxString;
         private OfflineUrlsDialogStage stage = OfflineUrlsDialogStage.WhichType;
-
-        #region InnerModels
-        internal class ParseResult : ViewModelBase
-        {
-            private OfflineTaskParseUrl parseResult;
-            private readonly OfflineTaskDialogViewModel parent;
-
-            internal enum ParseResultStatus
-            {
-                /// <summary>
-                /// 解析中
-                /// </summary>
-                Parsing,
-                /// <summary>
-                /// 成功
-                /// </summary>
-                Success,
-                /// <summary>
-                /// 需要密码
-                /// </summary>
-                PasswordRequired,
-                /// <summary>
-                /// 不合法的地址
-                /// </summary>
-                InvalidUrl
-            }
-
-            public string Name => parseResult.Info.Name;
-
-            public string FriendlyErrorInfo => Status switch
-            {
-                ParseResultStatus.Success => null,
-                ParseResultStatus.Parsing => "解析中请稍等",
-                ParseResultStatus.PasswordRequired => "需要密码",
-                ParseResultStatus.InvalidUrl => "地址解析失败",
-                _ => "预期外的任务状态",
-            };
-
-            public Visibility FriendlyErrorInfoVisibility => FriendlyErrorInfo == null ? Visibility.Collapsed : Visibility.Visible;
-
-            public string Identity => parseResult.Hash;
-
-            public long Size => parseResult.Info.Size;
-
-            public IList<OfflineTaskParseFile> Files => parseResult.Info.DataList;
-
-            /// <summary>
-            /// 任务解析状态
-            /// </summary>
-            public ParseResultStatus Status { get; private set; } = ParseResultStatus.Parsing;
-
-            public Visibility PasswordBoxVisibility => Status == ParseResultStatus.PasswordRequired ? Visibility.Visible : Visibility.Collapsed;
-
-            public string SourceUrl { get; set; }
-
-            public bool AllowEdit => Status != ParseResultStatus.Success;
-
-            public string Icon => Status switch
-            {
-                ParseResultStatus.Parsing => "\uf519",
-                ParseResultStatus.PasswordRequired => "\uf084",
-                ParseResultStatus.InvalidUrl => "\uf06a",
-                ParseResultStatus.Success => "\uf058",
-                _ => "\uf519",
-            };
-
-            public string SharePassword { get; set; }
-
-            /// <summary>
-            /// 仅未成功的任务可调用此Command
-            /// </summary>
-            public DependencyCommand ParseCommand { get; set; }
-            public async void Parse(object parameter = null)
-            {
-                if (SourceUrl == null)
-                {
-                    throw new InvalidOperationException("Url为空");
-                }
-
-                try
-                {
-                    parseResult = await OfflineDownloader.Parse(SourceUrl, password: SharePassword);
-                    Status = ParseResultStatus.Success;
-                }
-                catch (NeedPasswordException)
-                {
-                    Status = ParseResultStatus.PasswordRequired;
-                }
-                catch (UnsupportUrlException)
-                {
-                    Status = ParseResultStatus.InvalidUrl;
-                }
-                catch (RequestFailedException ex)
-                {
-                    if (ex.Code == "SHARE_IS_EMPTY")
-                    {
-                        Status = ParseResultStatus.InvalidUrl;
-                    }
-                    else
-                    {
-                        Status = ParseResultStatus.InvalidUrl;
-                    }
-                }
-
-                OnPropertyChanged(nameof(PasswordBoxVisibility));
-                OnPropertyChanged(nameof(Status));
-                OnPropertyChanged(nameof(AllowEdit));
-                OnPropertyChanged(nameof(Icon));
-                OnPropertyChanged(nameof(FriendlyErrorInfo));
-                OnPropertyChanged(nameof(FriendlyErrorInfoVisibility));
-                parent.UrlParseResultConfirmCommand.OnCanExecutedChanged(this, null);
-                ParseCommand.OnCanExecutedChanged(this, null);
-            }
-            private bool CanParse(object parameter)
-            {
-                return Status != ParseResultStatus.Success;
-            }
-
-            public DependencyCommand CancelCommand { get; set; }
-            private void Cancel(object parameter)
-            {
-                parent.ParseResults.Remove(this);
-            }
-
-
-            public ParseResult(string source, OfflineTaskDialogViewModel p)
-            {
-                SourceUrl = source;
-                parent = p;
-                ParseCommand = new DependencyCommand(Parse, CanParse);
-                CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
-            }
-
-            public ParseResult(OfflineTaskParseUrl e, OfflineTaskDialogViewModel p)
-            {
-                parseResult = e;
-                parent = p;
-                ParseCommand = new DependencyCommand(Parse, CanParse);
-                CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
-            }
-        }
-
-        internal class TorrentResult : ViewModelBase
-        {
-
-        }
-        #endregion
 
         #region BindingProperties
         /// <summary>
@@ -187,7 +41,7 @@ namespace SixCloudCore.ViewModels
                     {
                         for (int index = 0; index < urls.Length - 1; index++)
                         {
-                            ParseResult x = new ParseResult(urls[index], this);
+                            ParseResult x = new UrlResult(urls[index], this);
                             x.Parse();
                             ParseResults.Add(x);
                         }
@@ -233,20 +87,16 @@ namespace SixCloudCore.ViewModels
 
         public OfflineTaskParameters[] OfflineTaskParameters { get; set; }
 
-        public FileGridViewModel FileGrid { get; set; } = new FileGridViewModel();
+        public FileGridViewModel FileGrid { get; set; } = new FileGridViewModel
+        {
+            Mode = Mode.PathSelector
+        };
         #endregion
 
         #region Commands
-
         /// <summary>
-        /// 选中后重置Parse序列
+        /// 尝试进入文件搜检阶段
         /// </summary>
-        public DependencyCommand ParseUrlCommand { get; set; }
-        private void ParseUrl(object parameter)
-        {
-            ParseResults.Clear();
-        }
-
         public DependencyCommand UrlParseResultConfirmCommand { get; set; }
         private void UrlParseResultConfirm(object parameter)
         {
@@ -264,10 +114,13 @@ namespace SixCloudCore.ViewModels
             return !unsuccessed.Any();
         }
 
+        /// <summary>
+        /// 上传并解析种子文件
+        /// </summary>
         public DependencyCommand UploadTorrentCommand { get; set; }
         private async void UploadTorrent(object parameter)
         {
-            ParseResults.Clear();
+            //ParseResults.Clear();
 
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -317,15 +170,11 @@ namespace SixCloudCore.ViewModels
                 {
                     return;
                 }
-                var parsedTorrent = new ParseResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
-                parsedTorrent.Parse();
+                var parsedTorrent = new TorrentResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
                 ParseResults.Add(parsedTorrent);
-                IEnumerable<OfflineTaskParameters> taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
-                OfflineTaskParameters = taskParameters.ToArray();
-
-                Stage = taskParameters.Any() ? OfflineUrlsDialogStage.CheckFiles : OfflineUrlsDialogStage.WhichType;
             }
         }
+
 
         public DependencyCommand CheckFilesCommand { get; set; }
         private void CheckFiles(object parameter)
@@ -366,10 +215,10 @@ namespace SixCloudCore.ViewModels
         public OfflineTaskDialogViewModel()
         {
             UploadTorrentCommand = new DependencyCommand(UploadTorrent, DependencyCommand.AlwaysCan);
-            ParseUrlCommand = new DependencyCommand(ParseUrl, DependencyCommand.AlwaysCan);
             UrlParseResultConfirmCommand = new DependencyCommand(UrlParseResultConfirm, CanUrlParseResultConfirm);
             CheckFilesCommand = new DependencyCommand(CheckFiles, DependencyCommand.AlwaysCan);
             SelectSavingPathCommand = new DependencyCommand(SelectSavingPath, DependencyCommand.AlwaysCan);
+            FileGrid.NavigateByPathAsync("/");
         }
     }
 }

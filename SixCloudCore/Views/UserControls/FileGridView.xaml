@@ -15,29 +15,102 @@
         <ViewModels:TooLongStringConverter x:Key="TooLongStringConverter"/>
         <local:GridViewContextMenuAvailableConverter x:Key="GridViewContextMenuAvailableConverter"/>
 
+        <Style TargetType="{x:Type controls:FontIcon}">
+            <Setter Property="IconSize" Value="14"/>
+            <Setter Property="Margin" Value="5,0"/>
+        </Style>
+
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <!--<EventSetter Event="Selected" Handler="ListBoxItem_Selected"/>-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" ClipToBounds="{TemplateBinding ClipToBounds}" Margin="{TemplateBinding Margin}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition From="{x:Null}" GeneratedDuration="0:0:0.3" Storyboard="{x:Null}" To="Normal">
+                                            <VisualTransition.GeneratedEasingFunction>
+                                                <CircleEase EasingMode="EaseOut"/>
+                                            </VisualTransition.GeneratedEasingFunction>
+                                        </VisualTransition>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="MouseOverBorder"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="SelectionStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition From="{x:Null}" GeneratedDuration="0:0:0.6" GeneratedEasingFunction="{x:Null}" Storyboard="{x:Null}" To="{x:Null}"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="0.18" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unselected"/>
+                                    <VisualState x:Name="SelectedUnfocused">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="0.03" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid>
+                                <Border x:Name="MouseOverBorder" Opacity="0" Background="{TemplateBinding Foreground, Converter={StaticResource BrushRoundConverter}}"/>
+                                <Border x:Name="SelectedBorder" Opacity="0" RenderTransformOrigin="0.5,0.5" Background="{TemplateBinding Foreground, Converter={StaticResource BrushRoundConverter}}">
+                                    <Border.RenderTransform>
+                                        <ScaleTransform ScaleX="1"/>
+                                    </Border.RenderTransform>
+                                </Border>
+                                <materialDesign:Ripple ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Focusable="False" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Feedback="{TemplateBinding Foreground, Converter={StaticResource BrushRoundConverter}}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.56"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
         <ItemsPanelTemplate x:Key="ListBoxItemsPanel">
-            <WrapPanel IsItemsHost="True"/>
+            <WrapPanel IsItemsHost="True" Width="{Binding RelativeSource= {RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=ActualWidth}"/>
         </ItemsPanelTemplate>
 
         <DataTemplate x:Key="FileCell">
-            <Grid Height="150" IsEnabled="{Binding Mode, Converter={StaticResource GridViewContextMenuAvailableConverter}, ElementName=userControl, Mode=OneTime}">
+            <Grid Height="100" Width="200" IsEnabled="{Binding Mode, Converter={StaticResource GridViewContextMenuAvailableConverter}, ElementName=userControl, Mode=OneTime}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <controls:FontIcon Margin="5" Grid.Column="1" Icon="{Binding Icon}" IconSize="90" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
-                <TextBlock Width="100"
-                           Text="{Binding Name, Converter={StaticResource TooLongStringConverter}, Mode=OneWay}"
-                           TextWrapping="NoWrap"
-                           Grid.ColumnSpan="3"
-                           Grid.Row="1"
-                           TextAlignment="Center"
-                           HorizontalAlignment="Center"
+                <controls:FontIcon Margin="15" Grid.Column="0" Grid.RowSpan="3" Icon="{Binding Icon}" IconSize="40" Foreground="{DynamicResource ImmersiveSystemAccentBrushDark2}"/>
+                <TextBlock Text="{Binding Name, Converter={StaticResource TooLongStringConverter}, Mode=OneWay}"
+                           TextWrapping="WrapWithOverflow"
+                           Grid.Column="1"
+                           Grid.Row="0"
+                           Margin="15"
+                           FontSize="12"
+                           TextAlignment="Left"
+                           HorizontalAlignment="Left"
                            VerticalAlignment="Center"/>
             </Grid>
         </DataTemplate>
@@ -66,7 +139,7 @@
             </Setter>
             <Setter Property="ContextMenu">
                 <Setter.Value>
-                    <ContextMenu x:Name="GridViewContextMenu" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="White">
+                    <ContextMenu x:Name="GridViewContextMenu" Background="{DynamicResource MainForegroundBrush}" Foreground="White">
                         <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
                             <MenuItem.Icon>
                                 <controls:FontIcon Icon="&#xF0C4;"/>
@@ -99,7 +172,32 @@
     </UserControl.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <!--地址栏-->
+        <ListBox Background="Transparent" BorderThickness="0" FontSize="12" Height="24" x:Name="AddressBar" VerticalAlignment="Top" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="5,0">
+                        <TextBlock Foreground="{DynamicResource MainForegroundBrush}" Text="{Binding DataContext, RelativeSource={RelativeSource Self}}" FontWeight="Bold"/>
+                        <controls:FontIcon Foreground="{DynamicResource MainForegroundBrush}" Icon="&#xF054;"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+
+
         <ListBox x:Name="MainList"
+                 Grid.Row="1"
                  ItemsPanel="{DynamicResource ListBoxItemsPanel}"
                  ItemsSource="{Binding FileList}"
                  ItemTemplate="{DynamicResource FileCell}"
