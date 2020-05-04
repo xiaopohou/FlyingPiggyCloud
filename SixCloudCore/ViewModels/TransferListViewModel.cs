@@ -12,7 +12,12 @@ namespace SixCloudCore.ViewModels
     {
         public string DownloadingListTitle => DownloadingList.Count == 0 ? string.Empty : $"在下载队列中（{DownloadingList.Count}）";
 
+        public Visibility DownloadingListVisibility => DownloadingListTitle == string.Empty ? Visibility.Collapsed : Visibility.Visible;
+
         public string UploadingListTitle => UploadingList.Count == 0 ? string.Empty : $"在上传队列中（{UploadingList.Count}）";
+
+        public Visibility UploadingListVisibility => UploadingListTitle == string.Empty ? Visibility.Collapsed : Visibility.Visible;
+
 
         public ObservableCollection<DownloadingTaskViewModel> DownloadingList => downloadingList;
 
@@ -126,11 +131,13 @@ namespace SixCloudCore.ViewModels
                 .AddHandler(downloadingList, nameof(downloadingList.CollectionChanged), (sender, e) =>
                 {
                     OnPropertyChanged(nameof(DownloadingListTitle));
+                    OnPropertyChanged(nameof(DownloadingListVisibility));
                 });
             WeakEventManager<ObservableCollection<UploadingTaskViewModel>, NotifyCollectionChangedEventArgs>
                 .AddHandler(uploadingList, nameof(uploadingList.CollectionChanged), (sender, e) =>
                 {
                     OnPropertyChanged(nameof(UploadingListTitle));
+                    OnPropertyChanged(nameof(UploadingListVisibility));
                 });
         }
     }
