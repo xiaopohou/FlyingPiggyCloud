@@ -7,6 +7,7 @@ using SixCloudCore.FileUploader.Calculators;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SixCloudCore.ViewModels
 {
@@ -14,19 +15,23 @@ namespace SixCloudCore.ViewModels
     {
         public UploadingFileViewModel(string targetPath, string filePath) : base()
         {
-            InitializeComponent(targetPath, filePath).Wait();
+            InitializeComponent(targetPath, filePath);
         }
 
-        private async Task InitializeComponent(string targetPath, string filePath)
+        private void InitializeComponent(string targetPath, string filePath)
         {
             TargetPath = targetPath;
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
-            string hash = await Task.Run(() => $"{ETag.ComputeEtag(filePath)}{Calculators.LongTo36(new FileInfo(filePath).Length)}");
+        }
+
+        public async Task Run()
+        {
+            string hash = await Task.Run(() => $"{ETag.ComputeEtag(LocalFilePath)}{Calculators.LongTo36(new FileInfo(LocalFilePath).Length)}");
             try
             {
-                UploadToken x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name);
-                task = x.Created ? new HashCachedTask(hash) : EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
+                UploadToken x = await FileSystem.UploadFile(Name, parentPath: TargetPath, hash: hash, originalFilename: Name);
+                task = x.Created ? new HashCachedTask(hash) : EzWcs.NewTask(LocalFilePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
 
             }
             catch (RequestFailedException ex) when (ex.Code == "FILE_ALREADY_EXISTS")
@@ -106,13 +111,6 @@ namespace SixCloudCore.ViewModels
         {
             task.TaskOperate(UploadTaskStatus.Active);
         }
-
-#if DEBUG
-        ~UploadingFileViewModel()
-        {
-            Console.WriteLine("已回收");
-        }
-#endif
 
     }
 

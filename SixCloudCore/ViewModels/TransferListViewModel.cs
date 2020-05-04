@@ -86,7 +86,7 @@ namespace SixCloudCore.ViewModels
             NewUploadTask(targetList.CurrentPath, path);
         }
 
-        public static void NewUploadTask(string targetPath, string path)
+        public static async void NewUploadTask(string targetPath, string path)
         {
             if (Directory.Exists(path))
             {
@@ -95,15 +95,17 @@ namespace SixCloudCore.ViewModels
             else if (File.Exists(path))
             {
                 UploadingFileViewModel task = new UploadingFileViewModel(targetPath, path);
-                uploadingList.Add(task);
                 task.UploadCompleted += CompletedEventHandler;
+                task.UploadAborted += AbortedEventHandler;
+                await task.Run();
+                Application.Current.Dispatcher.Invoke(() => uploadingList.Add(task));
+
                 void CompletedEventHandler(object sender, EventArgs e)
                 {
                     task.UploadCompleted -= CompletedEventHandler;
                     uploadingList.Remove(task);
                     TransferCompletedListViewModel.NewUploadedTask(task);
                 };
-                task.UploadAborted += AbortedEventHandler;
                 void AbortedEventHandler(object sender, EventArgs e)
                 {
                     task.UploadAborted -= AbortedEventHandler;
