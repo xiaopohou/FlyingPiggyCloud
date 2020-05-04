@@ -403,7 +403,7 @@ namespace SixCloudCore.ViewModels
                 {
                     if (File.Exists(p))
                     {
-                        UploadingListViewModel.NewTask(this, p);
+                        TransferListViewModel.NewUploadTask(this, p);
                     }
                 }
             }
@@ -412,7 +412,7 @@ namespace SixCloudCore.ViewModels
 
         #region UploadFolderCommand
         public DependencyCommand UploadFolderCommand { get; private set; }
-        public async void UploadFolder(object parameter)
+        public void UploadFolder(object parameter)
         {
             using (FolderBrowserDialog commonOpenFileDialog = new FolderBrowserDialog())
             {
@@ -420,7 +420,7 @@ namespace SixCloudCore.ViewModels
                 {
                     if (Directory.Exists(commonOpenFileDialog.SelectedPath))
                     {
-                        await FoundFolder(new DirectoryInfo(commonOpenFileDialog.SelectedPath), CurrentPath);
+                        Task.Run(() => FoundFolder(new DirectoryInfo(commonOpenFileDialog.SelectedPath), CurrentPath));
                     }
                 }
             }
@@ -437,7 +437,7 @@ namespace SixCloudCore.ViewModels
                         {
                             if (a.Exists)
                             {
-                                UploadingListViewModel.NewTask(currentPath, a.FullName);
+                                TransferListViewModel.NewUploadTask(currentPath, a.FullName);
                             }
                         }
                     }

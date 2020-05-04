@@ -6,6 +6,7 @@ using SixCloudCore.FileUploader;
 using SixCloudCore.FileUploader.Calculators;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace SixCloudCore.ViewModels
 {
@@ -13,15 +14,15 @@ namespace SixCloudCore.ViewModels
     {
         public UploadingFileViewModel(string targetPath, string filePath) : base()
         {
-            InitializeComponent(targetPath, filePath);
+            InitializeComponent(targetPath, filePath).Wait();
         }
 
-        private async void InitializeComponent(string targetPath, string filePath)
+        private async Task InitializeComponent(string targetPath, string filePath)
         {
             TargetPath = targetPath;
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
-            string hash = $"{ETag.ComputeEtag(filePath)}{Calculators.LongTo36(new FileInfo(filePath).Length)}";
+            string hash = await Task.Run(() => $"{ETag.ComputeEtag(filePath)}{Calculators.LongTo36(new FileInfo(filePath).Length)}");
             try
             {
                 UploadToken x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name);
@@ -51,9 +52,9 @@ namespace SixCloudCore.ViewModels
                 }
                 else
                 {
-                    var span = DateTime.Now - lastTime;
+                    TimeSpan span = DateTime.Now - lastTime;
                     lastTime += span;
-                    var intervalCompleted = task.CompletedBytes - lastCompletedBytes;
+                    long intervalCompleted = task.CompletedBytes - lastCompletedBytes;
                     lastCompletedBytes += intervalCompleted;
                     return Calculators.SizeCalculator((long)Math.Round(span.TotalSeconds == 0 ? 0 : intervalCompleted / span.TotalSeconds, 0)) + "/秒";
                 }

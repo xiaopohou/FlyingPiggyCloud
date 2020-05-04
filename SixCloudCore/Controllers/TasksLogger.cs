@@ -45,7 +45,7 @@ namespace SixCloudCore.Controllers
                     {
                         foreach (UploadTaskRecord record in list)
                         {
-                            App.Current.Dispatcher.Invoke(() => UploadingListViewModel.NewTask(record.TargetPath, record.LocalFilePath));
+                            App.Current.Dispatcher.Invoke(() => TransferListViewModel.NewUploadTask(record.TargetPath, record.LocalFilePath));
                         }
                     }
                 }
