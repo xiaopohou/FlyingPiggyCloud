@@ -382,7 +382,7 @@ namespace SixCloudCore.ViewModels
 
         #region UploadFileCommand
         public DependencyCommand UploadFileCommand { get; private set; }
-        public async void UploadFile(object parameter)
+        public void UploadFile(object parameter)
         {
             OpenFileDialog commonOpenFileDialog = new OpenFileDialog
             {
@@ -395,7 +395,7 @@ namespace SixCloudCore.ViewModels
                 {
                     if (File.Exists(p))
                     {
-                        await UploadingListViewModel.NewTask(this, p);
+                        UploadingListViewModel.NewTask(this, p);
                     }
                 }
             }
@@ -429,7 +429,7 @@ namespace SixCloudCore.ViewModels
                         {
                             if (a.Exists)
                             {
-                                await UploadingListViewModel.NewTask(currentPath, a.FullName);
+                                UploadingListViewModel.NewTask(currentPath, a.FullName);
                             }
                         }
                     }

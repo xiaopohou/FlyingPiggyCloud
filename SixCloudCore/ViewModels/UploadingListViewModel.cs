@@ -12,14 +12,14 @@ namespace SixCloudCore.ViewModels
     {
         public ObservableCollection<UploadingTaskViewModel> ObservableCollection => uploadingList;
 
-        public static async Task NewTask(FileListViewModel targetList, string path)
+        public static void NewTask(FileListViewModel targetList, string path)
         {
-            await NewUploadTask(targetList.CurrentPath, path);
+            NewUploadTask(targetList.CurrentPath, path);
         }
 
-        public static async Task NewTask(string targetPath, string path)
+        public static void NewTask(string targetPath, string path)
         {
-            await NewUploadTask(targetPath, path);
+            NewUploadTask(targetPath, path);
         }
 
     }

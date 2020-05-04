@@ -12,20 +12,20 @@ namespace SixCloudCore.ViewModels
     {
         public UploadingFileViewModel(string targetPath, string filePath) : base()
         {
+            InitializeComponent(targetPath, filePath);
+        }
+
+        private async void InitializeComponent(string targetPath, string filePath)
+        {
             TargetPath = targetPath;
             LocalFilePath = filePath;
             Name = Path.GetFileName(filePath);
             string hash = $"{ETag.ComputeEtag(filePath)}{Calculators.LongTo36(new FileInfo(filePath).Length)}";
-            UploadToken x = FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name).Result;
-            //if (x.HashCached)
-            //{
-            //    task = new HashCachedTask();
-            //    return;
-            //}
-            task = EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
+            UploadToken x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name);
+            task = x.Created ? new HashCachedTask() : EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
         }
 
-        private readonly IUploadTask task;
+        private IUploadTask task;
 
         private DateTime lastTime;
         private long lastCompletedBytes;

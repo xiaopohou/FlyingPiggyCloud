@@ -81,12 +81,12 @@ namespace SixCloudCore.ViewModels
         #region FromUploadingListViewModel
         protected static readonly ObservableCollection<UploadingTaskViewModel> uploadingList = new ObservableCollection<UploadingTaskViewModel>();
 
-        public static async Task NewUploadTask(FileListViewModel targetList, string path)
+        public static void NewUploadTask(FileListViewModel targetList, string path)
         {
-            await NewUploadTask(targetList.CurrentPath, path);
+            NewUploadTask(targetList.CurrentPath, path);
         }
 
-        public static async Task NewUploadTask(string targetPath, string path)
+        public static void NewUploadTask(string targetPath, string path)
         {
             if (Directory.Exists(path))
             {
@@ -94,7 +94,7 @@ namespace SixCloudCore.ViewModels
             }
             else if (File.Exists(path))
             {
-                UploadingFileViewModel task = await Task.Run(() => new UploadingFileViewModel(targetPath, path));
+                UploadingFileViewModel task = new UploadingFileViewModel(targetPath, path);
                 uploadingList.Add(task);
                 task.UploadCompleted += CompletedEventHandler;
                 void CompletedEventHandler(object sender, EventArgs e)
