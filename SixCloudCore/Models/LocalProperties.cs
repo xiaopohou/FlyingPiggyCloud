@@ -15,23 +15,5 @@ namespace SixCloudCore.Models
             set => ApplicationDictionary.SetValue("Token", value);
         }
 
-        public static bool IsSavedPassword
-        {
-            get => ApplicationDictionary.GetValue("IsSavedPassword") == null ? false : bool.Parse((string)ApplicationDictionary.GetValue("IsSavedPassword"));
-            set => ApplicationDictionary.SetValue("IsSavedPassword", value);
-        }
-
-        public static bool IsAutoLogin
-        {
-            get => ApplicationDictionary.GetValue("IsAutoLogin") == null ? false : bool.Parse((string)ApplicationDictionary.GetValue("IsAutoLogin"));
-            set => ApplicationDictionary.SetValue("IsAutoLogin", value);
-        }
-
-        public static string CountryCode
-        {
-            get => (string)ApplicationDictionary.GetValue("CountryCode") ?? "(86)中国大陆";
-            set => ApplicationDictionary.SetValue("CountryCode", value);
-        }
-
     }
 }

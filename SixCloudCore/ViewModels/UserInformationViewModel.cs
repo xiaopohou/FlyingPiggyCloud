@@ -98,8 +98,6 @@ namespace SixCloudCore.ViewModels
         private async void Logout(object parameter)
         {
             await Authentication.Logout();
-            LocalProperties.Token = "";
-            LocalProperties.IsAutoLogin = false;
             Application.Current.Shutdown();
         }
         #endregion

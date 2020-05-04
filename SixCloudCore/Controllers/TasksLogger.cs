@@ -3,6 +3,7 @@
 using Newtonsoft.Json;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods;
+using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Models;
 using SixCloudCore.ViewModels;
 using System;
@@ -101,6 +102,8 @@ namespace SixCloudCore.Controllers
                 string s = JsonConvert.SerializeObject(taskList);
                 writer.Write(s);
             }
+
+            LocalProperties.Token = SixCloudMethodBase.Token;
         }
     }
 }

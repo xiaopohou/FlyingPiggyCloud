@@ -8,8 +8,9 @@ namespace QingzhenyunApis.Methods.V3
 {
     public sealed class Authentication : SixCloudMethodBase
     {
-        public static async Task<UserInformation> GetUserInformation()
+        public static async Task<UserInformation> GetUserInformation(string token = null)
         {
+            Token ??= token;
             return await GetAsync<UserInformation>("/v3/user/info");
         }
 
@@ -17,6 +18,7 @@ namespace QingzhenyunApis.Methods.V3
         public static async Task Logout()
         {
             await PostAsync<object>("", "/v3/user/logout");
+            Token = null;
         }
 
         /// <summary>

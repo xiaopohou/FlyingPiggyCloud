@@ -1,15 +1,17 @@
 ﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Controllers;
+using SixCloudCore.Models;
 using SixCloudCore.Views;
-using System.Threading;
+using System;
 using System.Windows;
 
 namespace SixCloudCore.ViewModels
 {
     internal class LoginWebViewModel : ViewModelBase
     {
-        bool createMainFrame;
+        private readonly bool createMainFrame;
 
         private DestinationInformation DestinationInfo { get; set; }
 
@@ -17,41 +19,52 @@ namespace SixCloudCore.ViewModels
 
         private async void InitializeComponent()
         {
-            var x = await Authentication.CreateDestination();
-            DestinationInfo = x;
-
-            LoginUrl = Authentication.GetLoginUrl(DestinationInfo.Destination, out string _);
-
-            Application.Current.Dispatcher.Invoke(() =>
+            //尝试用已保存的Token获取用户信息
+            try
             {
-                LoginWebView = new LoginWebView
-                {
-                    DataContext = this
-                };
-                LoginWebView.Show();
-            });
+                UserInformation userInfo = await Authentication.GetUserInformation(LocalProperties.Token);
 
-            if (await Authentication.CheckDestination(DestinationInfo) && createMainFrame)
+            }
+            catch (RequestFailedException)
+            {
+                DestinationInformation x = await Authentication.CreateDestination();
+                DestinationInfo = x;
+
+                LoginUrl = Authentication.GetLoginUrl(DestinationInfo.Destination, out string _);
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoginWebView = new LoginWebView
+                    {
+                        DataContext = this
+                    };
+                    LoginWebView.Show();
+                });
+
+                if (!await Authentication.CheckDestination(DestinationInfo))
+                {
+                    throw new Exception();
+                }
+            }
+
+            if (createMainFrame)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     new MainFrame().Show();
-                    LoginWebView.Close();
+                    LoginWebView?.Close();
                     Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                     new TaskBarButton();
+                    Application.Current.Exit += TasksLogger.ExitEventHandler;
+                    Application.Current.DispatcherUnhandledException += (sender, e) =>
+                    {
+                        TasksLogger.ExitEventHandler(sender, e);
+                        System.Windows.Forms.Application.Restart();
+                        Application.Current.Shutdown();
+                    };
                 });
                 TasksLogger.StartUpRecovery();
-                Application.Current.Exit += TasksLogger.ExitEventHandler;
-                Application.Current.DispatcherUnhandledException += (sender, e) =>
-                {
-                    TasksLogger.ExitEventHandler(sender, e);
-                    System.Windows.Forms.Application.Restart();
-                    Application.Current.Shutdown();
-                };
-            }
-            else
-            {
-#warning 失败了应该做点啥
+
             }
         }
 
