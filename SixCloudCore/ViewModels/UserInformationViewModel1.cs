@@ -23,16 +23,17 @@ namespace SixCloudCore.ViewModels
 
         public string Name { get; set; }
 
-        public UserInformationViewModel(UserInformation currentUser)
+        public UserInformationViewModel()
         {
             ChangeUserNameCommand = new DependencyCommand(ChangeUserName, DependencyCommand.AlwaysCan);
             ChangePasswordCommand = new DependencyCommand(ChangePassword, DependencyCommand.AlwaysCan);
             LogoutCommand = new DependencyCommand(Logout, DependencyCommand.AlwaysCan);
-            ParseInformation(currentUser);
+            ParseInformation();
         }
 
-        private void ParseInformation(UserInformation currentUser)
+        private async void ParseInformation(UserInformation user = null)
         {
+            var currentUser = user ?? await Authentication.GetUserInformation();
             string icon;
             try
             {

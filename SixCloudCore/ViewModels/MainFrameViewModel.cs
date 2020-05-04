@@ -8,22 +8,14 @@ namespace SixCloudCore.ViewModels
 
         public FileListViewModel FileVM { get; set; } = new FileListViewModel();
 
-        //public DownloadingListViewModel DownloadingList { get; private set; } = new DownloadingListViewModel();
-
         public DownloadedListViewModel DownloadedList { get; private set; } = new DownloadedListViewModel();
-
-        //public UploadingListViewModel UploadingList { get; private set; } = new UploadingListViewModel();
 
         public TransferListViewModel TransferList { get; private set; } = new TransferListViewModel();
 
         public UploadedListViewModel UploadedList { get; private set; } = new UploadedListViewModel();
 
-#warning 此处暂未实现
         public OfflineTaskViewModel OfflineTask { get; private set; } = new OfflineTaskViewModel();
 
-
-        public MainFrameViewModel()
-        {
-        }
+        public UserInformationViewModel UserInformation { get; private set; } = new UserInformationViewModel();
     }
 }
