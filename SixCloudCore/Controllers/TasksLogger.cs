@@ -16,9 +16,9 @@ namespace SixCloudCore.Controllers
 {
     internal partial class TasksLogger
     {
-        private static readonly string rootDirectory;
-        private static readonly string uploadingRecordsPath;
-        private static readonly string downloadingRecordsPath;
+        private static readonly string rootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/SixCloud";
+        private static readonly string uploadingRecordsPath = rootDirectory + "/UploadRecord.json";
+        private static readonly string downloadingRecordsPath = rootDirectory + "/DownloadRecord.json";
 
         public static ObservableCollection<UploadingTaskViewModel> Uploadings
         {
@@ -70,10 +70,7 @@ namespace SixCloudCore.Controllers
 
         static TasksLogger()
         {
-            rootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/SixCloud";
             Directory.CreateDirectory(rootDirectory);
-            uploadingRecordsPath = rootDirectory + "/UploadRecord.json";
-            downloadingRecordsPath = rootDirectory + "/DownloadRecord.json";
         }
 
         public static void ExitEventHandler(object sender, EventArgs e)

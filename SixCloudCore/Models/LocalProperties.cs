@@ -9,21 +9,6 @@ namespace SixCloudCore.Models
 
         public static RegistryKey ApplicationDictionary { get; } = Registry.CurrentUser.CreateSubKey(DomainSubKey);
 
-        public static string UserName
-        {
-            get => (string)ApplicationDictionary.GetValue("UserName");
-            set => ApplicationDictionary.SetValue("UserName", value);
-        }
-
-        /// <summary>
-        /// 只保存PassWordMD5
-        /// </summary>
-        public static string Password
-        {
-            get => (string)ApplicationDictionary.GetValue("Password");
-            set => ApplicationDictionary.SetValue("Password", value);
-        }
-
         public static string Token
         {
             get => (string)ApplicationDictionary.GetValue("Token");
@@ -41,12 +26,6 @@ namespace SixCloudCore.Models
             get => ApplicationDictionary.GetValue("IsAutoLogin") == null ? false : bool.Parse((string)ApplicationDictionary.GetValue("IsAutoLogin"));
             set => ApplicationDictionary.SetValue("IsAutoLogin", value);
         }
-
-        //public static string CurrentUserInformation
-        //{
-        //    get => (string)ApplicationDictionary.GetValue("CurrentUserInformation");
-        //    set => ApplicationDictionary.SetValue("CurrentUserInformation", value);
-        //}
 
         public static string CountryCode
         {
