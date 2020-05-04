@@ -23,7 +23,7 @@ namespace SixCloudCore.ViewModels
             //尝试用已保存的Token获取用户信息
             try
             {
-                UserInformation userInfo = await Authentication.GetUserInformation(LocalProperties.Token);
+                UserInformation userInfo = await Authentication.GetUserInformation(LocalProperties.Token??string.Empty);
 
             }
             catch (RequestFailedException)
