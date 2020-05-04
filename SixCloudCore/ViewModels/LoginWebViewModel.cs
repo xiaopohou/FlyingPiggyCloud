@@ -5,6 +5,7 @@ using SixCloudCore.Controllers;
 using SixCloudCore.Models;
 using SixCloudCore.Views;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace SixCloudCore.ViewModels
@@ -64,7 +65,6 @@ namespace SixCloudCore.ViewModels
                     };
                 });
                 TasksLogger.StartUpRecovery();
-
             }
         }
 

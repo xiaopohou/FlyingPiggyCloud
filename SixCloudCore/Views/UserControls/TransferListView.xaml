@@ -15,6 +15,26 @@
             <Setter Property="Margin" Value="0,15"/>
         </Style>
 
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <ContentPresenter/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type ListBox}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="MaxHeight" Value="1000"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
         <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}"/>
 
         <DataTemplate x:Key="TransferItemDataTemplate">
@@ -45,9 +65,9 @@
                     <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Speed}"/>
 
                     <StackPanel Grid.RowSpan="3" Grid.Column="3" Orientation="Horizontal">
-                        <metro:LightButton Height="48" Width="48" Command="{Binding RecoveryCommand}"/>
-                        <metro:LightButton Height="48" Width="48" Command="{Binding PauseCommand}"/>
-                        <metro:LightButton Height="48" Width="48" Command="{Binding CancelCommand}"/>
+                        <metro:LightButton FontIcon="&#xf01e;" Height="48" Width="48" Command="{Binding RecoveryCommand}"/>
+                        <metro:LightButton FontIcon="&#xf04c;" Height="48" Width="48" Command="{Binding PauseCommand}"/>
+                        <metro:LightButton FontIcon="&#xf00d;" Height="48" Width="48" Command="{Binding CancelCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -85,10 +105,10 @@
         <DataTemplate DataType="{x:Type vm:DownloadedTaskViewModel}">
             <Border Margin="0,1" Background="White" Name="ground" Opacity="0.9">
                 <Grid Height="48" Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="48"/>
                         <ColumnDefinition Width="1*"/>
@@ -98,20 +118,20 @@
                     </Grid.ColumnDefinitions>
                     <Rectangle Fill="White" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
                     <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
-                <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
-                    <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
-                </StackPanel>
-                <Grid.ContextMenu>
-                    <ContextMenu Style="{StaticResource MaterialDesignContextMenu}">
-                        <MenuItem Header="打开" Command="{Binding OpenCommand}"/>
-                        <MenuItem Header="在文件夹中显示" Command="{Binding ShowCommand}"/>
-                        <MenuItem Header="删除" Command="{Binding DeleteCommand}"/>
-                    </ContextMenu>
-                </Grid.ContextMenu>
-            </Grid>
-                
+                    <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                        <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
+                    </StackPanel>
+                    <Grid.ContextMenu>
+                        <ContextMenu Style="{StaticResource MaterialDesignContextMenu}">
+                            <MenuItem Header="打开" Command="{Binding OpenCommand}"/>
+                            <MenuItem Header="在文件夹中显示" Command="{Binding ShowCommand}"/>
+                            <MenuItem Header="删除" Command="{Binding DeleteCommand}"/>
+                        </ContextMenu>
+                    </Grid.ContextMenu>
+                </Grid>
+
             </Border>
 
         </DataTemplate>
@@ -122,13 +142,13 @@
         <StackPanel Orientation="Vertical">
             <!--在下载队列中-->
             <TextBlock Style="{StaticResource Title}" Text="{Binding DownloadingListTitle}" Visibility="{Binding DownloadingListVisibility}"/>
-            <ItemsControl x:Name="DownloadingList" ItemsSource="{Binding DownloadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}" Visibility="{Binding DownloadingListVisibility}"/>
+            <ListBox Visibility="{Binding DownloadingListVisibility}" x:Name="DownloadingList" ItemsSource="{Binding DownloadingList}" VirtualizingPanel.IsVirtualizing="True" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
             <!--在上传队列中-->
             <TextBlock Style="{StaticResource Title}" Text="{Binding UploadingListTitle}" Visibility="{Binding UploadingListVisibility}"/>
-            <ItemsControl x:Name="UploadingList" ItemsSource="{Binding UploadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}" Visibility="{Binding UploadingListVisibility}"/>
+            <ListBox x:Name="UploadingList" ItemsSource="{Binding UploadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}" Visibility="{Binding UploadingListVisibility}"/>
             <!--最近活动-->
             <TextBlock Style="{StaticResource Title}" Text="最近活动"/>
-            <ItemsControl DataContext="{Binding TransferCompletedList}" x:Name="CompletedList" ItemsSource="{Binding TransferCompletedList}"/>
+            <ListBox DataContext="{Binding TransferCompletedList}" x:Name="CompletedList" VirtualizingPanel.IsVirtualizing="True" ItemsSource="{Binding TransferCompletedList}"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

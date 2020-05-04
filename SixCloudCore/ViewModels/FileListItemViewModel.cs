@@ -213,7 +213,6 @@ namespace SixCloudCore.ViewModels
                 if (Directory)
                 {
                     await DownloadHelper(UUID, System.IO.Path.Combine(downloadPathDialog.SelectedPath, Name), 0);
-
                     async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
                     {
                         await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(0, identity: uuid))
