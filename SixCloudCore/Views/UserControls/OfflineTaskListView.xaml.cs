@@ -12,7 +12,6 @@ namespace SixCloudCore.Views.UserControls
         {
             InitializeComponent();
             LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
-            LazyLoadEventHandler?.Invoke(this, null);
         }
 
         private ScrollChangedEventHandler LazyLoadEventHandler;

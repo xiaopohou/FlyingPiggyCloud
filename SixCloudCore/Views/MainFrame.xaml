@@ -90,18 +90,8 @@
             <TabItem Header="传输列表">
                 <usercontrols:TransferListView DataContext="{Binding TransferList}" Margin="15"/>
             </TabItem>
-
-            <!--下载完成-->
-            <!--<TabItem Header="下载完成">
-                <usercontrols:DownloadedTaskView Margin="15"/>
-            </TabItem>-->
-
-            <!--上传完成-->
-            <!--<TabItem DataContext="{Binding UploadedList}" Header="上传完成">
-                <usercontrols:UploadedListView Margin="15"/>
-            </TabItem>-->
         </TabControl>
-
+        
         <Border Margin="0,50,10,0"
                 DataContext="{Binding UserInformation}"
                 BorderBrush="{DynamicResource ImmersiveSystemAccentBrush}" 
@@ -109,7 +99,7 @@
                 Background="White"
                 x:Name="contextMenu" Height="0" Width="280" HorizontalAlignment="Right" VerticalAlignment="Top" MouseDown="ContextMenu_MouseDown">
             <StackPanel>
-                <Grid Height="100" Width="280" ToolTip="{Binding FrendlySpaceCapacity}">
+                <Grid Background="Gray" Height="100" Width="280" ToolTip="{Binding FrendlySpaceCapacity}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -123,13 +113,14 @@
             </StackPanel>
         </Border>
 
+
         <Grid.Triggers>
             <EventTrigger RoutedEvent="Button.Click">
                 <BeginStoryboard>
                     <Storyboard>
                         <DoubleAnimation Duration="00:00:00.200" To="250" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
                             <DoubleAnimation.EasingFunction>
-                                <BackEase EasingMode="EaseIn"/>
+                                <BackEase EasingMode="EaseOut"/>
                             </DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
                     </Storyboard>
@@ -148,6 +139,8 @@
             </EventTrigger>
 
         </Grid.Triggers>
+
+
 
 
     </Grid>

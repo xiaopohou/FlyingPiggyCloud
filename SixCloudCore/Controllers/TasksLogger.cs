@@ -100,7 +100,7 @@ namespace SixCloudCore.Controllers
                 writer.Write(s);
             }
 
-            LocalProperties.Token = SixCloudMethodBase.Token;
+            LocalProperties.Token = SixCloudMethodBase.Token ?? string.Empty;
         }
     }
 }

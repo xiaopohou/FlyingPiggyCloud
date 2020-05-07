@@ -6,6 +6,8 @@ using SixCloudCore.Controllers;
 using SixCloudCore.Models;
 using SixCloudCore.Views;
 using System;
+using System.IO;
+using System.Threading;
 using System.Windows;
 
 namespace SixCloudCore.ViewModels
@@ -13,6 +15,8 @@ namespace SixCloudCore.ViewModels
     internal class LoginWebViewModel : ViewModelBase
     {
         private readonly bool createMainFrame;
+
+        //private Timer timer;
 
         private DestinationInformation DestinationInfo { get; set; }
 
@@ -68,11 +72,20 @@ namespace SixCloudCore.ViewModels
                 {
                     TasksLogger.ExitEventHandler(sender, e);
                     e.Exception.Submit();
-                    //System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-                    //Application.Current.Shutdown();
+                    //尝试自动重启
+                    var x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloudCore.exe";
+                    if (File.Exists(x))
+                    {
+                        System.Diagnostics.Process.Start(x);
+                        Application.Current.Shutdown();
+                    }
                 };
             });
             TasksLogger.StartUpRecovery();
+            //timer = new Timer(async (_) =>
+            //{
+            //    await Authentication.GetUserInformation();
+            //}, null, TimeSpan.FromMinutes(1), TimeSpan.Zero);
         }
 
         public string LoginUrl { get; private set; }
