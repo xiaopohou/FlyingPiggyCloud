@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using SixCloudCore.ViewModels;
+using System.Windows.Controls;
 
 namespace SixCloudCore.Views.UserControls
 {
@@ -22,9 +23,7 @@ namespace SixCloudCore.Views.UserControls
             {
                 LazyLoadEventHandler -= LazyLoad;
             }
-#warning 离线下载接口尚未完成
-            //懒加载的业务代码
-            //await (DataContext as OfflineTaskViewModel)?.LazyLoad();
+            await (DataContext as OfflineTaskViewModel)?.LazyLoad();
             LazyLoadEventHandler += LazyLoad;
         }
 

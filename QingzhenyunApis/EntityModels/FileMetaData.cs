@@ -111,16 +111,16 @@ namespace QingzhenyunApis.EntityModels
         public int Opt { get; set; }
 
         /// <summary>
-        /// 预览状态 600=text 300=pic 1000=video
+        /// 预览状态
         /// </summary>
         [JsonProperty(PropertyName = "preview")]
         public bool Preview { get; set; }
 
         /// <summary>
-        /// 预览类型 3010=video
+        /// 预览类型
         /// </summary>
         [JsonProperty(PropertyName = "previewType")]
-        public int PreviewType { get; set; }
+        public PreviewType PreviewType { get; set; }
 
         /// <summary>
         /// 总是 0
@@ -151,5 +151,15 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty(PropertyName = "downloadAddress")]
         public string DownloadAddress { get; set; }
 
+    }
+
+    public enum PreviewType
+    {
+        Unknown = 0,
+        HLS = 3010,
+        MP3 = 3020,
+        Image = 3030,
+        Document = 3040,
+        Archive = 3050
     }
 }

@@ -44,7 +44,6 @@ namespace QingzhenyunApis.Methods.V3
             return await PostAsync<RecoveryBoxPage>(JsonConvert.SerializeObject(data), "/v3/trashCan/list/");
         }
 
-#warning 这个方法还没有实现
         /// <summary>
         /// 从回收站删除文件
         /// </summary>
@@ -52,7 +51,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <returns></returns>
         public static async Task<int?> Delete(string[] targetUUID)
         {
-            return await PostAsync<int?>(JsonConvert.SerializeObject(targetUUID), "/v2/trash/delete");
+            return await PostAsync<int?>(JsonConvert.SerializeObject(new { sourceIdentity = targetUUID }), "/v3/trash/delete");
         }
     }
 }

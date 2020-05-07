@@ -13,7 +13,7 @@ namespace SixCloudCore.ViewModels
 {
     internal class FileListItemViewModel
     {
-        private readonly FileListViewModel Parent;
+        private readonly FileListViewModel parent;
         private static readonly Dictionary<string, string> IconDictionary = new Dictionary<string, string>
             {
                 {"default",'\uf15c'.ToString() },
@@ -100,7 +100,7 @@ namespace SixCloudCore.ViewModels
 
         public bool Preview { get; set; }
 
-        public int PreviewType { get; set; }
+        public PreviewType PreviewType { get; set; }
 
         public bool Directory { get; set; }
 
@@ -120,14 +120,18 @@ namespace SixCloudCore.ViewModels
         internal async void NewPreView()
         {
 #warning 这里的代码还没有完成
-            if (PreviewType == 3010 || Mime.Contains("video"))
+            switch (PreviewType)
             {
-                PreviewInformation x = await Task.Run(() =>
-                {
-                    return QingzhenyunApis.Methods.V3.Preview.Video(UUID);
-                });
-                PreView preView = new PreView(PreView.ResourceType.Video, x.PreviewHlsAddress, x);
-                preView.Show();
+                case PreviewType.HLS:
+                    PreviewInformation x = await Task.Run(() =>
+                    {
+                        return QingzhenyunApis.Methods.V3.Preview.Video(UUID);
+                    });
+                    PreView preView = new PreView(PreView.ResourceType.Video, x.PreviewHlsAddress, x);
+                    preView.Show();
+                    break;
+                default:
+                    return;
             }
         }
 
@@ -138,7 +142,7 @@ namespace SixCloudCore.ViewModels
                     UUID
             };
             FileListViewModel.CutList = null;
-            Parent.StickCommand.OnCanExecutedChanged(this, new EventArgs());
+            parent.StickCommand.OnCanExecutedChanged(this, new EventArgs());
         }
         #endregion
 
@@ -152,7 +156,7 @@ namespace SixCloudCore.ViewModels
                     UUID
             };
             FileListViewModel.CopyList = null;
-            Parent.StickCommand.OnCanExecutedChanged(this, new EventArgs());
+            parent.StickCommand.OnCanExecutedChanged(this, new EventArgs());
         }
         #endregion
 
@@ -260,7 +264,7 @@ namespace SixCloudCore.ViewModels
 
         public FileListItemViewModel(FileListViewModel parent, FileMetaData fileMetaData)
         {
-            Parent = parent;
+            this.parent = parent;
             Name = fileMetaData.Name;
             MTime = Calculators.UnixTimeStampConverter(fileMetaData.Mtime);
             ATime = Calculators.UnixTimeStampConverter(fileMetaData.Atime);
