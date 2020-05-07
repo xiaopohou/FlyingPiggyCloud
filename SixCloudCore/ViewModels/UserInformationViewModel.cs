@@ -3,6 +3,7 @@ using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
+using SixCloudCore.Models;
 using SixCloudCore.Views;
 using System;
 using System.Threading.Tasks;
@@ -97,6 +98,7 @@ namespace SixCloudCore.ViewModels
         private async void Logout(object parameter)
         {
             await Authentication.Logout();
+            LocalProperties.Token = string.Empty;
             Application.Current.Shutdown();
         }
         #endregion

@@ -23,10 +23,10 @@ namespace SixCloudCore.ViewModels
             //尝试用已保存的Token获取用户信息
             try
             {
-                UserInformation userInfo = await Authentication.GetUserInformation(LocalProperties.Token??string.Empty);
+                UserInformation userInfo = await Authentication.GetUserInformation(LocalProperties.Token ?? string.Empty);
 
             }
-            catch (RequestFailedException)
+            catch (RequestFailedException ex)
             {
                 DestinationInformation x = await Authentication.CreateDestination();
                 DestinationInfo = x;
@@ -44,29 +44,35 @@ namespace SixCloudCore.ViewModels
 
                 if (!await Authentication.CheckDestination(DestinationInfo))
                 {
-                    throw new Exception();
+                    throw new Exception("登陆失败", ex);
                 }
             }
 
             if (createMainFrame)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    new MainFrame().Show();
-                    LoginWebView?.Close();
-                    Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-                    new TaskBarButton();
-                    Application.Current.Exit += TasksLogger.ExitEventHandler;
-                    Application.Current.DispatcherUnhandledException += (sender, e) =>
-                    {
-                        TasksLogger.ExitEventHandler(sender, e);
-                        SentrySdk.CaptureException(e.Exception);
-                        //System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-                        //Application.Current.Shutdown();
-                    };
-                });
-                TasksLogger.StartUpRecovery();
+                OnLoginSuccess();
             }
+        }
+
+        private void OnLoginSuccess()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                new MainFrame().Show();
+                LoginWebView?.Close();
+
+                Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                new TaskBarButton();
+                Application.Current.Exit += TasksLogger.ExitEventHandler;
+                Application.Current.DispatcherUnhandledException += (sender, e) =>
+                {
+                    TasksLogger.ExitEventHandler(sender, e);
+                    e.Exception.Submit();
+                    //System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                    //Application.Current.Shutdown();
+                };
+            });
+            TasksLogger.StartUpRecovery();
         }
 
         public string LoginUrl { get; private set; }

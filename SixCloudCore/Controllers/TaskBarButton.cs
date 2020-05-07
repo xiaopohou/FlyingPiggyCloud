@@ -1,4 +1,5 @@
-﻿using SixCloudCore.Views;
+﻿using Sentry;
+using SixCloudCore.Views;
 using System;
 using System.Windows;
 using System.Windows.Forms;
@@ -65,6 +66,14 @@ namespace SixCloudCore.Controllers
         private void Dispose(object sender, ExitEventArgs e)
         {
             NotifyIcon.Dispose();
+        }
+    }
+
+    internal static class SentryAgent
+    {
+        internal static void Submit(this Exception exception)
+        {
+            SentrySdk.CaptureException(exception);
         }
     }
 }
