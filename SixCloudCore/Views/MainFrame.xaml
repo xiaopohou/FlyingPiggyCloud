@@ -10,6 +10,8 @@
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                   xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
                   xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
+                  xmlns:animation="clr-namespace:SourceChord.FluentWPF.Animations;assembly=FluentWPF"
+                  xmlns:brush="clr-namespace:CustomControls.BrushExtensions;assembly=SixCloudCoreCustomControlLibrary"
                   mc:Ignorable="d" MinHeight="720" MinWidth="800" AcrylicWindowStyle="NoIcon"
                   Title="6盘，祝你越来越6"
                   fw:PointerTracker.Enabled="True"
@@ -27,9 +29,47 @@
         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource AcrylicMenuItemStyle}">
             <Setter Property="Template" Value="{StaticResource AcrylicMenuItemTemplateStyle}"/>
         </Style>
+
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="20,5"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" x:Name="mainBorder">
+                            <Border.BorderBrush>
+                                <brush:RevealBorderBrush Color="#FF5A5A5A"/>
+                            </Border.BorderBrush>
+                            <Grid>
+                                <ContentPresenter Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                <Rectangle HorizontalAlignment="Left" Margin="-1,7" Width="3" Fill="{DynamicResource ImmersiveSystemAccentBrush}" Visibility="Collapsed" x:Name="checkedSign"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="mainBorder" Value="#555A5A5A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="mainBorder" Value="#AA5A5A5A"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Visibility" TargetName="checkedSign" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </fw:AcrylicWindow.Resources>
     <Grid Background="{DynamicResource MainBackgroundBrush}">
-        <TabControl Margin="10" BorderThickness="0" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}" Button.Click="TabControl_Click">
+        <TabControl BorderThickness="0" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}" Button.Click="TabControl_Click">
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">
                     <Grid>
@@ -41,7 +81,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <TabPanel Grid.Row="0" Grid.Column="0" x:Name="headerPanel" IsItemsHost="true"/>
+                        <TabPanel Margin="10" Grid.Row="0" Grid.Column="0" x:Name="headerPanel" IsItemsHost="true"/>
 
                         <StackPanel DataContext="{Binding UserInformation}"
                                     MaxHeight="40" Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
@@ -57,17 +97,17 @@
             </TabControl.Template>
             <!--文件列表-->
             <TabItem IsSelected="True" DataContext="{Binding FileVM}" Header="所有文件">
-                <Grid Margin="15">
+                <Grid Margin="0,15,15,15">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="320"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Width="130" Grid.RowSpan="2" Grid.Column="0">
-                        <RadioButton Command="{Binding NavigatiCommand}" CommandParameter="/" Content="所有文件"/>
+                    <StackPanel Grid.RowSpan="2" Grid.Column="0">
+                        <RadioButton Command="{Binding NavigateCommand}" CommandParameter="/" Content="所有文件" IsChecked="True"/>
                         <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Video" Content="所有视频"/>
                         <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Audio" Content="所有音频"/>
                         <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Image" Content="所有图片"/>
@@ -92,7 +132,7 @@
             </TabItem>
         </TabControl>
 
-        <Border Margin="0,50,10,0"
+        <Border Margin="0,50,0,0"
                 DataContext="{Binding UserInformation}"
                 BorderBrush="{DynamicResource ImmersiveSystemAccentBrush}" 
                 BorderThickness="1"
