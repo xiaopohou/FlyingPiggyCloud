@@ -198,7 +198,14 @@ namespace SixCloudCore.ViewModels
                 {
                     if (await fileMetaDataEnumerator.MoveNextAsync())
                     {
-                        App.Current.Dispatcher.Invoke(() => FileList.Add(new FileListItemViewModel(this, fileMetaDataEnumerator.Current)));
+                        //异步调用时Current可能为null导致调用失败，疑似因状态机被GC导致
+                        var fileMetaData = fileMetaDataEnumerator.Current;
+                        if (fileMetaData == null)
+                        {
+                            return;
+                        }
+
+                        App.Current.Dispatcher.Invoke(() => FileList.Add(new FileListItemViewModel(this, fileMetaData)));
                     }
                     else
                     {
