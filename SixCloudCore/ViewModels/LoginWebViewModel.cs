@@ -76,8 +76,10 @@ namespace SixCloudCore.ViewModels
                     var x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloudCore.exe";
                     if (File.Exists(x))
                     {
+                        //应在此处释放互斥锁
                         System.Diagnostics.Process.Start(x);
-                        Application.Current.Shutdown();
+
+                        //Application.Current.Shutdown();
                     }
                 };
             });

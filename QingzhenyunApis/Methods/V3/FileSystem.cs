@@ -53,7 +53,7 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="parentIdentity">该文件夹的ID</param>
         /// <param name="path">路径</param>
         /// <returns></returns>
-        public static async Task<FileList> GetDirectory(string parentIdentity = "", string path = "", int start = 0, int limit = 20)
+        public static async Task<FileList> GetDirectory(string parentIdentity = "", string path = "", int start = 0, int limit = 20, Type? type = null)
         {
             dynamic data = new ExpandoObject();
             if (!string.IsNullOrEmpty(parentIdentity))
@@ -67,6 +67,11 @@ namespace QingzhenyunApis.Methods.V3
             else
             {
                 data.parentPath = "/";
+            }
+
+            if (type != null)
+            {
+                data.type = type;
             }
 
             data.skip = start;
@@ -205,6 +210,18 @@ namespace QingzhenyunApis.Methods.V3
             var data = new { sourceIdentity };
 
             return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/file/trash");
+        }
+
+        public enum Type
+        {
+            Unknown = 0,
+            Directory = 10,
+            Image = 20,
+            Video = 30,
+            Document = 40,
+            Audio = 50,
+            Archive = 60,
+            Torrent = 70
         }
     }
 }

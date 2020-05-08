@@ -10,6 +10,7 @@
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
     <LangVersion>8.0</LangVersion>
     <SignAssembly>false</SignAssembly>
+    <ApplicationIcon>MediaResources\666.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

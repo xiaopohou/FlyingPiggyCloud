@@ -111,14 +111,14 @@ namespace SixCloudCore.ViewModels
         /// <param name="identity"></param>
         /// <exception cref="RequestFailedException">未能找到目录</exception>
         /// <returns></returns>
-        public static async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(int skip, string path = null, string identity = null, Mode mode = Mode.FileListContainer)
+        public static async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(int skip, string path = null, string identity = null, Mode mode = Mode.FileListContainer, FileSystem.Type? type = null)
         {
             int start = skip;
             const int limit = 20;
             int count;
             do
             {
-                FileList x = await FileSystem.GetDirectory(identity, path, start, limit);
+                FileList x = await FileSystem.GetDirectory(identity, path, start, limit, type);
                 count = x.List.Count;
                 foreach (FileMetaData item in x.List)
                 {
@@ -275,15 +275,32 @@ namespace SixCloudCore.ViewModels
         public DependencyCommand NavigateCommand { get; set; }
         private async void Navigate(object parameter)
         {
-            CurrentPath = parameter as string;
-            fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: ":all", mode: Mode).GetAsyncEnumerator();
-            //FileMetaData directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
-            CurrentUUID = default;
-            App.Current.Dispatcher.Invoke(() => FileList.Clear());
-            CreatePathArray(CurrentPath);
-            await LazyLoad();
-            PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+            if (parameter is string targetPath)
+            {
+                CurrentPath = targetPath;
 
+                if (Enum.TryParse<FileSystem.Type>(targetPath, out FileSystem.Type type))
+                {
+                    var rootDircetory = await FileSystem.GetDirectory(path: "/");
+
+                    fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: $"::all", mode: Mode, type: type).GetAsyncEnumerator();
+                }
+                else
+                {
+                    fileMetaDataEnumerator = CreateFileListEnumerator(0, path: targetPath, mode: Mode).GetAsyncEnumerator();
+                }
+
+                CurrentUUID = default;
+                App.Current.Dispatcher.Invoke(() => FileList.Clear());
+                CreatePathArray(CurrentPath);
+                await LazyLoad();
+                PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+
+            }
+            else if (parameter is FileListItemViewModel selectObject)
+            {
+                NavigateByUUIDAsync(selectObject.UUID);
+            }
         }
 
         #endregion
