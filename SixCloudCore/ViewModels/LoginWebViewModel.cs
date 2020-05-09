@@ -24,6 +24,17 @@ namespace SixCloudCore.ViewModels
 
         private async void InitializeComponent()
         {
+            var newPackageUri = await UpdateHelper.Check();
+            if (newPackageUri != default)
+            {
+                var newPackageMessageBoxResult = MessageBox.Show("发现新的软件包，点击确定下载或者点击取消继续使用当前版本", "更新", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                if (newPackageMessageBoxResult == MessageBoxResult.OK)
+                {
+                    System.Diagnostics.Process.Start(newPackageUri.ToString());
+                    Application.Current.Shutdown();
+                }
+            }
+
             //尝试用已保存的Token获取用户信息
             try
             {
