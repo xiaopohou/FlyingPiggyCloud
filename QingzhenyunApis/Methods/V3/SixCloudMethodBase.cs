@@ -97,7 +97,7 @@ namespace QingzhenyunApis.Methods.V3
             }
         }
 
-        public static string Token { get; protected set; }
+        public static string Token { get; protected set; } = string.Empty;
 
         protected static async Task<T> PostAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
@@ -182,5 +182,6 @@ namespace QingzhenyunApis.Methods.V3
         {
             Token = token ?? Token;
         }
+
     }
 }

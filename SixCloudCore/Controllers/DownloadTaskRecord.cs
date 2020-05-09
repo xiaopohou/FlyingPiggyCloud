@@ -24,8 +24,9 @@ namespace SixCloudCore.Controllers
     {
         public static async Task<Uri> Check()
         {
-            var x = await QingzhenyunApis.Methods.V4.System.Update(Assembly.GetExecutingAssembly().GetName().Version);
-            if (x.Data.Any())
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var x = await QingzhenyunApis.Methods.V4.System.Update(version);
+            if (x.Data != default && x.Data.Any())
             {
                 var query = from package in x.Data
                             orderby package.CreateTime descending
