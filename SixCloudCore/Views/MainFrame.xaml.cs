@@ -47,14 +47,14 @@ namespace SixCloudCore.Views
             //如果不是从文件列表Raise的事件，忽略
             if (e.OriginalSource is ListView)
             {
-                if (e.AddedItems.Count == 0)
-                {
-                    InfoView.BeginAnimation(OpacityProperty, new DoubleAnimation(0d, new Duration(TimeSpan.FromMilliseconds(300d))));
-                }
-                else
-                {
-                    InfoView.BeginAnimation(OpacityProperty, new DoubleAnimation(0d, 1d, new Duration(TimeSpan.FromMilliseconds(300d))));
-                }
+                //if (e.AddedItems.Count == 0)
+                //{
+                //    InfoView.BeginAnimation(OpacityProperty, new DoubleAnimation(0d, new Duration(TimeSpan.FromMilliseconds(300d))));
+                //}
+                //else
+                //{
+                //    InfoView.BeginAnimation(OpacityProperty, new DoubleAnimation(0d, 1d, new Duration(TimeSpan.FromMilliseconds(300d))));
+                //}
             }
         }
 

@@ -20,8 +20,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="详细信息" FontSize="24" Margin="15" />
-        <Grid Grid.Row="1">
+        <Border Grid.Row="0" Background="{DynamicResource MainBackgroundBrush}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="50" Direction="90" ShadowDepth="15" Opacity="0.5" Color="LightGray"/>
+            </Border.Effect>
+        </Border>
+        <TextBlock Background="{DynamicResource MainBackgroundBrush}" Grid.Row="0" Text="详细信息" FontSize="24" Margin="15" />
+        <Grid Background="{DynamicResource MainBackgroundBrush}" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>

@@ -113,8 +113,8 @@
                         <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Audio" Content="所有音频"/>
                         <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Image" Content="所有图片"/>
                     </StackPanel>
+                    <usercontrols:FileListItemInformationView Background="{DynamicResource MainBackgroundBrush}" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
                     <usercontrols:FileListView x:Name="FileListContainer" ListView.SelectionChanged="FileListContainer_SelectionChanged" Grid.Column="1" Grid.RowSpan="2"/>
-                    <usercontrols:FileListItemInformationView HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
                 </Grid>
             </TabItem>
 
