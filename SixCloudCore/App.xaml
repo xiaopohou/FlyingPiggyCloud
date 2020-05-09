@@ -6,21 +6,17 @@
     xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
     xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
     xmlns:usercontrols="clr-namespace:SixCloudCore.Views.UserControls"
+    xmlns:brush="clr-namespace:CustomControls.BrushExtensions;assembly=SixCloudCoreCustomControlLibrary"
     xmlns:metro="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
-
                 <!--  FluentWPF Controls  -->
                 <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/SixCloudCoreCustomControlLibrary;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="ProgressBarStyle" TargetType="{x:Type ProgressBar}" BasedOn="{StaticResource MaterialDesignLinearProgressBar}">
+            <Style x:Key="ProgressBarStyle" TargetType="{x:Type ProgressBar}">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="Foreground" Value="{DynamicResource ImmersiveSystemAccentBrush}"/>
                 <Setter Property="BorderBrush" Value="{x:Null}"/>
@@ -77,6 +73,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
         </ResourceDictionary>
 
 

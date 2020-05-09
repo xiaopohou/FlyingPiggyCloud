@@ -8,6 +8,7 @@
              xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:ViewModels="clr-namespace:SixCloudCore.ViewModels"
+             xmlns:border="E"
              xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
              x:Class="SixCloudCore.Views.UserControls.FileListView"
              mc:Ignorable="d" 
@@ -16,80 +17,6 @@
         <ViewModels:HidingSizeinfoForDirectoryConverter x:Key="HidingSizeinfoForDirectoryConverter"/>
 
         <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>
-
-        <Style TargetType="{x:Type controls:FontIcon}">
-            <Setter Property="IconSize" Value="14"/>
-            <Setter Property="Margin" Value="5,0"/>
-        </Style>
-
-        <DataTemplate x:Key="MetaName">
-            <Grid x:Name="MetaNameContainer">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <controls:FontIcon Foreground="{DynamicResource MainForegroundBrush}" IconSize="24" Icon="{Binding Icon}"/>
-                <controls:RenamableTextBox Grid.Column="1" x:Name="NameBox" HorizontalAlignment="Left" VerticalAlignment="Center" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
-                <controls:LightButton Grid.Column="2" Margin="2,0" FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
-                <controls:LightButton Grid.Column="3" Margin="2,0" FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
-                    <controls:LightButton.ContextMenu>
-                        <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource ImmersiveSystemAccentBrush}" Foreground="White">
-                            <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
-                                <MenuItem.Icon>
-                                    <controls:FontIcon Icon="&#xF0C4;"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem x:Name="Copy" Header="复制" Command="{Binding CopyCommand}">
-                                <MenuItem.Icon>
-                                    <controls:FontIcon Icon="&#xF0C5;"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem x:Name="Rename" Header="重命名" Command="{Binding RenameCommand}">
-                                <MenuItem.Icon>
-                                    <controls:FontIcon Icon="&#xF079;"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem x:Name="Delete" Header="删除" Command="{Binding DeleteCommand}">
-                                <MenuItem.Icon>
-                                    <controls:FontIcon Icon="&#xF1F8;"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                        </ContextMenu>
-                    </controls:LightButton.ContextMenu>
-                </controls:LightButton>
-            </Grid>
-            <DataTemplate.Triggers>
-                <!--选中时显示附加按钮-->
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter TargetName="DownloadBotton" Property="Visibility" Value="Visible"/>
-                </MultiDataTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter TargetName="NameBox" Property="TextAreaWidth" Value="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox, Mode=OneWay}"/>
-                    <Setter TargetName="MoreBotton" Property="Visibility" Value="Visible"/>
-                </MultiDataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
-
-        <DataTemplate x:Key="MetaSize">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Size}"/>
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate x:Key="MetaMTime">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding MTime}"/>
-            </StackPanel>
-        </DataTemplate>
-
         <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -156,53 +83,81 @@
             </Setter>
         </Style>
 
-        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListViewItem}">
-                        <Border x:Name="Border" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1" Background="{TemplateBinding Background}" Padding="{Binding (materialDesign:ListViewAssist.ListViewItemPadding), RelativeSource={RelativeSource Self}}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                            <GridViewRowPresenter Columns="{TemplateBinding GridView.ColumnCollection}" Content="{TemplateBinding Content}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <EventSetter Event="Control.MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
-            <Style.Triggers>
-                <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                    <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignTextBoxBorder}"/>
-                </Trigger>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}"/>
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}"/>
-                </Trigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsSelected" Value="True"/>
-                        <Condition Property="Selector.IsSelectionActive" Value="False"/>
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}"/>
-                </MultiTrigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsSelected" Value="True"/>
-                        <Condition Property="Selector.IsSelectionActive" Value="True"/>
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
-                </MultiTrigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Opacity" Value="0.56"/>
-                </Trigger>
-                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                    <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}"/>
-                </Trigger>
-            </Style.Triggers>
+
+        <Style TargetType="{x:Type controls:FontIcon}">
+            <Setter Property="IconSize" Value="14"/>
+            <Setter Property="Margin" Value="5,0"/>
         </Style>
+
+        <DataTemplate x:Key="MetaName">
+            <Grid x:Name="MetaNameContainer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="{DynamicResource ImmersiveSystemAccentBrushLight2}" Height="50"/>
+                <controls:FontIcon Foreground="{DynamicResource MainBackgroundBrush}" IconSize="24" Icon="{Binding Icon}"/>
+                <controls:RenamableTextBox Margin="15,0,0,0" Grid.Column="1" x:Name="NameBox" HorizontalAlignment="Left" VerticalAlignment="Center" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
+                <controls:LightButton Grid.Column="2" Margin="2,0" FontIcon="&#xF063;" FontSize="12" Visibility="Collapsed" x:Name="DownloadBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding DownloadCommand}"/>
+                <controls:LightButton Grid.Column="3" Margin="2,0" FontIcon="&#xF141;" FontSize="12" Visibility="Collapsed" x:Name="MoreBotton" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
+                    <controls:LightButton.ContextMenu>
+                        <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource ImmersiveSystemAccentBrush}" Foreground="White">
+                            <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
+                                <MenuItem.Icon>
+                                    <controls:FontIcon Icon="&#xF0C4;"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem x:Name="Copy" Header="复制" Command="{Binding CopyCommand}">
+                                <MenuItem.Icon>
+                                    <controls:FontIcon Icon="&#xF0C5;"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem x:Name="Rename" Header="重命名" Command="{Binding RenameCommand}">
+                                <MenuItem.Icon>
+                                    <controls:FontIcon Icon="&#xF079;"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem x:Name="Delete" Header="删除" Command="{Binding DeleteCommand}">
+                                <MenuItem.Icon>
+                                    <controls:FontIcon Icon="&#xF1F8;"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </controls:LightButton.ContextMenu>
+                </controls:LightButton>
+            </Grid>
+            <DataTemplate.Triggers>
+                <!--选中时显示附加按钮-->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="DownloadBotton" Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="NameBox" Property="TextAreaWidth" Value="{Binding ActualWidth, ElementName=WidthHelperRenameTextBox, Mode=OneWay}"/>
+                    <Setter TargetName="MoreBotton" Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="MetaSize">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Size}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="MetaMTime">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding MTime}"/>
+            </StackPanel>
+        </DataTemplate>
+
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -210,7 +165,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        
+
         <!--地址栏-->
         <ListBox Background="Transparent" BorderThickness="0" FontSize="12" x:Name="AddressBar" Height="24" VerticalAlignment="Top" ItemsSource="{Binding PathArray}" SelectionChanged="AddressBar_SelectionChanged">
             <ListBox.ItemsPanel>
@@ -234,39 +189,39 @@
             <controls:LightButton Foreground="{DynamicResource MainForegroundBrush}"  FontIcon="&#xF054;" Margin="10,0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="Next" Command="{Binding NextNavigateCommand}"/>
             <Button x:Name="UploadButton" Command="{Binding UploadFileCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF574;"/>
-                        <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
-                    </StackPanel>
+                    <controls:FontIcon Icon="&#xF574;"/>
+                    <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
+                </StackPanel>
             </Button>
             <Button x:Name="UploadFolderButton" Command="{Binding UploadFolderCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF093;"/>
-                        <TextBlock Text="上传文件夹"/>
-                    </StackPanel>
+                    <controls:FontIcon Icon="&#xF093;"/>
+                    <TextBlock Text="上传文件夹"/>
+                </StackPanel>
             </Button>
             <Button x:Name="NewFolderButton" Command="{Binding NewFolderCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF65E;" />
-                        <TextBlock Text="新建文件夹" />
-                    </StackPanel>
+                    <controls:FontIcon Icon="&#xF65E;" />
+                    <TextBlock Text="新建文件夹" />
+                </StackPanel>
             </Button>
             <Button x:Name="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF1F8;" />
-                        <TextBlock Text="删除" />
-                    </StackPanel>
+                    <controls:FontIcon Icon="&#xF1F8;" />
+                    <TextBlock Text="删除" />
+                </StackPanel>
             </Button>
             <Button x:Name="Cut" Command="{Binding CutCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF0C4;"/>
-                        <TextBlock Text="剪切" />
-                    </StackPanel>
+                    <controls:FontIcon Icon="&#xF0C4;"/>
+                    <TextBlock Text="剪切" />
+                </StackPanel>
             </Button>
             <Button x:Name="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF0C5;"/>
-                        <TextBlock Text="复制" />
-                    </StackPanel>
+                    <controls:FontIcon Icon="&#xF0C5;"/>
+                    <TextBlock Text="复制" />
+                </StackPanel>
             </Button>
             <Button x:Name="Stick" Command="{Binding StickCommand}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -278,14 +233,19 @@
 
         <Rectangle Grid.Row="2" Fill="White"/>
 
-        <ListView Grid.Row="2" SelectedIndex="{Binding SelectedIndex, Mode=OneWayToSource}" ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" ItemsSource="{Binding FileList}" ItemContainerStyle="{DynamicResource ListViewItemStyle}">
+        <ListView Style="{StaticResource ListViewNoHeaderStyle}" Grid.Row="2" SelectedIndex="{Binding SelectedIndex, Mode=OneWayToSource}" ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" ItemsSource="{Binding FileList}">
             <ListView.View>
-                <GridView>
+                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}">
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName, Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileSize}" CellTemplate="{StaticResource MetaSize}" Header="大小"/>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" CellTemplate="{StaticResource MetaMTime}" Header="修改时间"/>
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemContainerStyle}">
+                    <EventSetter Event="Control.MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
 
         <!--这个Grid用于帮助GridView自动校正分栏宽度-->

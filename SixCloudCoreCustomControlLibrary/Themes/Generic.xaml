@@ -16,7 +16,7 @@
         <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/LoadingControl.xaml"/>
         <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/FluentTabControl.xaml"/>
         <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/FluentTabItem.xaml"/>
-
+        <ResourceDictionary Source="/SixCloudCoreCustomControlLibrary;component/Themes/ListView.xaml"/>
         <!--  FluentWPF Controls  -->
         <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
 
