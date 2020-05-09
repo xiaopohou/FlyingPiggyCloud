@@ -61,7 +61,11 @@ namespace SixCloudCore.Views
         private void TabControl_Click(object sender, RoutedEventArgs e)
         {
             //避免click其他按钮展开菜单
-            if ((e.OriginalSource as Button)?.Name != "contextMenuButton")
+            if (e.OriginalSource is Button contextMenuButton && contextMenuButton.Name == "contextMenuButton")
+            {
+                //contextMenuButton.Focus();
+            }
+            else
             {
                 e.Handled = true;
             }

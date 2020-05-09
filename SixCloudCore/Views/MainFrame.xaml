@@ -67,6 +67,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
     </fw:AcrylicWindow.Resources>
     <Grid Background="{DynamicResource MainBackgroundBrush}">
         <TabControl BorderThickness="0" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}" Button.Click="TabControl_Click">
@@ -86,7 +87,7 @@
                         <StackPanel DataContext="{Binding UserInformation}"
                                     MaxHeight="40" Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
                             <Image Source="{Binding Icon}"/>
-                            <Button x:Name="contextMenuButton" Height="40" Width="40">
+                            <Button x:Name="contextMenuButton" Height="40" Width="40" Focusable="True">
                                 <metro:FontIcon Icon="&#xf141;"/>
                             </Button>
                         </StackPanel>
