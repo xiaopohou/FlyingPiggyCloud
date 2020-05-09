@@ -41,12 +41,18 @@ namespace QingzhenyunApis.EntityModels
         public int Version { get; set; }
 
         [JsonProperty(PropertyName = "vip")]
-        public int Vip { get; set; }
+        public VipStatus Vip { get; set; }
 
         [JsonProperty(PropertyName = "vipExpireTime")]
         public long VipExpireTime { get; set; }
 
         [JsonProperty(PropertyName = "lastActivateTime")]
         public long LastActivateTime { get; set; }
+    }
+
+    public enum VipStatus
+    {
+        Ordinary = 0,
+        VIP = 10
     }
 }

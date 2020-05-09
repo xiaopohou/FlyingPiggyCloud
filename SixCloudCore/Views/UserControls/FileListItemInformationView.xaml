@@ -25,32 +25,32 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <!--<RowDefinition Height="Auto"/>-->
-                <!--<RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>-->
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <!--<ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>-->
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="0" Text="文件类型:"/>
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Mime}"/>
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="访问时间:"/>
-            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ATime}"/>
-            <TextBlock Grid.Column="2" Grid.Row="0" Text="大小:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
-            <TextBlock Grid.Column="3" Grid.Row="0" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
-            <TextBlock Grid.Column="2" Grid.Row="1" Text="创建时间:"/>
-            <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding CTime}"/>
-            <TextBlock Grid.Column="4" Grid.Row="0" Text="可预览:"/>
-            <TextBlock Grid.Column="5" Grid.Row="0" Text="{Binding Preview}"/>
-            <TextBlock Grid.Column="4" Grid.Row="1" Text="修改时间:"/>
-            <TextBlock Grid.Column="5" Grid.Row="1" Text="{Binding MTime}"/>
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="大小:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="可预览:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Preview}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="0" Grid.Row="3" Text="访问时间:"/>
+            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding ATime}"/>
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="创建时间:"/>
+            <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding CTime}"/>
+            <TextBlock Grid.Column="0" Grid.Row="5" Text="修改时间:"/>
+            <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding MTime}"/>
         </Grid>
     </Grid>
 </UserControl>

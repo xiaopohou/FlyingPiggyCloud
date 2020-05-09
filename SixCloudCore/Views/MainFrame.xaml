@@ -106,14 +106,14 @@
                         <ColumnDefinition Width="320"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.RowSpan="2" Grid.Column="0">
+                    <StackPanel Grid.Row="0" Grid.Column="0">
                         <RadioButton Command="{Binding NavigateCommand}" CommandParameter="/" Content="所有文件" IsChecked="True"/>
                         <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Video" Content="所有视频"/>
                         <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Audio" Content="所有音频"/>
                         <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Image" Content="所有图片"/>
                     </StackPanel>
-                    <usercontrols:FileListView x:Name="FileListContainer" ListView.SelectionChanged="FileListContainer_SelectionChanged" Grid.Column="1"/>
-                    <usercontrols:FileListItemInformationView HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
+                    <usercontrols:FileListView x:Name="FileListContainer" ListView.SelectionChanged="FileListContainer_SelectionChanged" Grid.Column="1" Grid.RowSpan="2"/>
+                    <usercontrols:FileListItemInformationView HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
                 </Grid>
             </TabItem>
 
@@ -139,26 +139,29 @@
                 Background="White"
                 x:Name="contextMenu" Height="0" Width="280" HorizontalAlignment="Right" VerticalAlignment="Top" MouseDown="ContextMenu_MouseDown">
             <StackPanel>
-                <Grid Background="Gray" Height="100" Width="280" ToolTip="{Binding FrendlySpaceCapacity}">
+                <Grid Background="LightGray" Height="200" Width="280">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" FontSize="20" VerticalAlignment="Bottom" Text="{Binding Name}" Margin="15"/>
-                    <ProgressBar Grid.Row="1" VerticalAlignment="Top" Value="{Binding AvailableRate}" Style="{StaticResource ProgressBarStyle}" Margin="15" Background="LightGray"/>
+                    <TextBlock Grid.Row="1" FontSize="14" VerticalAlignment="Bottom" Text="{Binding FriendlyVipExpireTime}" Margin="15"/>
+                    <ProgressBar Grid.Row="2" VerticalAlignment="Top" Value="{Binding AvailableRate}" Style="{StaticResource ProgressBarStyle}" Margin="15" Background="LightGray"/>
+                    <TextBlock Grid.Row="3" FontSize="14" VerticalAlignment="Bottom" Text="{Binding FrendlySpaceCapacity}" Margin="15"/>
                 </Grid>
                 <Button Content="修改用户名" Command="{Binding ChangeUserNameCommand}" Height="50" Width="280"/>
+                <Button Content="会员续费" Command="{Binding ChangeUserNameCommand}" Height="50" Width="280"/>
                 <Button Content="修改密码" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
                 <Button Content="注销登录" Command="{Binding LogoutCommand}" Height="50" Width="280"/>
             </StackPanel>
         </Border>
-
-
         <Grid.Triggers>
             <EventTrigger RoutedEvent="Button.Click">
                 <BeginStoryboard>
                     <Storyboard>
-                        <DoubleAnimation Duration="00:00:00.200" To="250" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
+                        <DoubleAnimation Duration="00:00:00.200" To="400" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
                             <DoubleAnimation.EasingFunction>
                                 <BackEase EasingMode="EaseOut"/>
                             </DoubleAnimation.EasingFunction>
@@ -179,9 +182,5 @@
             </EventTrigger>
 
         </Grid.Triggers>
-
-
-
-
     </Grid>
 </fw:AcrylicWindow>

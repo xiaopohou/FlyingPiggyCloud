@@ -3,6 +3,7 @@ using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
+using SixCloudCore.Controllers;
 using SixCloudCore.Models;
 using SixCloudCore.Views;
 using System;
@@ -22,6 +23,10 @@ namespace SixCloudCore.ViewModels
         public string FrendlySpaceCapacity { get; set; }
 
         public string Name { get; set; }
+
+        public VipStatus VipStatus { get; private set; }
+
+        public string FriendlyVipExpireTime { get; private set; }
 
         public UserInformationViewModel()
         {
@@ -46,10 +51,11 @@ namespace SixCloudCore.ViewModels
                 Icon = new BitmapImage(new Uri(icon));
 
             }
-            catch (UriFormatException)
+            catch (UriFormatException ex)
             {
                 //检查导致解析头像崩溃的原因
                 //ex.ToExceptionless().AddObject(icon).AddObject(currentUser).Submit();
+                ex.Submit();
             }
 
             try
@@ -60,12 +66,17 @@ namespace SixCloudCore.ViewModels
             {
                 AvailableRate = 100;
             }
+
             FrendlySpaceCapacity = $"总计：{Calculators.SizeCalculator(currentUser.SpaceCapacity)}{Environment.NewLine}已用：{Calculators.SizeCalculator(currentUser.SpaceUsed)}";
             Name = currentUser.Name;
+            VipStatus = currentUser.Vip;
+            FriendlyVipExpireTime = currentUser.VipExpireTime == 0 ? "" : $"会员过期时间：{Calculators.UnixTimeStampConverter(currentUser.VipExpireTime)}";
             OnPropertyChanged(nameof(Icon));
             OnPropertyChanged(nameof(AvailableRate));
             OnPropertyChanged(nameof(FrendlySpaceCapacity));
             OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(VipStatus));
+            OnPropertyChanged(nameof(FriendlyVipExpireTime));
         }
 
         #region Commands
