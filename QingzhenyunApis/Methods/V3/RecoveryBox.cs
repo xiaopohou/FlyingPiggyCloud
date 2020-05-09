@@ -49,9 +49,9 @@ namespace QingzhenyunApis.Methods.V3
         /// </summary>
         /// <param name="targetUUID"></param>
         /// <returns></returns>
-        public static async Task<int?> Delete(string[] targetUUID)
+        public static async Task<SuccessCount> Delete(string[] targetUUID)
         {
-            return await PostAsync<int?>(JsonConvert.SerializeObject(new { sourceIdentity = targetUUID }), "/v3/trash/delete");
+            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(new { sourceIdentity = targetUUID }), "/v3/trash/delete");
         }
     }
 }
