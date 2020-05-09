@@ -25,7 +25,7 @@ namespace SixCloudCore.Controllers
             //设置托盘的各个属性
             NotifyIcon = new NotifyIcon
             {
-                BalloonTipText = "祝你越来越6",//托盘气泡显示内容
+                BalloonTipText = "留住美好",//托盘气泡显示内容
                 BalloonTipTitle = "6盘",
                 Text = "6盘",
                 Visible = true,//托盘按钮是否可见
