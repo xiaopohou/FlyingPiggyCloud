@@ -144,7 +144,6 @@
         </Setter>
     </Style>
 
-
     <Style x:Key="GridViewColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
         <Setter Property="Background" Value="{DynamicResource MainBackgroundBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -175,4 +174,10 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource ListViewNoHeaderStyle}"/>
+    <Style TargetType="{x:Type GridView}">
+        <Setter Property="ColumnHeaderContainerStyle" Value="{StaticResource GridViewColumnHeaderStyle}"/>
+    </Style>
+
 </ResourceDictionary>

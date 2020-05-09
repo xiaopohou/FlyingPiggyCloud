@@ -33,6 +33,7 @@ namespace SixCloudCore.ViewModels
             ChangeUserNameCommand = new DependencyCommand(ChangeUserName, DependencyCommand.AlwaysCan);
             ChangePasswordCommand = new DependencyCommand(ChangePassword, DependencyCommand.AlwaysCan);
             LogoutCommand = new DependencyCommand(Logout, DependencyCommand.AlwaysCan);
+            RenewalCommand = new DependencyCommand(Renewal, DependencyCommand.AlwaysCan);
             ParseInformation();
         }
 
@@ -80,6 +81,13 @@ namespace SixCloudCore.ViewModels
         }
 
         #region Commands
+
+        public DependencyCommand RenewalCommand { get; set; }
+        private void Renewal(object parameter)
+        {
+            MessageBox.Show("会员续费功能尚未启用", "尚未启用", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
         public DependencyCommand ChangeUserNameCommand { get; set; }
         private async void ChangeUserName(object parameter)
         {

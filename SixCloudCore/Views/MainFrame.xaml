@@ -67,7 +67,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
     </fw:AcrylicWindow.Resources>
     <Grid Background="{DynamicResource MainBackgroundBrush}">
         <TabControl BorderThickness="0" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}" Button.Click="TabControl_Click">
@@ -153,7 +153,7 @@
                     <TextBlock Grid.Row="3" FontSize="14" VerticalAlignment="Bottom" Text="{Binding FrendlySpaceCapacity}" Margin="15"/>
                 </Grid>
                 <Button Content="修改用户名" Command="{Binding ChangeUserNameCommand}" Height="50" Width="280"/>
-                <Button Content="会员续费" Command="{Binding ChangeUserNameCommand}" Height="50" Width="280"/>
+                <Button Content="会员续费" Command="{Binding RenewalCommand}" Height="50" Width="280"/>
                 <Button Content="修改密码" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
                 <Button Content="注销登录" Command="{Binding LogoutCommand}" Height="50" Width="280"/>
             </StackPanel>
