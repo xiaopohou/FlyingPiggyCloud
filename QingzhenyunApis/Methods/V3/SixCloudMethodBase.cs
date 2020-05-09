@@ -18,7 +18,6 @@ namespace QingzhenyunApis.Methods.V3
     /// </summary>
     public abstract class SixCloudMethodBase
     {
-
         protected const string AccessKeyId = "bc088aa5e2ad";
         private const string AccessKeySecret = "DyO04JriYoqJ9f57";
         private static readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
