@@ -10,7 +10,7 @@ namespace QingzhenyunApis.Methods.V3
     {
         public static async Task<UserInformation> GetUserInformation(string token = null)
         {
-            Token ??= token;
+            Token = token ?? Token;
             return await GetAsync<UserInformation>("/v3/user/info");
         }
 
