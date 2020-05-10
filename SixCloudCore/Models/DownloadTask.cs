@@ -1,89 +1,132 @@
-﻿using FileDownloader;
+﻿using QingzhenyunApis.Exceptions;
+using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
+using SixCloudCore.SixTransporter.Downloader;
+using SixCloudCore.ViewModels;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SixCloudCore.Models
 {
     internal class DownloadTask
     {
-        public enum TaskStatus
+        public TransferTaskStatus Status => (fileDownloader?.Status ?? DownloadStatusEnum.Waiting) switch
         {
-            Running,
-            Pause,
-            Cancel
-        }
+            DownloadStatusEnum.Downloading => TransferTaskStatus.Running,
+            DownloadStatusEnum.Waiting => TransferTaskStatus.Running,
 
-        public TaskStatus Status { get; private set; } = TaskStatus.Pause;
-        private readonly object statusSyncRoot = new object();
+            DownloadStatusEnum.Paused => TransferTaskStatus.Pause,
+            DownloadStatusEnum.Failed => TransferTaskStatus.Pause,
+            DownloadStatusEnum.Completed => TransferTaskStatus.Completed,
+            _ => throw new InvalidCastException()
+        };
 
-        private readonly IFileDownloader fileDownloader;
+        private HttpDownloader fileDownloader;
 
-        public double DownloadProgress => fileDownloader.TotalBytesToReceive == 0 ? 0 : fileDownloader.BytesReceived * 100 / fileDownloader.TotalBytesToReceive;
+        public float DownloadProgress => fileDownloader?.DownloadPercentage ?? 0;
 
-        public string Completed => Calculators.SizeCalculator(fileDownloader.BytesReceived);
+        public string Completed => Calculators.SizeCalculator(fileDownloader?.Info.DownloadedSize ?? 0);
 
-        public string Total => Calculators.SizeCalculator(fileDownloader.TotalBytesToReceive);
+        public string Total => Calculators.SizeCalculator(fileDownloader?.Info.ContentSize ?? 0);
 
         public string Name { get; private set; }
-
+        public string TargetUUID { get; }
+        public string Url { get; private set; }
         public string Path { get; }
 
-        public string CurrentFileFullPath => fileDownloader.LocalFileName;
+        public string Speed => Calculators.SizeCalculator(fileDownloader?.Speed ?? 0) + "/秒";
 
-        public long CompletedBytes => fileDownloader.BytesReceived;
+        public string CurrentFileFullPath => fileDownloader?.Info.DownloadPath;
+
+        public long CompletedBytes => fileDownloader?.Info.DownloadedSize ?? 0;
 
         public async void Start()
         {
-            lock (statusSyncRoot)
+            if (fileDownloader?.Status == DownloadStatusEnum.Downloading)
             {
-                if (Status != TaskStatus.Pause)
-                {
-                    return;
-                }
-                Status = TaskStatus.Running;
+                return;
             }
 
-            await Task.Run(() =>
+            if (Url == null)
             {
-                fileDownloader.Start();
-            });
+                Url = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
+            }
+
+            if (fileDownloader == null)
+            {
+                string downloadPath = System.IO.Path.Combine(Path, Name);
+                DownloadTaskInfo taskInfo;
+
+                if (File.Exists(downloadPath + ".downloading"))
+                {
+                    taskInfo = DownloadTaskInfo.Load(downloadPath + ".downloading");
+                }
+                else
+                {
+                    taskInfo = new DownloadTaskInfo()
+                    {
+                        DownloadUrl = Url, // 下载链接，可以为null，任务开始前再赋值初始化
+                        DownloadPath = downloadPath,
+                        Threads = 4,
+                    };
+                }
+                fileDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
+                fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
+                {
+                    if (newValue == DownloadStatusEnum.Completed)
+                    {
+                        DownloadCompleted?.Invoke(sender, null);
+                    }
+                };
+            }
+
+            await Task.Run(() => fileDownloader?.StartDownload());
         }
 
-        public async Task Pause()
+        public void Pause()
         {
-            await Task.Run(() =>
+            if (Status != TransferTaskStatus.Running)
             {
-                lock (statusSyncRoot)
-                {
-                    if (Status != TaskStatus.Running)
-                    {
-                        return;
-                    }
-                    fileDownloader.Pause();
-                    Status = TaskStatus.Pause;
-                }
-            });
+                return;
+            }
+
+            fileDownloader.StopAndSave().Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
         }
 
         public void Stop()
         {
-            //DownloadFileCompleted?.Invoke(this, null);
-            lock (statusSyncRoot)
+            fileDownloader.StopAndSave().Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
+            try
             {
-                fileDownloader?.Cancel();
+                File.Delete(System.IO.Path.Combine(Path, Name));
+                File.Delete(System.IO.Path.Combine(Path, $"{Name}.downloading"));
+            }
+            catch (IOException ex)
+            {
+                ex.Submit();
             }
         }
 
-        public DownloadTask(string storagePath, string name, RefreshUri getDownloadUri, EventHandler<DownloadFileCompletedArgs> downloadFileCompleted, EventHandler<DownloadFileProgressChangedArgs> downloadFileProgressChanged)
+        public event EventHandler DownloadCompleted;
+
+        public DownloadTask(string storagePath, string name, string targetUUID, EventHandler downloadFileCompleted)
         {
             Path = storagePath;
             Name = name;
-
-            fileDownloader = new FileDownloadTask(Path, getDownloadUri, name);
-            fileDownloader.DownloadFileCompleted += downloadFileCompleted;
-            fileDownloader.DownloadProgressChanged += downloadFileProgressChanged;
-
+            TargetUUID = targetUUID;
+            DownloadCompleted += downloadFileCompleted;
+            DownloadCompleted += (sender, e) =>
+            {
+                try
+                {
+                    File.Delete(System.IO.Path.Combine(Path, $"{Name}.downloading"));
+                }
+                catch (IOException ex)
+                {
+                    ex.Submit();
+                }
+            };
         }
     }
 }

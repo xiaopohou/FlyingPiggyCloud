@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace SixCloudCore.ViewModels
 {
@@ -28,39 +29,9 @@ namespace SixCloudCore.ViewModels
 
         public double Progress => downloadTask.DownloadProgress;
 
-        public TransferTaskStatus Status => downloadTask.Status switch
-        {
-            DownloadTask.TaskStatus.Running => TransferTaskStatus.Running,
-            DownloadTask.TaskStatus.Pause => TransferTaskStatus.Pause,
-            DownloadTask.TaskStatus.Cancel => TransferTaskStatus.Stop,
-            _ => TransferTaskStatus.Stop
-        };
+        public TransferTaskStatus Status => downloadTask.Status;
 
-        private DateTime lastTime;
-        private long lastCompletedBytes;
-        private double lastSpeed;
-        public string Speed
-        {
-            get
-            {
-                if (lastTime == default || lastCompletedBytes == default)
-                {
-                    lastTime = DateTime.Now;
-                    lastCompletedBytes = downloadTask.CompletedBytes;
-                    lastSpeed = 0;
-                    return "0B/秒";
-                }
-                else
-                {
-                    TimeSpan span = DateTime.Now - lastTime;
-                    lastTime += span;
-                    long intervalCompleted = downloadTask.CompletedBytes - lastCompletedBytes;
-                    lastCompletedBytes += intervalCompleted;
-                    lastSpeed += Math.Round(((span.TotalSeconds == 0 ? 0 : intervalCompleted / span.TotalSeconds) - lastSpeed) / 100, 0);
-                    return Calculators.SizeCalculator((long)lastSpeed) + "/秒";
-                }
-            }
-        }
+        public string Speed => downloadTask.Speed;
 
         public DependencyCommand RecoveryCommand { get; }
         private void Recovery(object parameter)
@@ -77,9 +48,9 @@ namespace SixCloudCore.ViewModels
 
 
         public DependencyCommand PauseCommand { get; }
-        private async void Pause(object parameter)
+        private void Pause(object parameter)
         {
-            await downloadTask.Pause();
+            downloadTask.Pause();
             OnPropertyChanged(nameof(Status));
             RecoveryCommand.OnCanExecutedChanged(this, null);
             PauseCommand.OnCanExecutedChanged(this, null);
@@ -112,22 +83,20 @@ namespace SixCloudCore.ViewModels
             PauseCommand = new DependencyCommand(Pause, CanPause);
             CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
 
-            downloadTask = new DownloadTask(localPath, name, () =>
+            downloadTask = new DownloadTask(localPath, name, TargetUUID, (sender, e) =>
              {
-                 return new Uri(FileSystem.GetDownloadUrlByIdentity(targetUUID).Result.DownloadAddress);
-             }, (sender, e) =>
-             {
-                 if (e.State == FileDownloader.CompletedState.Succeeded)
-                 {
-                     DownloadCompleted?.Invoke(this, new EventArgs());
-                 }
-             }, (sender, e) =>
-              {
-                  OnPropertyChanged(nameof(Completed));
-                  OnPropertyChanged(nameof(Speed));
-                  OnPropertyChanged(nameof(Total));
-                  OnPropertyChanged(nameof(Progress));
-              });
+                 DownloadCompleted?.Invoke(this, e);
+             });
+
+            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
+
+            void Callback(object sender, EventArgs e)
+            {
+                OnPropertyChanged(nameof(Completed));
+                OnPropertyChanged(nameof(Speed));
+                OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(Progress));
+            }
         }
 
     }
@@ -136,7 +105,7 @@ namespace SixCloudCore.ViewModels
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((DownloadTask.TaskStatus)value) == DownloadTask.TaskStatus.Running ? Visibility.Collapsed : Visibility.Visible;
+            return ((TransferTaskStatus)value) == TransferTaskStatus.Running ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

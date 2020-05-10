@@ -9,17 +9,17 @@ namespace SixCloudCore.ViewModels
     /// </summary>
     internal abstract class UploadingTaskViewModel : ViewModelBase, ITransferItemViewModel
     {
-        /// <summary>
-        /// 用于定时刷新任务进度
-        /// </summary>
-        private static readonly DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher)
-        {
-            Interval = TimeSpan.FromSeconds(0.5d)
-        };
+        ///// <summary>
+        ///// 用于定时刷新任务进度
+        ///// </summary>
+        //private static readonly DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher)
+        //{
+        //    Interval = TimeSpan.FromSeconds(0.5d)
+        //};
 
         static UploadingTaskViewModel()
         {
-            timer.Start();
+
         }
 
         protected UploadingTaskViewModel()
@@ -28,7 +28,7 @@ namespace SixCloudCore.ViewModels
             PauseCommand = new DependencyCommand(Pause, CanPause);
             CancelCommand = new DependencyCommand(Stop, DependencyCommand.AlwaysCan);
 
-            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(timer, nameof(timer.Tick), Callback);
+            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
 
             void Callback(object sender, EventArgs e)
             {
