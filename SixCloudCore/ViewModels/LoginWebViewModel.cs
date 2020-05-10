@@ -30,7 +30,7 @@ namespace SixCloudCore.ViewModels
                 var newPackageMessageBoxResult = MessageBox.Show("发现新的软件包，点击确定下载或者点击取消继续使用当前版本", "更新", MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 if (newPackageMessageBoxResult == MessageBoxResult.OK)
                 {
-                    System.Diagnostics.Process.Start(newPackageUri.ToString());
+                    System.Diagnostics.Process.Start("explorer.exe", newPackageUri.ToString());
                     Application.Current.Shutdown();
                 }
             }

@@ -2,6 +2,7 @@
 //using Exceptionless;
 using Newtonsoft.Json;
 using QingzhenyunApis.Methods.V3;
+using QingzhenyunApis.Exceptions;
 using SixCloudCore.Models;
 using SixCloudCore.ViewModels;
 using System;
