@@ -55,8 +55,7 @@ namespace SixCloudCore.ViewModels
             catch (UriFormatException ex)
             {
                 //检查导致解析头像崩溃的原因
-                //ex.ToExceptionless().AddObject(icon).AddObject(currentUser).Submit();
-                ex.Submit();
+                ex.ToSentry().AttachExtraInfo(nameof(icon), currentUser.Icon).AttachExtraInfo(nameof(currentUser), currentUser).Submit();
             }
 
             try
