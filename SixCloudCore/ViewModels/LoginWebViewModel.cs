@@ -82,14 +82,14 @@ namespace SixCloudCore.ViewModels
                 Application.Current.DispatcherUnhandledException += (sender, e) =>
                 {
                     TasksLogger.ExitEventHandler(sender, e);
-                    e.Exception.Submit();
+                    e.Exception.ToSentry().AttachTag("Crash", "True").Submit();
+
                     //尝试自动重启
                     var x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloudCore.exe";
                     if (File.Exists(x))
                     {
                         //应在此处释放互斥锁
                         System.Diagnostics.Process.Start(x);
-
                         //Application.Current.Shutdown();
                     }
                 };

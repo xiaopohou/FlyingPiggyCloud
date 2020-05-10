@@ -6,21 +6,11 @@
         xmlns:local="clr-namespace:SixCloudCore"
         xmlns:brush="clr-namespace:CustomControls.BrushExtensions;assembly=SixCloudCoreCustomControlLibrary"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1140">
+        Title="MainWindow" Height="720" Width="1140" Background="Black">
     <Window.Resources>
 
     </Window.Resources>
-    <ListView>
-        <ListView.View>
-            <GridView>
-                <GridViewColumn Width="100" Header="HelloWorld"/>
-                <GridViewColumn Width="100" Header="HelloWorld"/>
-                <GridViewColumn Width="100" Header="HelloWorld"/>
-            </GridView>
-        </ListView.View>
-        <ListViewItem Content="HelloWorld"/>
-        <ListViewItem Content="HelloWorld"/>
-        <ListViewItem Content="HelloWorld"/>
-        <ListViewItem IsEnabled="False" Content="HelloWorld"/>
-    </ListView>
+    <Grid >
+
+    </Grid>
 </Window>

@@ -39,9 +39,7 @@
             <vm:StatusToVisibility x:Key="StatusToVisibility"/>
             <usercontrols:SizeCalculator x:Key="SizeCalculator"/>
 
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonRevealStyle}">
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="Padding" Value="5"/>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource FlunetButtonStyle}">
                 <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
             </Style>
 
