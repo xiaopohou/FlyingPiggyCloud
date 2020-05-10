@@ -1,8 +1,8 @@
 ﻿//#define Record
 //using Exceptionless;
 using Newtonsoft.Json;
-using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Exceptions;
+using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Models;
 using SixCloudCore.ViewModels;
 using System;
@@ -76,15 +76,24 @@ namespace SixCloudCore.Controllers
         {
             using (StreamWriter writer = new StreamWriter(File.Create(downloadingRecordsPath)))
             {
-                IEnumerable<DownloadTaskRecord> taskList = from record in downloadingList
-                                                           where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
-                                                           select new DownloadTaskRecord
-                                                           {
-                                                               LocalPath = record.SavedLocalPath,
-                                                               TargetUUID = record.TargetUUID,
-                                                               Name = record.Name,
-                                                           };
-                string s = JsonConvert.SerializeObject(taskList);
+                IEnumerable<DownloadingTaskViewModel> taskList = from record in downloadingList
+                                                                 where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
+                                                                 select record;
+
+
+                taskList.ToList()
+                        .ForEach(task => task.PauseCommand.Execute(null));
+
+                string s = JsonConvert.SerializeObject(taskList.Select(task =>
+                {
+                    return new DownloadTaskRecord
+                    {
+                        LocalPath = task.SavedLocalPath,
+                        TargetUUID = task.TargetUUID,
+                        Name = task.Name,
+                    };
+                }));
+
                 writer.Write(s);
             }
 
