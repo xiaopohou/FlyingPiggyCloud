@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,11 @@ namespace QingzhenyunApis.Methods.V3
         protected const string AccessKeyId = "bc088aa5e2ad";
         private const string AccessKeySecret = "DyO04JriYoqJ9f57";
         private static readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
+
+        static SixCloudMethodBase()
+        {
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"qingzhen uwp client {Assembly.GetEntryAssembly().GetName().Version}");
+        }
 
         private static string HmacSha1(string key, string input)
         {
