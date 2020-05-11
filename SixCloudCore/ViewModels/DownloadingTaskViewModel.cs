@@ -64,16 +64,19 @@ namespace SixCloudCore.ViewModels
         public DependencyCommand CancelCommand { get; }
         private void Cancel(object parameter)
         {
-            DownloadCompleted?.Invoke(this, new EventArgs());
             downloadTask.Stop();
-            OnPropertyChanged(nameof(Status));
-            RecoveryCommand.OnCanExecutedChanged(this, null);
-            PauseCommand.OnCanExecutedChanged(this, null);
+            DownloadCanceled?.Invoke(this, EventArgs.Empty);
+            //OnPropertyChanged(nameof(Status));
+            //RecoveryCommand.OnCanExecutedChanged(this, null);
+            //PauseCommand.OnCanExecutedChanged(this, null);
         }
 
 
 
         public event EventHandler<EventArgs> DownloadCompleted;
+
+        public event EventHandler<EventArgs> DownloadCanceled;
+
 
         public DownloadingTaskViewModel(string targetUUID, string localPath, string name)
         {

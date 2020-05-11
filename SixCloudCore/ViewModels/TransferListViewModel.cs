@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Windows;
+using QingzhenyunApis.Exceptions;
 
 namespace SixCloudCore.ViewModels
 {
@@ -52,12 +53,28 @@ namespace SixCloudCore.ViewModels
                             TransferCompletedListViewModel.NewDownloadedTask(task);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-
+                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
                     }
                 });
             };
+
+            task.DownloadCanceled += (sender, e) =>
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        downloadingList.Remove(task);
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
+                    }
+                });
+            };
+
             AddDownloadingItem(isAutoStart, task);
         }
 

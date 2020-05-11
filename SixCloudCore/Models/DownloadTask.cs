@@ -93,7 +93,7 @@ namespace SixCloudCore.Models
 
             try
             {
-                fileDownloader.StopAndSave().Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
+                fileDownloader.StopAndSave()?.Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
             }
             catch (NullReferenceException ex)
             {
@@ -103,7 +103,7 @@ namespace SixCloudCore.Models
 
         public void Stop()
         {
-            fileDownloader.StopAndSave().Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
+            fileDownloader.StopAndSave()?.Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
             try
             {
                 File.Delete(System.IO.Path.Combine(Path, Name));
