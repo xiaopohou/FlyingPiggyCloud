@@ -81,8 +81,7 @@ namespace SixCloudCore.Controllers
                                                                  select record;
 
 
-                taskList.ToList()
-                        .ForEach(task => task.PauseCommand.Execute(null));
+                taskList.ToList().ForEach(task => task.PauseCommand.Execute(null));
 
                 string s = JsonConvert.SerializeObject(taskList.Select(task =>
                 {

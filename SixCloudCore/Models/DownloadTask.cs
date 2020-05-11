@@ -91,7 +91,14 @@ namespace SixCloudCore.Models
                 return;
             }
 
-            fileDownloader.StopAndSave().Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
+            try
+            {
+                fileDownloader.StopAndSave().Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
+            }
+            catch (NullReferenceException ex)
+            {
+                ex.ToSentry().AttachExtraInfo(nameof(DownloadTask), this).Submit();
+            }
         }
 
         public void Stop()

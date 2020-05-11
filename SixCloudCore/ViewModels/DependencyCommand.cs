@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using QingzhenyunApis.Exceptions;
 
 namespace SixCloudCore.ViewModels
 {
@@ -69,6 +70,7 @@ namespace SixCloudCore.ViewModels
                 catch (Exception ex)
                 {
                     MessageBox.Show($"失败，由于{ex.Message}", "请求失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ex.ToSentry().AttachTag("AutoTreated", $"By{nameof(DependencyCommand)}").Submit();
                 }
                 return;
             }
