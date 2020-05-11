@@ -12,6 +12,8 @@ namespace SixCloudCore.ViewModels
     internal class DownloadingTaskViewModel : ViewModelBase, ITransferItemViewModel
     {
         private readonly DownloadTask downloadTask;
+        private long lastCompletedSize = 0;
+        private int retryTimes = 0;
 
         public string Icon { get; } = "\uf019";
 
@@ -92,6 +94,21 @@ namespace SixCloudCore.ViewModels
 
             void Callback(object sender, EventArgs e)
             {
+                if (lastCompletedSize == downloadTask.CompletedBytes)
+                {
+                    retryTimes++;
+                }
+                else
+                {
+                    lastCompletedSize = downloadTask.CompletedBytes;
+                }
+
+                if (retryTimes >= 60)
+                {
+                    retryTimes = 0;
+                    downloadTask.Redownload();
+                }
+
                 OnPropertyChanged(nameof(Completed));
                 OnPropertyChanged(nameof(Speed));
                 OnPropertyChanged(nameof(Total));

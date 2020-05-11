@@ -53,7 +53,7 @@ namespace SixCloudCore.Models
                 Url = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
             }
 
-            if (fileDownloader == null)
+            if (fileDownloader == null || fileDownloader.Status == DownloadStatusEnum.Failed)
             {
                 string downloadPath = System.IO.Path.Combine(Path, Name);
                 DownloadTaskInfo taskInfo;
@@ -115,11 +115,24 @@ namespace SixCloudCore.Models
             }
         }
 
+        /// <summary>
+        /// 删除本地文件并重新申请下载链接
+        /// </summary>
+        public void Redownload()
+        {
+            Stop();
+            Start();
+        }
+
         public event EventHandler DownloadCompleted;
 
         public DownloadTask(string storagePath, string name, string targetUUID, EventHandler downloadFileCompleted)
         {
             Path = storagePath;
+            if (!Directory.Exists(Path))
+            {
+                Directory.CreateDirectory(Path);
+            }
             Name = name;
             TargetUUID = targetUUID;
             DownloadCompleted += downloadFileCompleted;
