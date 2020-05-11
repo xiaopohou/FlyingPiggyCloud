@@ -9,7 +9,7 @@
   <Identity
     Name="43466Bsense.6"
     Publisher="CN=4DA9D3D3-323F-4606-99AC-CCC6CDA5CBC0"
-    Version="3.0.1.0" />
+    Version="3.0.4.0" />
 
   <Properties>
     <DisplayName>6盘</DisplayName>
