@@ -23,8 +23,6 @@
 
   <ItemGroup>
     <None Remove="MediaResources\666.ico" />
-    <None Remove="MediaResources\link-interface-hyperlink-icon-2770-512x512.png" />
-    <None Remove="MediaResources\torrent-brand-software-icon-7283-512x512.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,8 +44,6 @@
 
   <ItemGroup>
     <Resource Include="MediaResources\666.ico" />
-    <Resource Include="MediaResources\link-interface-hyperlink-icon-2770-512x512.png" />
-    <Resource Include="MediaResources\torrent-brand-software-icon-7283-512x512.png" />
   </ItemGroup>
 
   <ItemGroup>

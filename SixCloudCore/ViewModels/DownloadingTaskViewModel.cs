@@ -66,9 +66,6 @@ namespace SixCloudCore.ViewModels
         {
             downloadTask.Stop();
             DownloadCanceled?.Invoke(this, EventArgs.Empty);
-            //OnPropertyChanged(nameof(Status));
-            //RecoveryCommand.OnCanExecutedChanged(this, null);
-            //PauseCommand.OnCanExecutedChanged(this, null);
         }
 
 

@@ -15,51 +15,11 @@
             <Setter Property="Margin" Value="0,15"/>
         </Style>
 
-        <Style TargetType="{x:Type ListBoxItem}">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Margin" Value="0,1"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <ContentPresenter/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type ListBox}">
-            <Setter Property="BorderThickness" Value="0"/>
+        <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource ListViewNoHeaderStyle}">
             <Setter Property="MaxHeight" Value="1000"/>
-            <Setter Property="Background" Value="Transparent"/>
         </Style>
 
         <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}"/>
-
-        <DataTemplate x:Key="TransferItemDataTemplate">
-            <Border Background="White" Name="ground" Opacity="0.9">
-                <Grid Height="48" Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="48"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <!--<metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="3"/>-->
-                </Grid>
-            </Border>
-            <DataTemplate.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Opacity" TargetName="ground" Value="1"/>
-                </Trigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
 
         <DataTemplate x:Key="IconCell">
             <metro:FontIcon Icon="{Binding Icon}"/>
@@ -95,11 +55,13 @@
             </StackPanel>
         </DataTemplate>
 
+
+
     </UserControl.Resources>
     <ScrollViewer>
         <StackPanel Orientation="Vertical">
             <!--这个Grid用于帮助GridView自动校正分栏宽度-->
-            <Grid Visibility="Hidden" Margin="10,0">
+            <Grid Visibility="Hidden" Margin="15,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="3*"/>
@@ -115,7 +77,7 @@
 
             <!--在下载队列中-->
             <TextBlock Style="{StaticResource Title}" Text="{Binding DownloadingListTitle}" Visibility="{Binding DownloadingListVisibility}"/>
-            <ListView Style="{StaticResource ListViewNoHeaderStyle}" Visibility="{Binding DownloadingListVisibility}" x:Name="DownloadingList" ItemsSource="{Binding DownloadingList}" VirtualizingPanel.IsVirtualizing="True" ItemTemplate="{StaticResource TransferItemDataTemplate}">
+            <ListView Visibility="{Binding DownloadingListVisibility}" x:Name="DownloadingList" ItemsSource="{Binding DownloadingList}" VirtualizingPanel.IsVirtualizing="True">
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}">
                         <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperIconCell}" CellTemplate="{StaticResource IconCell}"/>
@@ -125,12 +87,84 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+
             <!--在上传队列中-->
             <TextBlock Style="{StaticResource Title}" Text="{Binding UploadingListTitle}" Visibility="{Binding UploadingListVisibility}"/>
-            <ListBox x:Name="UploadingList" ItemsSource="{Binding UploadingList}" ItemTemplate="{StaticResource TransferItemDataTemplate}" Visibility="{Binding UploadingListVisibility}"/>
+            <ListView Visibility="{Binding UploadingListVisibility}" x:Name="UploadingList" ItemsSource="{Binding UploadingList}" VirtualizingPanel.IsVirtualizing="True">
+                <ListView.View>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}">
+                        <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperIconCell}" CellTemplate="{StaticResource IconCell}"/>
+                        <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperNameCell}" CellTemplate="{StaticResource NameCell}"/>
+                        <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperProgressCell}" CellTemplate="{StaticResource ProgressCell}"/>
+                        <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperCommandCell}" CellTemplate="{StaticResource CommandCell}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
             <!--最近活动-->
             <TextBlock Style="{StaticResource Title}" Text="最近活动"/>
-            <ListBox DataContext="{Binding TransferCompletedList}" x:Name="CompletedList" VirtualizingPanel.IsVirtualizing="True" ItemsSource="{Binding TransferCompletedList}"/>
+            <ListBox DataContext="{Binding TransferCompletedList}" x:Name="CompletedList" VirtualizingPanel.IsVirtualizing="True" ItemsSource="{Binding TransferCompletedList}">
+                <ListBox.Resources>
+                    <DataTemplate DataType="{x:Type vm:UploadedTaskViewModel}">
+                        <Border Margin="0,1" Background="White" Name="ground" Opacity="0.9">
+                            <Grid Height="48" Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
+                                <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                                    <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type vm:DownloadedTaskViewModel}">
+                        <Border Margin="0,1" Background="White" Name="ground" Opacity="0.9">
+                            <Grid Height="48" Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Fill="White" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
+                                <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
+                                <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                                    <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
+                                </StackPanel>
+                                <Grid.ContextMenu>
+                                    <ContextMenu Style="{StaticResource MaterialDesignContextMenu}">
+                                        <MenuItem Header="打开" Command="{Binding OpenCommand}"/>
+                                        <MenuItem Header="在文件夹中显示" Command="{Binding ShowCommand}"/>
+                                        <MenuItem Header="删除" Command="{Binding DeleteCommand}"/>
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                            </Grid>
+
+                        </Border>
+
+                    </DataTemplate>
+
+                </ListBox.Resources>
+            </ListBox>
         </StackPanel>
     </ScrollViewer>
 </UserControl>
