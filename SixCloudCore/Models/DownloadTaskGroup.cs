@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using QingzhenyunApis.Exceptions;
+using System.Linq;
+using QingzhenyunApis.Utils;
+using Newtonsoft.Json;
 
 namespace SixCloudCore.Models
 {
@@ -30,7 +33,7 @@ namespace SixCloudCore.Models
 
         public ConcurrentQueue<DownloadTaskRecord> WaittingTasks { get; } = new ConcurrentQueue<DownloadTaskRecord>();
 
-        public List<HttpDownloader> RunningTasks { get; } = new List<HttpDownloader>(16);
+        public Dictionary<DownloadTaskRecord, HttpDownloader> RunningTasks { get; } = new Dictionary<DownloadTaskRecord, HttpDownloader>(16);
 
         public List<DownloadTaskRecord> CompletedTasks { get; } = new List<DownloadTaskRecord>();
 
@@ -46,7 +49,15 @@ namespace SixCloudCore.Models
 
         public override string Total => $"共{TotalCount}个项目";
 
-        public override string Speed { get; }
+        public override string Speed
+        {
+            get
+            {
+                long speedTemp = 0;
+                RunningTasks.Values.ToList().ForEach(task => speedTemp += task.Speed);
+                return Calculators.SizeCalculator(speedTemp) + "/秒";
+            }
+        }
 
         public override event EventHandler DownloadCompleted;
         public override event EventHandler DownloadCanceled;
@@ -137,13 +148,14 @@ namespace SixCloudCore.Models
                         }
 
                         HttpDownloader fileDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
+                        RunningTasks[task] = fileDownloader;
                         fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
                         {
                             if (newValue == DownloadStatusEnum.Completed)
                             {
                                 lock (RunningTasks)
                                 {
-                                    RunningTasks.Remove(fileDownloader);
+                                    RunningTasks.Remove(task);
                                     CompletedTasks.Add(task);
                                 }
 
@@ -160,7 +172,7 @@ namespace SixCloudCore.Models
             status = TransferTaskStatus.Stop;
             lock (RunningTasks)
             {
-                RunningTasks.ForEach(task =>
+                RunningTasks.Values.ToList().ForEach(task =>
                 {
                     var filePath = task.StopAndSave().DownloadPath;
                     try
@@ -237,6 +249,96 @@ namespace SixCloudCore.Models
                 OnPropertyChanged(nameof(Progress));
             }
 
+        }
+
+        public DownloadTaskGroup(DownloadTaskGroupRecord record)
+        {
+            TargetUUID = record.TargetUUID;
+            SavedLocalPath = record.LocalPath;
+            Name = record.Name;
+
+            record.WaittingList.ToList().ForEach(tasks => WaittingTasks.Enqueue(tasks));
+            CompletedTasks.AddRange(record.CompletedList);
+            record.RunningList.ToList().ForEach(async (task) =>
+            {
+                string downloadPath = Path.Combine(task.LocalPath, task.Name);
+                string downloadUrl = (await FileSystem.GetDownloadUrlByIdentity(task.TargetUUID)).DownloadAddress;
+                lock (RunningTasks)
+                {
+                    DownloadTaskInfo taskInfo;
+                    if (File.Exists(downloadPath + ".downloading"))
+                    {
+                        taskInfo = DownloadTaskInfo.Load(downloadPath + ".downloading");
+                    }
+                    else
+                    {
+                        taskInfo = new DownloadTaskInfo()
+                        {
+                            DownloadUrl = downloadUrl, // 下载链接，可以为null，任务开始前再赋值初始化
+                            DownloadPath = downloadPath,
+                            Threads = 4,
+                        };
+                    }
+
+                    HttpDownloader fileDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
+                    RunningTasks[task] = fileDownloader;
+                    fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
+                    {
+                        if (newValue == DownloadStatusEnum.Completed)
+                        {
+                            lock (RunningTasks)
+                            {
+                                RunningTasks.Remove(task);
+                                CompletedTasks.Add(task);
+                            }
+
+                        }
+                    };
+                    Task.Run(() => fileDownloader.StartDownload());
+                }
+            });
+
+            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
+
+            async void Callback(object sender, EventArgs e)
+            {
+                await StartWaittingTasks();
+
+                OnPropertyChanged(nameof(Completed));
+                OnPropertyChanged(nameof(Speed));
+                OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(Progress));
+            }
+        }
+
+        public override string ToString()
+        {
+            Pause(null);
+
+            lock (RunningTasks)
+            {
+                RunningTasks.Values.ToList().ForEach(task =>
+                {
+                    try
+                    {
+                        task.StopAndSave()?.Save(task.Info.DownloadPath + ".downloading");
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        ex.ToSentry().AttachExtraInfo(nameof(DownloadTask), this).Submit();
+                    }
+                });
+            }
+            var record = new DownloadTaskGroupRecord
+            {
+                Name = Name,
+                TargetUUID = TargetUUID,
+                LocalPath = SavedLocalPath,
+                WaittingList = WaittingTasks.ToArray(),
+                CompletedList = CompletedTasks.ToArray(),
+                RunningList = RunningTasks.Keys.ToArray()
+            };
+            return JsonConvert.SerializeObject(record);
         }
     }
 }

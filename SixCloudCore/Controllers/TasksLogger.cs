@@ -15,7 +15,11 @@ namespace SixCloudCore.Controllers
     {
         private static readonly string rootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/SixCloud";
         private static readonly string uploadingRecordsPath = rootDirectory + "/UploadRecord.json";
+        //在v3.0.4及以前版本使用，将在未来移除
         private static readonly string downloadingRecordsPath = rootDirectory + "/DownloadRecord.json";
+        //在v3.0.5版本引入，除downloadTask外，还记录downloadTaskGroup
+        private static readonly string downloadingGroupRecordsPath = rootDirectory + "/DownloadGroupRecord.json";
+
 
         public static ObservableCollection<UploadingTaskViewModel> Uploadings
         {
@@ -46,6 +50,7 @@ namespace SixCloudCore.Controllers
                     }
                 }
 
+                //在v3.0.5版本解析该文件并移除，在未来将弃用该文件
                 if (File.Exists(downloadingRecordsPath))
                 {
                     string s = File.ReadAllText(downloadingRecordsPath);
@@ -55,6 +60,29 @@ namespace SixCloudCore.Controllers
                         foreach (DownloadTaskRecord record in list)
                         {
                             DownloadingListViewModel.NewTask(record.TargetUUID, record.LocalPath, record.Name);
+                        }
+                    }
+                }
+
+
+                if (File.Exists(downloadingGroupRecordsPath))
+                {
+                    string s = File.ReadAllText(downloadingRecordsPath);
+                    dynamic[] list = JsonConvert.DeserializeObject<dynamic[]>(s);
+                    if (list != null && list.Length > 0)
+                    {
+                        foreach (var record in list)
+                        {
+                            if (record.Type == nameof(DownloadTask))
+                            {
+                                var downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record.Record);
+                                DownloadingListViewModel.NewTask(downloadTaskRecord.TargetUUID, downloadTaskRecord.LocalPath, downloadTaskRecord.Name);
+                            }
+                            else
+                            {
+                                var downloadTaskGroupRecord = JsonConvert.DeserializeObject<DownloadTaskGroupRecord>(record.Record);
+                                TransferListViewModel.NewDownloadTaskGroup(downloadTaskGroupRecord);
+                            }
                         }
                     }
                 }
@@ -72,26 +100,26 @@ namespace SixCloudCore.Controllers
 
         public static void ExitEventHandler(object sender, EventArgs e)
         {
-            using (StreamWriter writer = new StreamWriter(File.Create(downloadingRecordsPath)))
+            using (StreamWriter writer = new StreamWriter(File.Create(downloadingGroupRecordsPath)))
             {
-                IEnumerable<DownloadingTaskViewModel> taskList = from record in downloadingList
-                                                                 where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
-                                                                 select record;
+                var taskList = from record in downloadingList
+                               where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
+                               select new { Type = record is DownloadTask ? nameof(DownloadTask) : nameof(DownloadTaskGroup), Record = record.ToString() };
 
 
-                taskList.ToList().ForEach(task => task.PauseCommand.Execute(null));
+                //taskList.ToList().ForEach(task => task.PauseCommand.Execute(null));
 
-                string s = JsonConvert.SerializeObject(taskList.Select(task =>
-                {
-                    return new DownloadTaskRecord
-                    {
-                        LocalPath = task.SavedLocalPath,
-                        TargetUUID = task.TargetUUID,
-                        Name = task.Name,
-                    };
-                }));
+                //string s = JsonConvert.SerializeObject(taskList.Select(task =>
+                //{
+                //    return new DownloadTaskRecord
+                //    {
+                //        LocalPath = task.SavedLocalPath,
+                //        TargetUUID = task.TargetUUID,
+                //        Name = task.Name,
+                //    };
+                //}));
 
-                writer.Write(s);
+                writer.Write(JsonConvert.SerializeObject(taskList));
             }
 
             using (StreamWriter writer = new StreamWriter(File.Create(uploadingRecordsPath)))
