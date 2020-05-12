@@ -6,12 +6,36 @@ using SixCloudCore.ViewModels;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace SixCloudCore.Models
 {
-    internal class DownloadTask
+    internal class DownloadTask : DownloadingTaskViewModel
     {
-        public TransferTaskStatus Status => (fileDownloader?.Status ?? DownloadStatusEnum.Waiting) switch
+        private long lastCompletedSize = 0;
+        private int retryTimes = 0;
+        private HttpDownloader fileDownloader;
+
+        protected string Url { get; private set; }
+
+        protected string Path { get; }
+
+        public override string Name { get; protected set; }
+
+        public override string CurrentFileFullPath => fileDownloader?.Info.DownloadPath;
+
+        public override string Completed => Calculators.SizeCalculator(fileDownloader?.Info.DownloadedSize ?? 0);
+
+        public override string TargetUUID { get; protected set; }
+
+        public override string SavedLocalPath { get; protected set; }
+
+        public override string Total => Calculators.SizeCalculator(fileDownloader?.Info.ContentSize ?? 0);
+
+        public override double Progress => fileDownloader?.DownloadPercentage ?? 0;
+
+        public override TransferTaskStatus Status => (fileDownloader?.Status ?? DownloadStatusEnum.Waiting) switch
         {
             DownloadStatusEnum.Downloading => TransferTaskStatus.Running,
             DownloadStatusEnum.Waiting => TransferTaskStatus.Running,
@@ -22,26 +46,11 @@ namespace SixCloudCore.Models
             _ => throw new InvalidCastException()
         };
 
-        private HttpDownloader fileDownloader;
-
-        public float DownloadProgress => fileDownloader?.DownloadPercentage ?? 0;
-
-        public string Completed => Calculators.SizeCalculator(fileDownloader?.Info.DownloadedSize ?? 0);
-
-        public string Total => Calculators.SizeCalculator(fileDownloader?.Info.ContentSize ?? 0);
-
-        public string Name { get; private set; }
-        public string TargetUUID { get; }
-        public string Url { get; private set; }
-        public string Path { get; }
-
-        public string Speed => Calculators.SizeCalculator(fileDownloader?.Speed ?? 0) + "/秒";
-
-        public string CurrentFileFullPath => fileDownloader?.Info.DownloadPath;
+        public override string Speed => Calculators.SizeCalculator(fileDownloader?.Speed ?? 0) + "/秒";
 
         public long CompletedBytes => fileDownloader?.Info.DownloadedSize ?? 0;
 
-        public async void Start()
+        protected override async void Recovery(object parameter = null)
         {
             if (fileDownloader?.Status == DownloadStatusEnum.Downloading)
             {
@@ -82,9 +91,13 @@ namespace SixCloudCore.Models
             }
 
             await Task.Run(() => fileDownloader?.StartDownload());
+
+            OnPropertyChanged(nameof(Status));
+            RecoveryCommand.OnCanExecutedChanged(this, null);
+            PauseCommand.OnCanExecutedChanged(this, null);
         }
 
-        public void Pause()
+        protected override void Pause(object parameter = null)
         {
             if (Status != TransferTaskStatus.Running)
             {
@@ -99,9 +112,13 @@ namespace SixCloudCore.Models
             {
                 ex.ToSentry().AttachExtraInfo(nameof(DownloadTask), this).Submit();
             }
+
+            OnPropertyChanged(nameof(Status));
+            RecoveryCommand.OnCanExecutedChanged(this, null);
+            PauseCommand.OnCanExecutedChanged(this, null);
         }
 
-        public void Stop()
+        protected override void Cancel(object parameter = null)
         {
             fileDownloader.StopAndSave()?.Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
             try
@@ -113,21 +130,30 @@ namespace SixCloudCore.Models
             {
                 ex.Submit();
             }
+
+            DownloadCanceled?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
         /// 删除本地文件并重新申请下载链接
         /// </summary>
-        public void Redownload()
+        protected void Redownload()
         {
-            Stop();
-            Start();
+            Cancel();
+            Recovery();
         }
 
-        public event EventHandler DownloadCompleted;
+        public override event EventHandler DownloadCompleted;
 
-        public DownloadTask(string storagePath, string name, string targetUUID, EventHandler downloadFileCompleted)
+        public override event EventHandler DownloadCanceled;
+
+
+        public DownloadTask(string storagePath, string name, string targetUUID) : base()
         {
+            TargetUUID = targetUUID;
+            SavedLocalPath = storagePath;
+
+
             Path = storagePath;
             if (!Directory.Exists(Path))
             {
@@ -135,7 +161,7 @@ namespace SixCloudCore.Models
             }
             Name = name;
             TargetUUID = targetUUID;
-            DownloadCompleted += downloadFileCompleted;
+            //DownloadCompleted += downloadFileCompleted;
             DownloadCompleted += (sender, e) =>
             {
                 try
@@ -147,6 +173,32 @@ namespace SixCloudCore.Models
                     ex.Submit();
                 }
             };
+
+            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
+
+            void Callback(object sender, EventArgs e)
+            {
+                if (lastCompletedSize == CompletedBytes)
+                {
+                    retryTimes++;
+                }
+                else
+                {
+                    lastCompletedSize = CompletedBytes;
+                }
+
+                if (retryTimes >= 60)
+                {
+                    retryTimes = 0;
+                    Redownload();
+                }
+
+                OnPropertyChanged(nameof(Completed));
+                OnPropertyChanged(nameof(Speed));
+                OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(Progress));
+            }
+
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿//#define Record
-//using Exceptionless;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Models;

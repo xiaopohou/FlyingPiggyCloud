@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Windows;
 using QingzhenyunApis.Exceptions;
+using SixCloudCore.Models;
 
 namespace SixCloudCore.ViewModels
 {
@@ -39,7 +40,7 @@ namespace SixCloudCore.ViewModels
         /// <param name="isAutoStart">自动开始</param>
         public static void NewDownloadTask(string targetUUID, string localPath, string name, bool isAutoStart = true)
         {
-            DownloadingTaskViewModel task = new DownloadingTaskViewModel(targetUUID, localPath, name);
+            DownloadingTaskViewModel task = new DownloadTask(localPath, name, targetUUID);
             //当下载任务结束时从列表中移除任务信息
             task.DownloadCompleted += (sender, e) =>
             {
