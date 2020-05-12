@@ -79,6 +79,49 @@ namespace SixCloudCore.ViewModels
             AddDownloadingItem(isAutoStart, task);
         }
 
+        public static async void NewDownloadTaskGroup(string targetUUID, string localPath, string name, bool isAutoStart = true)
+        {
+            DownloadingTaskViewModel task = await new DownloadTaskGroup(targetUUID, localPath, name).InitTaskGroup();
+
+
+            task.DownloadCompleted += (sender, e) =>
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        downloadingList.Remove(task);
+                        if (File.Exists(task.CurrentFileFullPath))
+                        {
+                            TransferCompletedListViewModel.NewDownloadedTask(task);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
+                    }
+                });
+            };
+
+            task.DownloadCanceled += (sender, e) =>
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        downloadingList.Remove(task);
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
+                    }
+                });
+            };
+
+            AddDownloadingItem(isAutoStart, task);
+
+        }
+
         private static void AddDownloadingItem(bool isAutoStart, DownloadingTaskViewModel task)
         {
             App.Current.Dispatcher.Invoke(() =>

@@ -216,30 +216,32 @@ namespace SixCloudCore.ViewModels
 
                 if (Directory)
                 {
-                    await DownloadHelper(UUID, System.IO.Path.Combine(downloadPathDialog.SelectedPath, Name), 0);
-                    async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
-                    {
-                        await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(0, identity: uuid))
-                        {
-                            if (!child.Directory)
-                            {
-                                DownloadingListViewModel.NewTask(child.UUID, localParentPath, child.Name);
-                            }
-                            else
-                            {
-                                string nextPath = System.IO.Path.Combine(localParentPath, child.Name);
-                                System.IO.Directory.CreateDirectory(nextPath);
-                                if (depthIndex < 32)
-                                {
-                                    await DownloadHelper(child.UUID, nextPath, depthIndex + 1);
-                                }
-                                else
-                                {
-                                    ThreadPool.QueueUserWorkItem((state) => DownloadHelper(child.UUID, nextPath, 0).Wait(), null);
-                                }
-                            }
-                        }
-                    }
+                    TransferListViewModel.NewDownloadTaskGroup(UUID, downloadPathDialog.SelectedPath, Name);
+
+                    //await DownloadHelper(UUID, System.IO.Path.Combine(downloadPathDialog.SelectedPath, Name), 0);
+                    //async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
+                    //{
+                    //    await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(0, identity: uuid))
+                    //    {
+                    //        if (!child.Directory)
+                    //        {
+                    //            DownloadingListViewModel.NewTask(child.UUID, localParentPath, child.Name);
+                    //        }
+                    //        else
+                    //        {
+                    //            string nextPath = System.IO.Path.Combine(localParentPath, child.Name);
+                    //            System.IO.Directory.CreateDirectory(nextPath);
+                    //            if (depthIndex < 32)
+                    //            {
+                    //                await DownloadHelper(child.UUID, nextPath, depthIndex + 1);
+                    //            }
+                    //            else
+                    //            {
+                    //                ThreadPool.QueueUserWorkItem((state) => DownloadHelper(child.UUID, nextPath, 0).Wait(), null);
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
                 else
                 {
