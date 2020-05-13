@@ -29,7 +29,7 @@ namespace SixCloudCore.Models
         public override string TargetUUID { get; protected set; }
 
         public override TransferTaskStatus Status => status;
-        public override double Progress => CompletedCount * 100 / TotalCount;
+        public override double Progress => TotalCount == 0 ? 0 : CompletedCount * 100 / TotalCount;
 
         public ConcurrentQueue<DownloadTaskRecord> WaittingTasks { get; } = new ConcurrentQueue<DownloadTaskRecord>();
 
@@ -319,7 +319,7 @@ namespace SixCloudCore.Models
             TargetUUID = record.TargetUUID;
             SavedLocalPath = record.LocalPath;
             Name = record.Name;
-
+            TotalCount = record.WaittingList.Count + record.RunningList.Count + record.CompletedList.Count;
             record.WaittingList.ToList().ForEach(tasks => WaittingTasks.Enqueue(tasks));
             CompletedTasks.AddRange(record.CompletedList);
             record.RunningList.ToList().ForEach(async (task) =>

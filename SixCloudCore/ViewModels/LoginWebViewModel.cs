@@ -70,8 +70,9 @@ namespace SixCloudCore.ViewModels
             }
         }
 
-        private void OnLoginSuccess()
+        private async void OnLoginSuccess()
         {
+            var currentUser = await Authentication.GetUserInformation();
             Application.Current.Dispatcher.Invoke(() =>
             {
                 new MainFrame().Show();
@@ -79,10 +80,10 @@ namespace SixCloudCore.ViewModels
 
                 Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 new TaskBarButton();
-                Application.Current.Exit += TasksLogger.ExitEventHandler;
+                Application.Current.Exit += (sender, e) => TasksLogger.ExitEventHandler(sender, new Controllers.ExitEventArgs(currentUser));
                 Application.Current.DispatcherUnhandledException += (sender, e) =>
                 {
-                    TasksLogger.ExitEventHandler(sender, e);
+                    TasksLogger.ExitEventHandler(sender, new Controllers.ExitEventArgs(currentUser));
                     e.Exception.ToSentry().TreatedBy(nameof(DispatcherUnhandledExceptionEventHandler)).Submit();
 
                     //尝试自动重启
@@ -95,11 +96,7 @@ namespace SixCloudCore.ViewModels
                     }
                 };
             });
-            TasksLogger.StartUpRecovery();
-            //timer = new Timer(async (_) =>
-            //{
-            //    await Authentication.GetUserInformation();
-            //}, null, TimeSpan.FromMinutes(1), TimeSpan.Zero);
+            TasksLogger.StartUpRecovery(currentUser);
         }
 
         public string LoginUrl { get; private set; }

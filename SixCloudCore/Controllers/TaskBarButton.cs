@@ -62,7 +62,7 @@ namespace SixCloudCore.Controllers
             InitialTray();
         }
 
-        private void Dispose(object sender, ExitEventArgs e)
+        private void Dispose(object sender, System.Windows.ExitEventArgs e)
         {
             NotifyIcon.Dispose();
         }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Models;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace SixCloudCore.Controllers
 {
@@ -17,8 +19,8 @@ namespace SixCloudCore.Controllers
         private static readonly string uploadingRecordsPath = rootDirectory + "/UploadRecord.json";
         //在v3.0.4及以前版本使用，将在未来移除
         private static readonly string downloadingRecordsPath = rootDirectory + "/DownloadRecord.json";
-        //在v3.0.5版本引入，除downloadTask外，还记录downloadTaskGroup
-        private static readonly string downloadingGroupRecordsPath = rootDirectory + "/DownloadGroupRecord.json";
+        //在v3.0.5版本引入，将上传、下载配置信息整合至同一文件中
+        private static readonly string startupInformationPath = rootDirectory + "/StartupInformation_3.0.5.json";
 
 
         public static ObservableCollection<UploadingTaskViewModel> Uploadings
@@ -33,10 +35,59 @@ namespace SixCloudCore.Controllers
         }
         private static ObservableCollection<DownloadingTaskViewModel> downloadingList;
 
-        public static void StartUpRecovery()
+        private class StartupInformation
+        {
+            public UserInformation BelongsTo { get; set; }
+
+            public IList<UploadTaskRecord> UploadTasks { get; set; }
+
+            public IList<string> SerializedDownloadTasks { get; set; }
+
+            public IList<string> SerializedDownloadTaskGroups { get; set; }
+        }
+
+        public static void StartUpRecovery(UserInformation user)
         {
             try
             {
+                if (File.Exists(startupInformationPath))
+                {
+                    string s = File.ReadAllText(startupInformationPath);
+                    StartupInformation startupInformation = JsonConvert.DeserializeObject<StartupInformation>(s);
+
+                    if (startupInformation?.BelongsTo?.UUID == user.UUID)
+                    {
+                        if (startupInformation.UploadTasks != null && startupInformation.UploadTasks.Any())
+                        {
+                            foreach (UploadTaskRecord record in startupInformation.UploadTasks)
+                            {
+                                Application.Current.Dispatcher.Invoke(() => TransferListViewModel.NewUploadTask(record.TargetPath, record.LocalFilePath));
+                            }
+                        }
+
+                        if (startupInformation.SerializedDownloadTasks != null && startupInformation.SerializedDownloadTasks.Any())
+                        {
+                            foreach (var record in startupInformation.SerializedDownloadTasks)
+                            {
+                                var downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record);
+                                DownloadingListViewModel.NewTask(downloadTaskRecord.TargetUUID, downloadTaskRecord.LocalPath, downloadTaskRecord.Name);
+                            }
+                        }
+
+                        if (startupInformation.SerializedDownloadTasks != null && startupInformation.SerializedDownloadTasks.Any())
+                        {
+                            foreach (var record in startupInformation.SerializedDownloadTaskGroups)
+                            {
+                                var downloadTaskGroupRecord = JsonConvert.DeserializeObject<DownloadTaskGroupRecord>(record);
+                                TransferListViewModel.NewDownloadTaskGroup(downloadTaskGroupRecord);
+                            }
+                        }
+                    }
+
+                    return;
+                }
+
+                //在v3.0.5版本解析该文件并移除，在未来将弃用该文件
                 if (File.Exists(uploadingRecordsPath))
                 {
                     string s = File.ReadAllText(uploadingRecordsPath);
@@ -65,27 +116,6 @@ namespace SixCloudCore.Controllers
                 }
 
 
-                if (File.Exists(downloadingGroupRecordsPath))
-                {
-                    string s = File.ReadAllText(downloadingRecordsPath);
-                    dynamic[] list = JsonConvert.DeserializeObject<dynamic[]>(s);
-                    if (list != null && list.Length > 0)
-                    {
-                        foreach (var record in list)
-                        {
-                            if (record.Type == nameof(DownloadTask))
-                            {
-                                var downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record.Record);
-                                DownloadingListViewModel.NewTask(downloadTaskRecord.TargetUUID, downloadTaskRecord.LocalPath, downloadTaskRecord.Name);
-                            }
-                            else
-                            {
-                                var downloadTaskGroupRecord = JsonConvert.DeserializeObject<DownloadTaskGroupRecord>(record.Record);
-                                TransferListViewModel.NewDownloadTaskGroup(downloadTaskGroupRecord);
-                            }
-                        }
-                    }
-                }
             }
             catch (InvalidOperationException ex)
             {
@@ -98,44 +128,42 @@ namespace SixCloudCore.Controllers
             Directory.CreateDirectory(rootDirectory);
         }
 
-        public static void ExitEventHandler(object sender, EventArgs e)
+        public static void ExitEventHandler(object sender, ExitEventArgs e)
         {
-            using (StreamWriter writer = new StreamWriter(File.Create(downloadingGroupRecordsPath)))
-            {
-                var taskList = from record in downloadingList
-                               where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
-                               select new { Type = record is DownloadTask ? nameof(DownloadTask) : nameof(DownloadTaskGroup), Record = record.ToString() };
+            var startupInformation = new StartupInformation();
 
+            startupInformation.BelongsTo = e.CurrentUser;
 
-                //taskList.ToList().ForEach(task => task.PauseCommand.Execute(null));
+            var downloadLists = from record in downloadingList
+                                where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
+                                group record.ToString() by record is DownloadTask;
+            startupInformation.SerializedDownloadTasks = downloadLists.FirstOrDefault(x => x.Key == true)?.ToArray();
+            startupInformation.SerializedDownloadTaskGroups = downloadLists.FirstOrDefault(x => x.Key == false)?.ToArray();
 
-                //string s = JsonConvert.SerializeObject(taskList.Select(task =>
-                //{
-                //    return new DownloadTaskRecord
-                //    {
-                //        LocalPath = task.SavedLocalPath,
-                //        TargetUUID = task.TargetUUID,
-                //        Name = task.Name,
-                //    };
-                //}));
+            var uploadList = from record in uploadingList
+                             where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
+                             select new UploadTaskRecord
+                             {
+                                 LocalFilePath = record.LocalFilePath,
+                                 TargetPath = record.TargetPath
+                             };
+            startupInformation.UploadTasks = uploadList.ToArray();
 
-                writer.Write(JsonConvert.SerializeObject(taskList));
-            }
-
-            using (StreamWriter writer = new StreamWriter(File.Create(uploadingRecordsPath)))
-            {
-                IEnumerable<UploadTaskRecord> taskList = from record in uploadingList
-                                                         where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
-                                                         select new UploadTaskRecord
-                                                         {
-                                                             LocalFilePath = record.LocalFilePath,
-                                                             TargetPath = record.TargetPath
-                                                         };
-                string s = JsonConvert.SerializeObject(taskList);
-                writer.Write(s);
-            }
+            using StreamWriter writer = new StreamWriter(File.Create(startupInformationPath));
+            writer.Write(JsonConvert.SerializeObject(startupInformation));
 
             LocalProperties.Token = SixCloudMethodBase.Token ?? string.Empty;
+        }
+    }
+
+
+    internal class ExitEventArgs : EventArgs
+    {
+        public UserInformation CurrentUser { get; }
+
+        public ExitEventArgs(UserInformation currentUser)
+        {
+            CurrentUser = currentUser;
         }
     }
 }
