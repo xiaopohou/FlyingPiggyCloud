@@ -70,7 +70,7 @@ namespace SixCloudCore.ViewModels
                 catch (Exception ex)
                 {
                     MessageBox.Show($"失败，由于{ex.Message}", "请求失败", MessageBoxButton.OK, MessageBoxImage.Error);
-                    ex.ToSentry().AttachTag("AutoTreated", $"By{nameof(DependencyCommand)}").Submit();
+                    ex.ToSentry().TreatedBy(nameof(DependencyCommand)).Submit();
                 }
                 return;
             }

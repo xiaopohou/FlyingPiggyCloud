@@ -58,12 +58,11 @@ namespace SixCloudCore.SixTransporter.Downloader
                 _request.Timeout = 8000;
                 _request.ReadWriteTimeout = 8000;
                 foreach (var header in Info.Headers)
-                    HttpDownloader.SetHeaderValue(_request.Headers,header.Key, header.Value);
+                    HttpDownloader.SetHeaderValue(_request.Headers, header.Key, header.Value);
                 _request.AddRange(Block.BeginOffset, Block.EndOffset);
                 _response = (HttpWebResponse)_request.GetResponse();
                 using (var responseStream = _response.GetResponseStream())
-                using (var stream = new FileStream(Info.DownloadPath, FileMode.Open, FileAccess.ReadWrite,
-                    FileShare.ReadWrite, 1024 * 1024))
+                using (var stream = new FileStream(Info.DownloadPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024 * 1024))
                 {
                     stream.Seek(Block.BeginOffset, SeekOrigin.Begin);
                     var array = new byte[1024];

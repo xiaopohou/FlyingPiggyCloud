@@ -30,6 +30,11 @@ namespace QingzhenyunApis.Exceptions
             return sentryScopeInfo;
         }
 
+        public static SentryScopeInfo TreatedBy(this SentryScopeInfo sentryScopeInfo, string byWhom)
+        {
+            return sentryScopeInfo.AttachTag(nameof(TreatedBy), byWhom);
+        }
+
         public static void Submit(this Exception exception)
         {
             exception.ToSentry().Submit();

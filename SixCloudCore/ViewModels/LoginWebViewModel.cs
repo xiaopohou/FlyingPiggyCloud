@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace SixCloudCore.ViewModels
 {
@@ -82,7 +83,7 @@ namespace SixCloudCore.ViewModels
                 Application.Current.DispatcherUnhandledException += (sender, e) =>
                 {
                     TasksLogger.ExitEventHandler(sender, e);
-                    e.Exception.ToSentry().AttachTag("Crash", "True").Submit();
+                    e.Exception.ToSentry().TreatedBy(nameof(DispatcherUnhandledExceptionEventHandler)).Submit();
 
                     //尝试自动重启
                     var x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloudCore.exe";

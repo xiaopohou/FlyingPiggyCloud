@@ -56,7 +56,7 @@ namespace SixCloudCore.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
+                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
                     }
                 });
             };
@@ -71,7 +71,7 @@ namespace SixCloudCore.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
+                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
                     }
                 });
             };
@@ -98,7 +98,7 @@ namespace SixCloudCore.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
+                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
                     }
                 });
             };
@@ -113,7 +113,7 @@ namespace SixCloudCore.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
+                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
                     }
                 });
             };
@@ -141,7 +141,7 @@ namespace SixCloudCore.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
+                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
                     }
                 });
             };
@@ -156,7 +156,7 @@ namespace SixCloudCore.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        ex.ToSentry().AttachTag("AutoTreated", "DownloadCompleted").Submit();
+                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
                     }
                 });
             };

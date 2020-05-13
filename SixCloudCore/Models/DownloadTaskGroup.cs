@@ -47,7 +47,7 @@ namespace SixCloudCore.Models
 
         public long TotalCount { get; private set; } = 0;
 
-        public override string Total => $"共{TotalCount}个项目";
+        public override string Total => $"{TotalCount}个项目";
 
         public override string Speed
         {
@@ -165,6 +165,12 @@ namespace SixCloudCore.Models
                     }
                 }
             }
+
+            if (CompletedCount != 0 && CompletedCount == TotalCount)
+            {
+                status = TransferTaskStatus.Completed;
+                DownloadCompleted?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         protected override void Cancel(object parameter)
@@ -174,14 +180,15 @@ namespace SixCloudCore.Models
             {
                 RunningTasks.Values.ToList().ForEach(task =>
                 {
-                    var filePath = task.StopAndSave().DownloadPath;
+                    var filePath = task.StopAndSave(true).DownloadPath;
                     try
                     {
                         File.Delete(filePath);
                     }
                     catch (IOException ex)
                     {
-                        ex.ToSentry().AttachTag("TreatedBy", "DownloadTaskGroup").Submit();
+#warning 已知问题：这里的删除总是失败的
+                        ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
                     }
 
                     try
@@ -190,7 +197,7 @@ namespace SixCloudCore.Models
                     }
                     catch (IOException ex)
                     {
-                        ex.ToSentry().AttachTag("TreatedBy", "DownloadTaskGroup").Submit();
+                        ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
                     }
                 });
                 RunningTasks.Clear();
@@ -203,7 +210,7 @@ namespace SixCloudCore.Models
                     }
                     catch (IOException ex)
                     {
-                        ex.ToSentry().AttachTag("TreatedBy", "DownloadTaskGroup").Submit();
+                        ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
                     }
                 });
                 CompletedTasks.Clear();
@@ -217,25 +224,80 @@ namespace SixCloudCore.Models
         protected override void Pause(object parameter)
         {
             status = TransferTaskStatus.Pause;
+            lock (RunningTasks)
+            {
+                RunningTasks.Values.ToList().ForEach(task =>
+                {
+                    try
+                    {
+                        task.StopAndSave()?.Save(task.Info.DownloadPath + ".downloading");
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        ex.ToSentry().AttachExtraInfo(nameof(DownloadTask), this).Submit();
+                    }
+                });
+            }
+
+            RecoveryCommand.OnCanExecutedChanged(this, EventArgs.Empty);
+            PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
+
         }
 
-        protected override void Recovery(object parameter)
+        protected async override void Recovery(object parameter)
         {
+            foreach (var task in RunningTasks)
+            {
+                if (task.Value?.Status == DownloadStatusEnum.Downloading)
+                {
+                    return;
+                }
+                string url = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
+
+                if (task.Value == null || task.Value.Status == DownloadStatusEnum.Failed)
+                {
+                    string downloadPath = Path.Combine(task.Key.LocalPath, task.Key.Name);
+
+                    DownloadTaskInfo taskInfo;
+
+                    if (File.Exists(downloadPath + ".downloading"))
+                    {
+                        taskInfo = DownloadTaskInfo.Load(downloadPath + ".downloading");
+                    }
+                    else
+                    {
+                        taskInfo = new DownloadTaskInfo()
+                        {
+                            DownloadUrl = url, // 下载链接，可以为null，任务开始前再赋值初始化
+                            DownloadPath = downloadPath,
+                            Threads = 4,
+                        };
+                    }
+
+                    RunningTasks[task.Key] = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
+                    task.Value.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
+                    {
+                        if (newValue == DownloadStatusEnum.Completed)
+                        {
+                            DownloadCompleted?.Invoke(sender, null);
+                        }
+                    };
+                }
+
+                await Task.Run(() => task.Value?.StartDownload());
+            }
+
+
             status = TransferTaskStatus.Running;
+            RecoveryCommand.OnCanExecutedChanged(this, EventArgs.Empty);
+            PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
         }
 
         public DownloadTaskGroup(string targetUUID, string localStoragePath, string name)
         {
-            if (FileSystem.GetDetailsByIdentity(TargetUUID).Result.Directory)
-            {
-                TargetUUID = targetUUID;
-                SavedLocalPath = localStoragePath;
-                Name = name;
-            }
-            else
-            {
-                throw new InvalidOperationException("请求下载的对象不是一个文件夹");
-            }
+            TargetUUID = targetUUID;
+            SavedLocalPath = localStoragePath;
+            Name = name;
 
             WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
 
@@ -247,6 +309,7 @@ namespace SixCloudCore.Models
                 OnPropertyChanged(nameof(Speed));
                 OnPropertyChanged(nameof(Total));
                 OnPropertyChanged(nameof(Progress));
+                OnPropertyChanged(nameof(Status));
             }
 
         }
@@ -315,20 +378,6 @@ namespace SixCloudCore.Models
         {
             Pause(null);
 
-            lock (RunningTasks)
-            {
-                RunningTasks.Values.ToList().ForEach(task =>
-                {
-                    try
-                    {
-                        task.StopAndSave()?.Save(task.Info.DownloadPath + ".downloading");
-                    }
-                    catch (NullReferenceException ex)
-                    {
-                        ex.ToSentry().AttachExtraInfo(nameof(DownloadTask), this).Submit();
-                    }
-                });
-            }
             var record = new DownloadTaskGroupRecord
             {
                 Name = Name,
