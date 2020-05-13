@@ -23,6 +23,11 @@
 
   <ItemGroup>
     <None Remove="MediaResources\666.ico" />
+    <None Remove="MediaResources\MainLogo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="MediaResources\MainLogo.png" />
   </ItemGroup>
 
   <ItemGroup>

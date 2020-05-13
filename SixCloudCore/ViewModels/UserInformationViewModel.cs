@@ -46,10 +46,13 @@ namespace SixCloudCore.ViewModels
                 icon = currentUser.Icon;
                 if (string.IsNullOrEmpty(icon) || icon == "default.jpg" || icon == "default")
                 {
-                    icon = "/MediaResources/666.ico";
+                    var iconSource = new Uri(@"pack://application:,,,/SixCloudCore;component/MediaResources/MainLogo.png");
+                    Icon = new BitmapImage(iconSource);
                 }
-
-                Icon = new BitmapImage(new Uri(icon));
+                else
+                {
+                    Icon = new BitmapImage(new Uri(icon));
+                }
 
             }
             catch (UriFormatException ex)
