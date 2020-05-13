@@ -70,9 +70,9 @@
 
         <DataTemplate x:Key="CommandCell">
             <StackPanel Orientation="Horizontal">
-                <metro:LightButton FontIcon="&#xf01e;" Height="48" Width="48" Command="{Binding RecoveryCommand}"/>
-                <metro:LightButton FontIcon="&#xf04c;" Height="48" Width="48" Command="{Binding PauseCommand}"/>
-                <metro:LightButton FontIcon="&#xf00d;" Height="48" Width="48" Command="{Binding CancelCommand}"/>
+                <metro:LightButton FontIcon="&#xf01e;" Height="60" Width="60" Command="{Binding RecoveryCommand}"/>
+                <metro:LightButton FontIcon="&#xf04c;" Height="60" Width="60" Command="{Binding PauseCommand}"/>
+                <metro:LightButton FontIcon="&#xf00d;" Height="60" Width="60" Command="{Binding CancelCommand}"/>
             </StackPanel>
         </DataTemplate>
 
@@ -84,7 +84,7 @@
             <!--这个Grid用于帮助GridView自动校正分栏宽度-->
             <Grid Visibility="Hidden" Margin="15,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="150"/>
@@ -128,13 +128,13 @@
                 <ListBox.Resources>
                     <DataTemplate DataType="{x:Type vm:UploadedTaskViewModel}">
                         <Border Margin="0,1" Background="White" Name="ground" Opacity="0.9">
-                            <Grid Height="48" Margin="10">
+                            <Grid Height="60" Margin="10">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition Width="60"/>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
@@ -152,13 +152,13 @@
 
                     <DataTemplate DataType="{x:Type vm:DownloadedTaskViewModel}">
                         <Border Margin="0,1" Background="White" Name="ground" Opacity="0.9">
-                            <Grid Height="48" Margin="10">
+                            <Grid Height="60" Margin="10">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition Width="60"/>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>

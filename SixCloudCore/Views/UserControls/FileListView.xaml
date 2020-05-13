@@ -92,12 +92,12 @@
         <DataTemplate x:Key="MetaName">
             <Grid x:Name="MetaNameContainer">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="1*"/>
                     <!--<ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>-->
                 </Grid.ColumnDefinitions>
-                <Border Background="{DynamicResource ImmersiveSystemAccentBrushLight2}" Height="50"/>
+                <Border Background="{DynamicResource ImmersiveSystemAccentBrushLight2}" Height="60"/>
                 <controls:FontIcon Foreground="{DynamicResource MainBackgroundBrush}" IconSize="24" Icon="{Binding Icon}"/>
                 <controls:RenamableTextBox Margin="15,0,0,0" Grid.Column="1" x:Name="NameBox" HorizontalAlignment="Left" VerticalAlignment="Center" CurrentName="{Binding Name, Mode=OneTime}" Command="{Binding ConfirmCommand}" CommandParameter="{Binding CurrentName, RelativeSource={RelativeSource Self}}"/>
             </Grid>
@@ -111,8 +111,8 @@
 
         <DataTemplate x:Key="MetaMTime">
             <StackPanel Orientation="Horizontal">
-                <controls:LightButton Margin="2,0" FontIcon="&#xF063;" FontSize="16" Height="50" Width="50" x:Name="DownloadBotton" Command="{Binding DownloadCommand}"/>
-                <controls:LightButton Margin="2,0" FontIcon="&#xF141;" FontSize="16" Height="50" Width="50" x:Name="MoreBotton" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
+                <controls:LightButton Margin="2,0" FontIcon="&#xF063;" FontSize="16" Height="60" Width="60" x:Name="DownloadBotton" Command="{Binding DownloadCommand}"/>
+                <controls:LightButton Margin="2,0" FontIcon="&#xF141;" FontSize="16" Height="60" Width="60" x:Name="MoreBotton" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
                     <controls:LightButton.ContextMenu>
                         <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource ImmersiveSystemAccentBrush}" Foreground="White">
                             <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
