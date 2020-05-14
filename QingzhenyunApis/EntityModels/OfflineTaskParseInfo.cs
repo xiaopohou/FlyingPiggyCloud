@@ -7,7 +7,7 @@ namespace QingzhenyunApis.EntityModels
     public class OfflineTaskParseInfo : EntityBodyBase
     {
         [JsonProperty("textLink")]
-        public Uri TextLink { get; set; }
+        public string TextLink { get; set; }
 
         [JsonProperty("fileHash")]
         public string FileHash { get; set; }

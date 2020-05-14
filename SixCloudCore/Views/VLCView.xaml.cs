@@ -20,6 +20,7 @@ namespace SixCloudCore.Views
         public VLCView()
         {
             InitializeComponent();
+            MainContainer.
         }
     }
 }

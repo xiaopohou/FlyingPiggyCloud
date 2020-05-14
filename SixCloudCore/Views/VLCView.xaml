@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="VLCView" Height="450" Width="800">
     <Grid>
-        <lvs:VideoView Resources="" />
+        <lvs:VideoView Name="MainContainer"/>
     </Grid>
 </Window>
