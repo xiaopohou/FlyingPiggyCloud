@@ -15,6 +15,7 @@
     <FileVersion>3.0.5.0</FileVersion>
     <Version>3.0.5</Version>
     <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

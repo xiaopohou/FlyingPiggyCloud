@@ -2,8 +2,6 @@
 using CefSharp.Wpf;
 using LibVLCSharp.Shared;
 using Sentry;
-using SixCloudCore.ViewModels;
-using SixCloudCore.Views;
 using System;
 using System.IO;
 using System.Reflection;
@@ -21,22 +19,24 @@ namespace SixCloudCore
         {
             AppDomain.CurrentDomain.AssemblyResolve += Resolver;
             InitializeCefSharp();
-            SentrySdk.Init("https://aa9303eba050450187a9c04653e74be5@o387540.ingest.sentry.io/5222970");
             Core.Initialize();
+            SentrySdk.Init("https://aa9303eba050450187a9c04653e74be5@o387540.ingest.sentry.io/5222970");
             //new LoginWebViewModel();
-            //new MainWindow().Show();
-            new VLCView().Show();
+            new MainWindow().Show();
+            //new VLCView().Show();
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void InitializeCefSharp()
         {
-            var settings = new CefSettings();
+            CefSettings settings = new CefSettings
+            {
 
-            // Set BrowserSubProcessPath based on app bitness at runtime
-            settings.BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                // Set BrowserSubProcessPath based on app bitness at runtime
+                BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
                                                    Environment.Is64BitProcess ? "x64" : "x86",
-                                                   "CefSharp.BrowserSubprocess.exe");
+                                                   "CefSharp.BrowserSubprocess.exe")
+            };
 
             // Make sure you set performDependencyCheck false
             Cef.Initialize(settings, performDependencyCheck: false, browserProcessHandler: null);
