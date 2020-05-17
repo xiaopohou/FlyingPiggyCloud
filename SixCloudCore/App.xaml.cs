@@ -31,11 +31,8 @@ namespace SixCloudCore
         {
             CefSettings settings = new CefSettings
             {
-
                 // Set BrowserSubProcessPath based on app bitness at runtime
-                BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
-                                                   Environment.Is64BitProcess ? "x64" : "x86",
-                                                   "CefSharp.BrowserSubprocess.exe")
+                BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, Environment.Is64BitProcess ? "x64" : "x86", "CefSharp.BrowserSubprocess.exe")
             };
 
             // Make sure you set performDependencyCheck false
