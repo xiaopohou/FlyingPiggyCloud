@@ -10,29 +10,42 @@ namespace SixCloudCore.Views
     /// </summary>
     public partial class VLCView : Window
     {
-        private readonly LibVLC _libVLC;
+        private static readonly LibVLC libVlc = new LibVLC();
         private readonly MediaPlayer _mediaPlayer;
+
+        static VLCView()
+        {
+            Application.Current.Exit += (sender, e) =>
+            {
+                libVlc.Dispose();
+            };
+        }
+
 
         protected override void OnClosed(EventArgs e)
         {
-            MainContainer.Dispose();
+            libVlc.Dispose();
         }
 
         public VLCView()
         {
             InitializeComponent();
 
-            _libVLC = new LibVLC();
-            _mediaPlayer = new MediaPlayer(_libVLC);
+            _mediaPlayer = new MediaPlayer(libVlc);
 
             // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
             MainContainer.Loaded += (sender, e) =>
             {
                 MainContainer.MediaPlayer = _mediaPlayer;
-                MainContainer.MediaPlayer.Play(new Media(_libVLC, "http://hslSource", FromType.FromLocation));
+                MainContainer.MediaPlayer.EnableMouseInput = true;
+                MainContainer.MediaPlayer.Play(new Media(libVlc, "https://hls-source", FromType.FromLocation));
             };
 
 
+
+        }
+        private void MainContainer_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
 
         }
     }

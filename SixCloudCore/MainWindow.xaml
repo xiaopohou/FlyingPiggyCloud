@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:SixCloudCore"
         xmlns:brush="clr-namespace:CustomControls.BrushExtensions;assembly=SixCloudCoreCustomControlLibrary"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1140" Background="Black">
+        Title="MainWindow" Height="720" Width="1140">
     <Window.Resources>
 
     </Window.Resources>
-    <Grid >
+    <Grid Background="Transparent" MouseEnter="Grid_MouseEnter">
         <!--<cefSharpWPF:ChromiumWebBrowser x:Name="MainContainer" Address="www.baidu.com"/>-->
     </Grid>
 </Window>

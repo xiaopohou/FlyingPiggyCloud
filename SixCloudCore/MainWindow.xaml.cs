@@ -11,5 +11,10 @@ namespace SixCloudCore
         {
             InitializeComponent();
         }
+
+        private void Grid_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+
+        }
     }
 }

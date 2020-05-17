@@ -5,9 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SixCloudCore.Views"
         xmlns:lvs="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+        xmlns:controls="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+        xmlns:brush="clr-namespace:CustomControls.BrushExtensions;assembly=SixCloudCoreCustomControlLibrary"
         mc:Ignorable="d"
-        Title="VLCView" Height="450" Width="800">
-    <Grid>
-        <lvs:VideoView Name="MainContainer"/>
-    </Grid>
+        Title="VLCView" Height="450" Width="800" >
+    <lvs:VideoView Name="MainContainer">
+        <Grid x:Name="controllBar" IsHitTestVisible="True"  MouseEnter="MainContainer_MouseEnter">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Rectangle Fill="Black" Opacity="0.000001"  Grid.ColumnSpan="3" Grid.RowSpan="3" />
+            <Slider x:Name="sliderControll" Value="50" Grid.Row="1" Grid.ColumnSpan="3" />
+            <StackPanel x:Name="controllBottons" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1">
+                <controls:LightButton Width="50" Height="50"/>
+            </StackPanel>
+        </Grid>
+    </lvs:VideoView>
 </Window>
