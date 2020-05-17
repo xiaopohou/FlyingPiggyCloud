@@ -27,20 +27,7 @@ namespace SixCloudCore.Views
                          loadingView.Visibility = Visibility.Hidden;
                      }
                  });
-
-                 //if (e.IsLoading || false)
-                 //{
-                 //    Application.Current.Dispatcher.Invoke(() => mainContainer.Visibility = Visibility.Hidden);
-                 //}
              };
-
-            //mainContainer.NavigationStarting += (sender, e) =>
-            //  {
-            //      if (mainContainer.Source != e.Uri)
-            //      {
-            //          mainContainer.Visibility = System.Windows.Visibility.Hidden;
-            //      }
-            //  };
         }
 
 
