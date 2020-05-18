@@ -4,6 +4,7 @@ using LibVLCSharp.Shared;
 using Sentry;
 using SixCloudCore.ViewModels;
 using SixCloudCore.Views;
+using SixCloudCore.Views.VLCView;
 using System;
 using System.IO;
 using System.Reflection;

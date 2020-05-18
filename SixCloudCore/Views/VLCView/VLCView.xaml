@@ -1,0 +1,31 @@
+﻿<fw:AcrylicWindow x:Class="SixCloudCore.Views.VLCView.VLCView"
+                  xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:local="clr-namespace:SixCloudCore.Views"
+                  xmlns:lvs="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+                  xmlns:controls="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+                  xmlns:brush="clr-namespace:CustomControls.BrushExtensions;assembly=SixCloudCoreCustomControlLibrary"
+                  mc:Ignorable="d"
+                  Title="VLCView" Height="450" Width="800">
+    <lvs:VideoView Name="VideoViewer">
+        <Grid Height="20" x:Name="ControllBar" Background="White" Opacity="0.1" VerticalAlignment="Bottom" Mouse.MouseEnter="ControllBar_MouseEnter" Mouse.MouseLeave="ControllBar_MouseLeave">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <controls:FontIcon Icon="&#xF141;" HorizontalAlignment="Right" Margin="20,0"/>
+
+            <Slider VerticalAlignment="Center" x:Name="ProgressSlider" Style="{StaticResource MaterialDesignSlider}" Grid.Row="1" Margin="20,0"/>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="2">
+                <controls:LightButton Height="50" Width="50"/>
+                <controls:LightButton Height="50" Width="50"/>
+                <controls:LightButton Height="50" Width="50"/>
+            </StackPanel>
+        </Grid>
+    </lvs:VideoView>
+</fw:AcrylicWindow>
