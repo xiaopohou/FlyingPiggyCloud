@@ -10,7 +10,7 @@
                   xmlns:brush="clr-namespace:CustomControls.BrushExtensions;assembly=SixCloudCoreCustomControlLibrary"
                   mc:Ignorable="d"
                   Title="VLCView" Height="450" Width="800">
-    <lvs:VideoView Name="VideoViewer">
+    <lvs:VideoView Name="VideoViewer" MediaPlayer="{Binding MediaPlayer}">
         <Grid Height="20" x:Name="ControllBar" Background="White" Opacity="0.1" VerticalAlignment="Bottom" Mouse.MouseEnter="ControllBar_MouseEnter" Mouse.MouseLeave="ControllBar_MouseLeave">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"/>
@@ -19,7 +19,7 @@
             </Grid.RowDefinitions>
             <controls:FontIcon Icon="&#xF141;" HorizontalAlignment="Right" Margin="20,0"/>
 
-            <Slider VerticalAlignment="Center" x:Name="ProgressSlider" Style="{StaticResource MaterialDesignSlider}" Grid.Row="1" Margin="20,0"/>
+            <Slider VerticalAlignment="Center" x:Name="ProgressSlider" Grid.Row="1" Margin="20,0"/>
 
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="2">
                 <controls:LightButton Height="50" Width="50"/>

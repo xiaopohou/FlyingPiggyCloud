@@ -13,19 +13,9 @@ namespace SixCloudCore.Views.VLCView
     /// </summary>
     public partial class VLCView : AcrylicWindow
     {
-        private static readonly LibVLC libVlc = new LibVLC();
-        private readonly MediaPlayer mediaPlayer = new MediaPlayer(libVlc);
-        static VLCView()
-        {
-            Application.Current.Exit += (sender, e) =>
-            {
-                libVlc.Dispose();
-            };
-        }
-
         protected override void OnClosed(EventArgs e)
         {
-            mediaPlayer.Dispose();
+            //mediaPlayer.Dispose();
         }
 
         public static readonly DependencyProperty FullScreenProperty = DependencyProperty.Register("FullScreenProperty", typeof(bool), typeof(PreView), new PropertyMetadata(false));
@@ -39,9 +29,6 @@ namespace SixCloudCore.Views.VLCView
             }
         }
 
-
-
-
         public VLCView()
         {
             InitializeComponent();
@@ -49,14 +36,9 @@ namespace SixCloudCore.Views.VLCView
             // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
             VideoViewer.Loaded += (sender, e) =>
             {
-                VideoViewer.MediaPlayer = mediaPlayer;
-                VideoViewer.MediaPlayer.EnableMouseInput = true;
-                VideoViewer.MediaPlayer.Play(new Media(libVlc, "https://hls-source", FromType.FromLocation));
-            };
-
-            Activated += (sender, e) =>
-            {
-
+                //VideoViewer.MediaPlayer = mediaPlayer;
+                //VideoViewer.MediaPlayer.EnableMouseInput = true;
+                //VideoViewer.MediaPlayer.Play(new Media(libVlc, "https://hls-source", FromType.FromLocation));
             };
         }
 

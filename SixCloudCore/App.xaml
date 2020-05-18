@@ -18,7 +18,7 @@
                 <ResourceDictionary Source="pack://application:,,,/SixCloudCoreCustomControlLibrary;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MaterialDesignDiscreteVerticalSlider}"/>
+            <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MaterialDesignSlider}"/>
 
             <Style x:Key="ProgressBarStyle" TargetType="{x:Type ProgressBar}" BasedOn="{StaticResource MaterialDesignLinearProgressBar}">
                 <Setter Property="Background" Value="Transparent"/>

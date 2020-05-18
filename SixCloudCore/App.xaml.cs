@@ -26,7 +26,7 @@ namespace SixCloudCore
             SentrySdk.Init("https://aa9303eba050450187a9c04653e74be5@o387540.ingest.sentry.io/5222970");
             //new LoginWebViewModel();
             //new MainWindow().Show();
-            new VLCView().Show();
+            new MediaPlayerViewModel().InitializeComponent();
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
