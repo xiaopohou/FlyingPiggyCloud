@@ -1,4 +1,5 @@
 ﻿using LibVLCSharp.Shared;
+using QingzhenyunApis.EntityModels;
 using SixCloudCore.Views.VLCView;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,9 @@ namespace SixCloudCore.ViewModels
 
         public MediaPlayer MediaPlayer { get; }
 
-        public string Title { get; set; } = "在线预览";
+        public string Title { get; } = "在线预览";
+
+        public string Source { get; }
 
         public double Progress
         {
@@ -75,18 +78,20 @@ namespace SixCloudCore.ViewModels
                 DataContext = this
             };
             View.Show();
-            MediaPlayer.Play(new Media(libVLC, "https://hls-source", FromType.FromLocation));
+            MediaPlayer.Play(new Media(libVLC, Source, FromType.FromLocation));
             PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
             PlayCommand.OnCanExecutedChanged(this, EventArgs.Empty);
         }
 
         public void Dispose()
         {
-            ((IDisposable)MediaPlayer).Dispose();
+            ((IDisposable)MediaPlayer)?.Dispose();
         }
 
-        public MediaPlayerViewModel()
+        public MediaPlayerViewModel(PreviewInformation previewInformation)
         {
+            Title = previewInformation.Name;
+            Source = previewInformation.PreviewHlsAddress;
             MediaPlayer = new MediaPlayer(libVLC);
             PlayCommand = new DependencyCommand(Play, CanPlay);
             PauseCommand = new DependencyCommand(Pause, CanPause);

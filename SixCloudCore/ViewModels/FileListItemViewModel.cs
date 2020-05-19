@@ -123,12 +123,13 @@ namespace SixCloudCore.ViewModels
             switch (PreviewType)
             {
                 case PreviewType.HLS:
-                    PreviewInformation x = await Task.Run(() =>
-                    {
-                        return QingzhenyunApis.Methods.V3.Preview.Video(UUID);
-                    });
-                    PreView preView = new PreView(PreView.ResourceType.Video, x.PreviewHlsAddress, x);
-                    preView.Show();
+                    //PreviewInformation x = await Task.Run(() =>
+                    //{
+                    //    return QingzhenyunApis.Methods.V3.Preview.Video(UUID);
+                    //});
+                    //PreView preView = new PreView(PreView.ResourceType.Video, x.PreviewHlsAddress, x);
+                    //preView.Show();
+                    new MediaPlayerViewModel(await QingzhenyunApis.Methods.V3.Preview.Video(UUID)).InitializeComponent();
                     break;
                 default:
                     return;

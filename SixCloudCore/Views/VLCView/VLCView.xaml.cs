@@ -17,7 +17,9 @@ namespace SixCloudCore.Views.VLCView
         protected override void OnClosed(EventArgs e)
         {
             //mediaPlayer.Dispose();
+            VideoViewer.MediaPlayer?.Stop();
         }
+
 
         public static readonly DependencyProperty FullScreenProperty = DependencyProperty.Register("FullScreenProperty", typeof(bool), typeof(PreView), new PropertyMetadata(false));
         public bool FullScreen
@@ -33,14 +35,6 @@ namespace SixCloudCore.Views.VLCView
         public VLCView()
         {
             InitializeComponent();
-
-            // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
-            VideoViewer.Loaded += (sender, e) =>
-            {
-                //VideoViewer.MediaPlayer = mediaPlayer;
-                //VideoViewer.MediaPlayer.EnableMouseInput = true;
-                //VideoViewer.MediaPlayer.Play(new Media(libVlc, "https://hls-source", FromType.FromLocation));
-            };
         }
 
         protected void SetScreenStyle(bool isFullScreen)
