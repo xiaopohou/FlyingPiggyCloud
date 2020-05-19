@@ -3,6 +3,7 @@ using SourceChord.FluentWPF;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
@@ -11,7 +12,7 @@ namespace SixCloudCore.Views.VLCView
     /// <summary>
     /// VLCView.xaml 的交互逻辑
     /// </summary>
-    public partial class VLCView : AcrylicWindow
+    public partial class VLCView : Window
     {
         protected override void OnClosed(EventArgs e)
         {
@@ -115,6 +116,11 @@ namespace SixCloudCore.Views.VLCView
             });
 
 
+        }
+
+        private void ProgressSlider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            (sender as Slider)?.GetBindingExpression(RangeBase.ValueProperty).UpdateSource();
         }
     }
 }
