@@ -14,7 +14,6 @@ namespace QingzhenyunApis.Methods.V3
             return await GetAsync<UserInformation>("/v3/user/info");
         }
 
-#warning 此接口行为尚未验证
         public static async Task Logout()
         {
             var x = await PostAsync<object>("", "/v3/user/logout");
