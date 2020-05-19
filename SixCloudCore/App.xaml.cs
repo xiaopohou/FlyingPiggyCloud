@@ -2,14 +2,15 @@
 using CefSharp.Wpf;
 using LibVLCSharp.Shared;
 using Sentry;
+using SixCloudCore.Controllers;
 using SixCloudCore.ViewModels;
-using SixCloudCore.Views;
-using SixCloudCore.Views.VLCView;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using QingzhenyunApis.Exceptions;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace SixCloudCore
 {
@@ -24,6 +25,11 @@ namespace SixCloudCore
             InitializeCefSharp();
             Core.Initialize();
             SentrySdk.Init("https://aa9303eba050450187a9c04653e74be5@o387540.ingest.sentry.io/5222970");
+            Application.Current.DispatcherUnhandledException += (sender, e) =>
+            {
+                e.Exception.ToSentry().TreatedBy(nameof(DispatcherUnhandledExceptionEventHandler)).Submit();
+            };
+
             new LoginWebViewModel();
             //new MainWindow().Show();
             //new MediaPlayerViewModel().InitializeComponent();

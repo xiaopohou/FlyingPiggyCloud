@@ -84,7 +84,6 @@ namespace SixCloudCore.ViewModels
                 Application.Current.DispatcherUnhandledException += (sender, e) =>
                 {
                     TasksLogger.ExitEventHandler(sender, new Controllers.ExitEventArgs(currentUser));
-                    e.Exception.ToSentry().TreatedBy(nameof(DispatcherUnhandledExceptionEventHandler)).Submit();
 
                     //尝试自动重启
                     var x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloudCore.exe";
