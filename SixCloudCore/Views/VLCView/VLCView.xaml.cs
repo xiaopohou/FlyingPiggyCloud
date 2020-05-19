@@ -21,7 +21,7 @@ namespace SixCloudCore.Views.VLCView
         }
 
 
-        public static readonly DependencyProperty FullScreenProperty = DependencyProperty.Register("FullScreenProperty", typeof(bool), typeof(PreView), new PropertyMetadata(false));
+        public static readonly DependencyProperty FullScreenProperty = DependencyProperty.Register("FullScreenProperty", typeof(bool), typeof(VLCView), new PropertyMetadata(false));
         public bool FullScreen
         {
             get => (bool)GetValue(FullScreenProperty);

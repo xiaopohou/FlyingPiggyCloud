@@ -117,48 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PreviewContainer" xml:space="preserve">
-    <value>&lt;!DOCTYPE html&gt;
-&lt;html lang="zh-cn"&gt;
-&lt;head&gt;
-    &lt;meta charset="utf-8"&gt;
-    &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
-&lt;/head&gt;
-&lt;body style="margin:0;background:#000000"&gt;
-    &lt;video id="video" style="clear:both;display:block;margin:auto" autoplay controls&gt;
-    &lt;/video&gt;
-    &lt;style&gt;
-        video {
-            display: flex;
-            display: -webkit-flex;
-            position: absolute;
-            left: 0;
-            top: 0;
-            flex-direction: column;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            visibility: visible;
-            text-align: center;
-        }
-    &lt;/style&gt;
-    &lt;script src="https://cdn.staticfile.org/hls.js/8.0.0-beta.3/hls.min.js"&gt;&lt;/script&gt;
-    &lt;script&gt;
-        if (Hls.isSupported()) {
-            const video = document.getElementById('video');
-            const hls = new Hls();
-            hls.attachMedia(video);
-
-            hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-                console.log("video and hls.js are now bound together !");
-                hls.loadSource("{{uri}}");
-            });
-
-        }
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="_666" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\MediaResources\666.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
