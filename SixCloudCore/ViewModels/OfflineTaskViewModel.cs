@@ -57,7 +57,7 @@ namespace SixCloudCore.ViewModels
             }
             catch (InvalidOperationException ex)
             {
-                ex.ToSentry().TreatedBy(nameof(OfflineTaskViewModel.LazyLoad)).Submit();
+                ex.ToSentry().TreatedBy(nameof(OfflineTaskViewModel.LazyLoad)).AttachExtraInfo(nameof(OfflineTaskViewModel), this).Submit();
             }
         }
 
