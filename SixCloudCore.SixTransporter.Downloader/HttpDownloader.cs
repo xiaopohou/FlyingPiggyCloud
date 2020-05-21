@@ -34,6 +34,7 @@ namespace SixCloudCore.SixTransporter.Downloader
         public float DownloadPercentage { get; set; }
 
         public event Action<DownloadStatusEnum, DownloadStatusEnum, HttpDownloader> DownloadStatusChangedEvent;
+        public event EventHandler AllFileStreamDisposed;
 
 
         private DownloadStatusEnum _status = DownloadStatusEnum.Waiting;
@@ -148,6 +149,14 @@ namespace SixCloudCore.SixTransporter.Downloader
             {
                 foreach (DownloadThread thread in Threads)
                 {
+                    thread.FileStreamDisposed += (sender, e) =>
+                    {
+                        Threads.Remove(sender as DownloadThread);
+                        if (!Threads.Any())
+                        {
+                            AllFileStreamDisposed?.Invoke(this, EventArgs.Empty);
+                        }
+                    };
                     if (force)
                     {
                         thread.ForceStop();

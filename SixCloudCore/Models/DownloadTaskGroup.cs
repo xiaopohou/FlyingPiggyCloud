@@ -180,25 +180,27 @@ namespace SixCloudCore.Models
             {
                 RunningTasks.Values.ToList().ForEach(task =>
                 {
-                    var filePath = task.StopAndSave(true).DownloadPath;
-                    try
+                    task.AllFileStreamDisposed += (sender, e) =>
                     {
-                        File.Delete(filePath);
-                    }
-                    catch (IOException ex)
-                    {
-#warning 已知问题：这里的删除总是失败的
-                        ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
-                    }
-
-                    try
-                    {
-                        File.Delete(filePath + ".downloading");
-                    }
-                    catch (IOException ex)
-                    {
-                        ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
-                    }
+                        var filePath = (sender as HttpDownloader).Info.DownloadPath;
+                        try
+                        {
+                            File.Delete(filePath);
+                        }
+                        catch (IOException ex)
+                        {
+                            ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
+                        }
+                        try
+                        {
+                            File.Delete(filePath + ".downloading");
+                        }
+                        catch (IOException ex)
+                        {
+                            ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
+                        }
+                    };
+                    task.StopAndSave(true);
                 });
                 RunningTasks.Clear();
 

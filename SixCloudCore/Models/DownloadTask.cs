@@ -121,23 +121,27 @@ namespace SixCloudCore.Models
 
         protected override void Cancel(object parameter = null)
         {
+            fileDownloader.AllFileStreamDisposed += (sender, e) =>
+            {
+                try
+                {
+                    File.Delete(System.IO.Path.Combine(Path, Name));
+                }
+                catch (IOException ex)
+                {
+                    ex.Submit();
+                }
+                try
+                {
+                    File.Delete(System.IO.Path.Combine(Path, $"{Name}.downloading"));
+                }
+                catch (IOException ex)
+                {
+                    ex.Submit();
+                }
+            };
+
             fileDownloader.StopAndSave(true)?.Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
-            try
-            {
-                File.Delete(System.IO.Path.Combine(Path, Name));
-            }
-            catch (IOException ex)
-            {
-                ex.Submit();
-            }
-            try
-            {
-                File.Delete(System.IO.Path.Combine(Path, $"{Name}.downloading"));
-            }
-            catch (IOException ex)
-            {
-                ex.Submit();
-            }
 
             DownloadCanceled?.Invoke(this, EventArgs.Empty);
         }
