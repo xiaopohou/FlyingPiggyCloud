@@ -1,4 +1,5 @@
-﻿using SixCloudCore.ViewModels;
+﻿using CefSharp;
+using SixCloudCore.ViewModels;
 using SourceChord.FluentWPF;
 using System;
 using System.Windows;
@@ -13,6 +14,7 @@ namespace SixCloudCore.Views
         public LoginWebView()
         {
             InitializeComponent();
+            mainContainer.MenuHandler = new MenuHandler();
             mainContainer.LoadingStateChanged += (sender, e) =>
              {
 
@@ -28,6 +30,29 @@ namespace SixCloudCore.Views
                      }
                  });
              };
+        }
+
+        private class MenuHandler : IContextMenuHandler
+        {
+            public void OnBeforeContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
+            {
+                model.Clear();
+            }
+
+            public bool OnContextMenuCommand(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
+            {
+                return false;
+            }
+
+            public void OnContextMenuDismissed(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame)
+            {
+
+            }
+
+            public bool RunContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
+            {
+                return false;
+            }
         }
 
 
