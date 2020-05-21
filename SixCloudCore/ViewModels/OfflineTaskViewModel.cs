@@ -2,6 +2,7 @@
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.Views;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -53,6 +54,10 @@ namespace SixCloudCore.ViewModels
             catch (RequestFailedException ex)
             {
                 MessageBox.Show($"加载目录失败，由于{ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                ex.ToSentry().TreatedBy(nameof(OfflineTaskViewModel.LazyLoad)).Submit();
             }
         }
 
