@@ -1,7 +1,42 @@
-﻿namespace SixCloudCore.ViewModels
+﻿using SixCloudCore.Views;
+using SourceChord.FluentWPF;
+using System;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace SixCloudCore.ViewModels
 {
     internal sealed class MainFrameViewModel : ViewModelBase
     {
+        public async Task InitializeComponent()
+        {
+            if (Environment.OSVersion.Version > new Version(6, 1))
+            {
+                MainFrameWindow = new AcrylicWindow
+                {
+                    AcrylicWindowStyle = AcrylicWindowStyle.NoIcon,
+                };
+            }
+            else
+            {
+                MainFrameWindow = new Window
+                {
+                    WindowStyle = WindowStyle.ToolWindow
+                };
+            }
+            MainFrameWindow.MinHeight = 720;
+            MainFrameWindow.MinWidth = 800;
+            MainFrameWindow.Title = "6盘，留住美好";
+            MainFrameWindow.DataContext = this;
+            MainFrameWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            MainFrameWindow.Content = new MainFrame();
+
+            MainFrameWindow.Show();
+            await FileVM.NavigateByPath("/");
+        }
+
+        public Window MainFrameWindow { get; private set; }
+
         public RecoveryBoxViewModel RecVM { get; set; } = new RecoveryBoxViewModel();
 
         public FileListViewModel FileVM { get; set; } = new FileListViewModel();

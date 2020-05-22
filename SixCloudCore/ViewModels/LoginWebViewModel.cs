@@ -68,7 +68,6 @@ namespace SixCloudCore.ViewModels
                             WindowStartupLocation = WindowStartupLocation.CenterScreen,
                             Content = loginWebView,
                         };
-                        LoginWindow.Show();
                     }
                     else
                     {
@@ -81,8 +80,8 @@ namespace SixCloudCore.ViewModels
                             WindowStartupLocation = WindowStartupLocation.CenterScreen,
                             Content = loginWebView,
                         };
-                        LoginWindow.Show();
                     }
+                    LoginWindow.Show();
                 });
 
                 if (!await Authentication.CheckDestination(DestinationInfo))
@@ -100,9 +99,9 @@ namespace SixCloudCore.ViewModels
         private async void OnLoginSuccess()
         {
             var currentUser = await Authentication.GetUserInformation();
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.Invoke(async () =>
             {
-                new MainFrame().Show();
+                await new MainFrameViewModel().InitializeComponent().ConfigureAwait(true);
                 LoginWindow?.Close();
 
                 Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;

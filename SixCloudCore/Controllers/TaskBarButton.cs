@@ -1,4 +1,5 @@
-﻿using SixCloudCore.Views;
+﻿using SixCloudCore.ViewModels;
+using SixCloudCore.Views;
 using System;
 using System.Windows;
 using System.Windows.Forms;
@@ -38,7 +39,7 @@ namespace SixCloudCore.Controllers
             App.Current.Exit += Dispose;
         }
 
-        private void ShowMainWindow(object sender, EventArgs e)
+        private async void ShowMainWindow(object sender, EventArgs e)
         {
             Window c = System.Windows.Application.Current.MainWindow;
             if (c != null)
@@ -47,7 +48,7 @@ namespace SixCloudCore.Controllers
             }
             else
             {
-                new MainFrame().Show();
+                await new MainFrameViewModel().InitializeComponent();
             }
 
         }

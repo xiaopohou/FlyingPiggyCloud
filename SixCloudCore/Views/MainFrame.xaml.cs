@@ -11,21 +11,11 @@ namespace SixCloudCore.Views
     /// <summary>
     /// MainFrame.xaml 的交互逻辑
     /// </summary>
-    public partial class MainFrame : AcrylicWindow
+    public partial class MainFrame : UserControl
     {
         public MainFrame()
         {
             InitializeComponent();
-            MainFrameViewModel mainFrameViewModel = new MainFrameViewModel();
-            DataContext = mainFrameViewModel;
-            //if (Environment.OSVersion.Version > new Version(6, 1))
-            //{
-            //    SetResourceReference(BackgroundProperty, "ImmersiveSystemAccentBrushDark3");
-            //}
-            ThreadPool.QueueUserWorkItem(async (_) =>
-            {
-                await mainFrameViewModel.FileVM.NavigateByPath("/");
-            });
         }
 
         private void TabControl_Click(object sender, RoutedEventArgs e)
