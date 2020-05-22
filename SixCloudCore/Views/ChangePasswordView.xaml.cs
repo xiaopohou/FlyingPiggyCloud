@@ -17,6 +17,10 @@ namespace SixCloudCore.Views
         public ChangePasswordView()
         {
             InitializeComponent();
+            if (Environment.OSVersion.Version < new Version(6, 2))
+            {
+                SetResourceReference(BackgroundProperty, "ImmersiveSystemAccentBrushDark2");
+            }
         }
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)

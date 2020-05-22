@@ -1,4 +1,5 @@
 ﻿using SourceChord.FluentWPF;
+using System;
 
 namespace SixCloudCore.Views
 {
@@ -43,6 +44,10 @@ namespace SixCloudCore.Views
         private TextInputDialog()
         {
             InitializeComponent();
+            if (Environment.OSVersion.Version < new Version(6, 2))
+            {
+                SetResourceReference(BackgroundProperty, "ImmersiveSystemAccentBrushDark2");
+            }
         }
 
         private void Confirm_Click(object sender, System.Windows.RoutedEventArgs e)
