@@ -146,14 +146,14 @@ namespace SixCloudCore.Models
             DownloadCanceled?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <summary>
-        /// 删除本地文件并重新申请下载链接
-        /// </summary>
-        protected void Redownload()
-        {
-            Cancel();
-            Recovery();
-        }
+        ///// <summary>
+        ///// 删除本地文件并重新申请下载链接
+        ///// </summary>
+        //protected void Redownload()
+        //{
+        //    Cancel();
+        //    Recovery();
+        //}
 
         public override event EventHandler DownloadCompleted;
 
@@ -190,20 +190,21 @@ namespace SixCloudCore.Models
 
             void Callback(object sender, EventArgs e)
             {
-                if (lastCompletedSize == CompletedBytes)
-                {
-                    retryTimes++;
-                }
-                else
-                {
-                    lastCompletedSize = CompletedBytes;
-                }
+                //if (lastCompletedSize == CompletedBytes)
+                //{
+                //    retryTimes++;
+                //}
+                //else
+                //{
+                //    retryTimes = 0;
+                //    lastCompletedSize = CompletedBytes;
+                //}
 
-                if (retryTimes >= 60)
-                {
-                    retryTimes = 0;
-                    Redownload();
-                }
+                //if (retryTimes >= 60)
+                //{
+                //    retryTimes = 0;
+                //    Redownload();
+                //}
 
                 OnPropertyChanged(nameof(Completed));
                 OnPropertyChanged(nameof(Speed));
