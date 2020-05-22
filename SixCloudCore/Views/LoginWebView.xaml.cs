@@ -3,17 +3,22 @@ using SixCloudCore.ViewModels;
 using SourceChord.FluentWPF;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SixCloudCore.Views
 {
     /// <summary>
     /// LoginWebView.xaml 的交互逻辑
     /// </summary>
-    public partial class LoginWebView : AcrylicWindow
+    public partial class LoginWebView : UserControl
     {
         public LoginWebView()
         {
             InitializeComponent();
+            Unloaded += (sender, e) =>
+            {
+                mainContainer.Dispose();
+            };
             mainContainer.MenuHandler = new MenuHandler();
             mainContainer.LoadingStateChanged += (sender, e) =>
              {
@@ -53,13 +58,6 @@ namespace SixCloudCore.Views
             {
                 return false;
             }
-        }
-
-
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-            mainContainer.Dispose();
         }
     }
 }

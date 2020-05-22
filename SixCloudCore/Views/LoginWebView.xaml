@@ -1,4 +1,4 @@
-﻿<fw:AcrylicWindow
+﻿<UserControl
     x:Class="SixCloudCore.Views.LoginWebView"
     xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,10 +8,9 @@
     xmlns:local="clr-namespace:SixCloudCore.Views"
     xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
     xmlns:userControl="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
-    mc:Ignorable="d"
-    Title="登陆" Height="650" Width="400" AcrylicWindowStyle="NoIcon" WindowStartupLocation="CenterScreen">
+    mc:Ignorable="d">
     <Grid>
         <userControl:LoadingControl x:Name="loadingView" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <cef:ChromiumWebBrowser x:Name="mainContainer" Address="{Binding LoginUrl,Mode=OneWay}"/>
     </Grid>
-</fw:AcrylicWindow>
+</UserControl>

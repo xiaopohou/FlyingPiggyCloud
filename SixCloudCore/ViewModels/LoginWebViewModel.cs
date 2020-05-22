@@ -5,6 +5,7 @@ using Sentry;
 using SixCloudCore.Controllers;
 using SixCloudCore.Models;
 using SixCloudCore.Views;
+using SourceChord.FluentWPF;
 using System;
 using System.IO;
 using System.Threading;
@@ -21,7 +22,7 @@ namespace SixCloudCore.ViewModels
 
         private DestinationInformation DestinationInfo { get; set; }
 
-        private LoginWebView LoginWebView { get; set; }
+        private Window LoginWindow { get; set; }
 
         private async void InitializeComponent()
         {
@@ -51,11 +52,37 @@ namespace SixCloudCore.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    LoginWebView = new LoginWebView
+                    var loginWebView = new LoginWebView
                     {
                         DataContext = this
                     };
-                    LoginWebView.Show();
+
+                    if (Environment.OSVersion.Version > new Version(6, 1))
+                    {
+                        LoginWindow = new AcrylicWindow
+                        {
+                            Title = "登陆",
+                            Height = 650,
+                            Width = 400,
+                            AcrylicWindowStyle = AcrylicWindowStyle.NoIcon,
+                            WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                            Content = loginWebView,
+                        };
+                        LoginWindow.Show();
+                    }
+                    else
+                    {
+                        LoginWindow = new Window
+                        {
+                            Title = "登陆",
+                            Height = 650,
+                            Width = 400,
+                            WindowStyle = WindowStyle.ToolWindow,
+                            WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                            Content = loginWebView,
+                        };
+                        LoginWindow.Show();
+                    }
                 });
 
                 if (!await Authentication.CheckDestination(DestinationInfo))
@@ -76,7 +103,7 @@ namespace SixCloudCore.ViewModels
             Application.Current.Dispatcher.Invoke(() =>
             {
                 new MainFrame().Show();
-                LoginWebView?.Close();
+                LoginWindow?.Close();
 
                 Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 new TaskBarButton();

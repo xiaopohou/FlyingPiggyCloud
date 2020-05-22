@@ -4,7 +4,6 @@ using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
 
 namespace SixCloudCore.Views
 {
@@ -14,48 +13,19 @@ namespace SixCloudCore.Views
     /// </summary>
     public partial class MainFrame : AcrylicWindow
     {
-        //private static UserInformation recoveryInfo;
-
-        ///// <summary>
-        ///// 从后台恢复前台窗口
-        ///// </summary>
-        //public static void Recovery()
-        //{
-        //    if (recoveryInfo != null)
-        //    {
-        //        new MainFrame(recoveryInfo).Show();
-        //    }
-        //    else
-        //    {
-        //        new LoginWebViewModel();
-        //    }
-        //}
-
         public MainFrame()
         {
             InitializeComponent();
             MainFrameViewModel mainFrameViewModel = new MainFrameViewModel();
             DataContext = mainFrameViewModel;
+            //if (Environment.OSVersion.Version > new Version(6, 1))
+            //{
+            //    SetResourceReference(BackgroundProperty, "ImmersiveSystemAccentBrushDark3");
+            //}
             ThreadPool.QueueUserWorkItem(async (_) =>
             {
                 await mainFrameViewModel.FileVM.NavigateByPath("/");
             });
-        }
-
-        private void FileListContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //如果不是从文件列表Raise的事件，忽略
-            if (e.OriginalSource is ListView)
-            {
-                //if (e.AddedItems.Count == 0)
-                //{
-                //    InfoView.BeginAnimation(OpacityProperty, new DoubleAnimation(0d, new Duration(TimeSpan.FromMilliseconds(300d))));
-                //}
-                //else
-                //{
-                //    InfoView.BeginAnimation(OpacityProperty, new DoubleAnimation(0d, 1d, new Duration(TimeSpan.FromMilliseconds(300d))));
-                //}
-            }
         }
 
         private void TabControl_Click(object sender, RoutedEventArgs e)
@@ -76,11 +46,5 @@ namespace SixCloudCore.Views
             //避免点击菜单内元素导致菜单收回
             e.Handled = true;
         }
-
-        //protected override void OnClosing(CancelEventArgs e)
-        //{
-        //    Hide();
-        //    e.Cancel = true;
-        //}
     }
 }

@@ -98,6 +98,7 @@ namespace SixCloudCore.ViewModels
                     }
                     catch (Exception ex)
                     {
+#warning System.NotImplementedException:DownloadTaskGroup.CurrentFileFullPath is null
                         ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
                     }
                 });
