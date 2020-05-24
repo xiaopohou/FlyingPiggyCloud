@@ -1,0 +1,62 @@
+﻿<Window x:Class="SixCloudCore.Views.Dialogs.AboutDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SixCloudCore.Views.Dialogs"
+        mc:Ignorable="d"
+        Title="关于6盘" Height="550" Width="800" MinHeight="300" MinWidth="400" WindowStartupLocation="CenterOwner">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Image Source="/MediaResources/MainLogo.png" Height="72" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <StackPanel Margin="15" Grid.Column="1" VerticalAlignment="Center">
+            <TextBlock Text="SixCloudCore via Cdorey"/>
+            <TextBlock x:Name="VersionBlock"/>
+            <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://github.com/Cdorey/FlyingPiggyCloud">依据Apache 2.0许可发布</Hyperlink>
+            </TextBlock>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Background="{DynamicResource MainBackgroundBrush}">
+            <StackPanel>
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock Text="本软件引用了如下开源项目（许可）"/>
+                <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://github.com/cefsharp/CefSharp/blob/master/LICENSE">CefSharp.Wpf (点击以查看许可)</Hyperlink>
+                </TextBlock>
+                <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://github.com/sourcechord/FluentWPF">FluentWPF via sourcechord (MIT)</Hyperlink>
+                </TextBlock>
+                <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://code.videolan.org/videolan/LibVLCSharp">LibVLCSharp.WPF via VideoLan (LGPLv2.1)</Hyperlink>
+                </TextBlock>
+                <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit">MaterialDesignInXamlToolkit (MIT)</Hyperlink>
+                </TextBlock>
+                <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://github.com/JamesNK/Newtonsoft.Json">Newtonsoft.Json via JamesNK (MIT)</Hyperlink>
+                </TextBlock>
+                <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://github.com/getsentry/sentry-dotnet">Sentry via Sentry.io (MIT)</Hyperlink>
+                </TextBlock>
+                <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://gitlab.com/Syroot/KnownFolders">KnownFolders via Syroot (MIT)</Hyperlink>
+                </TextBlock>
+                <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://github.com/Mrs4s/SixTransporter">SixTransporter via Mrs4s</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

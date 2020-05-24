@@ -153,13 +153,14 @@
                 <Button Content="会员续费" Command="{Binding RenewalCommand}" Height="50" Width="280"/>
                 <Button Content="修改密码" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
                 <Button Content="注销登录" Command="{Binding LogoutCommand}" Height="50" Width="280"/>
+                <Button Content="关于软件" Command="{Binding AboutCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Height="50" Width="280"/>
             </StackPanel>
         </Border>
         <Grid.Triggers>
             <EventTrigger RoutedEvent="Button.Click">
                 <BeginStoryboard>
                     <Storyboard>
-                        <DoubleAnimation Duration="00:00:00.200" To="400" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
+                        <DoubleAnimation Duration="00:00:00.200" To="450" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
                             <DoubleAnimation.EasingFunction>
                                 <BackEase EasingMode="EaseOut"/>
                             </DoubleAnimation.EasingFunction>

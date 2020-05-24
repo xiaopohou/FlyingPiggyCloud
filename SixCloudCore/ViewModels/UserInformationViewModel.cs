@@ -6,6 +6,7 @@ using QingzhenyunApis.Utils;
 using SixCloudCore.Controllers;
 using SixCloudCore.Models;
 using SixCloudCore.Views;
+using SixCloudCore.Views.Dialogs;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -34,6 +35,7 @@ namespace SixCloudCore.ViewModels
             ChangePasswordCommand = new DependencyCommand(ChangePassword, DependencyCommand.AlwaysCan);
             LogoutCommand = new DependencyCommand(Logout, DependencyCommand.AlwaysCan);
             RenewalCommand = new DependencyCommand(Renewal, DependencyCommand.AlwaysCan);
+            AboutCommand = new DependencyCommand(About, DependencyCommand.AlwaysCan);
             ParseInformation();
         }
 
@@ -122,6 +124,13 @@ namespace SixCloudCore.ViewModels
             LocalProperties.Token = string.Empty;
             Application.Current.Shutdown();
         }
+
+        public DependencyCommand AboutCommand { get; set; }
+        private void About(object parameter)
+        {
+            new AboutDialog { Owner = parameter as Window }.Show();
+        }
+
         #endregion
     }
 }

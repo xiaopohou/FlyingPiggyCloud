@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using QingzhenyunApis.Exceptions;
 using System.Windows;
 using System.Windows.Threading;
+using SixCloudCore.Views.Dialogs;
 
 namespace SixCloudCore
 {
@@ -31,8 +32,6 @@ namespace SixCloudCore
             };
 
             new LoginWebViewModel();
-            //new MainWindow().Show();
-            //new MediaPlayerViewModel().InitializeComponent();
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
