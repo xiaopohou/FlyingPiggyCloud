@@ -57,7 +57,7 @@ namespace SixCloudCore.ViewModels
                         DataContext = this
                     };
 
-                    if (Environment.OSVersion.Version > new Version(6, 1))
+                    if (Environment.OSVersion.Version >= new Version(6, 2))
                     {
                         LoginWindow = new AcrylicWindow
                         {

@@ -10,7 +10,7 @@ namespace SixCloudCore.ViewModels
     {
         public async Task InitializeComponent()
         {
-            if (Environment.OSVersion.Version > new Version(6, 1))
+            if (Environment.OSVersion.Version >= new Version(6, 2))
             {
                 MainFrameWindow = new AcrylicWindow
                 {
