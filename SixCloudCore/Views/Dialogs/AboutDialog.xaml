@@ -56,6 +56,9 @@
                 <TextBlock Width="Auto">
                     <Hyperlink NavigateUri="https://github.com/Mrs4s/SixTransporter">SixTransporter via Mrs4s</Hyperlink>
                 </TextBlock>
+                <TextBlock Width="Auto">
+                    <Hyperlink NavigateUri="https://github.com/microsoft/Windows-AppConsult-Tools-DesktopBridgeHelpers">DesktopBridge.Helpers via Matteo Pagani (MIT)</Hyperlink>
+                </TextBlock>
             </StackPanel>
         </ScrollViewer>
     </Grid>

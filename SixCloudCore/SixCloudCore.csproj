@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <PackageReference Include="CefSharp.Wpf" Version="79.1.360" />
+    <PackageReference Include="DesktopBridge.Helpers" Version="1.2.2" />
     <PackageReference Include="FluentWPF" Version="0.8.0" />
     <PackageReference Include="LibVLCSharp.WPF" Version="3.4.5" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.2" />

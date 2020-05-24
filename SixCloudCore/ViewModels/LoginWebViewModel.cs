@@ -1,4 +1,5 @@
-﻿using QingzhenyunApis.EntityModels;
+﻿using DesktopBridge;
+using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using Sentry;
@@ -8,6 +9,7 @@ using SixCloudCore.Views;
 using SourceChord.FluentWPF;
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
@@ -26,14 +28,17 @@ namespace SixCloudCore.ViewModels
 
         private async void InitializeComponent()
         {
-            var newPackageUri = await UpdateHelper.Check();
-            if (newPackageUri != default)
+            if (!new Helpers().IsRunningAsUwp())
             {
-                var newPackageMessageBoxResult = MessageBox.Show("发现新的软件包，点击确定下载或者点击取消继续使用当前版本", "更新", MessageBoxButton.OKCancel, MessageBoxImage.Question);
-                if (newPackageMessageBoxResult == MessageBoxResult.OK)
+                var newPackageUri = await UpdateHelper.Check();
+                if (newPackageUri != default)
                 {
-                    System.Diagnostics.Process.Start("explorer.exe", newPackageUri.ToString());
-                    Application.Current.Shutdown();
+                    var newPackageMessageBoxResult = MessageBox.Show("发现新的软件包，点击确定下载或者点击取消继续使用当前版本", "更新", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                    if (newPackageMessageBoxResult == MessageBoxResult.OK)
+                    {
+                        System.Diagnostics.Process.Start("explorer.exe", newPackageUri.ToString());
+                        Application.Current.Shutdown();
+                    }
                 }
             }
 
