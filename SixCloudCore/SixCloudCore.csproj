@@ -11,19 +11,40 @@
     <LangVersion>8.0</LangVersion>
     <SignAssembly>false</SignAssembly>
     <ApplicationIcon>MediaResources\666.ico</ApplicationIcon>
-    <AssemblyVersion>3.1.7.0</AssemblyVersion>
-    <FileVersion>3.1.7.0</FileVersion>
-    <Version>3.1.7</Version>
+    <AssemblyVersion>3.1.8.0</AssemblyVersion>
+    <FileVersion>3.1.8.0</FileVersion>
+    <Version>3.1.8</Version>
     <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile/>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DocumentationFile />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <NoWarn>1701;1702</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <NoWarn>1701;1702</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
