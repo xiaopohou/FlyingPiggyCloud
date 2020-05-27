@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloudCore.SixTransporter
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "SixCloudCore.Package", "SixCloudCore.Package\SixCloudCore.Package.wapproj", "{C7F1DC4C-9EAC-44AE-9C41-E6AEFC309645}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{77F758DB-56E1-49E2-A805-E8E61EA2871D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -205,26 +203,6 @@ Global
 		{C7F1DC4C-9EAC-44AE-9C41-E6AEFC309645}.Release|x86.ActiveCfg = Release|x86
 		{C7F1DC4C-9EAC-44AE-9C41-E6AEFC309645}.Release|x86.Build.0 = Release|x86
 		{C7F1DC4C-9EAC-44AE-9C41-E6AEFC309645}.Release|x86.Deploy.0 = Release|x86
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|ARM.Build.0 = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|x64.Build.0 = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Debug|x86.Build.0 = Debug|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|ARM.ActiveCfg = Release|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|ARM.Build.0 = Release|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|ARM64.Build.0 = Release|Any CPU
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|x64.ActiveCfg = Release|x64
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|x64.Build.0 = Release|x64
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|x86.ActiveCfg = Release|x86
-		{77F758DB-56E1-49E2-A805-E8E61EA2871D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
