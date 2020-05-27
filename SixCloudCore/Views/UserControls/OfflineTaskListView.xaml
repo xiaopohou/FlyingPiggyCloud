@@ -5,8 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SixCloudCore.Views.UserControls"
              xmlns:metro="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+             xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <vm:TaskStatusConverter x:Key="StatusConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -67,24 +71,36 @@
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperProgressCell}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid>
+                                <Grid Margin="0,0,10,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="1*"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
-                                    <StackPanel HorizontalAlignment="Left" Grid.Row="0" Orientation="Horizontal">
+                                    <StackPanel HorizontalAlignment="Left" Grid.Row="0" Orientation="Horizontal" x:Name="Progress">
                                         <TextBlock Text="任务进度："/>
                                         <TextBlock Text="{Binding Progress, Mode=OneWay}"/>
                                         <TextBlock Text="%"/>
                                     </StackPanel>
-                                    <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="2" Value="{Binding Progress, Mode=OneWay}" Grid.Row="1"/>
-                                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Grid.Row="2">
-                                        <TextBlock Text="{Binding ProcessedSize, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
-                                        <TextBlock Text="/"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Converter={StaticResource StatusConverter}}"/>
+                                    <ProgressBar Grid.ColumnSpan="2" Style="{StaticResource ProgressBarStyle}" Height="2" Value="{Binding Progress, Mode=OneWay}" Grid.Row="1"/>
+                                    <StackPanel Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2">
+                                        <TextBlock Text="{Binding ProcessedSize, Converter={StaticResource SizeCalculator}, Mode=OneWay}" Name="Processed"/>
+                                        <TextBlock Text="/" Name="ProcessedSlider"/>
                                         <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
                                     </StackPanel>
                                 </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Converter={StaticResource StatusConverter}}" Value="已完成">
+                                        <Setter TargetName="Progress" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="Processed" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="ProcessedSlider" Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

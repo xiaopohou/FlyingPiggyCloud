@@ -9,6 +9,8 @@
              xmlns:vm="clr-namespace:SixCloudCore.ViewModels"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <vm:TaskStatusConverter x:Key="StatusConverter"/>
+
         <Style x:Key="Title" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="FontWeight" Value="ExtraBlack"/>
@@ -58,7 +60,7 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Status}"/>
+                    <TextBlock Text="{Binding Status,Converter={StaticResource StatusConverter}}" Margin="5,0"/>
                     <TextBlock Text="{Binding Completed}"/>
                     <TextBlock Text="，共"/>
                     <TextBlock Text="{Binding Total}"/>
