@@ -41,6 +41,10 @@ namespace SixCloudCore.ViewModels
                         Status = ParseResultStatus.InvalidUrl;
                     }
                 }
+                catch (InvalidOperationException ex) when (ex.Message == "Both textLink and fileHash are empty.")
+                {
+                    ex.ToSentry().TreatedBy(nameof(OfflineTaskDialogViewModel)).AttachExtraInfo("urlTask", this).Submit();
+                }
 
                 OnPropertyChanged(nameof(PasswordBoxVisibility));
                 OnPropertyChanged(nameof(Status));

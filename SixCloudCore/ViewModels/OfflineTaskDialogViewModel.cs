@@ -119,8 +119,6 @@ namespace SixCloudCore.ViewModels
         public DependencyCommand UploadTorrentCommand { get; set; }
         private async void UploadTorrent(object parameter)
         {
-            //ParseResults.Clear();
-
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Multiselect = false,
@@ -169,8 +167,16 @@ namespace SixCloudCore.ViewModels
                 {
                     return;
                 }
-                TorrentResult parsedTorrent = new TorrentResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
-                ParseResults.Add(parsedTorrent);
+
+                try
+                {
+                    TorrentResult parsedTorrent = new TorrentResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
+                    ParseResults.Add(parsedTorrent);
+                }
+                catch (InvalidOperationException ex) when (ex.Message == "Both textLink and fileHash are empty.")
+                {
+                    ex.ToSentry().TreatedBy(nameof(OfflineTaskDialogViewModel)).AttachExtraInfo("torrentTask", task).Submit();
+                }
             }
         }
 
