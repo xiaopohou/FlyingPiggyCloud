@@ -14,8 +14,6 @@ namespace SixCloudCore.Models
 {
     internal class DownloadTask : DownloadingTaskViewModel
     {
-        private long lastCompletedSize = 0;
-        private int retryTimes = 0;
         private HttpDownloader fileDownloader;
 
         protected string Url { get; private set; }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace SixCloudCore.Models
+namespace SixCloudCore.Controllers
 {
     internal class LocalProperties
     {
