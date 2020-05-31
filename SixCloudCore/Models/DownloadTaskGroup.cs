@@ -388,8 +388,16 @@ namespace SixCloudCore.Models
             if (newValue == DownloadStatusEnum.Failed)
             {
                 Thread.Sleep(TimeSpan.FromMinutes(1));
-                sender.Info.DownloadUrl = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
-                await Task.Run(() => sender?.StartDownload());
+                try
+                {
+                    var target = RunningTasks.First(x => x.Value == sender);
+                    sender.Info.DownloadUrl = (await FileSystem.GetDownloadUrlByIdentity(target.Key.TargetUUID)).DownloadAddress;
+                    await Task.Run(() => sender?.StartDownload());
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ex.ToSentry().Submit();
+                }
             }
         }
 
