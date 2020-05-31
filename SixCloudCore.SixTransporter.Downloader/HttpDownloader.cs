@@ -79,7 +79,8 @@ namespace SixCloudCore.SixTransporter.Downloader
                 {
                     Info.Threads = 8;
                 }
-
+                if (Info.Threads > 8)
+                    Info.Threads = 8;
                 response.Close();
                 Threads?.ToList().ForEach(v => v.ForceStop());
                 Threads = new List<DownloadThread>();
@@ -97,6 +98,7 @@ namespace SixCloudCore.SixTransporter.Downloader
 
                         DownloadThread thread = new DownloadThread(block, Info);
                         thread.ThreadCompletedEvent += HttpDownload_ThreadCompletedEvent;
+                        thread.ThreadFailedEvent += OnThreadFailedEvent;
                         thread.BeginDownload();
                         Threads.Add(thread);
                     }
@@ -109,6 +111,17 @@ namespace SixCloudCore.SixTransporter.Downloader
 
 
         }
+
+
+        private void OnThreadFailedEvent(DownloadThread _)
+        {
+            foreach (var thread in Threads)
+                thread.ForceStop();
+            Status = DownloadStatusEnum.Failed;
+        }
+
+
+
 
         private void HttpDownload_ThreadCompletedEvent(DownloadThread downloadThread)
         {
@@ -137,6 +150,7 @@ namespace SixCloudCore.SixTransporter.Downloader
 
                 DownloadThread thread = new DownloadThread(block, Info);
                 thread.ThreadCompletedEvent += HttpDownload_ThreadCompletedEvent;
+                thread.ThreadFailedEvent += OnThreadFailedEvent;
                 thread.BeginDownload();
                 Threads.Add(thread);
             }

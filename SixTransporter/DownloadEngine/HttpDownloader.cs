@@ -60,7 +60,8 @@ namespace SixTransporter.DownloadEngine
                     return;
                 }
                 if (!File.Exists(Info.DownloadPath))
-                    using (var _ = File.Create(Info.DownloadPath)) ;
+                    using (var _ = File.Create(Info.DownloadPath))
+                        ;
                 if (Info.BlockList.Count == 0)
                 {
                     Info.ContentSize = response.ContentLength;
@@ -68,8 +69,6 @@ namespace SixTransporter.DownloadEngine
                 }
                 if (Info.Threads > Info.BlockList.Count(v => !v.Downloaded && !v.Downloading))
                     Info.Threads = Info.BlockList.Count(v => !v.Downloaded && !v.Downloading);
-                if (Info.Threads > 8)
-                    Info.Threads = 8;
                 response.Close();
                 Threads?.ToList().ForEach(v => v.ForceStop());
                 Threads = new List<DownloadThread>();
@@ -83,6 +82,7 @@ namespace SixTransporter.DownloadEngine
                         if (block == null) break;
                         var thread = new DownloadThread(block, Info);
                         thread.ThreadCompletedEvent += HttpDownload_ThreadCompletedEvent;
+                        thread.ThreadFailedEvent += OnThreadFailedEvent;
                         thread.BeginDownload();
                         Threads.Add(thread);
                     }
@@ -95,6 +95,14 @@ namespace SixTransporter.DownloadEngine
 
 
         }
+
+        private void OnThreadFailedEvent(DownloadThread _)
+        {
+            foreach (var thread in Threads)
+                thread.ForceStop();
+            Status = DownloadStatusEnum.Failed;
+        }
+
 
         private void HttpDownload_ThreadCompletedEvent(DownloadThread downloadThread)
         {
@@ -116,6 +124,7 @@ namespace SixTransporter.DownloadEngine
                 if (block == null) return;
                 var thread = new DownloadThread(block, Info);
                 thread.ThreadCompletedEvent += HttpDownload_ThreadCompletedEvent;
+                thread.ThreadFailedEvent += OnThreadFailedEvent;
                 thread.BeginDownload();
                 Threads.Add(thread);
             }

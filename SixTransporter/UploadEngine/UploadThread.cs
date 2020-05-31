@@ -62,7 +62,7 @@ namespace SixTransporter.UploadEngine
                         Array.Copy(fdata, arr, len);
                         fdata = arr;
                     }
-                    var request = WebRequest.CreateHttp(Path.Combine(Info.UploadUrl, "mkblk", BlockInfo.BlockSize.ToString(), BlockInfo.Id.ToString()));
+                    var request = WebRequest.CreateHttp($"{Info.UploadUrl}/mkblk/{BlockInfo.BlockSize}/{BlockInfo.Id}");
                     request.ContentLength = fdata.Length;
                     request.ContentType = "application/octet-stream";
                     request.Headers.Add("Authorization", Info.Token);
@@ -159,7 +159,7 @@ namespace SixTransporter.UploadEngine
                             BlockUploadCompletedEvent?.Invoke(this);
                             return;
                         }
-                        var request = WebRequest.CreateHttp(Path.Combine(Info.UploadUrl, "bput", LastChunkCtx, LastChunkOffset.ToString()));
+                        var request = WebRequest.CreateHttp($"{Info.UploadUrl}/bput/{LastChunkCtx}/{LastChunkOffset}");
                         request.ContentLength = fdata.Length;
                         request.ContentType = "application/octet-stream";
                         request.Headers.Add("Authorization", Info.Token);

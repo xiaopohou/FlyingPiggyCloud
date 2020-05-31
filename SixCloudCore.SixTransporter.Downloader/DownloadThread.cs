@@ -14,10 +14,14 @@ namespace SixCloudCore.SixTransporter.Downloader
 
         public event Action<DownloadThread> ThreadCompletedEvent;
         internal event EventHandler FileStreamDisposed;
+        public event Action<DownloadThread> ThreadFailedEvent;
+
+
 
         private bool _stopped;
         private HttpWebRequest _request;
         private HttpWebResponse _response;
+        private int _retryCount;
 
         internal DownloadThread(DownloadBlock block, DownloadTaskInfo info)
         {
@@ -134,12 +138,21 @@ namespace SixCloudCore.SixTransporter.Downloader
                     ThreadCompletedEvent?.Invoke(this);
                     return;
                 }
-
-                new Thread(Start) { IsBackground = true }.Start();
+                if (++_retryCount < Info.MaxRetry)
+                {
+                    new Thread(Start) { IsBackground = true }.Start();
+                    return;
+                }
+                ThreadFailedEvent?.Invoke(this);
             }
             catch (Exception)
             {
-                new Thread(Start) { IsBackground = true }.Start();
+                if (++_retryCount < Info.MaxRetry)
+                {
+                    new Thread(Start) { IsBackground = true }.Start();
+                    return;
+                }
+                ThreadFailedEvent?.Invoke(this);
             }
             finally
             {
