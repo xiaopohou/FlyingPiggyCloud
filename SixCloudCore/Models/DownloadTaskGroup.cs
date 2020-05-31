@@ -161,6 +161,7 @@ namespace SixCloudCore.Models
 
                             }
                         };
+                        fileDownloader.DownloadStatusChangedEvent += DownloadFailedEventHandler;
                         Task.Run(() => fileDownloader.StartDownload());
                     }
                 }
@@ -250,13 +251,14 @@ namespace SixCloudCore.Models
         {
             foreach (var task in RunningTasks)
             {
-                if (task.Value?.Status == DownloadStatusEnum.Downloading)
+                if (task.Value?.Status == DownloadStatusEnum.Downloading || task.Value?.Status == DownloadStatusEnum.Failed)
                 {
                     return;
                 }
+
                 string url = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
 
-                if (task.Value == null || task.Value.Status == DownloadStatusEnum.Failed)
+                if (task.Value == null)
                 {
                     string downloadPath = Path.Combine(task.Key.LocalPath, task.Key.Name);
 
@@ -281,9 +283,14 @@ namespace SixCloudCore.Models
                     {
                         if (newValue == DownloadStatusEnum.Completed)
                         {
-                            DownloadCompleted?.Invoke(sender, null);
+                            lock (RunningTasks)
+                            {
+                                RunningTasks.Remove(task.Key);
+                                CompletedTasks.Add(task.Key);
+                            }
                         }
                     };
+                    task.Value.DownloadStatusChangedEvent += DownloadFailedEventHandler;
                 }
 
                 await Task.Run(() => task.Value?.StartDownload());
@@ -356,9 +363,9 @@ namespace SixCloudCore.Models
                                 RunningTasks.Remove(task);
                                 CompletedTasks.Add(task);
                             }
-
                         }
                     };
+                    fileDownloader.DownloadStatusChangedEvent += DownloadFailedEventHandler;
                     Task.Run(() => fileDownloader.StartDownload());
                 }
             });
@@ -373,6 +380,16 @@ namespace SixCloudCore.Models
                 OnPropertyChanged(nameof(Speed));
                 OnPropertyChanged(nameof(Total));
                 OnPropertyChanged(nameof(Progress));
+            }
+        }
+
+        private async void DownloadFailedEventHandler(DownloadStatusEnum oldValue, DownloadStatusEnum newValue, HttpDownloader sender)
+        {
+            if (newValue == DownloadStatusEnum.Failed)
+            {
+                Thread.Sleep(TimeSpan.FromMinutes(1));
+                sender.Info.DownloadUrl = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
+                await Task.Run(() => sender?.StartDownload());
             }
         }
 
