@@ -22,6 +22,7 @@ namespace SixCloudCore
     {
         public App()
         {
+            DisableIriSupport();
             AppDomain.CurrentDomain.AssemblyResolve += Resolver;
             InitializeCefSharp();
             Core.Initialize();
@@ -45,6 +46,21 @@ namespace SixCloudCore
 
             // Make sure you set performDependencyCheck false
             Cef.Initialize(settings, performDependencyCheck: false, browserProcessHandler: null);
+        }
+
+        private static void DisableIriSupport()
+        {
+            var _ = Uri.IsWellFormedUriString("http://www.baidu.com", UriKind.Absolute);
+            var assembly = Assembly.GetAssembly(typeof(Uri));
+            if (assembly != null)
+            {
+                var uriType = assembly.GetType("System.Uri");
+                if (uriType != null)
+                {
+                    uriType.InvokeMember("s_IdnScope", BindingFlags.Static | BindingFlags.SetField | BindingFlags.NonPublic, null, null, new object[] { UriIdnScope.None });
+                    uriType.InvokeMember("s_IriParsing", BindingFlags.Static | BindingFlags.SetField | BindingFlags.NonPublic, null, null, new object[] { false });
+                }
+            }
         }
 
         // Will attempt to load missing assembly from either x86 or x64 subdir
