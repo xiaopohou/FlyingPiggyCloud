@@ -141,6 +141,7 @@ namespace SixCloudCore.ViewModels
                     TransferTaskStatus.Pause => "暂停",
                     TransferTaskStatus.Running => "进行中",
                     TransferTaskStatus.Stop => "停止",
+                    TransferTaskStatus.Failed => "失败",
                     _ => "未定义的状态枚举"
                 };
             }

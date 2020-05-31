@@ -135,13 +135,13 @@ namespace SixCloudCore.Controllers
             startupInformation.BelongsTo = e.CurrentUser;
 
             var downloadLists = from record in downloadingList
-                                where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
+                                where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause || record.Status == TransferTaskStatus.Failed
                                 group record.ToString() by record is DownloadTask;
             startupInformation.SerializedDownloadTasks = downloadLists.FirstOrDefault(x => x.Key == true)?.ToArray();
             startupInformation.SerializedDownloadTaskGroups = downloadLists.FirstOrDefault(x => x.Key == false)?.ToArray();
 
             var uploadList = from record in uploadingList
-                             where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause
+                             where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause || record.Status == TransferTaskStatus.Failed
                              select new UploadTaskRecord
                              {
                                  LocalFilePath = record.LocalFilePath,

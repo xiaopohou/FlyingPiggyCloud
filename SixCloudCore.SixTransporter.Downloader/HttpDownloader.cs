@@ -211,6 +211,10 @@ namespace SixCloudCore.SixTransporter.Downloader
                 request.Accept = "*/*";
                 return (HttpWebResponse)request.GetResponse();
             }
+            catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError)
+            {
+                return null;
+            }
             catch (WebException ex)
             {
                 if (ex.Message.Contains("超时") || ex.Message.Contains("timed out"))

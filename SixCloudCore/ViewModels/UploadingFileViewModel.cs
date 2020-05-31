@@ -84,8 +84,9 @@ namespace SixCloudCore.ViewModels
                     case UploadTaskStatus.Active:
                         return TransferTaskStatus.Running;
                     case UploadTaskStatus.Pause:
-                    case UploadTaskStatus.Error:
                         return TransferTaskStatus.Pause;
+                    case UploadTaskStatus.Error:
+                        return TransferTaskStatus.Failed;
                     case UploadTaskStatus.Abort:
                         return TransferTaskStatus.Stop;
                     case UploadTaskStatus.Completed:

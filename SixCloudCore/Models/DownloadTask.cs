@@ -6,6 +6,8 @@ using SixCloudCore.SixTransporter.Downloader;
 using SixCloudCore.ViewModels;
 using System;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -40,7 +42,7 @@ namespace SixCloudCore.Models
             DownloadStatusEnum.Waiting => TransferTaskStatus.Running,
 
             DownloadStatusEnum.Paused => TransferTaskStatus.Pause,
-            DownloadStatusEnum.Failed => TransferTaskStatus.Pause,
+            DownloadStatusEnum.Failed => TransferTaskStatus.Failed,
             DownloadStatusEnum.Completed => TransferTaskStatus.Completed,
             _ => throw new InvalidCastException()
         };
@@ -51,7 +53,7 @@ namespace SixCloudCore.Models
 
         protected override async void Recovery(object parameter = null)
         {
-            if (fileDownloader?.Status == DownloadStatusEnum.Downloading)
+            if (fileDownloader?.Status == DownloadStatusEnum.Downloading || fileDownloader?.Status == DownloadStatusEnum.Failed)
             {
                 return;
             }
@@ -61,7 +63,7 @@ namespace SixCloudCore.Models
                 Url = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
             }
 
-            if (fileDownloader == null || fileDownloader.Status == DownloadStatusEnum.Failed)
+            if (fileDownloader == null)
             {
                 string downloadPath = System.IO.Path.Combine(Path, Name);
                 DownloadTaskInfo taskInfo;
@@ -80,12 +82,21 @@ namespace SixCloudCore.Models
                     };
                 }
                 fileDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
-                fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
+
+                fileDownloader.DownloadStatusChangedEvent += async (oldValue, newValue, sender) =>
                 {
                     if (newValue == DownloadStatusEnum.Completed)
                     {
                         DownloadCompleted?.Invoke(sender, null);
                     }
+                    else if (newValue == DownloadStatusEnum.Failed)
+                    {
+                        Thread.Sleep(TimeSpan.FromMinutes(1));
+                        Url = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
+                        taskInfo.DownloadUrl = Url;
+                        await Task.Run(() => fileDownloader?.StartDownload());
+                    }
+                    OnPropertyChanged(nameof(Status));
                 };
             }
 
@@ -140,7 +151,7 @@ namespace SixCloudCore.Models
             };
 
             fileDownloader.StopAndSave(true)?.Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
-
+            fileDownloader = null;
             DownloadCanceled?.Invoke(this, EventArgs.Empty);
         }
 
