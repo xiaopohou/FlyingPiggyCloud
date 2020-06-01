@@ -26,7 +26,7 @@ namespace SixCloudCore.SixTransporter.Downloader
         public int MaxRetry { get; set; } = 10;
 
         public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>()
-        { ["User-Agent"] = "Six-Pan download engine" };
+        { ["User-Agent"] = "Six-Pan download engine UWP" };
 
         public SpeedLimiter Limiter { get; set; } = new SpeedLimiter() { Limit = 0 };
 
