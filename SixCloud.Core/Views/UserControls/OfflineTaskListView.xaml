@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="SixCloud.Core.Views.UserControls.OfflineTaskListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SixCloud.Core.Views.UserControls"
+             xmlns:metro="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+             xmlns:vm="clr-namespace:SixCloud.Core.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <vm:TaskStatusConverter x:Key="StatusConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding NewTaskCommand}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <metro:FontIcon Icon="&#xF067;" Margin="5,0"/>
+                    <TextBlock Text="新建任务" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding CancelTaskCommand}"
+                    CommandParameter="{Binding SelectedItems, ElementName=OfflineList}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <metro:FontIcon Icon="&#xF068;" Margin="5,0"/>
+                    <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding RefreshListCommand}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <metro:FontIcon Icon="&#xF2F1;" Margin="5,0"/>
+                    <TextBlock Text="刷新列表" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!--这个Grid用于帮助GridView自动校正分栏宽度-->
+        <Grid Visibility="Visible" Grid.Row="1" Margin="15,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" x:Name="WidthHelperIconCell"/>
+            <Grid Grid.Column="1" x:Name="WidthHelperNameCell"/>
+            <Grid Grid.Column="2" x:Name="WidthHelperProgressCell"/>
+        </Grid>
+
+        <ListView Grid.Row="1" x:Name="OfflineList" ScrollViewer.ScrollChanged="OfflineList_ScrollChanged" ItemsSource="{Binding ObservableCollection}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperIconCell}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <metro:FontIcon Icon="&#xF4DE;"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperNameCell}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" Text="{Binding Name, Mode=OneWay}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperProgressCell}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,10,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Left" Grid.Row="0" Orientation="Horizontal" x:Name="Progress">
+                                        <TextBlock Text="任务进度："/>
+                                        <TextBlock Text="{Binding Progress, Mode=OneWay}"/>
+                                        <TextBlock Text="%"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Converter={StaticResource StatusConverter}}"/>
+                                    <ProgressBar Grid.ColumnSpan="2" Style="{StaticResource ProgressBarStyle}" Height="2" Value="{Binding Progress, Mode=OneWay}" Grid.Row="1"/>
+                                    <StackPanel Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2">
+                                        <TextBlock Text="{Binding ProcessedSize, Converter={StaticResource SizeCalculator}, Mode=OneWay}" Name="Processed"/>
+                                        <TextBlock Text="/" Name="ProcessedSlider"/>
+                                        <TextBlock Text="{Binding Size, Converter={StaticResource SizeCalculator}, Mode=OneWay}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Converter={StaticResource StatusConverter}}" Value="已完成">
+                                        <Setter TargetName="Progress" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="Processed" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="ProcessedSlider" Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

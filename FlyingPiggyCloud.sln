@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QingzhenyunApis", "Qingzhen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploader", "FileUploader\FileUploader.csproj", "{C06AD45A-691C-451C-9AD7-73653E8480B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloudCore", "SixCloudCore\SixCloudCore.csproj", "{E4A8C661-88DE-4FC0-A86F-08851844A27C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloud.Desktop", "SixCloud.Desktop\SixCloud.Desktop.csproj", "{E4A8C661-88DE-4FC0-A86F-08851844A27C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloudCoreCustomControlLibrary", "SixCloudCoreCustomControlLibrary\SixCloudCoreCustomControlLibrary.csproj", "{B6AE983F-8B08-4EDB-8F5F-E1CB702B0AE9}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloudCore.SixTransporter.Downloader", "SixCloudCore.SixTransporter.Downloader\SixCloudCore.SixTransporter.Downloader.csproj", "{9555ADD8-9F83-48ED-838C-9D874C7F4F06}"
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "SixCloudCore.Package", "SixCloudCore.Package\SixCloudCore.Package.wapproj", "{C7F1DC4C-9EAC-44AE-9C41-E6AEFC309645}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloud.Core", "SixCloud.Core\SixCloud.Core.csproj", "{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -203,6 +205,26 @@ Global
 		{C7F1DC4C-9EAC-44AE-9C41-E6AEFC309645}.Release|x86.ActiveCfg = Release|x86
 		{C7F1DC4C-9EAC-44AE-9C41-E6AEFC309645}.Release|x86.Build.0 = Release|x86
 		{C7F1DC4C-9EAC-44AE-9C41-E6AEFC309645}.Release|x86.Deploy.0 = Release|x86
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|ARM.Build.0 = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|x64.Build.0 = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Debug|x86.Build.0 = Debug|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|ARM.ActiveCfg = Release|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|ARM.Build.0 = Release|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|ARM64.Build.0 = Release|Any CPU
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|x64.ActiveCfg = Release|x64
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|x64.Build.0 = Release|x64
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|x86.ActiveCfg = Release|x86
+		{52EF9CA2-D60C-4803-BC09-49CAB9479B8B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

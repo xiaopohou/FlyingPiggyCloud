@@ -1,0 +1,61 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SixCloud.Core.Views.UserControls"
+             xmlns:ViewModels="clr-namespace:SixCloud.Core.ViewModels"
+             x:Class="SixCloud.Core.Views.UserControls.FileListItemInformationView"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="580" Height="0" HorizontalAlignment="Left" DataContextChanged="UserControl_DataContextChanged">
+    <UserControl.Resources>
+        <ViewModels:HidingSizeinfoForDirectoryConverter x:Key="HidingSizeinfoForDirectoryConverter"/>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#FF5A5A5A"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="{DynamicResource MainBackgroundBrush}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="50" Direction="90" ShadowDepth="15" Opacity="0.5" Color="LightGray"/>
+            </Border.Effect>
+        </Border>
+        <TextBlock Background="{DynamicResource MainBackgroundBrush}" Grid.Row="0" Text="详细信息" FontSize="24" Margin="15" />
+        <Grid Background="{DynamicResource MainBackgroundBrush}" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <!--<ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>-->
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="文件类型:"/>
+            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Mime}"/>
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="大小:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="可预览:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Preview}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+            <TextBlock Grid.Column="0" Grid.Row="3" Text="访问时间:"/>
+            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding ATime}"/>
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="创建时间:"/>
+            <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding CTime}"/>
+            <TextBlock Grid.Column="0" Grid.Row="5" Text="修改时间:"/>
+            <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding MTime}"/>
+        </Grid>
+    </Grid>
+</UserControl>

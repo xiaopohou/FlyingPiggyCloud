@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="SixCloud.Core.Views.UserControls.DownloadingTaskView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SixCloud.Core.Views.UserControls"
+             xmlns:metro="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+             xmlns:vm="clr-namespace:SixCloud.Core.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <!--<StackPanel Orientation="Horizontal">
+            <Button Command="MediaCommands.Play"
+                    CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
+                    CommandTarget="{Binding ElementName=DownloadingList}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                    <TextBlock Text="开始暂停" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Command="MediaCommands.Stop"
+                    CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
+                    CommandTarget="{Binding ElementName=DownloadingList}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
+                    <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>-->
+        <ListBox Grid.Row="1" SelectionMode="Extended" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
+    </Grid>
+</UserControl>

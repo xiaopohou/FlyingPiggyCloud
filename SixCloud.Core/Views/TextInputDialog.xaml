@@ -1,0 +1,35 @@
+﻿<fw:AcrylicWindow
+    xmlns:controls="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+    x:Class="SixCloud.Core.Views.TextInputDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:SixCloud.Core.Views"
+    xmlns:mt="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+    mc:Ignorable="d"
+    Title="6盘" Height="170" Width="350" AcrylicWindowStyle="NoIcon" WindowStartupLocation="CenterScreen" fw:PointerTracker.Enabled="True" >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="15"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <!--<TextBlock Grid.Row="1" Grid.ColumnSpan="5" Name="HintAssistant" Text="请输入文本" Visibility="Collapsed"/>-->
+        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="5" Style="{StaticResource TextBoxRevealStyle}" Name="InputBox"/>
+        <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource ButtonAccentRevealStyle}" Name="Confirm" Content="确认" Width="75" Height="32" Click="Confirm_Click"/>
+        <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource ButtonRevealStyle}" Name="Cancel" Content="取消" Width="75" Height="32" Click="Cancel_Click"/>
+    </Grid>
+</fw:AcrylicWindow>

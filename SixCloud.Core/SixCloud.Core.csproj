@@ -1,0 +1,148 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="MediaResources\666.ico" />
+    <None Remove="MediaResources\MainLogo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DesktopBridge.Helpers" Version="1.2.2" />
+    <PackageReference Include="FluentWPF" Version="0.8.0" />
+    <PackageReference Include="LibVLCSharp.WPF" Version="3.4.5" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Sentry" Version="2.1.1" />
+    <PackageReference Include="Syroot.Windows.IO.KnownFolders" Version="1.2.3" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FileUploader\FileUploader.csproj" />
+    <ProjectReference Include="..\QingzhenyunApis.Exceptions\QingzhenyunApis.Exceptions.csproj" />
+    <ProjectReference Include="..\QingzhenyunApis\QingzhenyunApis.csproj" />
+    <ProjectReference Include="..\SixCloudCore.SixTransporter.Downloader\SixCloudCore.SixTransporter.Downloader.csproj" />
+    <ProjectReference Include="..\SixCloudCoreCustomControlLibrary\SixCloudCoreCustomControlLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="MediaResources\666.ico" />
+    <Resource Include="MediaResources\MainLogo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\ChangePasswordView.xaml.cs">
+      <DependentUpon>ChangePasswordView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CreateShareItemView.xaml.cs">
+      <DependentUpon>CreateShareItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Dialogs\AboutDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\LoadingView.xaml.cs">
+      <DependentUpon>LoadingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LoginWebView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\MainFrame.xaml.cs">
+      <DependentUpon>MainFrame.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\OfflineTaskDialog.xaml.cs">
+      <DependentUpon>OfflineTaskDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TextInputDialog.xaml.cs">
+      <DependentUpon>TextInputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\DownloadedTaskView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\UserControls\FileGridView.xaml.cs">
+      <DependentUpon>FileGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\FileListItemInformationView.xaml.cs">
+      <DependentUpon>FileListItemInformationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\FileListView.xaml.cs">
+      <DependentUpon>FileListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\OfflineTaskListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\UserControls\RecoveryBox.xaml.cs">
+      <DependentUpon>RecoveryBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\UploadedListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\UserControls\UploadingListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\VLCView\VLCView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\ChangePasswordView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\CreateShareItemView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialogs\AboutDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LoadingView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LoginWebView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\MainFrame.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\OfflineTaskDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\TextInputDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\DownloadedTaskView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\FileGridView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\FileListItemInformationView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\FileListView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\OfflineTaskListView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\RecoveryBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\UploadedListView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\UploadingListView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\VLCView\VLCView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>
