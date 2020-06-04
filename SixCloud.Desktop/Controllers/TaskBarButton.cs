@@ -1,5 +1,5 @@
-﻿using SixCloudCore.ViewModels;
-using SixCloudCore.Views;
+﻿using SixCloud.Desktop.ViewModels;
+using SixCloud.Desktop.Views;
 using System;
 using System.Windows;
 using System.Windows.Forms;

@@ -1,11 +1,11 @@
 ﻿using CefSharp;
-using SixCloudCore.ViewModels;
+using SixCloud.Desktop.ViewModels;
 using SourceChord.FluentWPF;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SixCloudCore.Views
+namespace SixCloud.Desktop.Views
 {
     /// <summary>
     /// LoginWebView.xaml 的交互逻辑

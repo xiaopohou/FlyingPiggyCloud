@@ -1,11 +1,11 @@
 ﻿<UserControl
-    x:Class="SixCloudCore.Views.LoginWebView"
+    x:Class="SixCloud.Desktop.Views.LoginWebView"
     xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:SixCloudCore.Views"
+    xmlns:local="clr-namespace:SixCloud.Desktop.Views"
     xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
     xmlns:userControl="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
     mc:Ignorable="d">

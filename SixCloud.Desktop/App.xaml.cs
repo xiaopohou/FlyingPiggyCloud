@@ -1,7 +1,7 @@
 ﻿using CefSharp;
 using CefSharp.Wpf;
 using Sentry;
-using SixCloudCore.ViewModels;
+using SixCloud.Desktop.ViewModels;
 using System;
 using System.IO;
 using System.Reflection;
@@ -21,7 +21,7 @@ namespace SixCloud.Desktop
         {
             AppDomain.CurrentDomain.AssemblyResolve += Resolver;
             InitializeCefSharp();
-
+            Core.Core.Initialize();
             new LoginWebViewModel();
         }
 

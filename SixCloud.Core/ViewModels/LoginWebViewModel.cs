@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace SixCloud.Core.ViewModels
@@ -21,7 +22,8 @@ namespace SixCloud.Core.ViewModels
     {
         private readonly bool createMainFrame;
 
-        //private Timer timer;
+        protected static Func<Control> CreateLoginWebView;
+        protected static Action InitializeTaskBarIcon;
 
         private DestinationInformation DestinationInfo { get; set; }
 
@@ -58,11 +60,6 @@ namespace SixCloud.Core.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    var loginWebView = new LoginWebView(null)
-                    {
-                        DataContext = this
-                    };
-
                     if (Environment.OSVersion.Version >= new Version(6, 2))
                     {
                         LoginWindow = new AcrylicWindow
@@ -72,7 +69,8 @@ namespace SixCloud.Core.ViewModels
                             Width = 400,
                             AcrylicWindowStyle = AcrylicWindowStyle.NoIcon,
                             WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                            Content = loginWebView,
+                            Content = CreateLoginWebView?.Invoke(),
+                            DataContext = this,
                         };
                     }
                     else
@@ -84,7 +82,7 @@ namespace SixCloud.Core.ViewModels
                             Width = 400,
                             WindowStyle = WindowStyle.ToolWindow,
                             WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                            Content = loginWebView,
+                            Content = CreateLoginWebView?.Invoke(),
                         };
                     }
                     LoginWindow.Show();
@@ -117,7 +115,7 @@ namespace SixCloud.Core.ViewModels
                     TasksLogger.ExitEventHandler(sender, new Controllers.ExitEventArgs(currentUser));
 
                     //尝试自动重启
-                    var x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloudCore.exe";
+                    var x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloud.Desktop.exe";
                     if (File.Exists(x))
                     {
                         //应在此处释放互斥锁
@@ -125,6 +123,7 @@ namespace SixCloud.Core.ViewModels
                         //Application.Current.Shutdown();
                     }
                 };
+                InitializeTaskBarIcon?.Invoke();
             });
             TasksLogger.StartUpRecovery(currentUser);
         }

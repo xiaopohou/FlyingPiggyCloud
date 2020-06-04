@@ -6,6 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <LangVersion>8.0</LangVersion>
+    <Version>3.2.10</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,9 +51,6 @@
     </Compile>
     <Compile Update="Views\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\LoginWebView.xaml.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MainFrame.xaml.cs">
       <DependentUpon>MainFrame.xaml</DependentUpon>
@@ -103,9 +101,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\LoadingView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\LoginWebView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainFrame.xaml">
