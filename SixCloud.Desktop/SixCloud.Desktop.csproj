@@ -55,6 +55,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SixCloud.Core\SixCloud.Core.csproj" />
+    <ProjectReference Include="..\SixCloudCoreCustomControlLibrary\SixCloudCoreCustomControlLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>

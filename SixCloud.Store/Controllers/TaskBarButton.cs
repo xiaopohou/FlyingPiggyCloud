@@ -34,7 +34,7 @@ namespace SixCloud.Store.Controllers
                 BalloonTipTitle = "6盘",
                 Text = "6盘",
                 Visible = true,//托盘按钮是否可见
-                Icon = new Icon(System.Windows.Application.GetResourceStream(new Uri(@"pack://application:,,,/SixCloud.Store;component/MediaResources/666.ico")).Stream)
+                Icon = new Icon(System.Windows.Application.GetResourceStream(new Uri(@"pack://application:,,,/SixCloud.Core;component/MediaResources/666.ico")).Stream)
             };
 
             NotifyIcon.ContextMenuStrip = contextMenu;
