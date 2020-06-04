@@ -46,9 +46,9 @@ namespace SixCloud.Core.ViewModels
             try
             {
                 icon = currentUser.Icon;
-                if (string.IsNullOrEmpty(icon) || icon == "default.jpg" || icon == "default")
+                if (true || string.IsNullOrEmpty(icon) || icon == "default.jpg" || icon == "default")
                 {
-                    var iconSource = new Uri(@"pack://application:,,,/SixCloudCore;component/MediaResources/MainLogo.png");
+                    var iconSource = new Uri(@"pack://application:,,,/SixCloud.Core;component/MediaResources/MainLogo.png");
                     Icon = new BitmapImage(iconSource);
                 }
                 else

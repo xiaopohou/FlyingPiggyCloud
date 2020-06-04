@@ -50,27 +50,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="MediaResources\666.ico" />
-    <None Remove="MediaResources\MainLogo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="MediaResources\MainLogo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CefSharp.Wpf" Version="81.3.100" />
-    <PackageReference Include="FluentWPF" Version="0.8.0" />
-    <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
-    <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SixCloud.Core\SixCloud.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="MediaResources\666.ico" />
   </ItemGroup>
 
   <ItemGroup>

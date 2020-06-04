@@ -1,0 +1,15 @@
+﻿<UserControl
+    x:Class="SixCloud.Store.Views.LoginWebView"
+    xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:userControl="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
+    xmlns:controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
+    mc:Ignorable="d">
+    <Grid>
+        <userControl:LoadingControl x:Name="loadingView" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <controls:WebView x:Name="mainContainer" Source="{Binding LoginUrl,Mode=OneWay}"/>
+    </Grid>
+</UserControl>
