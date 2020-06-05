@@ -19,7 +19,6 @@ namespace SixCloud.Store.Controllers
                 Text = "退出"
             };
             menuItem.Click += Quit;
-
             contextMenu.Items.Add(menuItem);
 
 
