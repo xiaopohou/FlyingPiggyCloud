@@ -1,9 +1,7 @@
-﻿using SixCloud.Desktop.ViewModels;
-using SixCloud.Desktop.Views;
+﻿using SixCloud.Core.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Forms;
-using SixCloud.Core.ViewModels;
 
 namespace SixCloud.Desktop.Controllers
 {

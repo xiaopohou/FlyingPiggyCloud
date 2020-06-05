@@ -20,7 +20,7 @@ namespace CustomControls.Converters
         {
             if (parameter != null)
             {
-                return new CornerRadius((double)value/ System.Convert.ToDouble(parameter));
+                return new CornerRadius((double)value / System.Convert.ToDouble(parameter));
             }
             return new CornerRadius((double)value);
         }

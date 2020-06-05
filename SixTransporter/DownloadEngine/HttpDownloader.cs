@@ -11,7 +11,7 @@ namespace SixTransporter.DownloadEngine
 {
     public class HttpDownloader
     {
-        public DownloadTaskInfo Info { get;}
+        public DownloadTaskInfo Info { get; }
 
         public long Speed { get; set; }
 
@@ -22,7 +22,7 @@ namespace SixTransporter.DownloadEngine
             {
                 if (_status != value)
                 {
-                    var temp = _status;
+                    DownloadStatusEnum temp = _status;
                     _status = value;
                     DownloadStatusChangedEvent?.Invoke(temp, value, this);
                 }
@@ -53,34 +53,46 @@ namespace SixTransporter.DownloadEngine
                     return;
                 }
                 Status = DownloadStatusEnum.Downloading;
-                var response = GetResponse();
+                HttpWebResponse response = GetResponse();
                 if (response == null)
                 {
                     Status = DownloadStatusEnum.Failed;
                     return;
                 }
                 if (!File.Exists(Info.DownloadPath))
-                    using (var _ = File.Create(Info.DownloadPath))
+                {
+                    using (FileStream _ = File.Create(Info.DownloadPath))
+                    {
                         ;
+                    }
+                }
+
                 if (Info.BlockList.Count == 0)
                 {
                     Info.ContentSize = response.ContentLength;
                     Info.Init(Info.DownloadPath + ".downloading");
                 }
                 if (Info.Threads > Info.BlockList.Count(v => !v.Downloaded && !v.Downloading))
+                {
                     Info.Threads = Info.BlockList.Count(v => !v.Downloaded && !v.Downloading);
+                }
+
                 response.Close();
                 Threads?.ToList().ForEach(v => v.ForceStop());
                 Threads = new List<DownloadThread>();
                 new Thread(ReportDownloadProgress) { IsBackground = true }.Start();
                 Info.Limiter.Run();
-                for (var i = 0; i < Info.Threads; i++)
+                for (int i = 0; i < Info.Threads; i++)
                 {
                     if (Status == DownloadStatusEnum.Downloading)
                     {
-                        var block = Info.BlockList.FirstOrDefault(v => !v.Downloaded && !v.Downloading);
-                        if (block == null) break;
-                        var thread = new DownloadThread(block, Info);
+                        DownloadBlock block = Info.BlockList.FirstOrDefault(v => !v.Downloaded && !v.Downloading);
+                        if (block == null)
+                        {
+                            break;
+                        }
+
+                        DownloadThread thread = new DownloadThread(block, Info);
                         thread.ThreadCompletedEvent += HttpDownload_ThreadCompletedEvent;
                         thread.ThreadFailedEvent += OnThreadFailedEvent;
                         thread.BeginDownload();
@@ -98,8 +110,11 @@ namespace SixTransporter.DownloadEngine
 
         private void OnThreadFailedEvent(DownloadThread _)
         {
-            foreach (var thread in Threads)
+            foreach (DownloadThread thread in Threads)
+            {
                 thread.ForceStop();
+            }
+
             Status = DownloadStatusEnum.Failed;
         }
 
@@ -109,7 +124,10 @@ namespace SixTransporter.DownloadEngine
             lock (this)
             {
                 if (Threads.Count == 0)
+                {
                     return;
+                }
+
                 Threads.Remove(downloadThread);
                 if (Info.BlockList.All(v => v.Downloaded))
                 {
@@ -120,9 +138,13 @@ namespace SixTransporter.DownloadEngine
                     Info.Limiter.Stop();
                     return;
                 }
-                var block = Info.BlockList.FirstOrDefault(v => !v.Downloaded && !v.Downloading);
-                if (block == null) return;
-                var thread = new DownloadThread(block, Info);
+                DownloadBlock block = Info.BlockList.FirstOrDefault(v => !v.Downloaded && !v.Downloading);
+                if (block == null)
+                {
+                    return;
+                }
+
+                DownloadThread thread = new DownloadThread(block, Info);
                 thread.ThreadCompletedEvent += HttpDownload_ThreadCompletedEvent;
                 thread.ThreadFailedEvent += OnThreadFailedEvent;
                 thread.BeginDownload();
@@ -135,8 +157,18 @@ namespace SixTransporter.DownloadEngine
         {
             if (Threads != null)
             {
-                foreach (var thread in Threads)
-                    if (force) thread.ForceStop(); else thread.Stop();
+                foreach (DownloadThread thread in Threads)
+                {
+                    if (force)
+                    {
+                        thread.ForceStop();
+                    }
+                    else
+                    {
+                        thread.Stop();
+                    }
+                }
+
                 Status = DownloadStatusEnum.Paused;
                 Info.Limiter.Stop();
                 return Info;
@@ -146,7 +178,7 @@ namespace SixTransporter.DownloadEngine
 
         private void ReportDownloadProgress()
         {
-            var temp = 0L;
+            long temp = 0L;
             while (Status == DownloadStatusEnum.Downloading)
             {
                 Thread.Sleep(1000);
@@ -169,12 +201,15 @@ namespace SixTransporter.DownloadEngine
         {
             try
             {
-                var request = WebRequest.Create(Info.DownloadUrl) as HttpWebRequest;
+                HttpWebRequest request = WebRequest.Create(Info.DownloadUrl) as HttpWebRequest;
                 request.Method = "GET";
                 //request.UserAgent = "Accelerider-lite download engine";
                 request.Timeout = 5000;
-                foreach (var header in Info.Headers)
+                foreach (KeyValuePair<string, string> header in Info.Headers)
+                {
                     SetHeaderValue(request.Headers, header.Key, header.Value);
+                }
+
                 request.Accept = "*/*";
                 return (HttpWebResponse)request.GetResponse();
             }
@@ -185,15 +220,15 @@ namespace SixTransporter.DownloadEngine
                     return GetResponse();
                 }
 
-                var stream = ex.Response?.GetResponseStream();
+                Stream stream = ex.Response?.GetResponseStream();
                 if (stream == null)
                 {
                     //LogHelper.Error("GetResponse failed url:" + sub, false, ex);
                     return null;
                 }
-                using (var reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
                 {
-                    var result = reader.ReadToEnd();
+                    string result = reader.ReadToEnd();
                     //LogHelper.Info("sub: " + sub + ":" + result);
                 }
             }
@@ -205,11 +240,11 @@ namespace SixTransporter.DownloadEngine
         }
         internal static void SetHeaderValue(WebHeaderCollection header, string name, string value)
         {
-            var property = typeof(WebHeaderCollection).GetProperty("InnerCollection",
+            System.Reflection.PropertyInfo property = typeof(WebHeaderCollection).GetProperty("InnerCollection",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             if (property != null)
             {
-                var collection = property.GetValue(header, null) as NameValueCollection;
+                NameValueCollection collection = property.GetValue(header, null) as NameValueCollection;
                 collection[name] = value;
             }
         }

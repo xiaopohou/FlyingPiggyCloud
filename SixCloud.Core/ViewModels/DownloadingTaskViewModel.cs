@@ -1,11 +1,7 @@
-﻿using QingzhenyunApis.Methods.V3;
-using QingzhenyunApis.Utils;
-using SixCloud.Core.Models;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Threading;
 
 namespace SixCloud.Core.ViewModels
 {

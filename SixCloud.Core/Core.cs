@@ -1,11 +1,9 @@
-﻿using Sentry;
+﻿using QingzhenyunApis.Exceptions;
+using Sentry;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using QingzhenyunApis.Exceptions;
-using System.Windows.Threading;
 using System.Reflection;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace SixCloud.Core
 {
@@ -29,11 +27,11 @@ namespace SixCloud.Core
 
         private static void DisableIriSupport()
         {
-            var _ = Uri.IsWellFormedUriString("http://www.baidu.com", UriKind.Absolute);
-            var assembly = Assembly.GetAssembly(typeof(Uri));
+            bool _ = Uri.IsWellFormedUriString("http://www.baidu.com", UriKind.Absolute);
+            Assembly assembly = Assembly.GetAssembly(typeof(Uri));
             if (assembly != null)
             {
-                var uriType = assembly.GetType("System.Uri");
+                Type uriType = assembly.GetType("System.Uri");
                 if (uriType != null)
                 {
                     uriType.InvokeMember("s_IdnScope", BindingFlags.Static | BindingFlags.SetField | BindingFlags.NonPublic, null, null, new object[] { UriIdnScope.None });

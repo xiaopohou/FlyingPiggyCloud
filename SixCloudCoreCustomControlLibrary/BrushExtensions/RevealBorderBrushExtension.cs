@@ -38,19 +38,33 @@ namespace CustomControls.BrushExtensions
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             // 如果没有服务，则直接返回。
-            if (!(serviceProvider.GetService(typeof(IProvideValueTarget)) is IProvideValueTarget service)) return null;
+            if (!(serviceProvider.GetService(typeof(IProvideValueTarget)) is IProvideValueTarget service))
+            {
+                return null;
+            }
             // MarkupExtension 在样式模板中，返回 this 以延迟提供值。
-            if (service.TargetObject.GetType().Name.EndsWith("SharedDp")) return this;
-            if (!(service.TargetObject is FrameworkElement element)) return this;
-            if (DesignerProperties.GetIsInDesignMode(element)) return new SolidColorBrush(FallbackColor);
+            if (service.TargetObject.GetType().Name.EndsWith("SharedDp"))
+            {
+                return this;
+            }
 
-            var brush = CreateGlobalBrush(element);
+            if (!(service.TargetObject is FrameworkElement element))
+            {
+                return this;
+            }
+
+            if (DesignerProperties.GetIsInDesignMode(element))
+            {
+                return new SolidColorBrush(FallbackColor);
+            }
+
+            Brush brush = CreateGlobalBrush(element);
             return brush;
         }
 
         private Brush CreateBrush(UIElement rootVisual, FrameworkElement element)
         {
-            var brush = CreateRadialGradientBrush();
+            RadialGradientBrush brush = CreateRadialGradientBrush();
             rootVisual.MouseMove += OnMouseMove;
             return brush;
 
@@ -62,7 +76,7 @@ namespace CustomControls.BrushExtensions
 
         private Brush CreateGlobalBrush(FrameworkElement element)
         {
-            var brush = CreateRadialGradientBrush();
+            RadialGradientBrush brush = CreateRadialGradientBrush();
             if (_globalRevealingElements is null)
             {
                 CompositionTarget.Rendering -= OnRendering;
@@ -81,12 +95,12 @@ namespace CustomControls.BrushExtensions
                 return;
             }
 
-            var toCollect = new List<RadialGradientBrush>();
-            foreach (var pair in _globalRevealingElements)
+            List<RadialGradientBrush> toCollect = new List<RadialGradientBrush>();
+            foreach (KeyValuePair<RadialGradientBrush, WeakReference<FrameworkElement>> pair in _globalRevealingElements)
             {
-                var brush = pair.Key;
-                var weak = pair.Value;
-                if (weak.TryGetTarget(out var element))
+                RadialGradientBrush brush = pair.Key;
+                WeakReference<FrameworkElement> weak = pair.Value;
+                if (weak.TryGetTarget(out FrameworkElement element))
                 {
                     Reveal(brush, element);
                 }
@@ -96,7 +110,7 @@ namespace CustomControls.BrushExtensions
                 }
             }
 
-            foreach (var brush in toCollect)
+            foreach (RadialGradientBrush brush in toCollect)
             {
                 _globalRevealingElements.Remove(brush);
             }
@@ -122,7 +136,7 @@ namespace CustomControls.BrushExtensions
 
         private RadialGradientBrush CreateRadialGradientBrush()
         {
-            var brush = new RadialGradientBrush(Color, Colors.Transparent)
+            RadialGradientBrush brush = new RadialGradientBrush(Color, Colors.Transparent)
             {
                 MappingMode = BrushMappingMode.Absolute,
                 RadiusX = Radius,
@@ -137,7 +151,7 @@ namespace CustomControls.BrushExtensions
 
         private bool IsUsingMouseOrStylus()
         {
-            var device = Stylus.CurrentStylusDevice;
+            StylusDevice device = Stylus.CurrentStylusDevice;
             if (device is null)
             {
                 return true;

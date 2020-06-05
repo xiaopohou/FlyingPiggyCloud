@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Newtonsoft.Json;
 
 namespace SixTransporter.UploadEngine
 {
@@ -27,7 +26,7 @@ namespace SixTransporter.UploadEngine
         public void Init()
         {
             BlockList.Clear();
-            var info = new FileInfo(FilePath);
+            FileInfo info = new FileInfo(FilePath);
             FileSize = info.Length;
             //16MB
             const long blockSize = 16 * 1024 * 1024L;
@@ -42,7 +41,7 @@ namespace SixTransporter.UploadEngine
                 });
                 return;
             }
-            var temp = 0L;
+            long temp = 0L;
             while (temp + blockSize < FileSize)
             {
                 BlockList.Add(new UploadBlock()

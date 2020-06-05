@@ -5,7 +5,7 @@ namespace QingzhenyunApis.EntityModels
 {
     public class OfflineTaskParameters : EntityBodyBase
     {
-        public OfflineTaskParameters(string hash, string[] ignoreFiles=null)
+        public OfflineTaskParameters(string hash, string[] ignoreFiles = null)
         {
             Hash = hash;
             Ignores = ignoreFiles;

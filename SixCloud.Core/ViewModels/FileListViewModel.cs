@@ -200,7 +200,7 @@ namespace SixCloud.Core.ViewModels
                     if (await fileMetaDataEnumerator.MoveNextAsync())
                     {
                         //异步调用时Current可能为null导致调用失败，疑似因状态机被GC导致
-                        var fileMetaData = fileMetaDataEnumerator.Current;
+                        FileMetaData fileMetaData = fileMetaDataEnumerator.Current;
                         if (fileMetaData == null)
                         {
                             return;
@@ -289,7 +289,7 @@ namespace SixCloud.Core.ViewModels
 
                 if (Enum.TryParse<FileSystem.Type>(targetPath, out FileSystem.Type type))
                 {
-                    var rootDircetory = await FileSystem.GetDirectory(path: "/");
+                    FileList rootDircetory = await FileSystem.GetDirectory(path: "/");
 
                     fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: $"::all", mode: Mode, type: type).GetAsyncEnumerator();
                 }

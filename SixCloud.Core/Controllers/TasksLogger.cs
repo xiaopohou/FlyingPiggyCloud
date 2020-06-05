@@ -67,18 +67,18 @@ namespace SixCloud.Core.Controllers
 
                         if (startupInformation.SerializedDownloadTasks != null && startupInformation.SerializedDownloadTasks.Any())
                         {
-                            foreach (var record in startupInformation.SerializedDownloadTasks)
+                            foreach (string record in startupInformation.SerializedDownloadTasks)
                             {
-                                var downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record);
+                                DownloadTaskRecord downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record);
                                 DownloadingListViewModel.NewTask(downloadTaskRecord.TargetUUID, downloadTaskRecord.LocalPath, downloadTaskRecord.Name);
                             }
                         }
 
                         if (startupInformation.SerializedDownloadTasks != null && startupInformation.SerializedDownloadTasks.Any())
                         {
-                            foreach (var record in startupInformation.SerializedDownloadTaskGroups)
+                            foreach (string record in startupInformation.SerializedDownloadTaskGroups)
                             {
-                                var downloadTaskGroupRecord = JsonConvert.DeserializeObject<DownloadTaskGroupRecord>(record);
+                                DownloadTaskGroupRecord downloadTaskGroupRecord = JsonConvert.DeserializeObject<DownloadTaskGroupRecord>(record);
                                 TransferListViewModel.NewDownloadTaskGroup(downloadTaskGroupRecord);
                             }
                         }
@@ -130,23 +130,24 @@ namespace SixCloud.Core.Controllers
 
         public static void ExitEventHandler(object sender, ExitEventArgs e)
         {
-            var startupInformation = new StartupInformation();
+            StartupInformation startupInformation = new StartupInformation
+            {
+                BelongsTo = e.CurrentUser
+            };
 
-            startupInformation.BelongsTo = e.CurrentUser;
-
-            var downloadLists = from record in downloadingList
-                                where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause || record.Status == TransferTaskStatus.Failed
-                                group record.ToString() by record is DownloadTask;
+            IEnumerable<IGrouping<bool, string>> downloadLists = from record in downloadingList
+                                                                 where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause || record.Status == TransferTaskStatus.Failed
+                                                                 group record.ToString() by record is DownloadTask;
             startupInformation.SerializedDownloadTasks = downloadLists.FirstOrDefault(x => x.Key == true)?.ToArray();
             startupInformation.SerializedDownloadTaskGroups = downloadLists.FirstOrDefault(x => x.Key == false)?.ToArray();
 
-            var uploadList = from record in uploadingList
-                             where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause || record.Status == TransferTaskStatus.Failed
-                             select new UploadTaskRecord
-                             {
-                                 LocalFilePath = record.LocalFilePath,
-                                 TargetPath = record.TargetPath
-                             };
+            IEnumerable<UploadTaskRecord> uploadList = from record in uploadingList
+                                                       where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause || record.Status == TransferTaskStatus.Failed
+                                                       select new UploadTaskRecord
+                                                       {
+                                                           LocalFilePath = record.LocalFilePath,
+                                                           TargetPath = record.TargetPath
+                                                       };
             startupInformation.UploadTasks = uploadList.ToArray();
 
             using StreamWriter writer = new StreamWriter(File.Create(startupInformationPath));

@@ -46,7 +46,7 @@ namespace QingzhenyunApis.Utils
         /// <returns></returns>
         public static string UserMd5(string input)
         {
-            using (var md5 = MD5.Create())
+            using (MD5 md5 = MD5.Create())
             {
                 byte[] bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
                 StringBuilder sBuilder = new StringBuilder();
@@ -60,18 +60,21 @@ namespace QingzhenyunApis.Utils
 
         public static string LongTo36(long num)
         {
-            var str = "0123456789abcdefghijklmnopqrstuvwxyz";
-            var numList = new List<char>();
+            string str = "0123456789abcdefghijklmnopqrstuvwxyz";
+            List<char> numList = new List<char>();
 
 
             do
             {
-                var remainder = (int)(num % 36);
+                int remainder = (int)(num % 36);
                 numList.Add(str[remainder]);
 
                 num /= 36;
 
-                if (num != 0) continue;
+                if (num != 0)
+                {
+                    continue;
+                }
 
                 numList.Reverse();
                 return new string(numList.ToArray());

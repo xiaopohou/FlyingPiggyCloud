@@ -1,11 +1,8 @@
-﻿using LibVLCSharp.Shared;
-using SourceChord.FluentWPF;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
-using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace SixCloud.Core.Views.VLCView
 {

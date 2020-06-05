@@ -52,22 +52,16 @@ namespace SixCloudCore.FileUploader
 
         public long TotalBytes => SixUploader.Info.FileSize;
 
-        public UploadTaskStatus UploadTaskStatus
+        public UploadTaskStatus UploadTaskStatus => SixUploader.Status switch
         {
-            get
-            {
-                return SixUploader.Status switch
-                {
-                    UploadTaskStatusEnum.Completed => UploadTaskStatus.Completed,
-                    UploadTaskStatusEnum.Faulted => UploadTaskStatus.Error,
-                    UploadTaskStatusEnum.Hashing => UploadTaskStatus.Active,
-                    UploadTaskStatusEnum.Paused => UploadTaskStatus.Pause,
-                    UploadTaskStatusEnum.Uploading => UploadTaskStatus.Active,
-                    UploadTaskStatusEnum.Waiting => UploadTaskStatus.Active,
-                    _ => throw new ArgumentException(),
-                };
-            }
-        }
+            UploadTaskStatusEnum.Completed => UploadTaskStatus.Completed,
+            UploadTaskStatusEnum.Faulted => UploadTaskStatus.Error,
+            UploadTaskStatusEnum.Hashing => UploadTaskStatus.Active,
+            UploadTaskStatusEnum.Paused => UploadTaskStatus.Pause,
+            UploadTaskStatusEnum.Uploading => UploadTaskStatus.Active,
+            UploadTaskStatusEnum.Waiting => UploadTaskStatus.Active,
+            _ => throw new ArgumentException(),
+        };
 
         internal UploadTask(SixUploader sixUploader)
         {

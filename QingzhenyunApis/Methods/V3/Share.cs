@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using QingzhenyunApis.EntityModels;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace QingzhenyunApis.Methods.V3

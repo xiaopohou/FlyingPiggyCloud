@@ -4,7 +4,6 @@ using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
 using SixCloud.Core.Controllers;
-using SixCloud.Core.Models;
 using SixCloud.Core.Views;
 using SixCloud.Core.Views.Dialogs;
 using System;
@@ -46,9 +45,9 @@ namespace SixCloud.Core.ViewModels
             try
             {
                 icon = currentUser.Icon;
-                if (true || string.IsNullOrEmpty(icon) || icon == "default.jpg" || icon == "default")
+                if (string.IsNullOrEmpty(icon) || icon == "default.jpg" || icon == "default")
                 {
-                    var iconSource = new Uri(@"pack://application:,,,/SixCloud.Core;component/MediaResources/MainLogo.png");
+                    Uri iconSource = new Uri(@"pack://application:,,,/SixCloud.Core;component/MediaResources/MainLogo.png");
                     Icon = new BitmapImage(iconSource);
                 }
                 else

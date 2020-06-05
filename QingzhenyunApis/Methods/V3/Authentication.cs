@@ -16,7 +16,7 @@ namespace QingzhenyunApis.Methods.V3
 
         public static async Task Logout()
         {
-            var x = await PostAsync<object>("", "/v3/user/logout");
+            object x = await PostAsync<object>("", "/v3/user/logout");
             Token = null;
         }
 

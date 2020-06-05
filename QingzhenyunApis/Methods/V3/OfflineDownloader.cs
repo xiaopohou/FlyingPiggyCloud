@@ -3,7 +3,6 @@ using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using System;
 using System.Dynamic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace QingzhenyunApis.Methods.V3

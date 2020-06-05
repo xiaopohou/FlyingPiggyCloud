@@ -1,19 +1,19 @@
-﻿using QingzhenyunApis.EntityModels;
+﻿using Newtonsoft.Json;
+using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
-using SixCloudCore.SixTransporter.Downloader;
+using QingzhenyunApis.Utils;
 using SixCloud.Core.ViewModels;
+using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using QingzhenyunApis.Exceptions;
-using System.Linq;
-using QingzhenyunApis.Utils;
-using Newtonsoft.Json;
 
 namespace SixCloud.Core.Models
 {
@@ -183,7 +183,7 @@ namespace SixCloud.Core.Models
                 {
                     task.AllFileStreamDisposed += (sender, e) =>
                     {
-                        var filePath = (sender as HttpDownloader).Info.DownloadPath;
+                        string filePath = (sender as HttpDownloader).Info.DownloadPath;
                         try
                         {
                             File.Delete(filePath);
@@ -247,9 +247,9 @@ namespace SixCloud.Core.Models
 
         }
 
-        protected async override void Recovery(object parameter)
+        protected override async void Recovery(object parameter)
         {
-            foreach (var task in RunningTasks)
+            foreach (KeyValuePair<DownloadTaskRecord, HttpDownloader> task in RunningTasks)
             {
                 if (task.Value?.Status == DownloadStatusEnum.Downloading || task.Value?.Status == DownloadStatusEnum.Failed)
                 {
@@ -390,7 +390,7 @@ namespace SixCloud.Core.Models
                 Thread.Sleep(TimeSpan.FromMinutes(1));
                 try
                 {
-                    var target = RunningTasks.First(x => x.Value == sender);
+                    KeyValuePair<DownloadTaskRecord, HttpDownloader> target = RunningTasks.First(x => x.Value == sender);
                     sender.Info.DownloadUrl = (await FileSystem.GetDownloadUrlByIdentity(target.Key.TargetUUID)).DownloadAddress;
                     await Task.Run(() => sender?.StartDownload());
                 }
@@ -405,7 +405,7 @@ namespace SixCloud.Core.Models
         {
             Pause(null);
 
-            var record = new DownloadTaskGroupRecord
+            DownloadTaskGroupRecord record = new DownloadTaskGroupRecord
             {
                 Name = Name,
                 TargetUUID = TargetUUID,

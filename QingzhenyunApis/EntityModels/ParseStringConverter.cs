@@ -5,14 +5,20 @@ namespace QingzhenyunApis.EntityModels
 {
     internal class ParseStringConverter : JsonConverter
     {
-        public override bool CanConvert(Type t) => t == typeof(long) || t == typeof(long?);
+        public override bool CanConvert(Type t)
+        {
+            return t == typeof(long) || t == typeof(long?);
+        }
 
         public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            long l;
-            if (long.TryParse(value, out l))
+            if (reader.TokenType == JsonToken.Null)
+            {
+                return null;
+            }
+
+            string value = serializer.Deserialize<string>(reader);
+            if (long.TryParse(value, out long l))
             {
                 return l;
             }
@@ -26,7 +32,7 @@ namespace QingzhenyunApis.EntityModels
                 serializer.Serialize(writer, null);
                 return;
             }
-            var value = (long)untypedValue;
+            long value = (long)untypedValue;
             serializer.Serialize(writer, value.ToString());
             return;
         }

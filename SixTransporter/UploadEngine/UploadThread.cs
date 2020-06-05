@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace SixTransporter.UploadEngine
 {
@@ -43,7 +42,11 @@ namespace SixTransporter.UploadEngine
 
         private void CreateBlock()
         {
-            if (_stopped) return;
+            if (_stopped)
+            {
+                return;
+            }
+
             if (BlockInfo.Uploaded)
             {
                 BlockUploadCompletedEvent?.Invoke(this);
@@ -51,33 +54,39 @@ namespace SixTransporter.UploadEngine
             }
             try
             {
-                using (var stream = new FileStream(Info.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (FileStream stream = new FileStream(Info.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     stream.Seek(BlockInfo.BeginOffset, SeekOrigin.Begin);
-                    var fdata = new byte[ChunkSize];
-                    var len = stream.Read(fdata, 0, fdata.Length);
+                    byte[] fdata = new byte[ChunkSize];
+                    int len = stream.Read(fdata, 0, fdata.Length);
                     if (len < fdata.Length)
                     {
-                        var arr = new byte[len];
+                        byte[] arr = new byte[len];
                         Array.Copy(fdata, arr, len);
                         fdata = arr;
                     }
-                    var request = WebRequest.CreateHttp($"{Info.UploadUrl}/mkblk/{BlockInfo.BlockSize}/{BlockInfo.Id}");
+                    HttpWebRequest request = WebRequest.CreateHttp($"{Info.UploadUrl}/mkblk/{BlockInfo.BlockSize}/{BlockInfo.Id}");
                     request.ContentLength = fdata.Length;
                     request.ContentType = "application/octet-stream";
                     request.Headers.Add("Authorization", Info.Token);
                     request.Headers.Add("UploadBatch", Info.Uuid);
                     request.Method = "POST";
-                    using (var requestStream = request.GetRequestStream())
-                        requestStream.Write(fdata, 0, fdata.Length);
-                    using (var response = (HttpWebResponse)request.GetResponse())
+                    using (Stream requestStream = request.GetRequestStream())
                     {
-                        using (var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                        requestStream.Write(fdata, 0, fdata.Length);
+                    }
+
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
                         {
-                            var message = reader.ReadToEnd();
-                            var json = JObject.Parse(message);
+                            string message = reader.ReadToEnd();
+                            JObject json = JObject.Parse(message);
                             if (json["code"] != null)
+                            {
                                 throw new IOException(json.ToString(Formatting.None));
+                            }
+
                             BlockInfo.Ctx = json.Value<string>("ctx");
                             LastChunkCtx = json.Value<string>("ctx");
                             LastChunkOffset = json.Value<long>("offset");
@@ -98,14 +107,14 @@ namespace SixTransporter.UploadEngine
             }
             catch (WebException ex)
             {
-                var stream = ex.Response?.GetResponseStream();
+                Stream stream = ex.Response?.GetResponseStream();
                 if (stream != null)
                 {
-                    using (var reader = new StreamReader(stream, Encoding.UTF8))
+                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
                     {
                         try
                         {
-                            var message = reader.ReadToEnd();
+                            string message = reader.ReadToEnd();
                             Console.WriteLine(message);
                         }
                         catch (IOException)
@@ -116,7 +125,7 @@ namespace SixTransporter.UploadEngine
                 }
 
                 Console.Write("ERROR: " + ex.Message);
-                var e = ex.InnerException;
+                Exception e = ex.InnerException;
                 while (e != null)
                 {
                     Console.Write("-> " + e.Message);
@@ -135,19 +144,23 @@ namespace SixTransporter.UploadEngine
         {
             while (true)
             {
-                if (_stopped) return;
+                if (_stopped)
+                {
+                    return;
+                }
+
                 try
                 {
-                    using (var stream = new FileStream(Info.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (FileStream stream = new FileStream(Info.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         stream.Seek(BlockInfo.BeginOffset + LastChunkOffset, SeekOrigin.Begin);
-                        var fdata = new byte[BlockInfo.BeginOffset + LastChunkOffset + ChunkSize > BlockInfo.EndOffset
+                        byte[] fdata = new byte[BlockInfo.BeginOffset + LastChunkOffset + ChunkSize > BlockInfo.EndOffset
                             ? BlockInfo.EndOffset - (BlockInfo.BeginOffset + LastChunkOffset)
                             : ChunkSize];
-                        var len = stream.Read(fdata, 0, fdata.Length);
+                        int len = stream.Read(fdata, 0, fdata.Length);
                         if (len < fdata.Length)
                         {
-                            var arr = new byte[len];
+                            byte[] arr = new byte[len];
                             Array.Copy(fdata, arr, len);
                             fdata = arr;
                         }
@@ -159,23 +172,33 @@ namespace SixTransporter.UploadEngine
                             BlockUploadCompletedEvent?.Invoke(this);
                             return;
                         }
-                        var request = WebRequest.CreateHttp($"{Info.UploadUrl}/bput/{LastChunkCtx}/{LastChunkOffset}");
+                        HttpWebRequest request = WebRequest.CreateHttp($"{Info.UploadUrl}/bput/{LastChunkCtx}/{LastChunkOffset}");
                         request.ContentLength = fdata.Length;
                         request.ContentType = "application/octet-stream";
                         request.Headers.Add("Authorization", Info.Token);
                         request.Headers.Add("UploadBatch", Info.Uuid);
                         request.Method = "POST";
-                        using (var requestStream = request.GetRequestStream())
-                            requestStream.Write(fdata, 0, fdata.Length);
-                        if (_stopped) return;
-                        using (var response = (HttpWebResponse)request.GetResponse())
+                        using (Stream requestStream = request.GetRequestStream())
                         {
-                            using (var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                            requestStream.Write(fdata, 0, fdata.Length);
+                        }
+
+                        if (_stopped)
+                        {
+                            return;
+                        }
+
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        {
+                            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
                             {
-                                var message = reader.ReadToEnd();
-                                var json = JObject.Parse(message);
+                                string message = reader.ReadToEnd();
+                                JObject json = JObject.Parse(message);
                                 if (json["code"] != null)
+                                {
                                     throw new IOException(json.ToString(Formatting.None));
+                                }
+
                                 LastChunkCtx = json.Value<string>("ctx");
                                 BlockInfo.Ctx = json.Value<string>("ctx");
                                 //Console.WriteLine("CTX of chunk: "+ json.Value<string>("ctx"));
@@ -189,14 +212,14 @@ namespace SixTransporter.UploadEngine
                 }
                 catch (WebException ex)
                 {
-                    var stream = ex.Response?.GetResponseStream();
+                    Stream stream = ex.Response?.GetResponseStream();
                     if (stream != null)
                     {
-                        using (var reader = new StreamReader(stream, Encoding.UTF8))
+                        using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
                         {
                             try
                             {
-                                var message = reader.ReadToEnd();
+                                string message = reader.ReadToEnd();
                                 Console.WriteLine(message);
                             }
                             catch (IOException)
@@ -207,7 +230,7 @@ namespace SixTransporter.UploadEngine
                     }
 
                     Console.Write("ERROR: " + ex.Message);
-                    var e = ex.InnerException;
+                    Exception e = ex.InnerException;
                     while (e != null)
                     {
                         Console.Write("-> " + e.Message);

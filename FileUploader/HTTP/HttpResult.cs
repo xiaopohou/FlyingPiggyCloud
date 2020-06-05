@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SixCloudCore.FileUploader.HTTP
 {
@@ -27,13 +24,13 @@ namespace SixCloudCore.FileUploader.HTTP
         /// <param name="hr">要复制其内容的来源</param>
         public void Copy(HttpResult source)
         {
-            this.Code = source.Code;
-            this.Text = source.Text;
-            this.Data = source.Data;
-            this.ResponseHeaders = source.ResponseHeaders;
+            Code = source.Code;
+            Text = source.Text;
+            Data = source.Data;
+            ResponseHeaders = source.ResponseHeaders;
 
-            this.UserDefinedCode = source.UserDefinedCode;
-            this.UserDefinedText = source.UserDefinedText;
+            UserDefinedCode = source.UserDefinedCode;
+            UserDefinedText = source.UserDefinedText;
         }
 
         /// <summary>
@@ -82,7 +79,7 @@ namespace SixCloudCore.FileUploader.HTTP
             if (ResponseHeaders != null)
             {
                 sb.AppendLine("user-defined-headers:");
-                foreach (var d in ResponseHeaders)
+                foreach (KeyValuePair<string, string> d in ResponseHeaders)
                 {
                     sb.AppendLine(string.Format("{0}:{1}", d.Key, d.Value));
                 }
@@ -125,7 +122,7 @@ namespace SixCloudCore.FileUploader.HTTP
         /// 用户自定义信息
         /// </summary>
         public string UserDefinedText { set; get; }
-        
+
         public const int USER_DEFINED_CODE = 0;
     }
 }

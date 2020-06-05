@@ -1,14 +1,11 @@
 ﻿using CefSharp;
 using CefSharp.Wpf;
-using Sentry;
 using SixCloud.Desktop.ViewModels;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using QingzhenyunApis.Exceptions;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace SixCloud.Desktop
 {

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace SixTransporter.DownloadEngine
 {
@@ -27,7 +25,7 @@ namespace SixTransporter.DownloadEngine
         public int MaxRetry { get; set; } = 10;
 
         public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>()
-            { ["User-Agent"] = "Six-Pan download engine" };
+        { ["User-Agent"] = "Six-Pan download engine" };
 
         public SpeedLimiter Limiter { get; set; } = new SpeedLimiter() { Limit = 0 };
 
@@ -47,7 +45,7 @@ namespace SixTransporter.DownloadEngine
         /// </summary>
         public void Init()
         {
-            var temp = 0L;
+            long temp = 0L;
             BlockList.Clear();
             while (temp + BlockSize < ContentSize)
             {
@@ -112,7 +110,11 @@ namespace SixTransporter.DownloadEngine
 
         public void Run()
         {
-            if (Running || Limit <= 0) return;
+            if (Running || Limit <= 0)
+            {
+                return;
+            }
+
             Running = true;
             new Thread(() =>
                 {
@@ -120,12 +122,16 @@ namespace SixTransporter.DownloadEngine
                     {
                         Thread.Sleep(100);
                         if (Current - (Limit / 10) < 0)
+                        {
                             Current = 0;
+                        }
                         else
+                        {
                             Current -= Limit / 10;
+                        }
                     }
                 })
-                { IsBackground = true }.Start();
+            { IsBackground = true }.Start();
         }
 
         public void Stop()
@@ -139,7 +145,9 @@ namespace SixTransporter.DownloadEngine
             {
                 Current += size;
                 while (Current > Limit)
+                {
                     Thread.Sleep(10);
+                }
             }
         }
     }

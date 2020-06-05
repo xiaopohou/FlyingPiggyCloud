@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using QingzhenyunApis.EntityModels;
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace QingzhenyunApis.Methods.V3
@@ -120,7 +117,7 @@ namespace QingzhenyunApis.Methods.V3
                 data.hash = hash;
             }
 
-            var x = await PostAsync<UploadToken>(JsonConvert.SerializeObject(data), "/v3/file/uploadToken");
+            dynamic x = await PostAsync<UploadToken>(JsonConvert.SerializeObject(data), "/v3/file/uploadToken");
             return x;
         }
 

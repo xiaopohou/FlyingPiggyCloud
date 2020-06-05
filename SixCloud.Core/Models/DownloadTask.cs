@@ -2,11 +2,10 @@
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
-using SixCloudCore.SixTransporter.Downloader;
 using SixCloud.Core.ViewModels;
+using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -226,7 +225,7 @@ namespace SixCloud.Core.Models
         public override string ToString()
         {
             Pause(null);
-            var record = new DownloadTaskRecord
+            DownloadTaskRecord record = new DownloadTaskRecord
             {
                 LocalPath = SavedLocalPath,
                 TargetUUID = TargetUUID,

@@ -1,12 +1,8 @@
-﻿using SixCloud.Store.ViewModels;
-using SixCloud.Store.Views;
+﻿using SixCloud.Core.ViewModels;
 using System;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using SixCloud.Core.ViewModels;
-using System.Drawing;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace SixCloud.Store.Controllers
 {

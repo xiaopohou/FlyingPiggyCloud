@@ -1,6 +1,4 @@
 ﻿using SixCloud.Store.ViewModels;
-using SourceChord.FluentWPF;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 

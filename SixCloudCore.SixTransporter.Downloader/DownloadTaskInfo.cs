@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace SixCloudCore.SixTransporter.Downloader
 {
@@ -46,7 +44,7 @@ namespace SixCloudCore.SixTransporter.Downloader
         /// </summary>
         private void Init()
         {
-            var temp = 0L;
+            long temp = 0L;
             BlockList.Clear();
             while (temp + BlockSize < ContentSize)
             {

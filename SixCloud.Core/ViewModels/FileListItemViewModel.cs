@@ -1,12 +1,9 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
-using SixCloud.Core.Views;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 
 namespace SixCloud.Core.ViewModels

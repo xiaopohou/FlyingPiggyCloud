@@ -2,19 +2,13 @@
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
-using Sentry;
 using SixCloud.Core.Controllers;
-using SixCloud.Core.Models;
-using SixCloud.Core.Views;
 using SourceChord.FluentWPF;
 using System;
 using System.IO;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace SixCloud.Core.ViewModels
 {
@@ -29,14 +23,14 @@ namespace SixCloud.Core.ViewModels
 
         private Window LoginWindow { get; set; }
 
-        internal protected virtual async Task InitializeComponent()
+        protected internal virtual async Task InitializeComponent()
         {
             if (!new Helpers().IsRunningAsUwp())
             {
-                var newPackageUri = await UpdateHelper.Check();
+                Uri newPackageUri = await UpdateHelper.Check();
                 if (newPackageUri != default)
                 {
-                    var newPackageMessageBoxResult = MessageBox.Show("发现新的软件包，点击确定下载或者点击取消继续使用当前版本", "更新", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                    MessageBoxResult newPackageMessageBoxResult = MessageBox.Show("发现新的软件包，点击确定下载或者点击取消继续使用当前版本", "更新", MessageBoxButton.OKCancel, MessageBoxImage.Question);
                     if (newPackageMessageBoxResult == MessageBoxResult.OK)
                     {
                         System.Diagnostics.Process.Start("explorer.exe", newPackageUri.ToString());
@@ -102,7 +96,7 @@ namespace SixCloud.Core.ViewModels
 
         private async Task OnLoginSuccess()
         {
-            var currentUser = await Authentication.GetUserInformation();
+            UserInformation currentUser = await Authentication.GetUserInformation();
             await Application.Current.Dispatcher.Invoke(async () =>
             {
                 await new MainFrameViewModel().InitializeComponent().ConfigureAwait(true);
@@ -115,7 +109,7 @@ namespace SixCloud.Core.ViewModels
                     TasksLogger.ExitEventHandler(sender, new Controllers.ExitEventArgs(currentUser));
 
                     //尝试自动重启
-                    var x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloud.Desktop.exe";
+                    string x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloud.Desktop.exe";
                     if (File.Exists(x))
                     {
                         //应在此处释放互斥锁

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using QingzhenyunApis.Exceptions;
+using System;
 using System.Windows;
 using System.Windows.Input;
-using QingzhenyunApis.Exceptions;
 
 namespace SixCloud.Core.ViewModels
 {

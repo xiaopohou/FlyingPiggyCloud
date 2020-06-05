@@ -2,13 +2,11 @@
 using QingzhenyunApis.EntityModels;
 using SixCloud.Core.Views.VLCView;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 
 namespace SixCloud.Core.ViewModels
 {
-    class MediaPlayerViewModel : ViewModelBase, IDisposable
+    internal class MediaPlayerViewModel : ViewModelBase, IDisposable
     {
         private static readonly LibVLC libVLC = new LibVLC();
         static MediaPlayerViewModel()
@@ -61,14 +59,8 @@ namespace SixCloud.Core.ViewModels
 
         public double Progress
         {
-            get
-            {
-                return MediaPlayer.Length == 0 ? 0 : MediaPlayer.Time * 100 / MediaPlayer.Length;
-            }
-            set
-            {
-                MediaPlayer.Time = (long)(value * MediaPlayer.Length / 100);
-            }
+            get => MediaPlayer.Length == 0 ? 0 : MediaPlayer.Time * 100 / MediaPlayer.Length;
+            set => MediaPlayer.Time = (long)(value * MediaPlayer.Length / 100);
         }
 
         public void InitializeComponent()

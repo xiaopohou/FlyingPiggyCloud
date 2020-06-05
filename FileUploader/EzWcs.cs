@@ -1,5 +1,4 @@
-﻿using SixTransporter.UploadEngine;
-using System;
+﻿using System;
 using System.IO;
 
 namespace SixCloudCore.FileUploader

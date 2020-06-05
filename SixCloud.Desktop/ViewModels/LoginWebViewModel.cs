@@ -1,22 +1,8 @@
-﻿using DesktopBridge;
-using QingzhenyunApis.EntityModels;
-using QingzhenyunApis.Exceptions;
-using QingzhenyunApis.Methods.V3;
-using Sentry;
-using SixCloud.Core.Controllers;
-using SixCloud.Core.Models;
-using SixCloud.Core.Views;
-using SourceChord.FluentWPF;
+﻿using SixCloud.Desktop.Controllers;
+using SixCloud.Desktop.Views;
 using System;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using SixCloud.Desktop.Views;
-using SixCloud.Desktop.Controllers;
 
 namespace SixCloud.Desktop.ViewModels
 {

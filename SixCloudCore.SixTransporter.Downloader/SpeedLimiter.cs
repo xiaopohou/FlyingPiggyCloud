@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Threading;
 
 namespace SixCloudCore.SixTransporter.Downloader
 {
@@ -15,7 +15,11 @@ namespace SixCloudCore.SixTransporter.Downloader
 
         public void Run()
         {
-            if (Running || Limit <= 0) return;
+            if (Running || Limit <= 0)
+            {
+                return;
+            }
+
             Running = true;
             new Thread(() =>
                 {
@@ -23,12 +27,16 @@ namespace SixCloudCore.SixTransporter.Downloader
                     {
                         Thread.Sleep(100);
                         if (Current - (Limit / 10) < 0)
+                        {
                             Current = 0;
+                        }
                         else
+                        {
                             Current -= Limit / 10;
+                        }
                     }
                 })
-                { IsBackground = true }.Start();
+            { IsBackground = true }.Start();
         }
 
         public void Stop()
@@ -42,7 +50,9 @@ namespace SixCloudCore.SixTransporter.Downloader
             {
                 Current += size;
                 while (Current > Limit)
+                {
                     Thread.Sleep(10);
+                }
             }
         }
     }

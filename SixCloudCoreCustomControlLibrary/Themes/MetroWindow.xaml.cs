@@ -4,19 +4,22 @@ namespace CustomControls.Themes
 {
     public partial class MetroWindow
     {
-        void Minimized(object sender, RoutedEventArgs e)
+        private void Minimized(object sender, RoutedEventArgs e)
         {
             Window.GetWindow(sender as FrameworkElement).WindowState = WindowState.Minimized;
         }
-        void Normal(object sender, RoutedEventArgs e)
+
+        private void Normal(object sender, RoutedEventArgs e)
         {
             Window.GetWindow(sender as FrameworkElement).WindowState = WindowState.Normal;
         }
-        void Maximized(object sender, RoutedEventArgs e)
+
+        private void Maximized(object sender, RoutedEventArgs e)
         {
             Window.GetWindow(sender as FrameworkElement).WindowState = WindowState.Maximized;
         }
-        void Close(object sender, RoutedEventArgs e)
+
+        private void Close(object sender, RoutedEventArgs e)
         {
             Window.GetWindow(sender as FrameworkElement).Close();
         }

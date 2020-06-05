@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
-using Newtonsoft.Json.Linq;
 
 namespace SixTransporter.UploadEngine
 {
@@ -50,15 +50,22 @@ namespace SixTransporter.UploadEngine
                 Status = UploadTaskStatusEnum.Faulted;
                 return;
             }
-            if (Status == UploadTaskStatusEnum.Uploading) return;
+            if (Status == UploadTaskStatusEnum.Uploading)
+            {
+                return;
+            }
+
             Status = UploadTaskStatusEnum.Uploading;
             if (Info.Threads > Info.BlockList.Count(v => !v.Uploaded && !v.Uploading))
+            {
                 Info.Threads = Info.BlockList.Count(v => !v.Uploaded && !v.Uploading);
+            }
+
             Threads?.ForEach(v => v.Stop());
             Threads = new List<UploadThread>();
-            for (var i = 0; i < Info.Threads; i++)
+            for (int i = 0; i < Info.Threads; i++)
             {
-                var thread = new UploadThread(Info, Info.BlockList.First(v => !v.Uploaded && !v.Uploading).Id);
+                UploadThread thread = new UploadThread(Info, Info.BlockList.First(v => !v.Uploaded && !v.Uploading).Id);
                 thread.BlockUploadCompletedEvent += BlockUploadCompletedEvent;
                 thread.ChunkUploadCompletedEvent += ChunkUploadCompletedEvent;
                 thread.StartUpload();
@@ -77,7 +84,7 @@ namespace SixTransporter.UploadEngine
                 Thread.Sleep(1000);
                 if (Status == UploadTaskStatusEnum.Uploading)
                 {
-                    var uploadedSize = UploadedSize - _startSize;
+                    long uploadedSize = UploadedSize - _startSize;
                     if (uploadedSize / (DateTime.Now - _startTime).TotalSeconds > 0)
                     {
                         Speed = (long)(uploadedSize / (DateTime.Now - _startTime).TotalSeconds);
@@ -95,7 +102,7 @@ namespace SixTransporter.UploadEngine
                 Info.BlockList[sender.BlockId].Uploading = false;
                 if (Info.BlockList.Any(v => !v.Uploaded && !v.Uploading))
                 {
-                    var thread = new UploadThread(Info, Info.BlockList.First(v => !v.Uploaded && !v.Uploading).Id);
+                    UploadThread thread = new UploadThread(Info, Info.BlockList.First(v => !v.Uploaded && !v.Uploading).Id);
                     thread.BlockUploadCompletedEvent += BlockUploadCompletedEvent;
                     thread.ChunkUploadCompletedEvent += ChunkUploadCompletedEvent;
                     thread.StartUpload();
@@ -104,18 +111,20 @@ namespace SixTransporter.UploadEngine
                 }
 
                 if (Info.BlockList.Any(v => v.Uploading))
+                {
                     return;
+                }
             }
-            using (var client = new HttpClient())
+            using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Info.Token);
                 client.DefaultRequestHeaders.Add("UploadBatch", Info.Uuid);
-                var body = string.Join(",", Info.BlockList.Select(v => v.Ctx));
+                string body = string.Join(",", Info.BlockList.Select(v => v.Ctx));
                 //Console.WriteLine(body);
-                var result = await client.PostAsync($"{Info.UploadUrl}/mkfile/{Info.FileSize}", new StringContent(body));
+                HttpResponseMessage result = await client.PostAsync($"{Info.UploadUrl}/mkfile/{Info.FileSize}", new StringContent(body));
                 try
                 {
-                    var json = JObject.Parse(await result.Content.ReadAsStringAsync());
+                    JObject json = JObject.Parse(await result.Content.ReadAsStringAsync());
                     //LogHelper.Debug(json.ToString());
                     if (json["code"] != null)
                     {

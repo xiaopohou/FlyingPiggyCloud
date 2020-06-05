@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading;
 
 namespace SixTransporter.DownloadEngine
@@ -40,8 +38,16 @@ namespace SixTransporter.DownloadEngine
         {
             try
             {
-                if (_stopped) return;
-                if (!File.Exists(Info.DownloadPath)) return;
+                if (_stopped)
+                {
+                    return;
+                }
+
+                if (!File.Exists(Info.DownloadPath))
+                {
+                    return;
+                }
+
                 if (Block.Downloaded)
                 {
                     Block.Downloading = false;
@@ -61,17 +67,20 @@ namespace SixTransporter.DownloadEngine
                 _request.Method = "GET";
                 _request.Timeout = 8000;
                 _request.ReadWriteTimeout = 8000;
-                foreach (var header in Info.Headers)
-                    HttpDownloader.SetHeaderValue(_request.Headers,header.Key, header.Value);
+                foreach (KeyValuePair<string, string> header in Info.Headers)
+                {
+                    HttpDownloader.SetHeaderValue(_request.Headers, header.Key, header.Value);
+                }
+
                 _request.AddRange(Block.BeginOffset, Block.EndOffset);
                 _response = (HttpWebResponse)_request.GetResponse();
-                using (var responseStream = _response.GetResponseStream())
-                using (var stream = new FileStream(Info.DownloadPath, FileMode.Open, FileAccess.ReadWrite,
+                using (Stream responseStream = _response.GetResponseStream())
+                using (FileStream stream = new FileStream(Info.DownloadPath, FileMode.Open, FileAccess.ReadWrite,
                     FileShare.ReadWrite, 1024 * 1024))
                 {
                     stream.Seek(Block.BeginOffset, SeekOrigin.Begin);
-                    var array = new byte[1024];
-                    var i = responseStream.Read(array, 0, array.Length);
+                    byte[] array = new byte[1024];
+                    int i = responseStream.Read(array, 0, array.Length);
                     while (true)
                     {
                         if (_stopped)
@@ -87,7 +96,11 @@ namespace SixTransporter.DownloadEngine
                             return;
                         }
 
-                        if (i <= 0 || Block.BeginOffset > Block.EndOffset) break;
+                        if (i <= 0 || Block.BeginOffset > Block.EndOffset)
+                        {
+                            break;
+                        }
+
                         stream.Write(array, 0, i);
                         Block.BeginOffset += i;
                         Block.DownloadedSize += i;
@@ -148,13 +161,19 @@ namespace SixTransporter.DownloadEngine
         public void Stop()
         {
             if (Block.Downloaded)
+            {
                 return;
+            }
+
             _stopped = true;
         }
         public void ForceStop()
         {
             if (Block.Downloaded)
+            {
                 return;
+            }
+
             _stopped = true;
             try
             {

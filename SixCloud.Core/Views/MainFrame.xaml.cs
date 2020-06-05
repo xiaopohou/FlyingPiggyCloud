@@ -1,8 +1,4 @@
-﻿using SixCloud.Core.ViewModels;
-using SourceChord.FluentWPF;
-using System;
-using System.Threading;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace SixCloud.Core.Views

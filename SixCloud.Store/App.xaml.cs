@@ -1,10 +1,4 @@
 ﻿using SixCloud.Store.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace SixCloud.Store
@@ -16,8 +10,7 @@ namespace SixCloud.Store
     {
         public App()
         {
-            //Core.Core.Initialize();
-            LibVLCSharp.Shared.Core.Initialize();
+            Core.Core.Initialize();
             new LoginWebViewModel();
         }
     }
