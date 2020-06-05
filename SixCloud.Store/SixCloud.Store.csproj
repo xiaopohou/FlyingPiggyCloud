@@ -10,12 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LibVLCSharp.WPF" Version="3.4.5" />
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView" Version="6.0.1" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SixCloud.Core\SixCloud.Core.csproj" />
-    <ProjectReference Include="..\SixCloudCoreCustomControlLibrary\SixCloudCoreCustomControlLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>

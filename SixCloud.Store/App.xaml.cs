@@ -16,7 +16,8 @@ namespace SixCloud.Store
     {
         public App()
         {
-            Core.Core.Initialize();
+            //Core.Core.Initialize();
+            LibVLCSharp.Shared.Core.Initialize();
             new LoginWebViewModel();
         }
     }
