@@ -15,7 +15,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Image Source="/MediaResources/MainLogo.png" Height="72" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Image Source="pack://application:,,,/SixCloud.Core;component/MediaResources/MainLogo.png" Height="72" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <StackPanel Margin="15" Grid.Column="1" VerticalAlignment="Center">
             <TextBlock Text="SixCloudCore via Cdorey"/>
             <TextBlock x:Name="VersionBlock"/>
