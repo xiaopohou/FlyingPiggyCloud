@@ -12,8 +12,45 @@
              xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
              x:Class="SixCloud.Core.Views.UserControls.FileListView"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" fw:PointerTracker.Enabled="True">
+             d:DesignHeight="450" d:DesignWidth="800" fw:PointerTracker.Enabled="True" RenderTransformOrigin="0.5,0.5" Name="fileListView">
+    <UserControl.RenderTransform>
+        <TransformGroup>
+            <ScaleTransform ScaleX="1" ScaleY="1"></ScaleTransform>
+        </TransformGroup>
+    </UserControl.RenderTransform>
     <UserControl.Resources>
+        <Storyboard x:Key="ZoomStoryboard" >
+            <DoubleAnimationUsingKeyFrames Duration="00:00:00.500"
+                                           Storyboard.TargetName="fileListView"
+                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <EasingDoubleKeyFrame Value="0.99">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Duration="00:00:00.500"
+                                           Storyboard.TargetName="fileListView"
+                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <EasingDoubleKeyFrame Value="0.99">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+
         <ViewModels:HidingSizeinfoForDirectoryConverter x:Key="HidingSizeinfoForDirectoryConverter"/>
 
         <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>

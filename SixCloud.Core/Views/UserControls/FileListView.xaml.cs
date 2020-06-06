@@ -1,6 +1,7 @@
 ﻿using SixCloud.Core.ViewModels;
 using System.Text;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace SixCloud.Core.Views.UserControls
 {
@@ -23,6 +24,7 @@ namespace SixCloud.Core.Views.UserControls
                 {
                     if (fileListItem.Directory)
                     {
+                        ZoomAnimation();
                         dataContext.NavigateByUUIDAsync(fileListItem.UUID);
                     }
                     else if (fileListItem.Preview)
@@ -66,6 +68,7 @@ namespace SixCloud.Core.Views.UserControls
                 int i = listBox.SelectedIndex;
                 if (i == 0)
                 {
+                    ZoomAnimation();
                     viewmodel.NavigateByPathAsync("/");
                 }
                 else if (i != -1)
@@ -78,10 +81,17 @@ namespace SixCloud.Core.Views.UserControls
                         stringBuilder.Append("/");
                         stringBuilder.Append(path);
                     }
+                    ZoomAnimation();
                     viewmodel.NavigateByPathAsync(stringBuilder.ToString());
                 }
                 listBox.SelectedIndex = -1;
             }
+        }
+
+        private void ZoomAnimation()
+        {
+            var animation = FindResource("ZoomStoryboard") as Storyboard;
+            animation.Begin();
         }
     }
 }
