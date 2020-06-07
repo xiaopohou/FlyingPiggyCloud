@@ -1,6 +1,9 @@
-﻿using SixCloud.Core.ViewModels;
+﻿using SixCloud.Core.Controllers;
+using SixCloud.Core.ViewModels;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace SixCloud.Core.Views.UserControls
@@ -14,6 +17,11 @@ namespace SixCloud.Core.Views.UserControls
         {
             InitializeComponent();
             LazyLoadEventHandler += LazyLoad;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ColorSetter.SetAccentColor(Color.FromArgb(255, 0, 127, 127));
+                ColorSetter.SetForegroundColor(Color.FromArgb(255, 127, 0, 0));
+            });
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

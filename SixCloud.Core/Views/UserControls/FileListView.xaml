@@ -20,7 +20,7 @@
     </UserControl.RenderTransform>
     <UserControl.Resources>
         <Storyboard x:Key="ZoomStoryboard" >
-            <DoubleAnimationUsingKeyFrames Duration="00:00:00.500"
+            <DoubleAnimationUsingKeyFrames Duration="00:00:00.200"
                                            Storyboard.TargetName="fileListView"
                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
                 <EasingDoubleKeyFrame Value="0.99">
@@ -34,7 +34,8 @@
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Duration="00:00:00.500"
+
+            <DoubleAnimationUsingKeyFrames Duration="00:00:00.200"
                                            Storyboard.TargetName="fileListView"
                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
                 <EasingDoubleKeyFrame Value="0.99">
@@ -48,12 +49,26 @@
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
+
+            <DoubleAnimationUsingKeyFrames Duration="00:00:00.200"
+                                           Storyboard.TargetName="fileListView"
+                                           Storyboard.TargetProperty="Opacity">
+                <EasingDoubleKeyFrame Value="0.9">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
         </Storyboard>
 
-
         <ViewModels:HidingSizeinfoForDirectoryConverter x:Key="HidingSizeinfoForDirectoryConverter"/>
-
         <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>
+        
         <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -255,7 +270,7 @@
         <ListView Grid.Row="2" SelectedIndex="{Binding SelectedIndex, Mode=OneWayToSource}" ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" ItemsSource="{Binding FileList}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName, Mode=OneWay}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileSize}" CellTemplate="{StaticResource MetaSize}" Header="大小"/>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" CellTemplate="{StaticResource MetaMTime}" Header="修改时间"/>
                 </GridView>
