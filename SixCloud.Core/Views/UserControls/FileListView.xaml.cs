@@ -21,6 +21,7 @@ namespace SixCloud.Core.Views.UserControls
             {
                 ColorSetter.SetAccentColor(Color.FromArgb(255, 0, 127, 127));
                 ColorSetter.SetForegroundColor(Color.FromArgb(255, 127, 0, 0));
+                ColorSetter.SetBackgroundColor(Color.FromArgb(255, 55, 55, 0));
             });
         }
 

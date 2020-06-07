@@ -17,11 +17,20 @@ namespace SixCloud.Core.Controllers
             Application.Current.Resources["ImmersiveSystemAccentBrushDark1"] = new SolidColorBrush(Multiply(color, -0.1));
             Application.Current.Resources["ImmersiveSystemAccentBrushDark2"] = new SolidColorBrush(Multiply(color, -0.2));
             Application.Current.Resources["ImmersiveSystemAccentBrushDark3"] = new SolidColorBrush(Multiply(color, -0.3));
+
+            Application.Current.Resources["PrimaryHueLightBrush"] = new SolidColorBrush(Multiply(color, 0.1));
+            Application.Current.Resources["PrimaryHueMidBrush"] = new SolidColorBrush(color);
+            Application.Current.Resources["PrimaryHueDarkBrush"] = new SolidColorBrush(Multiply(color, -0.1));
+
         }
 
         public static void SetForegroundColor(Color color)
         {
             Application.Current.Resources["MainForegroundBrush"] = new SolidColorBrush(color);
+        }
+        public static void SetBackgroundColor(Color color)
+        {
+            Application.Current.Resources["MainBackgroundBrush"] = new SolidColorBrush(color);
         }
 
 
