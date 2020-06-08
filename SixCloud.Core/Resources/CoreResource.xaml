@@ -42,7 +42,7 @@
 
     <Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Foreground" Value="{DynamicResource ImmersiveSystemAccentBrush}"/>
         <Setter Property="Padding" Value="6"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="Template">
@@ -62,7 +62,7 @@
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="False"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="Foreground" Value="Gray"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
                             <Setter Property="Opacity" Value="0.95"/>
                             <Setter TargetName="line" Property="Opacity" Value="0"/>
                         </MultiDataTrigger>

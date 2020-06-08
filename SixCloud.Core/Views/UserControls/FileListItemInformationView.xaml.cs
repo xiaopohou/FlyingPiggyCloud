@@ -23,7 +23,7 @@ namespace SixCloud.Core.Views.UserControls
             }
             else
             {
-                BeginAnimation(HeightProperty, new DoubleAnimation(450, new Duration(new TimeSpan(0, 0, 0, 0, 150))));
+                BeginAnimation(HeightProperty, new DoubleAnimation(350, new Duration(new TimeSpan(0, 0, 0, 0, 150))));
             }
         }
     }

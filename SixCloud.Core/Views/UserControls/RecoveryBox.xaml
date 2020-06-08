@@ -61,20 +61,20 @@
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="Delete" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Command="{Binding DeleteCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=RecoveryList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF1F8;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="删除" Foreground="#FF5A5A5A"/>
+                        <controls:FontIcon Icon="&#xF1F8;"/>
+                        <TextBlock Text="删除"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="Cut" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Command="{Binding RecoveryCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=RecoveryList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF0C4;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="恢复" Foreground="#FF5A5A5A"/>
+                        <controls:FontIcon Icon="&#xF0C4;"/>
+                        <TextBlock Text="恢复"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="Copy" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Command="{Binding EmptyCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=RecoveryList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <controls:FontIcon Icon="&#xF0C5;" Foreground="#FF5A5A5A"/>
-                        <TextBlock Text="清空" Foreground="#FF5A5A5A"/>
+                        <controls:FontIcon Icon="&#xF0C5;"/>
+                        <TextBlock Text="清空"/>
                     </StackPanel>
                 </Button>
             </StackPanel>

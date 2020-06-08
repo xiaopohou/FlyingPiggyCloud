@@ -19,9 +19,9 @@ namespace SixCloud.Core.Views.UserControls
             LazyLoadEventHandler += LazyLoad;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ColorSetter.SetAccentColor(Color.FromArgb(255, 0, 127, 127));
-                ColorSetter.SetForegroundColor(Color.FromArgb(255, 127, 0, 0));
-                ColorSetter.SetBackgroundColor(Color.FromArgb(255, 55, 55, 0));
+                //ColorSetter.SetAccentColor(Color.FromArgb(255, 0, 127, 127));
+                //ColorSetter.SetForegroundColor(Color.FromArgb(255, 200, 200, 120));
+                //ColorSetter.SetBackgroundColor(Color.FromArgb(255, 55, 55, 25));
             });
         }
 
