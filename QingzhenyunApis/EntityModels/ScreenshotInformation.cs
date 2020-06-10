@@ -3,7 +3,7 @@ using System;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class ScreenshotInformation
+    public class ScreenshotInformation : EntityBodyBase
     {
         [JsonProperty("found")]
         public bool Found { get; set; }

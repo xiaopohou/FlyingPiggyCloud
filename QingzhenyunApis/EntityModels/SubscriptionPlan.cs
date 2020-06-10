@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class SubscriptionPlan
+    public class SubscriptionPlan : EntityBodyBase
     {
         [JsonProperty("identity")]
         public long Identity { get; set; }
