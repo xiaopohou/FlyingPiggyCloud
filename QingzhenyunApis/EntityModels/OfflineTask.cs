@@ -4,6 +4,8 @@ namespace QingzhenyunApis.EntityModels
 {
     public class OfflineTask : EntityBodyBase
     {
+        private long progress;
+
         [JsonProperty("taskIdentity")]
         public string TaskIdentity { get; set; }
 
@@ -29,7 +31,7 @@ namespace QingzhenyunApis.EntityModels
         public long ProcessedSize { get; set; }
 
         [JsonProperty("progress")]
-        public long Progress { get; set; }
+        public long Progress { get => Status == 1000 ? 100 : progress; set => progress = value; }
 
         [JsonProperty("errorCode")]
         public long ErrorCode { get; set; }
