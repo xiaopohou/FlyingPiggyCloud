@@ -116,7 +116,7 @@ namespace SixCloud.Core.ViewModels
                     TasksLogger.ExitEventHandler(sender, new Controllers.ExitEventArgs(currentUser));
 
                     //尝试自动重启
-                    string x = $"{AppDomain.CurrentDomain.BaseDirectory }SixCloud.Desktop.exe";
+                    string x = $"{AppDomain.CurrentDomain.BaseDirectory }{AppDomain.CurrentDomain.FriendlyName}.exe";
                     if (File.Exists(x))
                     {
                         //应在此处释放互斥锁
