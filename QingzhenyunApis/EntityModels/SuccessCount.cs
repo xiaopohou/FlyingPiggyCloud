@@ -7,5 +7,4 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty(PropertyName = "successCount")]
         public int Value { get; set; }
     }
-
 }

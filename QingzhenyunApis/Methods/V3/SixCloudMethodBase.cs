@@ -188,6 +188,5 @@ namespace QingzhenyunApis.Methods.V3
         {
             Token = token ?? Token;
         }
-
     }
 }
