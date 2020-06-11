@@ -2,6 +2,7 @@
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
+using Sentry.Protocol;
 using SixCloud.Core.Controllers;
 using SourceChord.FluentWPF;
 using System;
@@ -97,6 +98,12 @@ namespace SixCloud.Core.ViewModels
         private async Task OnLoginSuccess()
         {
             UserInformation currentUser = await Authentication.GetUserInformation();
+            SentryAgent.SetUser(new User
+            {
+                Id = currentUser.UUID.ToString(),
+                Username = currentUser.Name,
+                Email = currentUser.Email
+            }, currentUser);
             await Application.Current.Dispatcher.Invoke(async () =>
             {
                 await new MainFrameViewModel().InitializeComponent().ConfigureAwait(true);

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Sentry;
+using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,15 @@ namespace QingzhenyunApis.Exceptions
         internal static string ToJson(this object obj)
         {
             return JsonConvert.SerializeObject(obj);
+        }
+
+        public static void SetUser(User user, object userEntity)
+        {
+            SentrySdk.ConfigureScope(scope =>
+            {
+                scope.User = user;
+                scope.SetExtra("UserInformation", userEntity);
+            });
         }
 
         public static SentryScopeInfo ToSentry(this Exception exception)
