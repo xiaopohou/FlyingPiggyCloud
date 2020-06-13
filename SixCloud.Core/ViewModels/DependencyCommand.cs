@@ -59,21 +59,23 @@ namespace SixCloud.Core.ViewModels
         /// <param name="parameter"></param>
         public virtual void Execute(object parameter)
         {
-            if (IsAutoTryCatch)
+            try
             {
-                try
-                {
-                    ExecuteAction?.Invoke(parameter);
-                }
-                catch (Exception ex)
+                ExecuteAction?.Invoke(parameter);
+            }
+            catch (Exception ex)
+            {
+                if (IsAutoTryCatch)
                 {
                     MessageBox.Show($"失败，由于{ex.Message}", "请求失败", MessageBoxButton.OK, MessageBoxImage.Error);
                     ex.ToSentry().TreatedBy(nameof(DependencyCommand)).Submit();
                 }
-                return;
+                else
+                {
+                    throw;
+                }
             }
-
-            ExecuteAction?.Invoke(parameter);
+            return;
         }
 
         /// <summary>
