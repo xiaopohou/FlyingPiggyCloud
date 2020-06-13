@@ -37,7 +37,7 @@ namespace SixCloud.Core.Models
 
         public List<DownloadTaskRecord> CompletedTasks { get; } = new List<DownloadTaskRecord>();
 
-        public override string CurrentFileFullPath => throw new NotImplementedException();
+        public override string CurrentFileFullPath { get; }
 
         public long CompletedCount => CompletedTasks.Count;
 
