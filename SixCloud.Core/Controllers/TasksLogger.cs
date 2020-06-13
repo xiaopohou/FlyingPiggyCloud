@@ -57,7 +57,7 @@ namespace SixCloud.Core.Controllers
 
                     if (startupInformation?.BelongsTo?.UUID == user.UUID)
                     {
-                        if (startupInformation.UploadTasks != null && startupInformation.UploadTasks.Any())
+                        if (startupInformation?.UploadTasks?.Any() == true)
                         {
                             foreach (UploadTaskRecord record in startupInformation.UploadTasks)
                             {
@@ -76,7 +76,7 @@ namespace SixCloud.Core.Controllers
                             }
                         }
 
-                        if (startupInformation.SerializedDownloadTasks != null && startupInformation.SerializedDownloadTasks.Any())
+                        if (startupInformation?.SerializedDownloadTasks?.Any() == true)
                         {
                             foreach (string record in startupInformation.SerializedDownloadTasks)
                             {
@@ -98,7 +98,7 @@ namespace SixCloud.Core.Controllers
                             }
                         }
 
-                        if (startupInformation.SerializedDownloadTasks != null && startupInformation.SerializedDownloadTasks.Any())
+                        if (startupInformation?.SerializedDownloadTaskGroups?.Any() == true)
                         {
                             foreach (string record in startupInformation.SerializedDownloadTaskGroups)
                             {
