@@ -61,7 +61,18 @@ namespace SixCloud.Core.Controllers
                         {
                             foreach (UploadTaskRecord record in startupInformation.UploadTasks)
                             {
-                                Application.Current.Dispatcher.Invoke(() => TransferListViewModel.NewUploadTask(record.TargetPath, record.LocalFilePath));
+                                try
+                                {
+                                    Application.Current.Dispatcher.Invoke(() => TransferListViewModel.NewUploadTask(record.TargetPath, record.LocalFilePath));
+                                }
+                                catch (NullReferenceException ex)
+                                {
+                                    ex
+                                        .ToSentry()
+                                        .AttachTag("Location", nameof(UploadTaskRecord))
+                                        .AttachExtraInfo(nameof(record), record)
+                                        .Submit();
+                                }
                             }
                         }
 
@@ -69,8 +80,21 @@ namespace SixCloud.Core.Controllers
                         {
                             foreach (string record in startupInformation.SerializedDownloadTasks)
                             {
-                                DownloadTaskRecord downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record);
-                                DownloadingListViewModel.NewTask(downloadTaskRecord.TargetUUID, downloadTaskRecord.LocalPath, downloadTaskRecord.Name);
+                                try
+                                {
+                                    DownloadTaskRecord downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record);
+                                    DownloadingListViewModel.NewTask(downloadTaskRecord.TargetUUID, downloadTaskRecord.LocalPath, downloadTaskRecord.Name);
+                                }
+                                catch (NullReferenceException ex)
+                                {
+                                    ex
+                                        .ToSentry()
+                                        .AttachTag("Location", nameof(DownloadTaskRecord))
+                                        .AttachExtraInfo(nameof(record), record)
+                                        .AttachExtraInfo(nameof(DownloadTaskRecord), JsonConvert.DeserializeObject<DownloadTaskRecord>(record))
+                                        .Submit();
+                                }
+
                             }
                         }
 
@@ -78,8 +102,20 @@ namespace SixCloud.Core.Controllers
                         {
                             foreach (string record in startupInformation.SerializedDownloadTaskGroups)
                             {
-                                DownloadTaskGroupRecord downloadTaskGroupRecord = JsonConvert.DeserializeObject<DownloadTaskGroupRecord>(record);
-                                TransferListViewModel.NewDownloadTaskGroup(downloadTaskGroupRecord);
+                                try
+                                {
+                                    DownloadTaskGroupRecord downloadTaskGroupRecord = JsonConvert.DeserializeObject<DownloadTaskGroupRecord>(record);
+                                    TransferListViewModel.NewDownloadTaskGroup(downloadTaskGroupRecord);
+                                }
+                                catch (NullReferenceException ex)
+                                {
+                                    ex
+                                        .ToSentry()
+                                        .AttachTag("Location", nameof(DownloadTaskGroupRecord))
+                                        .AttachExtraInfo(nameof(record), record)
+                                        .AttachExtraInfo(nameof(DownloadTaskGroupRecord), JsonConvert.DeserializeObject<DownloadTaskGroupRecord>(record))
+                                        .Submit();
+                                }
                             }
                         }
                     }
