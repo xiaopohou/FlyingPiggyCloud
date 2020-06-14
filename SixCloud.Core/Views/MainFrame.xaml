@@ -85,7 +85,7 @@
                         <StackPanel DataContext="{Binding UserInformation}"
                                     MaxHeight="40" Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
                             <Image Source="{Binding Icon}"/>
-                            <Button x:Name="contextMenuButton" Height="40" Width="40" Focusable="True">
+                            <Button x:Name="contextMenuButton" Height="40" Width="40" Focusable="True" Click="ContextMenuButton_Click">
                                 <metro:FontIcon Icon="&#xf141;"/>
                             </Button>
                         </StackPanel>
@@ -131,32 +131,49 @@
             </TabItem>
         </TabControl>
 
-        <Border Margin="0,50,0,0"
+        <Border Background="#00FFFFFF" Visibility="Collapsed" x:Name="contextMenuBg" >
+            <Border Margin="0,50,0,0"
                 DataContext="{Binding UserInformation}"
                 BorderBrush="{DynamicResource ImmersiveSystemAccentBrush}" 
                 BorderThickness="1"
                 Background="White"
                 x:Name="contextMenu" Height="0" Width="280" HorizontalAlignment="Right" VerticalAlignment="Top" MouseDown="ContextMenu_MouseDown">
-            <StackPanel>
-                <Grid Background="LightGray" Height="200" Width="280">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" FontSize="20" VerticalAlignment="Bottom" Text="{Binding Name}" Margin="15"/>
-                    <TextBlock Grid.Row="1" FontSize="14" VerticalAlignment="Bottom" Text="{Binding FriendlyVipExpireTime}" Margin="15"/>
-                    <ProgressBar Grid.Row="2" VerticalAlignment="Top" Value="{Binding AvailableRate}" Style="{StaticResource ProgressBarStyle}" Margin="15" Background="LightGray"/>
-                    <TextBlock Grid.Row="3" FontSize="14" VerticalAlignment="Bottom" Text="{Binding FrendlySpaceCapacity}" Margin="15"/>
-                </Grid>
-                <Button Content="修改用户名" Command="{Binding ChangeUserNameCommand}" Height="50" Width="280"/>
-                <Button Content="会员续费" Command="{Binding RenewalCommand}" Height="50" Width="280"/>
-                <Button Content="修改密码" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
-                <Button Content="注销登录" Command="{Binding LogoutCommand}" Height="50" Width="280"/>
-                <Button Content="关于软件" Command="{Binding AboutCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Height="50" Width="280"/>
-            </StackPanel>
+                <StackPanel>
+                    <Grid Background="LightGray" Height="200" Width="280">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" FontSize="20" VerticalAlignment="Bottom" Text="{Binding Name}" Margin="15"/>
+                        <TextBlock Grid.Row="1" FontSize="14" VerticalAlignment="Bottom" Text="{Binding FriendlyVipExpireTime}" Margin="15"/>
+                        <ProgressBar Grid.Row="2" VerticalAlignment="Top" Value="{Binding AvailableRate}" Style="{StaticResource ProgressBarStyle}" Margin="15" Background="LightGray"/>
+                        <TextBlock Grid.Row="3" FontSize="14" VerticalAlignment="Bottom" Text="{Binding FrendlySpaceCapacity}" Margin="15"/>
+                    </Grid>
+                    <Button Content="修改用户名" Command="{Binding ChangeUserNameCommand}" Height="50" Width="280"/>
+                    <Button Content="会员续费" Command="{Binding RenewalCommand}" Height="50" Width="280"/>
+                    <Button Content="修改密码" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
+                    <Button Content="注销登录" Command="{Binding LogoutCommand}" Height="50" Width="280"/>
+                    <Button Content="关于软件" Command="{Binding AboutCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Height="50" Width="280"/>
+                </StackPanel>
+            </Border>
+            <Border.Triggers>
+                <EventTrigger RoutedEvent="MouseDown">
+                    <BeginStoryboard>
+                        <Storyboard x:Name="contextMenuHideTimeLine">
+                            <DoubleAnimation Duration="00:00:00.200" To="0" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
+                                <DoubleAnimation.EasingFunction>
+                                    <BackEase EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <ColorAnimation Duration="00:00:00.200" To="#00FFFFFF" Storyboard.TargetName="contextMenuBg" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Border.Triggers>
         </Border>
+
         <Grid.Triggers>
             <EventTrigger RoutedEvent="Button.Click">
                 <BeginStoryboard>
@@ -166,21 +183,10 @@
                                 <BackEase EasingMode="EaseOut"/>
                             </DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
+                        <ColorAnimation Duration="00:00:00.200" To="#77000000" Storyboard.TargetName="contextMenuBg" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
-            <EventTrigger RoutedEvent="MouseDown">
-                <BeginStoryboard>
-                    <Storyboard>
-                        <DoubleAnimation Duration="00:00:00.200" To="0" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
-                            <DoubleAnimation.EasingFunction>
-                                <BackEase EasingMode="EaseIn"/>
-                            </DoubleAnimation.EasingFunction>
-                        </DoubleAnimation>
-                    </Storyboard>
-                </BeginStoryboard>
-            </EventTrigger>
-
         </Grid.Triggers>
     </Grid>
 </UserControl>

@@ -22,15 +22,19 @@ namespace SixCloud.Core.Controllers
             Application.Current.Resources["PrimaryHueMidBrush"] = new SolidColorBrush(color);
             Application.Current.Resources["PrimaryHueDarkBrush"] = new SolidColorBrush(Multiply(color, -0.1));
 
+            LocalProperties.AccentColor = color;
+
         }
 
         public static void SetForegroundColor(Color color)
         {
             Application.Current.Resources["MainForegroundBrush"] = new SolidColorBrush(color);
+            LocalProperties.ForegroundColor = color;
         }
         public static void SetBackgroundColor(Color color)
         {
             Application.Current.Resources["MainBackgroundBrush"] = new SolidColorBrush(color);
+            LocalProperties.BackgroundColor = color;
         }
 
 

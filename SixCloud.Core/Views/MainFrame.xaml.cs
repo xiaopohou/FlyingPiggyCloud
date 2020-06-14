@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace SixCloud.Core.Views
 {
@@ -12,16 +15,17 @@ namespace SixCloud.Core.Views
         public MainFrame()
         {
             InitializeComponent();
+            //上下文菜单收回后隐藏黑色底幕
+            contextMenuHideTimeLine.Completed += (sender, e) =>
+            {
+                contextMenuBg.Visibility = Visibility.Collapsed;
+            };
         }
 
         private void TabControl_Click(object sender, RoutedEventArgs e)
         {
             //避免click其他按钮展开菜单
-            if (e.OriginalSource is Button contextMenuButton && contextMenuButton.Name == "contextMenuButton")
-            {
-                //contextMenuButton.Focus();
-            }
-            else
+            if (!(e.OriginalSource is Button contextMenuButton) || contextMenuButton.Name != "contextMenuButton")
             {
                 e.Handled = true;
             }
@@ -31,6 +35,11 @@ namespace SixCloud.Core.Views
         {
             //避免点击菜单内元素导致菜单收回
             e.Handled = true;
+        }
+
+        private void ContextMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            contextMenuBg.Visibility = Visibility.Visible;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Windows.Media;
 
 namespace SixCloud.Core.Controllers
 {
@@ -14,10 +15,25 @@ namespace SixCloud.Core.Controllers
             set => ApplicationDictionary.SetValue(nameof(Token), value);
         }
 
-        public FileViewType FileViewType
+        public static FileViewType FileViewType
         {
             get => (FileViewType)(ApplicationDictionary.GetValue(nameof(FileViewType)) ?? FileViewType.DetailsList);
             set => ApplicationDictionary.SetValue(nameof(FileViewType), value);
+        }
+        public static Color? AccentColor
+        {
+            get => (Color?)ApplicationDictionary.GetValue(nameof(AccentColor));
+            set => ApplicationDictionary.SetValue(nameof(AccentColor), value);
+        }
+        public static Color? ForegroundColor
+        {
+            get => (Color?)ApplicationDictionary.GetValue(nameof(ForegroundColor));
+            set => ApplicationDictionary.SetValue(nameof(ForegroundColor), value);
+        }
+        public static Color? BackgroundColor
+        {
+            get => (Color?)ApplicationDictionary.GetValue(nameof(BackgroundColor));
+            set => ApplicationDictionary.SetValue(nameof(BackgroundColor), value);
         }
     }
 

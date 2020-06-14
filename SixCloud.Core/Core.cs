@@ -1,5 +1,6 @@
 ﻿using QingzhenyunApis.Exceptions;
 using Sentry;
+using SixCloud.Core.Controllers;
 using System;
 using System.Reflection;
 using System.Windows;
@@ -11,7 +12,18 @@ namespace SixCloud.Core
     {
         public static void Initialize()
         {
-
+            if (LocalProperties.AccentColor != default)
+            {
+                ColorSetter.SetAccentColor(LocalProperties.AccentColor.Value);
+            }
+            if (LocalProperties.ForegroundColor != default)
+            {
+                ColorSetter.SetForegroundColor(LocalProperties.ForegroundColor.Value);
+            }
+            if (LocalProperties.BackgroundColor != default)
+            {
+                ColorSetter.SetBackgroundColor(LocalProperties.BackgroundColor.Value);
+            }
         }
 
         static Core()
