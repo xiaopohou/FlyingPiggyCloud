@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace SixCloud.Core.Views
@@ -16,10 +14,13 @@ namespace SixCloud.Core.Views
         {
             InitializeComponent();
             //上下文菜单收回后隐藏黑色底幕
-            contextMenuHideTimeLine.Completed += (sender, e) =>
+            if (FindResource("contextMenuHideTimeLine") is Storyboard contextMenuHideTimeLine)
             {
-                contextMenuBg.Visibility = Visibility.Collapsed;
-            };
+                contextMenuHideTimeLine.Completed += (sender, e) =>
+                {
+                    contextMenuBg.Visibility = Visibility.Collapsed;
+                };
+            }
         }
 
         private void TabControl_Click(object sender, RoutedEventArgs e)

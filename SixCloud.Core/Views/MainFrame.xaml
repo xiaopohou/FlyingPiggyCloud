@@ -66,6 +66,15 @@
             </Setter>
         </Style>
 
+        <Storyboard x:Key="contextMenuHideTimeLine">
+            <DoubleAnimation Duration="00:00:00.200" To="0" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <ColorAnimation Duration="00:00:00.200" To="#00FFFFFF" Storyboard.TargetName="contextMenuBg" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+        </Storyboard>
+
     </UserControl.Resources>
     <Grid Background="{DynamicResource MainBackgroundBrush}">
         <TabControl BorderThickness="0" Background="{DynamicResource MainBackgroundBrush}" ItemContainerStyle="{StaticResource TabItemStyle}" Button.Click="TabControl_Click">
@@ -167,16 +176,10 @@
             </Border>
             <Border.Triggers>
                 <EventTrigger RoutedEvent="MouseDown">
-                    <BeginStoryboard>
-                        <Storyboard x:Name="contextMenuHideTimeLine">
-                            <DoubleAnimation Duration="00:00:00.200" To="0" Storyboard.TargetName="contextMenu" Storyboard.TargetProperty="Height">
-                                <DoubleAnimation.EasingFunction>
-                                    <BackEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <ColorAnimation Duration="00:00:00.200" To="#00FFFFFF" Storyboard.TargetName="contextMenuBg" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
-                        </Storyboard>
-                    </BeginStoryboard>
+                    <BeginStoryboard Storyboard="{StaticResource contextMenuHideTimeLine}"/>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="ButtonBase.Click">
+                    <BeginStoryboard Storyboard="{StaticResource contextMenuHideTimeLine}"/>
                 </EventTrigger>
             </Border.Triggers>
         </Border>

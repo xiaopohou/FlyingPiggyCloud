@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SixCloud.Core.Views.Dialogs"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="颜色设置" SizeToContent="Height" MaxWidth="450" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="None">
+        Title="颜色设置" SizeToContent="Height" MaxWidth="450" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="None" SizeChanged="Window_SizeChanged" ResizeMode="NoResize">
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>

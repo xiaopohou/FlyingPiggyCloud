@@ -92,22 +92,25 @@ namespace SixCloud.Core.ViewModels
         {
             dialog = new ColorSetterDialog(owner);
             dialog.DataContext = this;
-            dialog.Show();
-            if (LocalProperties.AccentColor != default)
+            dialog.Activated += (sender, e) =>
             {
-                IsUserDefinedAccentColor = true;
-                OnPropertyChanged(nameof(IsUserDefinedAccentColor));
-            }
-            if (LocalProperties.ForegroundColor != default)
-            {
-                IsUserDefinedForegroundColor = true;
-                OnPropertyChanged(nameof(IsUserDefinedForegroundColor));
-            }
-            if (LocalProperties.BackgroundColor != default)
-            {
-                IsUserDefinedBackgroundColor = true;
-                OnPropertyChanged(nameof(IsUserDefinedBackgroundColor));
-            }
+                if (LocalProperties.AccentColor != default)
+                {
+                    IsUserDefinedAccentColor = true;
+                    OnPropertyChanged(nameof(IsUserDefinedAccentColor));
+                }
+                if (LocalProperties.ForegroundColor != default)
+                {
+                    IsUserDefinedForegroundColor = true;
+                    OnPropertyChanged(nameof(IsUserDefinedForegroundColor));
+                }
+                if (LocalProperties.BackgroundColor != default)
+                {
+                    IsUserDefinedBackgroundColor = true;
+                    OnPropertyChanged(nameof(IsUserDefinedBackgroundColor));
+                }
+            };
+            dialog.ShowDialog();
         }
 
         public ColorSetterViewModel()

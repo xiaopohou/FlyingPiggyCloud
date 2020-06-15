@@ -22,5 +22,13 @@ namespace SixCloud.Core.Views.Dialogs
             InitializeComponent();
             Owner = owner;
         }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.HeightChanged)
+            {
+                Top += (e.PreviousSize.Height - e.NewSize.Height) / 2;
+            }
+        }
     }
 }
