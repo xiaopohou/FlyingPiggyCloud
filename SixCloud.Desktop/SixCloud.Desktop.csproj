@@ -11,9 +11,7 @@
     <LangVersion>8.0</LangVersion>
     <SignAssembly>false</SignAssembly>
     <ApplicationIcon>MediaResources\666.ico</ApplicationIcon>
-    <AssemblyVersion>3.2.10.0</AssemblyVersion>
-    <FileVersion>3.2.10.0</FileVersion>
-    <Version>3.2.10</Version>
+    <Version>3.2.11</Version>
     <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <Platforms>AnyCPU;x64;x86</Platforms>
