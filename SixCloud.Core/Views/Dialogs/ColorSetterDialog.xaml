@@ -1,0 +1,151 @@
+﻿<Window x:Class="SixCloud.Core.Views.Dialogs.ColorSetterDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SixCloud.Core.Views.Dialogs"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="ColorSetterDialog" SizeToContent="Height" MaxWidth="450" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="强调色"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="跟随系统主题"/>
+        <ToggleButton Grid.Row="0" Grid.Column="2" Margin="5,0">
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation To="150" Duration="00:00:00.400" Storyboard.TargetName="AccentColorPicker" Storyboard.TargetProperty="Height">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation From="0" To="1" Duration="00:00:00.400" Storyboard.TargetName="AccentColorPicker" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation To="0" Duration="00:00:00.200" Storyboard.TargetName="AccentColorPicker" Storyboard.TargetProperty="Height">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation From="1" To="0" Duration="00:00:00.200" Storyboard.TargetName="AccentColorPicker" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
+        <TextBlock Grid.Row="0" Grid.Column="3" Text="自定义"/>
+        <materialDesign:ColorPicker Width="200" Name="AccentColorPicker" Height="0" Opacity="0" Grid.Row="1" Grid.ColumnSpan="4" Margin="20"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="前景色"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="建议的前景色"/>
+        <ToggleButton Grid.Row="2" Grid.Column="2" Margin="5,0">
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation To="150" Duration="00:00:00.400" Storyboard.TargetName="ForegroundColorPicker" Storyboard.TargetProperty="Height">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation From="0" To="1" Duration="00:00:00.400" Storyboard.TargetName="ForegroundColorPicker" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation To="0" Duration="00:00:00.200" Storyboard.TargetName="ForegroundColorPicker" Storyboard.TargetProperty="Height">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation From="1" To="0" Duration="00:00:00.200" Storyboard.TargetName="ForegroundColorPicker" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+
+        </ToggleButton>
+        <TextBlock Grid.Row="2" Grid.Column="3" Text="自定义"/>
+        <materialDesign:ColorPicker Width="200" Name="ForegroundColorPicker" Height="0" Opacity="0" Grid.Row="3" Grid.ColumnSpan="4" Margin="20"/>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="背景色"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" Text="建议的背景色"/>
+        <ToggleButton Grid.Row="4" Grid.Column="2" Margin="5,0">
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation To="150" Duration="00:00:00.400" Storyboard.TargetName="BackgroundColorPicker" Storyboard.TargetProperty="Height">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation From="0" To="1" Duration="00:00:00.400" Storyboard.TargetName="BackgroundColorPicker" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation To="0" Duration="00:00:00.200" Storyboard.TargetName="BackgroundColorPicker" Storyboard.TargetProperty="Height">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation From="1" To="0" Duration="00:00:00.200" Storyboard.TargetName="BackgroundColorPicker" Storyboard.TargetProperty="Opacity">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+
+        </ToggleButton>
+        <TextBlock Grid.Row="4" Grid.Column="3" Text="自定义"/>
+        <materialDesign:ColorPicker Width="200" Name="BackgroundColorPicker" Height="0" Opacity="0" Grid.Row="5" Grid.ColumnSpan="4" Margin="20"/>
+
+    </Grid>
+</Window>

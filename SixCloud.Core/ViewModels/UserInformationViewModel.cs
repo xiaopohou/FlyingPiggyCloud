@@ -35,6 +35,7 @@ namespace SixCloud.Core.ViewModels
             LogoutCommand = new DependencyCommand(Logout, DependencyCommand.AlwaysCan);
             RenewalCommand = new DependencyCommand(Renewal, DependencyCommand.AlwaysCan);
             AboutCommand = new DependencyCommand(About, DependencyCommand.AlwaysCan);
+            ChangeAccentColorCommand = new DependencyCommand(ChangeAccentColor, DependencyCommand.AlwaysCan);
             ParseInformation();
         }
 
@@ -114,6 +115,12 @@ namespace SixCloud.Core.ViewModels
         private void ChangePassword(object parameter)
         {
             new ChangePasswordView().ShowDialog();
+        }
+
+        public DependencyCommand ChangeAccentColorCommand { get; set; }
+        private void ChangeAccentColor(object parameter)
+        {
+            new ColorSetterDialog(parameter as Window).Show();
         }
 
         public DependencyCommand LogoutCommand { get; set; }
