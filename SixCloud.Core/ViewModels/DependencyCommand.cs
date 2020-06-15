@@ -16,6 +16,11 @@ namespace SixCloud.Core.ViewModels
 
         protected readonly Func<object, bool> CanExecuteAction;
 
+        public DependencyCommand(Action<object> executeAction) : this(executeAction, AlwaysCan)
+        {
+
+        }
+
         public DependencyCommand(Action<object> executeAction, Func<object, bool> canExecuteAction, bool isAutoTryCatch = true)
         {
             ExecuteAction = executeAction;

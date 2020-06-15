@@ -22,18 +22,18 @@ namespace SixCloud.Core.Controllers
         }
         public static Color? AccentColor
         {
-            get => (Color?)ApplicationDictionary.GetValue(nameof(AccentColor));
-            set => ApplicationDictionary.SetValue(nameof(AccentColor), value);
+            get => ApplicationDictionary.GetValue(nameof(AccentColor)) is string colorString ? (string.IsNullOrEmpty(colorString) ? null : ColorConverter.ConvertFromString(colorString) as Color?) : null;
+            set => ApplicationDictionary.SetValue(nameof(AccentColor), value == null ? "" : (object)value);
         }
         public static Color? ForegroundColor
         {
-            get => (Color?)ApplicationDictionary.GetValue(nameof(ForegroundColor));
-            set => ApplicationDictionary.SetValue(nameof(ForegroundColor), value);
+            get => ApplicationDictionary.GetValue(nameof(ForegroundColor)) is string colorString ? (string.IsNullOrEmpty(colorString) ? null : ColorConverter.ConvertFromString(colorString) as Color?) : null;
+            set => ApplicationDictionary.SetValue(nameof(ForegroundColor), value == null ? "" : (object)value);
         }
         public static Color? BackgroundColor
         {
-            get => (Color?)ApplicationDictionary.GetValue(nameof(BackgroundColor));
-            set => ApplicationDictionary.SetValue(nameof(BackgroundColor), value);
+            get => ApplicationDictionary.GetValue(nameof(BackgroundColor)) is string colorString ? (string.IsNullOrEmpty(colorString) ? null : ColorConverter.ConvertFromString(colorString) as Color?) : null;
+            set => ApplicationDictionary.SetValue(nameof(BackgroundColor), value == null ? "" : (object)value);
         }
     }
 

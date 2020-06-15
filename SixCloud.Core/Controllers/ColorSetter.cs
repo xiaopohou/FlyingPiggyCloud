@@ -8,7 +8,9 @@ namespace SixCloud.Core.Controllers
 {
     class ColorSetter
     {
-        public static void SetAccentColor(Color color)
+        public static Color AccentColor { get => (Application.Current.Resources["ImmersiveSystemAccentBrush"] as SolidColorBrush).Color; set => SetAccentColor(value); }
+
+        private static void SetAccentColor(Color color)
         {
             Application.Current.Resources["ImmersiveSystemAccentBrushLight3"] = new SolidColorBrush(Multiply(color, 0.3));
             Application.Current.Resources["ImmersiveSystemAccentBrushLight2"] = new SolidColorBrush(Multiply(color, 0.2));
@@ -26,12 +28,15 @@ namespace SixCloud.Core.Controllers
 
         }
 
-        public static void SetForegroundColor(Color color)
+        public static Color ForegroundColor { get => (Application.Current.Resources["MainForegroundBrush"] as SolidColorBrush).Color; set => SetForegroundColor(value); }
+        private static void SetForegroundColor(Color color)
         {
             Application.Current.Resources["MainForegroundBrush"] = new SolidColorBrush(color);
             LocalProperties.ForegroundColor = color;
         }
-        public static void SetBackgroundColor(Color color)
+
+        public static Color BackgroundColor { get => (Application.Current.Resources["MainBackgroundBrush"] as SolidColorBrush).Color; set => SetBackgroundColor(value); }
+        private static void SetBackgroundColor(Color color)
         {
             Application.Current.Resources["MainBackgroundBrush"] = new SolidColorBrush(color);
             LocalProperties.BackgroundColor = color;

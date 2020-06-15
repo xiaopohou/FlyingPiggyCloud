@@ -14,15 +14,15 @@ namespace SixCloud.Core
         {
             if (LocalProperties.AccentColor != default)
             {
-                ColorSetter.SetAccentColor(LocalProperties.AccentColor.Value);
+                ColorSetter.AccentColor = LocalProperties.AccentColor.Value;
             }
             if (LocalProperties.ForegroundColor != default)
             {
-                ColorSetter.SetForegroundColor(LocalProperties.ForegroundColor.Value);
+                ColorSetter.ForegroundColor = LocalProperties.ForegroundColor.Value;
             }
             if (LocalProperties.BackgroundColor != default)
             {
-                ColorSetter.SetBackgroundColor(LocalProperties.BackgroundColor.Value);
+                ColorSetter.BackgroundColor = LocalProperties.BackgroundColor.Value;
             }
         }
 

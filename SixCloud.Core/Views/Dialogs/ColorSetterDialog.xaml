@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SixCloud.Core.Views.Dialogs"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="ColorSetterDialog" SizeToContent="Height" MaxWidth="450" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+        Title="颜色设置" SizeToContent="Height" MaxWidth="450" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="None">
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -21,10 +21,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="强调色"/>
         <TextBlock Grid.Row="0" Grid.Column="1" Text="跟随系统主题"/>
-        <ToggleButton Grid.Row="0" Grid.Column="2" Margin="5,0">
+        <ToggleButton IsChecked="{Binding IsUserDefinedAccentColor,Mode=TwoWay}" Grid.Row="0" Grid.Column="2" Margin="5,0">
             <ToggleButton.Triggers>
                 <EventTrigger RoutedEvent="ToggleButton.Checked">
                     <BeginStoryboard>
@@ -61,11 +62,11 @@
             </ToggleButton.Triggers>
         </ToggleButton>
         <TextBlock Grid.Row="0" Grid.Column="3" Text="自定义"/>
-        <materialDesign:ColorPicker Width="200" Name="AccentColorPicker" Height="0" Opacity="0" Grid.Row="1" Grid.ColumnSpan="4" Margin="20"/>
+        <materialDesign:ColorPicker Color="{Binding NewAccentColor,Mode=TwoWay}" Width="200" Name="AccentColorPicker" Height="0" Opacity="0" Grid.Row="1" Grid.ColumnSpan="4" Margin="5"/>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="前景色"/>
         <TextBlock Grid.Row="2" Grid.Column="1" Text="建议的前景色"/>
-        <ToggleButton Grid.Row="2" Grid.Column="2" Margin="5,0">
+        <ToggleButton IsChecked="{Binding IsUserDefinedForegroundColor,Mode=TwoWay}" Grid.Row="2" Grid.Column="2" Margin="5,0">
             <ToggleButton.Triggers>
                 <EventTrigger RoutedEvent="ToggleButton.Checked">
                     <BeginStoryboard>
@@ -100,14 +101,13 @@
                     </BeginStoryboard>
                 </EventTrigger>
             </ToggleButton.Triggers>
-
         </ToggleButton>
         <TextBlock Grid.Row="2" Grid.Column="3" Text="自定义"/>
-        <materialDesign:ColorPicker Width="200" Name="ForegroundColorPicker" Height="0" Opacity="0" Grid.Row="3" Grid.ColumnSpan="4" Margin="20"/>
+        <materialDesign:ColorPicker Color="{Binding NewForegroundColor,Mode=TwoWay}" Width="200" Name="ForegroundColorPicker" Height="0" Opacity="0" Grid.Row="3" Grid.ColumnSpan="4" Margin="5"/>
 
         <TextBlock Grid.Row="4" Grid.Column="0" Text="背景色"/>
         <TextBlock Grid.Row="4" Grid.Column="1" Text="建议的背景色"/>
-        <ToggleButton Grid.Row="4" Grid.Column="2" Margin="5,0">
+        <ToggleButton IsChecked="{Binding IsUserDefinedBackgroundColor,Mode=TwoWay}" Grid.Row="4" Grid.Column="2" Margin="5,0">
             <ToggleButton.Triggers>
                 <EventTrigger RoutedEvent="ToggleButton.Checked">
                     <BeginStoryboard>
@@ -142,10 +142,13 @@
                     </BeginStoryboard>
                 </EventTrigger>
             </ToggleButton.Triggers>
-
         </ToggleButton>
         <TextBlock Grid.Row="4" Grid.Column="3" Text="自定义"/>
-        <materialDesign:ColorPicker Width="200" Name="BackgroundColorPicker" Height="0" Opacity="0" Grid.Row="5" Grid.ColumnSpan="4" Margin="20"/>
+        <materialDesign:ColorPicker Color="{Binding NewBackgroundColor,Mode=TwoWay}" Width="200" Name="BackgroundColorPicker" Height="0" Opacity="0" Grid.Row="5" Grid.ColumnSpan="4" Margin="5"/>
 
+        <StackPanel Grid.Row="6" Grid.ColumnSpan="4" Orientation="Horizontal">
+            <Button Width="180" Margin="5" Command="{Binding ConfirmCommand}" Content="确认"/>
+            <Button Width="180" Margin="5" Command="{Binding CancelCommand}" Content="取消"/>
+        </StackPanel>
     </Grid>
 </Window>

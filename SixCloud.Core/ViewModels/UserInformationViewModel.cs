@@ -120,7 +120,7 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand ChangeAccentColorCommand { get; set; }
         private void ChangeAccentColor(object parameter)
         {
-            new ColorSetterDialog(parameter as Window).Show();
+            new ColorSetterViewModel().InitializeComponent(parameter as Window);
         }
 
         public DependencyCommand LogoutCommand { get; set; }
