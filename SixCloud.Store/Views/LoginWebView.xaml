@@ -7,9 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControl="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
     xmlns:controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
-    mc:Ignorable="d">
+    mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="650">
     <Grid>
         <userControl:LoadingControl x:Name="loadingView" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <controls:WebView x:Name="mainContainer" Source="{Binding LoginUrl,Mode=OneWay}"/>
+        <Button Command="{Binding HelpCommand}" Background="White" Margin="15" Content="显示错误" Height="50" Width="100" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>
