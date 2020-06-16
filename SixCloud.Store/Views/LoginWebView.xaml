@@ -9,8 +9,12 @@
     xmlns:controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
     mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="650">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <userControl:LoadingControl x:Name="loadingView" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <controls:WebView x:Name="mainContainer" Source="{Binding LoginUrl,Mode=OneWay}"/>
-        <Button Command="{Binding HelpCommand}" Background="White" Margin="15" Content="显示错误" Height="50" Width="100" VerticalAlignment="Bottom"/>
+        <WebBrowser x:Name="mainContainer"/>
+        <Button Grid.Row="1" Command="{Binding HelpCommand}" Background="White" Margin="15" Content="如显示错误点此" Height="50" Width="100" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>
