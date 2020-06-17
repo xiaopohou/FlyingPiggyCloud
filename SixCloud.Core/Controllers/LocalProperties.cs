@@ -1,5 +1,7 @@
 ﻿using Microsoft.Win32;
+using System;
 using System.Windows.Media;
+using QingzhenyunApis.Exceptions;
 
 namespace SixCloud.Core.Controllers
 {
@@ -11,7 +13,20 @@ namespace SixCloud.Core.Controllers
 
         public static string Token
         {
-            get => (string)ApplicationDictionary.GetValue(nameof(Token));
+            get
+            {
+                try
+                {
+                    return (string)ApplicationDictionary.GetValue(nameof(Token));
+                }
+                catch (Exception ex)
+                {
+                    ex.ToSentry().TreatedBy(nameof(LocalProperties)).Submit();
+                    Token = string.Empty;
+                    return "";
+                }
+            }
+
             set => ApplicationDictionary.SetValue(nameof(Token), value);
         }
 
