@@ -123,7 +123,19 @@ namespace QingzhenyunApis.Methods.V3
             }
 
             string responseBody = await response.Content.ReadAsStringAsync();
-            return ParseResult<T>(responseBody);
+            try
+            {
+                return ParseResult<T>(responseBody);
+            }
+            catch (RequestFailedException ex)
+            {
+                ex.Data[nameof(data)] = data;
+                ex.Data[nameof(uri)] = uri;
+                ex.Data[nameof(querys)] = querys;
+                ex.Data[nameof(isAnonymous)] = isAnonymous;
+                ex.Data[nameof(responseBody)] = responseBody;
+                throw;
+            }
         }
 
         protected static T Post<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
@@ -143,7 +155,19 @@ namespace QingzhenyunApis.Methods.V3
             }
 
             string responseBody = response.Content.ReadAsStringAsync().Result;
-            return ParseResult<T>(responseBody);
+            try
+            {
+                return ParseResult<T>(responseBody);
+            }
+            catch (RequestFailedException ex)
+            {
+                ex.Data[nameof(data)] = data;
+                ex.Data[nameof(uri)] = uri;
+                ex.Data[nameof(querys)] = querys;
+                ex.Data[nameof(isAnonymous)] = isAnonymous;
+                ex.Data[nameof(responseBody)] = responseBody;
+                throw;
+            }
         }
 
         protected static async Task<T> GetAsync<T>(string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
@@ -160,7 +184,18 @@ namespace QingzhenyunApis.Methods.V3
             }
 
             string responseBody = await response.Content.ReadAsStringAsync();
-            return ParseResult<T>(responseBody);
+            try
+            {
+                return ParseResult<T>(responseBody);
+            }
+            catch (RequestFailedException ex)
+            {
+                ex.Data[nameof(uri)] = uri;
+                ex.Data[nameof(querys)] = querys;
+                ex.Data[nameof(isAnonymous)] = isAnonymous;
+                ex.Data[nameof(responseBody)] = responseBody;
+                throw;
+            }
         }
 
         protected static async Task<T> PatchAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
@@ -181,7 +216,19 @@ namespace QingzhenyunApis.Methods.V3
             }
 
             string responseBody = await response.Content.ReadAsStringAsync();
-            return ParseResult<T>(responseBody);
+            try
+            {
+                return ParseResult<T>(responseBody);
+            }
+            catch (RequestFailedException ex)
+            {
+                ex.Data[nameof(data)] = data;
+                ex.Data[nameof(uri)] = uri;
+                ex.Data[nameof(querys)] = querys;
+                ex.Data[nameof(isAnonymous)] = isAnonymous;
+                ex.Data[nameof(responseBody)] = responseBody;
+                throw;
+            }
         }
 
         protected SixCloudMethodBase(string token = null)
