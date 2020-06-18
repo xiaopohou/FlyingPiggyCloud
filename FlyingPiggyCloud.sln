@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloud.Core", "SixCloud.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloud.Store", "SixCloud.Store\SixCloud.Store.csproj", "{5E661C5C-66D6-48F1-BF32-15CB5FDBD259}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SixCloud.SixTransporter.Uploader", "SixCloud.SixTransporter.Uploader\SixCloud.SixTransporter.Uploader.csproj", "{F9FCD343-7235-4872-9C79-E2C5FC5F8166}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -247,6 +249,26 @@ Global
 		{5E661C5C-66D6-48F1-BF32-15CB5FDBD259}.Release|x64.Build.0 = Release|x64
 		{5E661C5C-66D6-48F1-BF32-15CB5FDBD259}.Release|x86.ActiveCfg = Release|x86
 		{5E661C5C-66D6-48F1-BF32-15CB5FDBD259}.Release|x86.Build.0 = Release|x86
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|ARM.Build.0 = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|x64.Build.0 = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Debug|x86.Build.0 = Debug|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|ARM.Build.0 = Release|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|ARM64.Build.0 = Release|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|x64.ActiveCfg = Release|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|x64.Build.0 = Release|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|x86.ActiveCfg = Release|Any CPU
+		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
