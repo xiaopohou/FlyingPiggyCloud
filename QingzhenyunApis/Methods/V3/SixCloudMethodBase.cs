@@ -84,7 +84,7 @@ namespace QingzhenyunApis.Methods.V3
                 //移除最后一个&
                 uriBuilder.Remove(uriBuilder.Length - 1, 1);
 
-                string signature = HmacSha1(AccessKeySecret, $"{method}api.6pan.cn{uriBuilder.ToString()}{extraHeaders}");
+                string signature = HmacSha1(AccessKeySecret, $"{method}api.6pan.cn{uriBuilder}{extraHeaders}");
                 uriBuilder.Append($"&signature={Calculators.Base64.Base64Encode(signature)}");
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                 uri = uriBuilder.ToString();
