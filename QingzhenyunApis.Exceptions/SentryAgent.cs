@@ -50,6 +50,12 @@ namespace QingzhenyunApis.Exceptions
             exception.ToSentry().Submit();
         }
 
+        public static void Submit(this Exception exception, string treatedBy)
+        {
+            exception.ToSentry().TreatedBy(treatedBy).Submit();
+        }
+
+
         public static void Submit(this SentryScopeInfo sentryScopeInfo)
         {
             SentrySdk.WithScope(scope =>
