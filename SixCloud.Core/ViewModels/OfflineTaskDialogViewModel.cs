@@ -173,7 +173,7 @@ namespace SixCloud.Core.ViewModels
                     TorrentResult parsedTorrent = new TorrentResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
                     ParseResults.Add(parsedTorrent);
                 }
-                catch (InvalidOperationException ex) when (ex.Message == "Both textLink and fileHash are empty.")
+                catch (InvalidOperationException ex)
                 {
                     ex.ToSentry().TreatedBy(nameof(OfflineTaskDialogViewModel)).AttachExtraInfo("torrentTask", task).Submit();
                 }

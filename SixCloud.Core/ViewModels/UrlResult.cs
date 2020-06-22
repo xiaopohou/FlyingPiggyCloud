@@ -41,7 +41,7 @@ namespace SixCloud.Core.ViewModels
                         Status = ParseResultStatus.InvalidUrl;
                     }
                 }
-                catch (InvalidOperationException ex) when (ex.Message == "Both textLink and fileHash are empty.")
+                catch (InvalidOperationException ex)
                 {
                     ex.ToSentry().TreatedBy(nameof(OfflineTaskDialogViewModel)).AttachExtraInfo("urlTask", this).Submit();
                 }
