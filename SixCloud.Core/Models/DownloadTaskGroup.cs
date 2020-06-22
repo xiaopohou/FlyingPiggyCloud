@@ -8,6 +8,7 @@ using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -30,6 +31,8 @@ namespace SixCloud.Core.Models
 
         public override TransferTaskStatus Status => status;
         public override double Progress => TotalCount == 0 ? 0 : CompletedCount * 100 / TotalCount;
+
+        public ObservableCollection<DownloadTaskRecord> TaskList { get; } = new ObservableCollection<DownloadTaskRecord>();
 
         public ConcurrentQueue<DownloadTaskRecord> WaittingTasks { get; } = new ConcurrentQueue<DownloadTaskRecord>();
 
