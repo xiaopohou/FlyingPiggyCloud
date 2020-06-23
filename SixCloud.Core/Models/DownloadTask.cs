@@ -57,12 +57,20 @@ namespace SixCloud.Core.Models
                 return;
             }
 
+            var detail = await FileSystem.GetDownloadUrlByIdentity(TargetUUID);
+
             if (Url == null)
             {
-                Url = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
+                Url = detail.DownloadAddress;
             }
 
-            if (fileDownloader == null)
+            if (detail.Size == 0)
+            {
+                File.Create(System.IO.Path.Combine(Path, Name)).Close();
+                DownloadCompleted?.Invoke(this, null);
+                return;
+            }
+            else if (fileDownloader == null)
             {
                 string downloadPath = System.IO.Path.Combine(Path, Name);
                 DownloadTaskInfo taskInfo;
@@ -153,15 +161,6 @@ namespace SixCloud.Core.Models
             fileDownloader = null;
             DownloadCanceled?.Invoke(this, EventArgs.Empty);
         }
-
-        ///// <summary>
-        ///// 删除本地文件并重新申请下载链接
-        ///// </summary>
-        //protected void Redownload()
-        //{
-        //    Cancel();
-        //    Recovery();
-        //}
 
         public override event EventHandler DownloadCompleted;
 

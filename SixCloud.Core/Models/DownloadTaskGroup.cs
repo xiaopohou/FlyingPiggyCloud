@@ -124,48 +124,58 @@ namespace SixCloud.Core.Models
             while (WaittingTasks.TryDequeue(out DownloadTaskRecord task))
             {
                 string downloadPath = Path.Combine(task.LocalPath, task.Name);
-                string downloadUrl = (await FileSystem.GetDownloadUrlByIdentity(task.TargetUUID)).DownloadAddress;
-                lock (RunningTasks)
+                var detail = await FileSystem.GetDownloadUrlByIdentity(task.TargetUUID);
+                string downloadUrl = detail.DownloadAddress;
+                if (detail.Size == 0)
                 {
-                    if (RunningTasks.Count >= 16)
+                    File.Create(downloadPath).Close();
+                    CompletedTasks.Add(task);
+                    continue;
+                }
+                else
+                {
+                    lock (RunningTasks)
                     {
-                        //如果有超过16个正在进行的任务，把当前任务塞回去，并终止循环
-                        WaittingTasks.Enqueue(task);
-                        break;
-                    }
-                    else
-                    {
-                        DownloadTaskInfo taskInfo;
-                        if (File.Exists(downloadPath + ".downloading"))
+                        if (RunningTasks.Count >= 16)
                         {
-                            taskInfo = DownloadTaskInfo.Load(downloadPath + ".downloading");
+                            //如果有超过16个正在进行的任务，把当前任务塞回去，并终止循环
+                            WaittingTasks.Enqueue(task);
+                            break;
                         }
                         else
                         {
-                            taskInfo = new DownloadTaskInfo()
+                            DownloadTaskInfo taskInfo;
+                            if (File.Exists(downloadPath + ".downloading"))
                             {
-                                DownloadUrl = downloadUrl, // 下载链接，可以为null，任务开始前再赋值初始化
-                                DownloadPath = downloadPath,
-                                Threads = 4,
-                            };
-                        }
-
-                        HttpDownloader fileDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
-                        RunningTasks[task] = fileDownloader;
-                        fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
-                        {
-                            if (newValue == DownloadStatusEnum.Completed)
-                            {
-                                lock (RunningTasks)
-                                {
-                                    RunningTasks.Remove(task);
-                                    CompletedTasks.Add(task);
-                                }
-
+                                taskInfo = DownloadTaskInfo.Load(downloadPath + ".downloading");
                             }
-                        };
-                        fileDownloader.DownloadStatusChangedEvent += DownloadFailedEventHandler;
-                        Task.Run(() => fileDownloader.StartDownload());
+                            else
+                            {
+                                taskInfo = new DownloadTaskInfo()
+                                {
+                                    DownloadUrl = downloadUrl, // 下载链接，可以为null，任务开始前再赋值初始化
+                                    DownloadPath = downloadPath,
+                                    Threads = 4,
+                                };
+                            }
+
+                            HttpDownloader fileDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
+                            RunningTasks[task] = fileDownloader;
+                            fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
+                            {
+                                if (newValue == DownloadStatusEnum.Completed)
+                                {
+                                    lock (RunningTasks)
+                                    {
+                                        RunningTasks.Remove(task);
+                                        CompletedTasks.Add(task);
+                                    }
+
+                                }
+                            };
+                            fileDownloader.DownloadStatusChangedEvent += DownloadFailedEventHandler;
+                            Task.Run(() => fileDownloader.StartDownload());
+                        }
                     }
                 }
             }
@@ -206,6 +216,7 @@ namespace SixCloud.Core.Models
                     };
                     task.StopAndSave(true);
                 });
+
                 RunningTasks.Clear();
 
                 CompletedTasks.ForEach(task =>
@@ -219,6 +230,7 @@ namespace SixCloud.Core.Models
                         ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
                     }
                 });
+
                 CompletedTasks.Clear();
 
                 WaittingTasks.Clear();
