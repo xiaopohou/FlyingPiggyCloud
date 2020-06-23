@@ -48,7 +48,7 @@ namespace SixCloud.Core.Models
 
         public override string SavedLocalPath { get; protected set; }
 
-        public long TotalCount { get; private set; } = 0;
+        public long TotalCount => TaskList.Count;
 
         public override string Total => $"{TotalCount}个项目";
 
@@ -85,13 +85,14 @@ namespace SixCloud.Core.Models
                             Directory.CreateDirectory(localParentPath);
                         }
 
-                        WaittingTasks.Enqueue(new DownloadTaskRecord
+                        var newTask = new DownloadTaskRecord
                         {
                             TargetUUID = child.UUID,
                             LocalPath = localParentPath,
                             Name = child.Name
-                        });
-                        TotalCount++;
+                        };
+                        TaskList.Add(newTask);
+                        WaittingTasks.Enqueue(newTask);
                     }
                     else
                     {
@@ -351,46 +352,20 @@ namespace SixCloud.Core.Models
             TargetUUID = record.TargetUUID;
             SavedLocalPath = record.LocalPath;
             Name = record.Name;
-            TotalCount = record.WaittingList.Count + record.RunningList.Count + record.CompletedList.Count;
-            record.WaittingList.ToList().ForEach(tasks => WaittingTasks.Enqueue(tasks));
-            CompletedTasks.AddRange(record.CompletedList);
-            record.RunningList.ToList().ForEach(async (task) =>
+            record.RunningList.ToList().ForEach(task =>
             {
-                string downloadPath = Path.Combine(task.LocalPath, task.Name);
-                string downloadUrl = (await FileSystem.GetDownloadUrlByIdentity(task.TargetUUID)).DownloadAddress;
-                lock (RunningTasks)
-                {
-                    DownloadTaskInfo taskInfo;
-                    if (File.Exists(downloadPath + ".downloading"))
-                    {
-                        taskInfo = DownloadTaskInfo.Load(downloadPath + ".downloading");
-                    }
-                    else
-                    {
-                        taskInfo = new DownloadTaskInfo()
-                        {
-                            DownloadUrl = downloadUrl, // 下载链接，可以为null，任务开始前再赋值初始化
-                            DownloadPath = downloadPath,
-                            Threads = 4,
-                        };
-                    }
-
-                    HttpDownloader fileDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
-                    RunningTasks[task] = fileDownloader;
-                    fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
-                    {
-                        if (newValue == DownloadStatusEnum.Completed)
-                        {
-                            lock (RunningTasks)
-                            {
-                                RunningTasks.Remove(task);
-                                CompletedTasks.Add(task);
-                            }
-                        }
-                    };
-                    fileDownloader.DownloadStatusChangedEvent += DownloadFailedEventHandler;
-                    Task.Run(() => fileDownloader.StartDownload());
-                }
+                TaskList.Add(task);
+                WaittingTasks.Enqueue(task);
+            });
+            record.WaittingList.ToList().ForEach(task =>
+            {
+                TaskList.Add(task);
+                WaittingTasks.Enqueue(task);
+            });
+            record.CompletedList.ToList().ForEach(task =>
+            {
+                TaskList.Add(task);
+                CompletedTasks.Add(task);
             });
 
             WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
