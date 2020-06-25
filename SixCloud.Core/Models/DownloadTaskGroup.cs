@@ -334,7 +334,14 @@ namespace SixCloud.Core.Models
             record.CompletedList.ToList().ForEach(task =>
             {
                 TaskList.Add(task);
-                CompletedTasks.Add(task);
+                if (File.Exists(Path.Combine(task.LocalPath, task.Name)))
+                {
+                    CompletedTasks.Add(task);
+                }
+                else
+                {
+                    WaittingTasks.Enqueue(task);
+                }
             });
 
             WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
@@ -349,24 +356,6 @@ namespace SixCloud.Core.Models
                 OnPropertyChanged(nameof(Progress));
             }
         }
-
-        //private async void DownloadFailedEventHandler(DownloadStatusEnum oldValue, DownloadStatusEnum newValue, HttpDownloader sender)
-        //{
-        //    if (newValue == DownloadStatusEnum.Failed)
-        //    {
-        //        Thread.Sleep(TimeSpan.FromMinutes(1));
-        //        try
-        //        {
-        //            KeyValuePair<DownloadTaskRecord, HttpDownloader> target = RunningTasks.First(x => x.Value == sender);
-        //            sender.Info.DownloadUrl = (await FileSystem.GetDownloadUrlByIdentity(target.Key.TargetUUID)).DownloadAddress;
-        //            await Task.Run(() => sender?.StartDownload());
-        //        }
-        //        catch (InvalidOperationException ex)
-        //        {
-        //            ex.ToSentry().Submit();
-        //        }
-        //    }
-        //}
 
         public override string ToString()
         {
