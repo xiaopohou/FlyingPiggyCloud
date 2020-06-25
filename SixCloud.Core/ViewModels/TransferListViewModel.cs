@@ -83,23 +83,28 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                DownloadingTaskViewModel task = await new DownloadTaskGroup(targetUUID, localPath, name).InitTaskGroup();
+                DownloadTaskGroup task = new DownloadTaskGroup(targetUUID, localPath, name);
+                AddDownloadingItem(false, task);
+                await task.InitTaskGroup();
                 task.DownloadCompleted += (sender, e) =>
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        try
-                        {
-                            downloadingList.Remove(task);
-                            if (File.Exists(task.CurrentFileFullPath))
-                            {
-                                TransferCompletedListViewModel.NewDownloadedTask(task);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-                        }
+                        downloadingList.Remove(task);
+                        TransferCompletedListViewModel.NewDownloadedTask(task);
+
+                        //try
+                        //{
+                        //    downloadingList.Remove(task);
+                        //    if (File.Exists(task.CurrentFileFullPath))
+                        //    {
+                        //        TransferCompletedListViewModel.NewDownloadedTask(task);
+                        //    }
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    ex.Submit("DownloadCompletedEventHandler");
+                        //}
                     });
                 };
 
@@ -113,12 +118,16 @@ namespace SixCloud.Core.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
+                            ex.Submit("DownloadCompletedEventHandler");
                         }
                     });
                 };
 
-                AddDownloadingItem(isAutoStart, task);
+                if (isAutoStart)
+                {
+                    task.RecoveryCommand.Execute(null);
+                }
+
             }
             catch (IOException ex) when (ex.Message.Contains("不正确"))
             {
@@ -137,18 +146,20 @@ namespace SixCloud.Core.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    try
-                    {
-                        downloadingList.Remove(task);
-                        if (File.Exists(task.CurrentFileFullPath))
-                        {
-                            TransferCompletedListViewModel.NewDownloadedTask(task);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-                    }
+                    downloadingList.Remove(task);
+                    TransferCompletedListViewModel.NewDownloadedTask(task);
+                    //try
+                    //{
+                    //    downloadingList.Remove(task);
+                    //    if (File.Exists(task.CurrentFileFullPath))
+                    //    {
+                    //        TransferCompletedListViewModel.NewDownloadedTask(task);
+                    //    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
+                    //}
                 });
             };
 

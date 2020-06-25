@@ -104,8 +104,6 @@ namespace SixCloud.Core.Models
             DownloadCanceled?.Invoke(this, EventArgs.Empty);
         }
 
-
-
         public override string Name { get; protected set; }
 
         public override string TargetUUID { get; protected set; }
