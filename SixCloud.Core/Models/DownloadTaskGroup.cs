@@ -85,7 +85,7 @@ namespace SixCloud.Core.Models
                             Directory.CreateDirectory(localParentPath);
                         }
 
-                        var newTask = new DownloadTaskRecord
+                        DownloadTaskRecord newTask = new DownloadTaskRecord
                         {
                             TargetUUID = child.UUID,
                             LocalPath = localParentPath,
@@ -125,7 +125,7 @@ namespace SixCloud.Core.Models
             while (WaittingTasks.TryDequeue(out DownloadTaskRecord task))
             {
                 string downloadPath = Path.Combine(task.LocalPath, task.Name);
-                var detail = await FileSystem.GetDownloadUrlByIdentity(task.TargetUUID);
+                FileMetaData detail = await FileSystem.GetDownloadUrlByIdentity(task.TargetUUID);
                 string downloadUrl = detail.DownloadAddress;
                 if (detail.Size == 0)
                 {
@@ -145,22 +145,7 @@ namespace SixCloud.Core.Models
                         }
                         else
                         {
-                            DownloadTaskInfo taskInfo;
-                            if (File.Exists(downloadPath + ".downloading"))
-                            {
-                                taskInfo = DownloadTaskInfo.Load(downloadPath + ".downloading");
-                            }
-                            else
-                            {
-                                taskInfo = new DownloadTaskInfo()
-                                {
-                                    DownloadUrl = downloadUrl, // 下载链接，可以为null，任务开始前再赋值初始化
-                                    DownloadPath = downloadPath,
-                                    Threads = 4,
-                                };
-                            }
-
-                            HttpDownloader fileDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
+                            HttpDownloader fileDownloader = CreateHttpDownloader(downloadPath, downloadUrl, task.TargetUUID);
                             RunningTasks[task] = fileDownloader;
                             fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
                             {
@@ -171,10 +156,10 @@ namespace SixCloud.Core.Models
                                         RunningTasks.Remove(task);
                                         CompletedTasks.Add(task);
                                     }
-
                                 }
                             };
-                            fileDownloader.DownloadStatusChangedEvent += DownloadFailedEventHandler;
+
+                            //fileDownloader.DownloadStatusChangedEvent += DownloadFailedEventHandler;
                             Task.Run(() => fileDownloader.StartDownload());
                         }
                     }
@@ -265,53 +250,17 @@ namespace SixCloud.Core.Models
 
         protected override async void Recovery(object parameter)
         {
-            var runningTasks = from task in RunningTasks
-                               where !(task.Value?.Status == DownloadStatusEnum.Downloading || task.Value?.Status == DownloadStatusEnum.Failed)
-                               select task;
+            IEnumerable<DownloadTaskRecord> runningTasks = from task in RunningTasks
+                                                           where !(task.Value?.Status == DownloadStatusEnum.Downloading || task.Value?.Status == DownloadStatusEnum.Failed)
+                                                           select task.Key;
             if (runningTasks.Any())
             {
                 try
                 {
-                    foreach (KeyValuePair<DownloadTaskRecord, HttpDownloader> task in runningTasks)
+                    foreach (DownloadTaskRecord taskRecord in runningTasks)
                     {
-                        string url = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
-
-                        if (task.Value == null)
-                        {
-                            string downloadPath = Path.Combine(task.Key.LocalPath, task.Key.Name);
-
-                            DownloadTaskInfo taskInfo;
-
-                            if (File.Exists(downloadPath + ".downloading"))
-                            {
-                                taskInfo = DownloadTaskInfo.Load(downloadPath + ".downloading");
-                            }
-                            else
-                            {
-                                taskInfo = new DownloadTaskInfo()
-                                {
-                                    DownloadUrl = url, // 下载链接，可以为null，任务开始前再赋值初始化
-                                    DownloadPath = downloadPath,
-                                    Threads = 4,
-                                };
-                            }
-
-                            RunningTasks[task.Key] = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
-                            task.Value.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
-                            {
-                                if (newValue == DownloadStatusEnum.Completed)
-                                {
-                                    lock (RunningTasks)
-                                    {
-                                        RunningTasks.Remove(task.Key);
-                                        CompletedTasks.Add(task.Key);
-                                    }
-                                }
-                            };
-                            task.Value.DownloadStatusChangedEvent += DownloadFailedEventHandler;
-                        }
-
-                        await Task.Run(() => task.Value?.StartDownload());
+                        RunningTasks[taskRecord] ??= await CreateDownloader(taskRecord);
+                        await Task.Run(() => RunningTasks[taskRecord]?.StartDownload());
                     }
                 }
                 catch (InvalidOperationException ex)
@@ -324,6 +273,26 @@ namespace SixCloud.Core.Models
             status = TransferTaskStatus.Running;
             RecoveryCommand.OnCanExecutedChanged(this, EventArgs.Empty);
             PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
+
+            async Task<HttpDownloader> CreateDownloader(DownloadTaskRecord record)
+            {
+                FileMetaData details = await FileSystem.GetDownloadUrlByIdentity(record.TargetUUID);
+                string downloadPath = Path.Combine(record.LocalPath, record.Name);
+
+                HttpDownloader downloader = CreateHttpDownloader(downloadPath, details.DownloadAddress, record.TargetUUID);
+                downloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
+                {
+                    if (newValue == DownloadStatusEnum.Completed)
+                    {
+                        lock (RunningTasks)
+                        {
+                            RunningTasks.Remove(record);
+                            CompletedTasks.Add(record);
+                        }
+                    }
+                };
+                return downloader;
+            }
         }
 
         public DownloadTaskGroup(string targetUUID, string localStoragePath, string name)
@@ -381,23 +350,23 @@ namespace SixCloud.Core.Models
             }
         }
 
-        private async void DownloadFailedEventHandler(DownloadStatusEnum oldValue, DownloadStatusEnum newValue, HttpDownloader sender)
-        {
-            if (newValue == DownloadStatusEnum.Failed)
-            {
-                Thread.Sleep(TimeSpan.FromMinutes(1));
-                try
-                {
-                    KeyValuePair<DownloadTaskRecord, HttpDownloader> target = RunningTasks.First(x => x.Value == sender);
-                    sender.Info.DownloadUrl = (await FileSystem.GetDownloadUrlByIdentity(target.Key.TargetUUID)).DownloadAddress;
-                    await Task.Run(() => sender?.StartDownload());
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ex.ToSentry().Submit();
-                }
-            }
-        }
+        //private async void DownloadFailedEventHandler(DownloadStatusEnum oldValue, DownloadStatusEnum newValue, HttpDownloader sender)
+        //{
+        //    if (newValue == DownloadStatusEnum.Failed)
+        //    {
+        //        Thread.Sleep(TimeSpan.FromMinutes(1));
+        //        try
+        //        {
+        //            KeyValuePair<DownloadTaskRecord, HttpDownloader> target = RunningTasks.First(x => x.Value == sender);
+        //            sender.Info.DownloadUrl = (await FileSystem.GetDownloadUrlByIdentity(target.Key.TargetUUID)).DownloadAddress;
+        //            await Task.Run(() => sender?.StartDownload());
+        //        }
+        //        catch (InvalidOperationException ex)
+        //        {
+        //            ex.ToSentry().Submit();
+        //        }
+        //    }
+        //}
 
         public override string ToString()
         {

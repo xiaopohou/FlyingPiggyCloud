@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
@@ -6,7 +7,6 @@ using SixCloud.Core.ViewModels;
 using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -17,101 +17,42 @@ namespace SixCloud.Core.Models
     {
         private HttpDownloader fileDownloader;
 
-        protected string Url { get; private set; }
+        //protected string Url { get; private set; }
 
         protected string Path { get; }
 
-        public override string Name { get; protected set; }
-
-        public override string CurrentFileFullPath => fileDownloader?.Info.DownloadPath;
-
-        public override string Completed => Calculators.SizeCalculator(fileDownloader?.Info.DownloadedSize ?? 0);
-
-        public override string TargetUUID { get; protected set; }
-
-        public override string SavedLocalPath { get; protected set; }
-
-        public override string Total => Calculators.SizeCalculator(fileDownloader?.Info.ContentSize ?? 0);
-
-        public override double Progress => fileDownloader?.DownloadPercentage ?? 0;
-
-        public override TransferTaskStatus Status => (fileDownloader?.Status ?? DownloadStatusEnum.Waiting) switch
-        {
-            DownloadStatusEnum.Downloading => TransferTaskStatus.Running,
-            DownloadStatusEnum.Waiting => TransferTaskStatus.Running,
-
-            DownloadStatusEnum.Paused => TransferTaskStatus.Pause,
-            DownloadStatusEnum.Failed => TransferTaskStatus.Failed,
-            DownloadStatusEnum.Completed => TransferTaskStatus.Completed,
-            _ => throw new InvalidCastException()
-        };
-
-        public override string Speed => Calculators.SizeCalculator(fileDownloader?.Speed ?? 0) + "/秒";
-
-        public long CompletedBytes => fileDownloader?.Info.DownloadedSize ?? 0;
-
         protected override async void Recovery(object parameter = null)
         {
-            if (fileDownloader?.Status == DownloadStatusEnum.Downloading || fileDownloader?.Status == DownloadStatusEnum.Failed)
+            if (!Cancelled && (fileDownloader?.Status) != DownloadStatusEnum.Downloading && (fileDownloader?.Status) != DownloadStatusEnum.Failed)
             {
-                return;
-            }
+                FileMetaData detail = await FileSystem.GetDownloadUrlByIdentity(TargetUUID);
 
-            var detail = await FileSystem.GetDownloadUrlByIdentity(TargetUUID);
-
-            if (Url == null)
-            {
-                Url = detail.DownloadAddress;
-            }
-
-            if (detail.Size == 0)
-            {
-                File.Create(System.IO.Path.Combine(Path, Name)).Close();
-                DownloadCompleted?.Invoke(this, null);
-                return;
-            }
-            else if (fileDownloader == null)
-            {
-                string downloadPath = System.IO.Path.Combine(Path, Name);
-                DownloadTaskInfo taskInfo;
-
-                if (File.Exists(downloadPath + ".downloading"))
+                if (detail.Size == 0)
                 {
-                    taskInfo = DownloadTaskInfo.Load(downloadPath + ".downloading");
+                    File.Create(System.IO.Path.Combine(Path, Name)).Close();
+                    DownloadCompleted?.Invoke(this, null);
                 }
                 else
                 {
-                    taskInfo = new DownloadTaskInfo()
+                    string downloadPath = System.IO.Path.Combine(Path, Name);
+
+                    fileDownloader ??= CreateHttpDownloader(downloadPath, detail.DownloadAddress, TargetUUID);
+
+                    fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
                     {
-                        DownloadUrl = Url, // 下载链接，可以为null，任务开始前再赋值初始化
-                        DownloadPath = downloadPath,
-                        Threads = 4,
+                        if (newValue == DownloadStatusEnum.Completed)
+                        {
+                            DownloadCompleted?.Invoke(sender, null);
+                        }
                     };
-                }
-                fileDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
 
-                fileDownloader.DownloadStatusChangedEvent += async (oldValue, newValue, sender) =>
-                {
-                    if (newValue == DownloadStatusEnum.Completed)
-                    {
-                        DownloadCompleted?.Invoke(sender, null);
-                    }
-                    else if (newValue == DownloadStatusEnum.Failed)
-                    {
-                        Thread.Sleep(TimeSpan.FromMinutes(1));
-                        Url = (await FileSystem.GetDownloadUrlByIdentity(TargetUUID)).DownloadAddress;
-                        taskInfo.DownloadUrl = Url;
-                        await Task.Run(() => fileDownloader?.StartDownload());
-                    }
+                    await Task.Run(() => fileDownloader?.StartDownload());
+
                     OnPropertyChanged(nameof(Status));
-                };
+                    RecoveryCommand.OnCanExecutedChanged(this, null);
+                    PauseCommand.OnCanExecutedChanged(this, null);
+                }
             }
-
-            await Task.Run(() => fileDownloader?.StartDownload());
-
-            OnPropertyChanged(nameof(Status));
-            RecoveryCommand.OnCanExecutedChanged(this, null);
-            PauseCommand.OnCanExecutedChanged(this, null);
         }
 
         protected override void Pause(object parameter = null)
@@ -137,6 +78,7 @@ namespace SixCloud.Core.Models
 
         protected override void Cancel(object parameter = null)
         {
+            Cancelled = true;
             fileDownloader.AllFileStreamDisposed += (sender, e) =>
             {
                 try
@@ -162,10 +104,40 @@ namespace SixCloud.Core.Models
             DownloadCanceled?.Invoke(this, EventArgs.Empty);
         }
 
+
+
+        public override string Name { get; protected set; }
+
+        public override string TargetUUID { get; protected set; }
+
+        public override string SavedLocalPath { get; protected set; }
+
+        public override string CurrentFileFullPath => fileDownloader?.Info.DownloadPath;
+
+        public override string Completed => Calculators.SizeCalculator(fileDownloader?.Info.DownloadedSize ?? 0);
+
+        public long CompletedBytes => fileDownloader?.Info.DownloadedSize ?? 0;
+
+        public override string Total => Calculators.SizeCalculator(fileDownloader?.Info.ContentSize ?? 0);
+
+        public override double Progress => fileDownloader?.DownloadPercentage ?? 0;
+
+        public override TransferTaskStatus Status => (fileDownloader?.Status ?? DownloadStatusEnum.Waiting) switch
+        {
+            DownloadStatusEnum.Downloading => TransferTaskStatus.Running,
+            DownloadStatusEnum.Waiting => TransferTaskStatus.Running,
+
+            DownloadStatusEnum.Paused => TransferTaskStatus.Pause,
+            DownloadStatusEnum.Failed => TransferTaskStatus.Failed,
+            DownloadStatusEnum.Completed => TransferTaskStatus.Completed,
+            _ => throw new InvalidCastException()
+        };
+
+        public override string Speed => Calculators.SizeCalculator(fileDownloader?.Speed ?? 0) + "/秒";
+
         public override event EventHandler DownloadCompleted;
 
         public override event EventHandler DownloadCanceled;
-
 
         public DownloadTask(string storagePath, string name, string targetUUID) : base()
         {
@@ -180,7 +152,7 @@ namespace SixCloud.Core.Models
             }
             Name = name;
             TargetUUID = targetUUID;
-            //DownloadCompleted += downloadFileCompleted;
+
             DownloadCompleted += (sender, e) =>
             {
                 try
@@ -197,22 +169,6 @@ namespace SixCloud.Core.Models
 
             void Callback(object sender, EventArgs e)
             {
-                //if (lastCompletedSize == CompletedBytes)
-                //{
-                //    retryTimes++;
-                //}
-                //else
-                //{
-                //    retryTimes = 0;
-                //    lastCompletedSize = CompletedBytes;
-                //}
-
-                //if (retryTimes >= 60)
-                //{
-                //    retryTimes = 0;
-                //    Redownload();
-                //}
-
                 OnPropertyChanged(nameof(Completed));
                 OnPropertyChanged(nameof(Speed));
                 OnPropertyChanged(nameof(Total));

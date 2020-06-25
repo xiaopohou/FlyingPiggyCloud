@@ -81,45 +81,50 @@ namespace SixCloud.Core.ViewModels
 
         public static async void NewDownloadTaskGroup(string targetUUID, string localPath, string name, bool isAutoStart = true)
         {
-            DownloadingTaskViewModel task = await new DownloadTaskGroup(targetUUID, localPath, name).InitTaskGroup();
-
-
-            task.DownloadCompleted += (sender, e) =>
+            try
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                DownloadingTaskViewModel task = await new DownloadTaskGroup(targetUUID, localPath, name).InitTaskGroup();
+                task.DownloadCompleted += (sender, e) =>
                 {
-                    try
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        downloadingList.Remove(task);
-                        if (File.Exists(task.CurrentFileFullPath))
+                        try
                         {
-                            TransferCompletedListViewModel.NewDownloadedTask(task);
+                            downloadingList.Remove(task);
+                            if (File.Exists(task.CurrentFileFullPath))
+                            {
+                                TransferCompletedListViewModel.NewDownloadedTask(task);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-#warning System.NotImplementedException:DownloadTaskGroup.CurrentFileFullPath is null
-                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-                    }
-                });
-            };
+                        catch (Exception ex)
+                        {
+                            ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
+                        }
+                    });
+                };
 
-            task.DownloadCanceled += (sender, e) =>
-            {
-                Application.Current.Dispatcher.Invoke(() =>
+                task.DownloadCanceled += (sender, e) =>
                 {
-                    try
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        downloadingList.Remove(task);
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-                    }
-                });
-            };
+                        try
+                        {
+                            downloadingList.Remove(task);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
+                        }
+                    });
+                };
 
-            AddDownloadingItem(isAutoStart, task);
+                AddDownloadingItem(isAutoStart, task);
+            }
+            catch (IOException ex) when (ex.Message.Contains("不正确"))
+            {
+                MessageBox.Show(ex.Message, "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
 
         }
 
