@@ -1,4 +1,5 @@
 ﻿using QingzhenyunApis.Methods.V3;
+using SixCloud.Core.Models;
 using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.Globalization;
@@ -12,6 +13,34 @@ namespace SixCloud.Core.ViewModels
 {
     public abstract class DownloadingTaskViewModel : ViewModelBase, ITransferItemViewModel
     {
+        /// <summary>
+        /// 创建一个下载器
+        /// </summary>
+        /// <param name="downloadPath"></param>
+        /// <param name="downloadUrl"></param>
+        /// <returns></returns>
+        protected HttpDownloader CreateHttpDownloader(string downloadPath, string downloadUrl, string targetUUID)
+        {
+            DownloadTaskInfo taskInfo = File.Exists(downloadPath + ".downloading") ? DownloadTaskInfo.Load(downloadPath + ".downloading") : new DownloadTaskInfo()
+            {
+                DownloadUrl = downloadUrl, // 下载链接，可以为null，任务开始前再赋值初始化
+                DownloadPath = downloadPath,
+                Threads = 4,
+            };
+
+            HttpDownloader httpDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
+
+            httpDownloader.DownloadStatusChangedEvent += async (oldValue, newValue, sender) =>
+            {
+                if (newValue == DownloadStatusEnum.Failed)
+                {
+                    await DownloadingFailedHandler(taskInfo, httpDownloader, targetUUID);
+                }
+                OnPropertyChanged(nameof(Status));
+            };
+            return httpDownloader;
+        }
+
         public string Icon { get; } = "\uf019";
 
         public abstract string Name { get; protected set; }
@@ -50,37 +79,8 @@ namespace SixCloud.Core.ViewModels
 
 
         public DependencyCommand CancelCommand { get; }
-
         protected bool Cancelled { get; set; } = false;
         protected abstract void Cancel(object parameter);
-
-        /// <summary>
-        /// 创建一个下载器
-        /// </summary>
-        /// <param name="downloadPath"></param>
-        /// <param name="downloadUrl"></param>
-        /// <returns></returns>
-        protected HttpDownloader CreateHttpDownloader(string downloadPath, string downloadUrl, string targetUUID)
-        {
-            DownloadTaskInfo taskInfo = File.Exists(downloadPath + ".downloading") ? DownloadTaskInfo.Load(downloadPath + ".downloading") : new DownloadTaskInfo()
-            {
-                DownloadUrl = downloadUrl, // 下载链接，可以为null，任务开始前再赋值初始化
-                DownloadPath = downloadPath,
-                Threads = 4,
-            };
-
-            HttpDownloader httpDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
-
-            httpDownloader.DownloadStatusChangedEvent += async (oldValue, newValue, sender) =>
-            {
-                if (newValue == DownloadStatusEnum.Failed)
-                {
-                    await DownloadingFailedHandler(taskInfo, httpDownloader, targetUUID);
-                }
-                OnPropertyChanged(nameof(Status));
-            };
-            return httpDownloader;
-        }
 
         private async Task DownloadingFailedHandler(DownloadTaskInfo taskInfo, HttpDownloader httpDownloader, string targetUUID)
         {
@@ -96,13 +96,41 @@ namespace SixCloud.Core.ViewModels
 
         public virtual event EventHandler DownloadCanceled;
 
-        public DownloadingTaskViewModel()
+        protected DownloadingTaskViewModel()
         {
             RecoveryCommand = new DependencyCommand(Recovery, CanRecovery);
             PauseCommand = new DependencyCommand(Pause, CanPause);
             CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
         }
 
+    }
+
+    public class DownloadingTaskInGroupViewModel : ViewModelBase
+    {
+        public DownloadTaskGroup Owner { get; }
+
+        public DownloadTaskRecord Record { get; }
+
+        public string Name => Record.Name;
+
+        public string LocalPath => Record.LocalPath;
+
+        public double Progress => throw new NotImplementedException();
+
+        public DownloadTaskStatusInGroup StatusInGroup => throw new NotImplementedException();
+
+        internal DownloadingTaskInGroupViewModel(DownloadTaskGroup downloadTaskGroup, DownloadTaskRecord downloadTaskRecord)
+        {
+            Owner = downloadTaskGroup;
+            Record = downloadTaskRecord;
+        }
+    }
+
+    public enum DownloadTaskStatusInGroup
+    {
+        Running,
+        Waitting,
+        Completed
     }
 
     public class StatusToVisibility : IValueConverter

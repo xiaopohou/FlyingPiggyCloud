@@ -8,11 +8,11 @@
         mc:Ignorable="d"
         Title="DownloadTaskGroupDialog" Height="450" Width="800" d:DataContext="{x:Type m:DownloadTaskGroup}">
     <Window.Resources>
-        <CollectionViewSource x:Key="taskSources" Source="{Binding TaskList}">
+        <!--<CollectionViewSource x:Key="taskSources" Source="{Binding TaskList}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="@Status" />
+                <PropertyGroupDescription Converter="{StaticResource taskGroupConverter}"/>
             </CollectionViewSource.GroupDescriptions>
-        </CollectionViewSource>
+        </CollectionViewSource>-->
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>

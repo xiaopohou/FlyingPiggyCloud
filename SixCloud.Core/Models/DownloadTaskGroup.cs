@@ -9,11 +9,13 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Threading;
 
 namespace SixCloud.Core.Models
@@ -21,33 +23,139 @@ namespace SixCloud.Core.Models
     /// <summary>
     /// 文件夹下载任务
     /// </summary>
-    internal class DownloadTaskGroup : DownloadingTaskViewModel
+    public class DownloadTaskGroup : DownloadingTaskViewModel
     {
         private TransferTaskStatus status = TransferTaskStatus.Pause;
 
+        /// <summary>
+        /// 尝试下载等待的任务，每500毫秒触发一次
+        /// </summary>
+        /// <returns></returns>
+        private async Task StartWaittingTasks()
+        {
+            if (Status != TransferTaskStatus.Running)
+            {
+                return;
+            }
+
+            while (WaittingTasks.TryDequeue(out IDownloadTask task))
+            {
+                string downloadPath = Path.Combine(task.LocalPath, task.Name);
+                FileMetaData detail = await FileSystem.GetDownloadUrlByIdentity(task.TargetUUID);
+                string downloadUrl = detail.DownloadAddress;
+
+                if (detail.Size == 0)
+                {
+                    File.Create(downloadPath).Close();
+                    CompletedTasks.Add(task);
+                    continue;
+                }
+                else
+                {
+                    lock (RunningTasks)
+                    {
+                        if (RunningTasks.Count >= 16 || Status != TransferTaskStatus.Running)
+                        {
+                            //如果有超过16个正在进行的任务，把当前任务塞回去，并终止循环
+                            WaittingTasks.Enqueue(task);
+                            break;
+                        }
+                        else
+                        {
+                            HttpDownloader fileDownloader = CreateHttpDownloader(downloadPath, downloadUrl, task.TargetUUID);
+                            RunningTasks[task] = fileDownloader;
+                            fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
+                            {
+                                if (newValue == DownloadStatusEnum.Completed)
+                                {
+                                    lock (RunningTasks)
+                                    {
+                                        RunningTasks.Remove(task);
+                                        CompletedTasks.Add(task);
+                                        DownloadTaskRecordStatusChanged?.Invoke(task, EventArgs.Empty);
+                                    }
+                                }
+                            };
+                            DownloadTaskRecordStatusChanged?.Invoke(task, EventArgs.Empty);
+                            Task.Run(() => fileDownloader.StartDownload());
+                        }
+                    }
+                }
+            }
+
+            if (CompletedCount != 0 && CompletedCount == TotalCount)
+            {
+                status = TransferTaskStatus.Completed;
+                DownloadCompleted?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// 目录名
+        /// </summary>
         public override string Name { get; protected set; }
 
+        /// <summary>
+        /// 目录IdentityID
+        /// </summary>
         public override string TargetUUID { get; protected set; }
 
+        /// <summary>
+        /// 总下载状态
+        /// </summary>
         public override TransferTaskStatus Status => status;
+
+        /// <summary>
+        /// 总进度
+        /// </summary>
         public override double Progress => TotalCount == 0 ? 0 : CompletedCount * 100 / TotalCount;
 
-        public ObservableCollection<DownloadTaskRecord> TaskList { get; } = new ObservableCollection<DownloadTaskRecord>();
+        /// <summary>
+        /// 全部任务清单
+        /// </summary>
+        public List<IDownloadTask> TaskList { get; } = new List<IDownloadTask>();
 
-        public ConcurrentQueue<DownloadTaskRecord> WaittingTasks { get; } = new ConcurrentQueue<DownloadTaskRecord>();
+        /// <summary>
+        /// 等待任务队列
+        /// </summary>
+        public ConcurrentQueue<IDownloadTask> WaittingTasks { get; } = new ConcurrentQueue<IDownloadTask>();
 
-        public Dictionary<DownloadTaskRecord, HttpDownloader> RunningTasks { get; } = new Dictionary<DownloadTaskRecord, HttpDownloader>(16);
+        ///// <summary>
+        ///// 下载中任务
+        ///// </summary>
+        //public Dictionary<DownloadTaskRecord, HttpDownloader> RunningTasks { get; } = new Dictionary<DownloadTaskRecord, HttpDownloader>(16);
 
-        public List<DownloadTaskRecord> CompletedTasks { get; } = new List<DownloadTaskRecord>();
+        ///// <summary>
+        ///// 已完成任务
+        ///// </summary>
+        //public List<DownloadTask> CompletedTasks { get; } = new List<DownloadTask>();
 
+        /// <summary>
+        /// 本地保存路径
+        /// </summary>
         public override string CurrentFileFullPath { get; }
 
-        public long CompletedCount => CompletedTasks.Count;
+        /// <summary>
+        /// 已完成计数
+        /// </summary>
+        public long CompletedCount
+        {
+            get
+            {
+                var completed = from task in TaskList
+                                where task.Status == TransferTaskStatus.Completed
+                                select task;
+                return completed.Count();
+            }
+        }
 
         public override string Completed => $"已完成{CompletedCount}";
 
         public override string SavedLocalPath { get; protected set; }
 
+        /// <summary>
+        /// 总任务计数
+        /// </summary>
         public long TotalCount => TaskList.Count;
 
         public override string Total => $"{TotalCount}个项目";
@@ -64,6 +172,8 @@ namespace SixCloud.Core.Models
 
         public override event EventHandler DownloadCompleted;
         public override event EventHandler DownloadCanceled;
+
+        public event EventHandler DownloadTaskRecordStatusChanged;
 
         /// <summary>
         /// 初始化任务组
@@ -111,67 +221,6 @@ namespace SixCloud.Core.Models
             }
         }
 
-        /// <summary>
-        /// 尝试下载等待的任务，每500毫秒触发一次
-        /// </summary>
-        /// <returns></returns>
-        public async Task StartWaittingTasks()
-        {
-            if (Status != TransferTaskStatus.Running)
-            {
-                return;
-            }
-
-            while (WaittingTasks.TryDequeue(out DownloadTaskRecord task))
-            {
-                string downloadPath = Path.Combine(task.LocalPath, task.Name);
-                FileMetaData detail = await FileSystem.GetDownloadUrlByIdentity(task.TargetUUID);
-                string downloadUrl = detail.DownloadAddress;
-                if (detail.Size == 0)
-                {
-                    File.Create(downloadPath).Close();
-                    CompletedTasks.Add(task);
-                    continue;
-                }
-                else
-                {
-                    lock (RunningTasks)
-                    {
-                        if (RunningTasks.Count >= 16)
-                        {
-                            //如果有超过16个正在进行的任务，把当前任务塞回去，并终止循环
-                            WaittingTasks.Enqueue(task);
-                            break;
-                        }
-                        else
-                        {
-                            HttpDownloader fileDownloader = CreateHttpDownloader(downloadPath, downloadUrl, task.TargetUUID);
-                            RunningTasks[task] = fileDownloader;
-                            fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
-                            {
-                                if (newValue == DownloadStatusEnum.Completed)
-                                {
-                                    lock (RunningTasks)
-                                    {
-                                        RunningTasks.Remove(task);
-                                        CompletedTasks.Add(task);
-                                    }
-                                }
-                            };
-
-                            //fileDownloader.DownloadStatusChangedEvent += DownloadFailedEventHandler;
-                            Task.Run(() => fileDownloader.StartDownload());
-                        }
-                    }
-                }
-            }
-
-            if (CompletedCount != 0 && CompletedCount == TotalCount)
-            {
-                status = TransferTaskStatus.Completed;
-                DownloadCompleted?.Invoke(this, EventArgs.Empty);
-            }
-        }
 
         protected override void Cancel(object parameter)
         {
@@ -227,9 +276,9 @@ namespace SixCloud.Core.Models
 
         protected override void Pause(object parameter)
         {
-            status = TransferTaskStatus.Pause;
             lock (RunningTasks)
             {
+                status = TransferTaskStatus.Pause;
                 RunningTasks.Values.ToList().ForEach(task =>
                 {
                     try
@@ -241,6 +290,13 @@ namespace SixCloud.Core.Models
                         ex.ToSentry().AttachExtraInfo(nameof(DownloadTask), this).Submit();
                     }
                 });
+
+                RunningTasks.Keys.ToList().ForEach(task =>
+                {
+                    RunningTasks.Remove(task);
+                    WaittingTasks.Enqueue(task);
+                    DownloadTaskRecordStatusChanged?.Invoke(task, EventArgs.Empty);
+                });
             }
 
             RecoveryCommand.OnCanExecutedChanged(this, EventArgs.Empty);
@@ -248,51 +304,12 @@ namespace SixCloud.Core.Models
 
         }
 
-        protected override async void Recovery(object parameter)
+        protected override void Recovery(object parameter)
         {
-            IEnumerable<DownloadTaskRecord> runningTasks = from task in RunningTasks
-                                                           where !(task.Value?.Status == DownloadStatusEnum.Downloading || task.Value?.Status == DownloadStatusEnum.Failed)
-                                                           select task.Key;
-            if (runningTasks.Any())
-            {
-                try
-                {
-                    foreach (DownloadTaskRecord taskRecord in runningTasks)
-                    {
-                        RunningTasks[taskRecord] ??= await CreateDownloader(taskRecord);
-                        await Task.Run(() => RunningTasks[taskRecord]?.StartDownload());
-                    }
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ex.ToSentry().TreatedBy(nameof(Recovery)).Submit();
-                }
-            }
-
-
             status = TransferTaskStatus.Running;
+
             RecoveryCommand.OnCanExecutedChanged(this, EventArgs.Empty);
             PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
-
-            async Task<HttpDownloader> CreateDownloader(DownloadTaskRecord record)
-            {
-                FileMetaData details = await FileSystem.GetDownloadUrlByIdentity(record.TargetUUID);
-                string downloadPath = Path.Combine(record.LocalPath, record.Name);
-
-                HttpDownloader downloader = CreateHttpDownloader(downloadPath, details.DownloadAddress, record.TargetUUID);
-                downloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
-                {
-                    if (newValue == DownloadStatusEnum.Completed)
-                    {
-                        lock (RunningTasks)
-                        {
-                            RunningTasks.Remove(record);
-                            CompletedTasks.Add(record);
-                        }
-                    }
-                };
-                return downloader;
-            }
         }
 
         public DownloadTaskGroup(string targetUUID, string localStoragePath, string name)
@@ -354,6 +371,7 @@ namespace SixCloud.Core.Models
                 OnPropertyChanged(nameof(Speed));
                 OnPropertyChanged(nameof(Total));
                 OnPropertyChanged(nameof(Progress));
+                OnPropertyChanged(nameof(Status));
             }
         }
 

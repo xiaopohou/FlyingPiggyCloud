@@ -13,11 +13,9 @@ using System.Windows.Threading;
 
 namespace SixCloud.Core.Models
 {
-    internal class DownloadTask : DownloadingTaskViewModel
+    public class DownloadTask : DownloadingTaskViewModel, IDownloadTask
     {
         private HttpDownloader fileDownloader;
-
-        //protected string Url { get; private set; }
 
         protected string Path { get; }
 
