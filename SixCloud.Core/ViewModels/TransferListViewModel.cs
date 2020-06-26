@@ -1,10 +1,12 @@
 ﻿using QingzhenyunApis.Exceptions;
+using QingzhenyunApis.Methods.V3;
 using SixCloud.Core.Controllers;
 using SixCloud.Core.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace SixCloud.Core.ViewModels
@@ -38,28 +40,40 @@ namespace SixCloud.Core.ViewModels
         /// <param name="localPath">本地路径</param>
         /// <param name="name">文件名</param>
         /// <param name="isAutoStart">自动开始</param>
-        public static void NewDownloadTask(string targetUUID, string localPath, string name, bool isAutoStart = true)
+        public static async Task NewDownloadTask(string targetUUID, string localPath, string name, bool isAutoStart = true)
         {
-            DownloadingTaskViewModel task = new DownloadTask(localPath, name, targetUUID);
+            var detail = await FileSystem.GetDetailsByIdentity(targetUUID);
+            DownloadingTaskViewModel task;
+
+            if (detail.Size == 0)
+            {
+                task = new EmptyFileDownloadTask(localPath, name, targetUUID);
+            }
+            else
+            {
+                task = new DownloadTask(localPath, name, targetUUID);
+
+            }
+
             //当下载任务结束时从列表中移除任务信息
             task.DownloadCompleted += (sender, e) =>
-            {
-                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    try
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        downloadingList.Remove(task);
-                        if (File.Exists(task.CurrentFileFullPath))
+                        try
                         {
-                            TransferCompletedListViewModel.NewDownloadedTask(task);
+                            downloadingList.Remove(task);
+                            if (File.Exists(task.CurrentFileFullPath))
+                            {
+                                TransferCompletedListViewModel.NewDownloadedTask(task);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-                    }
-                });
-            };
+                        catch (Exception ex)
+                        {
+                            ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
+                        }
+                    });
+                };
 
             task.DownloadCanceled += (sender, e) =>
             {
@@ -77,6 +91,7 @@ namespace SixCloud.Core.ViewModels
             };
 
             AddDownloadingItem(isAutoStart, task);
+
         }
 
         public static async void NewDownloadTaskGroup(string targetUUID, string localPath, string name, bool isAutoStart = true)
@@ -92,19 +107,6 @@ namespace SixCloud.Core.ViewModels
                     {
                         downloadingList.Remove(task);
                         TransferCompletedListViewModel.NewDownloadedTask(task);
-
-                        //try
-                        //{
-                        //    downloadingList.Remove(task);
-                        //    if (File.Exists(task.CurrentFileFullPath))
-                        //    {
-                        //        TransferCompletedListViewModel.NewDownloadedTask(task);
-                        //    }
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //    ex.Submit("DownloadCompletedEventHandler");
-                        //}
                     });
                 };
 
@@ -148,18 +150,6 @@ namespace SixCloud.Core.ViewModels
                 {
                     downloadingList.Remove(task);
                     TransferCompletedListViewModel.NewDownloadedTask(task);
-                    //try
-                    //{
-                    //    downloadingList.Remove(task);
-                    //    if (File.Exists(task.CurrentFileFullPath))
-                    //    {
-                    //        TransferCompletedListViewModel.NewDownloadedTask(task);
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-                    //}
                 });
             };
 

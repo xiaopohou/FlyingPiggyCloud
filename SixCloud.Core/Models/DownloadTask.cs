@@ -24,32 +24,22 @@ namespace SixCloud.Core.Models
             if (!Cancelled && (fileDownloader?.Status) != DownloadStatusEnum.Downloading && (fileDownloader?.Status) != DownloadStatusEnum.Failed)
             {
                 FileMetaData detail = await FileSystem.GetDownloadUrlByIdentity(TargetUUID);
-
-                if (detail.Size == 0)
+                string downloadPath = System.IO.Path.Combine(Path, Name);
+                fileDownloader ??= CreateHttpDownloader(downloadPath, detail.DownloadAddress, TargetUUID);
+                fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
                 {
-                    File.Create(System.IO.Path.Combine(Path, Name)).Close();
-                    DownloadCompleted?.Invoke(this, null);
-                }
-                else
-                {
-                    string downloadPath = System.IO.Path.Combine(Path, Name);
-
-                    fileDownloader ??= CreateHttpDownloader(downloadPath, detail.DownloadAddress, TargetUUID);
-
-                    fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
+                    if (newValue == DownloadStatusEnum.Completed)
                     {
-                        if (newValue == DownloadStatusEnum.Completed)
-                        {
-                            DownloadCompleted?.Invoke(sender, null);
-                        }
-                    };
+                        DownloadCompleted?.Invoke(sender, null);
+                    }
+                };
 
-                    await Task.Run(() => fileDownloader?.StartDownload());
+                await Task.Run(() => fileDownloader?.StartDownload());
 
-                    OnPropertyChanged(nameof(Status));
-                    RecoveryCommand.OnCanExecutedChanged(this, null);
-                    PauseCommand.OnCanExecutedChanged(this, null);
-                }
+                OnPropertyChanged(nameof(Status));
+                RecoveryCommand.OnCanExecutedChanged(this, null);
+                PauseCommand.OnCanExecutedChanged(this, null);
+
             }
         }
 
@@ -175,14 +165,18 @@ namespace SixCloud.Core.Models
 
         public override string ToString()
         {
+            return JsonConvert.SerializeObject(ToRecord());
+        }
+
+        public DownloadTaskRecord ToRecord()
+        {
             Pause(null);
-            DownloadTaskRecord record = new DownloadTaskRecord
+            return new DownloadTaskRecord
             {
                 LocalPath = SavedLocalPath,
                 TargetUUID = TargetUUID,
                 Name = Name,
             };
-            return JsonConvert.SerializeObject(record);
         }
     }
 }
