@@ -36,20 +36,22 @@ namespace SixCloud.Core.Models
                 return;
             }
 
-
-            while ((from taskInfo in TaskList where taskInfo.Status == TransferTaskStatus.Running select taskInfo).Count() < 16 && WaittingTasks.TryDequeue(out IDownloadTask task))
+            lock (TaskList)
             {
-                task.RecoveryCommand.Execute(null);
-            }
+                while ((from taskInfo in TaskList where taskInfo.Status == TransferTaskStatus.Running select taskInfo).Count() < 16 && WaittingTasks.TryDequeue(out IDownloadTask task))
+                {
+                    task.RecoveryCommand.Execute(null);
+                }
 
-            IEnumerable<IDownloadTask> errorTasks = from taskInfo in TaskList
-                                                    where taskInfo.Status != TransferTaskStatus.Running && taskInfo.Status != TransferTaskStatus.Completed
-                                                    where !WaittingTasks.Contains(taskInfo)
-                                                    select taskInfo;
+                IEnumerable<IDownloadTask> errorTasks = from taskInfo in TaskList
+                                                        where taskInfo.Status != TransferTaskStatus.Running && taskInfo.Status != TransferTaskStatus.Completed
+                                                        where !WaittingTasks.Contains(taskInfo)
+                                                        select taskInfo;
 
-            if (errorTasks.Any())
-            {
-                errorTasks.ToList().ForEach(x => WaittingTasks.Enqueue(x));
+                if (errorTasks.Any())
+                {
+                    errorTasks.ToList().ForEach(x => WaittingTasks.Enqueue(x));
+                }
             }
 
             if (CompletedCount != 0 && CompletedCount == TotalCount)
@@ -244,7 +246,6 @@ namespace SixCloud.Core.Models
                 }
             }
         }
-
 
         protected override void Cancel(object parameter)
         {

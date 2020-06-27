@@ -42,7 +42,7 @@ namespace SixCloud.Core.ViewModels
         /// <param name="isAutoStart">自动开始</param>
         public static async Task NewDownloadTask(string targetUUID, string localPath, string name, bool isAutoStart = true)
         {
-            var detail = await FileSystem.GetDetailsByIdentity(targetUUID);
+            QingzhenyunApis.EntityModels.FileMetaData detail = await FileSystem.GetDetailsByIdentity(targetUUID);
             DownloadingTaskViewModel task;
 
             if (detail.Size == 0)
@@ -135,14 +135,13 @@ namespace SixCloud.Core.ViewModels
             {
                 MessageBox.Show(ex.Message, "失败", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-
         }
 
-        public static void NewDownloadTaskGroup(DownloadTaskGroupRecord record, bool isAutoStart = true)
+        public static async void NewDownloadTaskGroup(DownloadTaskGroupRecord record, bool isAutoStart = true)
         {
-            DownloadingTaskViewModel task = new DownloadTaskGroup(record);
-
+            DownloadTaskGroup task = new DownloadTaskGroup(record);
+            AddDownloadingItem(false, task);
+            await task.InitTaskGroup();
 
             task.DownloadCompleted += (sender, e) =>
             {
@@ -168,8 +167,10 @@ namespace SixCloud.Core.ViewModels
                 });
             };
 
-            AddDownloadingItem(isAutoStart, task);
-
+            if (isAutoStart)
+            {
+                task.RecoveryCommand.Execute(null);
+            }
         }
 
 
