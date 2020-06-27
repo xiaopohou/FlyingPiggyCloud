@@ -119,7 +119,8 @@ namespace SixCloud.Core.Models
             _ => throw new InvalidCastException()
         };
 
-        public override string Speed => Calculators.SizeCalculator(fileDownloader?.Speed ?? 0) + "/秒";
+        public long Speed => fileDownloader?.Speed ?? 0;
+        public override string FriendlySpeed => Calculators.SizeCalculator(Speed) + "/秒";
 
         public override event EventHandler DownloadCompleted;
 
@@ -156,7 +157,7 @@ namespace SixCloud.Core.Models
             void Callback(object sender, EventArgs e)
             {
                 OnPropertyChanged(nameof(Completed));
-                OnPropertyChanged(nameof(Speed));
+                OnPropertyChanged(nameof(FriendlySpeed));
                 OnPropertyChanged(nameof(Total));
                 OnPropertyChanged(nameof(Progress));
             }

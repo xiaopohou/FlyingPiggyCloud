@@ -27,7 +27,7 @@ namespace SixCloud.Core.ViewModels
 
         public string Total { get; }
 
-        public string Speed { get; }
+        public string FriendlySpeed { get; }
 
         public DependencyCommand RecoveryCommand { get; }
 

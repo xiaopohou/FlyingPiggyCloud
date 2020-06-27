@@ -88,6 +88,6 @@ namespace SixCloud.Core.ViewModels
         public string LocalFilePath { get; protected set; }
 
         public string TargetPath { get; protected set; }
-        public abstract string Speed { get; }
+        public abstract string FriendlySpeed { get; }
     }
 }

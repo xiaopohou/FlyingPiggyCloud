@@ -21,7 +21,8 @@ namespace SixCloud.Core.Models
         /// 下载任务的保存目录
         /// </summary>
         string SavedLocalPath { get; }
-        string Speed { get; }
+        long Speed { get; }
+        string FriendlySpeed { get; }
         TransferTaskStatus Status { get; }
         string TargetUUID { get; }
         string Total { get; }

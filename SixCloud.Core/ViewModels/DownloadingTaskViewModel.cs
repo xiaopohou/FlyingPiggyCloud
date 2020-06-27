@@ -59,7 +59,7 @@ namespace SixCloud.Core.ViewModels
 
         public abstract TransferTaskStatus Status { get; }
 
-        public abstract string Speed { get; }
+        public abstract string FriendlySpeed { get; }
 
         public DependencyCommand RecoveryCommand { get; }
         protected abstract void Recovery(object parameter);

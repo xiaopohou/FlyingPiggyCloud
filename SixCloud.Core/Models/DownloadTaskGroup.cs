@@ -31,56 +31,27 @@ namespace SixCloud.Core.Models
         /// 尝试下载等待的任务，每500毫秒触发一次
         /// </summary>
         /// <returns></returns>
-        private async Task StartWaittingTasks()
+        private void StartWaittingTasks()
         {
             if (Status != TransferTaskStatus.Running)
             {
                 return;
             }
 
-            while (WaittingTasks.TryDequeue(out IDownloadTask task))
-            {
-                string downloadPath = Path.Combine(task.LocalPath, task.Name);
-                FileMetaData detail = await FileSystem.GetDownloadUrlByIdentity(task.TargetUUID);
-                string downloadUrl = detail.DownloadAddress;
 
-                if (detail.Size == 0)
-                {
-                    File.Create(downloadPath).Close();
-                    CompletedTasks.Add(task);
-                    continue;
-                }
-                else
-                {
-                    lock (RunningTasks)
-                    {
-                        if (RunningTasks.Count >= 16 || Status != TransferTaskStatus.Running)
-                        {
-                            //如果有超过16个正在进行的任务，把当前任务塞回去，并终止循环
-                            WaittingTasks.Enqueue(task);
-                            break;
-                        }
-                        else
-                        {
-                            HttpDownloader fileDownloader = CreateHttpDownloader(downloadPath, downloadUrl, task.TargetUUID);
-                            RunningTasks[task] = fileDownloader;
-                            fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
-                            {
-                                if (newValue == DownloadStatusEnum.Completed)
-                                {
-                                    lock (RunningTasks)
-                                    {
-                                        RunningTasks.Remove(task);
-                                        CompletedTasks.Add(task);
-                                        DownloadTaskRecordStatusChanged?.Invoke(task, EventArgs.Empty);
-                                    }
-                                }
-                            };
-                            DownloadTaskRecordStatusChanged?.Invoke(task, EventArgs.Empty);
-                            Task.Run(() => fileDownloader.StartDownload());
-                        }
-                    }
-                }
+            while ((from taskInfo in TaskList where taskInfo.Status == TransferTaskStatus.Running select taskInfo).Count() < 16 && WaittingTasks.TryDequeue(out IDownloadTask task))
+            {
+                task.RecoveryCommand.Execute(null);
+            }
+
+            var errorTasks = from taskInfo in TaskList
+                             where taskInfo.Status != TransferTaskStatus.Running && taskInfo.Status != TransferTaskStatus.Completed
+                             where !WaittingTasks.Contains(taskInfo)
+                             select taskInfo;
+
+            if (errorTasks.Any())
+            {
+                errorTasks.ToList().ForEach(x => WaittingTasks.Enqueue(x));
             }
 
             if (CompletedCount != 0 && CompletedCount == TotalCount)
@@ -160,11 +131,14 @@ namespace SixCloud.Core.Models
 
         public override string Total => $"{TotalCount}个项目";
 
-        public override string Speed
+        public override string FriendlySpeed
         {
             get
             {
                 long speedTemp = 0;
+                var runnings = from task in TaskList
+                               where task.Status == TransferTaskStatus.Running
+                               select task.FriendlySpeed
                 RunningTasks.Values.ToList().ForEach(task => speedTemp += task.Speed);
                 return Calculators.SizeCalculator(speedTemp) + "/秒";
             }
@@ -325,7 +299,7 @@ namespace SixCloud.Core.Models
                 await StartWaittingTasks();
 
                 OnPropertyChanged(nameof(Completed));
-                OnPropertyChanged(nameof(Speed));
+                OnPropertyChanged(nameof(FriendlySpeed));
                 OnPropertyChanged(nameof(Total));
                 OnPropertyChanged(nameof(Progress));
                 OnPropertyChanged(nameof(Status));
@@ -368,7 +342,7 @@ namespace SixCloud.Core.Models
                 await StartWaittingTasks();
 
                 OnPropertyChanged(nameof(Completed));
-                OnPropertyChanged(nameof(Speed));
+                OnPropertyChanged(nameof(FriendlySpeed));
                 OnPropertyChanged(nameof(Total));
                 OnPropertyChanged(nameof(Progress));
                 OnPropertyChanged(nameof(Status));

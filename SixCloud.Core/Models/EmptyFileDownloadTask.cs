@@ -25,7 +25,7 @@ namespace SixCloud.Core.Models
 
         public override string SavedLocalPath { get; protected set; }
 
-        public override string Speed => Calculators.SizeCalculator(0) + "/秒";
+        public override string FriendlySpeed => Calculators.SizeCalculator(0) + "/秒";
 
         public override TransferTaskStatus Status { get => status; }
         public override string TargetUUID { get; protected set; }

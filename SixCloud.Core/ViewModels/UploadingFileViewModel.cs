@@ -44,7 +44,7 @@ namespace SixCloud.Core.ViewModels
         private DateTime lastTime;
         private long lastCompletedBytes;
 
-        public override string Speed
+        public override string FriendlySpeed
         {
             get
             {
