@@ -8,14 +8,11 @@ using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Threading;
 
 namespace SixCloud.Core.Models
@@ -26,6 +23,7 @@ namespace SixCloud.Core.Models
     public class DownloadTaskGroup : DownloadingTaskViewModel
     {
         private TransferTaskStatus status = TransferTaskStatus.Pause;
+        private readonly DownloadTaskGroupRecord downloadTaskGroupRecord;
 
         /// <summary>
         /// 尝试下载等待的任务，每500毫秒触发一次
@@ -44,10 +42,10 @@ namespace SixCloud.Core.Models
                 task.RecoveryCommand.Execute(null);
             }
 
-            var errorTasks = from taskInfo in TaskList
-                             where taskInfo.Status != TransferTaskStatus.Running && taskInfo.Status != TransferTaskStatus.Completed
-                             where !WaittingTasks.Contains(taskInfo)
-                             select taskInfo;
+            IEnumerable<IDownloadTask> errorTasks = from taskInfo in TaskList
+                                                    where taskInfo.Status != TransferTaskStatus.Running && taskInfo.Status != TransferTaskStatus.Completed
+                                                    where !WaittingTasks.Contains(taskInfo)
+                                                    select taskInfo;
 
             if (errorTasks.Any())
             {
@@ -113,9 +111,9 @@ namespace SixCloud.Core.Models
         {
             get
             {
-                var completed = from task in TaskList
-                                where task.Status == TransferTaskStatus.Completed
-                                select task;
+                IEnumerable<IDownloadTask> completed = from task in TaskList
+                                                       where task.Status == TransferTaskStatus.Completed
+                                                       select task;
                 return completed.Count();
             }
         }
@@ -136,10 +134,10 @@ namespace SixCloud.Core.Models
             get
             {
                 long speedTemp = 0;
-                var runnings = from task in TaskList
-                               where task.Status == TransferTaskStatus.Running
-                               select task.FriendlySpeed
-                RunningTasks.Values.ToList().ForEach(task => speedTemp += task.Speed);
+                IEnumerable<long> runnings = from task in TaskList
+                                             where task.Status == TransferTaskStatus.Running
+                                             select task.Speed;
+                runnings.ToList().ForEach(speed => speedTemp += speed);
                 return Calculators.SizeCalculator(speedTemp) + "/秒";
             }
         }
@@ -155,8 +153,56 @@ namespace SixCloud.Core.Models
         /// <returns></returns>
         public async Task<DownloadTaskGroup> InitTaskGroup()
         {
-            await DownloadHelper(TargetUUID, Path.Combine(SavedLocalPath, Name), 0);
+            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), TimerCallBack);
+
+            //当前进程创建的任务组
+            if (downloadTaskGroupRecord == null)
+            {
+                await DownloadHelper(TargetUUID, Path.Combine(SavedLocalPath, Name), 0);
+            }
+            //从记录文件恢复的任务组
+            else
+            {
+                var waittingTaskList = from task in downloadTaskGroupRecord.TaskList
+                                       where downloadTaskGroupRecord.CompletedList.FirstOrDefault(x => x.TargetUUID == task.TargetUUID) == default
+                                       select task;
+                if (waittingTaskList.Any())
+                {
+                    foreach (var waittingTask in waittingTaskList)
+                    {
+                        var detail = await FileSystem.GetDetailsByIdentity(waittingTask.TargetUUID);
+                        if (detail.Size == 0)
+                        {
+                            TaskList.Add(new EmptyFileDownloadTask(waittingTask.SavedLocalPath, waittingTask.Name, waittingTask.TargetUUID));
+                        }
+                        else
+                        {
+                            TaskList.Add(new DownloadTask(waittingTask.SavedLocalPath, waittingTask.Name, waittingTask.TargetUUID));
+                        }
+                    }
+                }
+
+                if (downloadTaskGroupRecord.CompletedList.Any())
+                {
+                    foreach (var completedTask in downloadTaskGroupRecord.CompletedList)
+                    {
+                        TaskList.Add(new CompletedDownloadTask(completedTask.LocalPath, completedTask.Name, completedTask.TargetUUID));
+                    }
+                }
+            }
+
             return this;
+
+            void TimerCallBack(object sender, EventArgs e)
+            {
+                StartWaittingTasks();
+
+                OnPropertyChanged(nameof(Completed));
+                OnPropertyChanged(nameof(FriendlySpeed));
+                OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(Progress));
+                OnPropertyChanged(nameof(Status));
+            }
 
             async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
             {
@@ -169,12 +215,16 @@ namespace SixCloud.Core.Models
                             Directory.CreateDirectory(localParentPath);
                         }
 
-                        DownloadTaskRecord newTask = new DownloadTaskRecord
+                        FileMetaData detail = await FileSystem.GetDetailsByIdentity(child.UUID);
+                        IDownloadTask newTask;
+                        if (detail.Size == 0)
                         {
-                            TargetUUID = child.UUID,
-                            LocalPath = localParentPath,
-                            Name = child.Name
-                        };
+                            newTask = new EmptyFileDownloadTask(localParentPath, child.Name, child.UUID);
+                        }
+                        else
+                        {
+                            newTask = new DownloadTask(localParentPath, child.Name, child.UUID);
+                        }
                         TaskList.Add(newTask);
                         WaittingTasks.Enqueue(newTask);
                     }
@@ -199,50 +249,23 @@ namespace SixCloud.Core.Models
         protected override void Cancel(object parameter)
         {
             status = TransferTaskStatus.Stop;
-            lock (RunningTasks)
+            lock (TaskList)
             {
-                RunningTasks.Values.ToList().ForEach(task =>
+                TaskList.ForEach(task =>
                 {
-                    task.AllFileStreamDisposed += (sender, e) =>
+                    if (task is DownloadingTaskViewModel downloadingTask)
                     {
-                        string filePath = (sender as HttpDownloader).Info.DownloadPath;
-                        try
-                        {
-                            File.Delete(filePath);
-                        }
-                        catch (IOException ex)
-                        {
-                            ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
-                        }
-                        try
-                        {
-                            File.Delete(filePath + ".downloading");
-                        }
-                        catch (IOException ex)
-                        {
-                            ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
-                        }
-                    };
-                    task.StopAndSave(true);
-                });
-
-                RunningTasks.Clear();
-
-                CompletedTasks.ForEach(task =>
-                {
-                    try
-                    {
-                        File.Delete(Path.Combine(task.LocalPath, task.Name));
+                        downloadingTask.CancelCommand.Execute(null);
                     }
-                    catch (IOException ex)
+                    else if (task is CompletedDownloadTask downloadedTask)
                     {
-                        ex.ToSentry().TreatedBy(nameof(DownloadTaskGroup)).Submit();
+                        if (File.Exists(task.CurrentFileFullPath))
+                        {
+                            File.Delete(task.CurrentFileFullPath);
+                        }
                     }
+                    WaittingTasks.Clear();
                 });
-
-                CompletedTasks.Clear();
-
-                WaittingTasks.Clear();
             }
 
             DownloadCanceled?.Invoke(this, EventArgs.Empty);
@@ -250,32 +273,21 @@ namespace SixCloud.Core.Models
 
         protected override void Pause(object parameter)
         {
-            lock (RunningTasks)
+            lock (TaskList)
             {
                 status = TransferTaskStatus.Pause;
-                RunningTasks.Values.ToList().ForEach(task =>
+                TaskList.ForEach(task =>
                 {
-                    try
+                    if (task is DownloadingTaskViewModel downloadingTask && task.Status == TransferTaskStatus.Running)
                     {
-                        task.StopAndSave()?.Save(task.Info.DownloadPath + ".downloading");
+                        downloadingTask.PauseCommand.Execute(null);
+                        WaittingTasks.Enqueue(task);
+                        DownloadTaskRecordStatusChanged?.Invoke(task, EventArgs.Empty);
                     }
-                    catch (NullReferenceException ex)
-                    {
-                        ex.ToSentry().AttachExtraInfo(nameof(DownloadTask), this).Submit();
-                    }
-                });
-
-                RunningTasks.Keys.ToList().ForEach(task =>
-                {
-                    RunningTasks.Remove(task);
-                    WaittingTasks.Enqueue(task);
-                    DownloadTaskRecordStatusChanged?.Invoke(task, EventArgs.Empty);
                 });
             }
-
             RecoveryCommand.OnCanExecutedChanged(this, EventArgs.Empty);
             PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
-
         }
 
         protected override void Recovery(object parameter)
@@ -291,76 +303,27 @@ namespace SixCloud.Core.Models
             TargetUUID = targetUUID;
             SavedLocalPath = localStoragePath;
             Name = name;
-
-            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
-
-            async void Callback(object sender, EventArgs e)
-            {
-                await StartWaittingTasks();
-
-                OnPropertyChanged(nameof(Completed));
-                OnPropertyChanged(nameof(FriendlySpeed));
-                OnPropertyChanged(nameof(Total));
-                OnPropertyChanged(nameof(Progress));
-                OnPropertyChanged(nameof(Status));
-            }
-
         }
 
-        public DownloadTaskGroup(DownloadTaskGroupRecord record)
+        public DownloadTaskGroup(DownloadTaskGroupRecord record) : this(record.TargetUUID, record.LocalPath, record.Name)
         {
-            TargetUUID = record.TargetUUID;
-            SavedLocalPath = record.LocalPath;
-            Name = record.Name;
-            record.RunningList.ToList().ForEach(task =>
-            {
-                TaskList.Add(task);
-                WaittingTasks.Enqueue(task);
-            });
-            record.WaittingList.ToList().ForEach(task =>
-            {
-                TaskList.Add(task);
-                WaittingTasks.Enqueue(task);
-            });
-            record.CompletedList.ToList().ForEach(task =>
-            {
-                TaskList.Add(task);
-                if (File.Exists(Path.Combine(task.LocalPath, task.Name)))
-                {
-                    CompletedTasks.Add(task);
-                }
-                else
-                {
-                    WaittingTasks.Enqueue(task);
-                }
-            });
-
-            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
-
-            async void Callback(object sender, EventArgs e)
-            {
-                await StartWaittingTasks();
-
-                OnPropertyChanged(nameof(Completed));
-                OnPropertyChanged(nameof(FriendlySpeed));
-                OnPropertyChanged(nameof(Total));
-                OnPropertyChanged(nameof(Progress));
-                OnPropertyChanged(nameof(Status));
-            }
+            downloadTaskGroupRecord = record;
         }
 
         public override string ToString()
         {
             Pause(null);
+            var completed = from task in TaskList
+                            where task.Status == TransferTaskStatus.Completed
+                            select new DownloadTaskRecord { LocalPath = task.SavedLocalPath, TargetUUID = task.TargetUUID, Name = task.Name };
 
             DownloadTaskGroupRecord record = new DownloadTaskGroupRecord
             {
                 Name = Name,
                 TargetUUID = TargetUUID,
                 LocalPath = SavedLocalPath,
-                WaittingList = WaittingTasks.ToArray(),
-                CompletedList = CompletedTasks.ToArray(),
-                RunningList = RunningTasks.Keys.ToArray()
+                CompletedList = completed.ToArray(),
+                TaskList = TaskList,
             };
             return JsonConvert.SerializeObject(record);
         }

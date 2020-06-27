@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using QingzhenyunApis.Utils;
 using SixCloud.Core.ViewModels;
+using SixCloud.Core.Views.UserControls;
 using System;
 using System.IO;
 
@@ -25,7 +26,9 @@ namespace SixCloud.Core.Models
 
         public override string SavedLocalPath { get; protected set; }
 
-        public override string FriendlySpeed => Calculators.SizeCalculator(0) + "/秒";
+        public long Speed => 0;
+
+        public override string FriendlySpeed => Calculators.SizeCalculator(Speed) + "/秒";
 
         public override TransferTaskStatus Status { get => status; }
         public override string TargetUUID { get; protected set; }
@@ -56,7 +59,6 @@ namespace SixCloud.Core.Models
             TargetUUID = targetUUID;
             SavedLocalPath = storagePath;
             CurrentFileFullPath = Path.Combine(SavedLocalPath, Name);
-
         }
 
         public DownloadTaskRecord ToRecord()
