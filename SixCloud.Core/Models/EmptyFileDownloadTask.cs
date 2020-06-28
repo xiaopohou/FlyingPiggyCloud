@@ -50,7 +50,7 @@ namespace SixCloud.Core.Models
             DownloadCompleted?.Invoke(this, null);
         }
 
-        public override event EventHandler DownloadCanceled;
+        //public override event EventHandler DownloadCanceled;
         public override event EventHandler DownloadCompleted;
 
         public EmptyFileDownloadTask(string storagePath, string name, string targetUUID)

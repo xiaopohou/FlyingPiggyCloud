@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json;
 using QingzhenyunApis.EntityModels;
-using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
 using SixCloud.Core.ViewModels;
-using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -24,6 +22,7 @@ namespace SixCloud.Core.Models
     {
         private TransferTaskStatus status = TransferTaskStatus.Pause;
         private readonly DownloadTaskGroupRecord downloadTaskGroupRecord;
+        private string completed;
 
         /// <summary>
         /// 尝试下载等待的任务，每500毫秒触发一次
@@ -38,7 +37,10 @@ namespace SixCloud.Core.Models
 
             lock (TaskList)
             {
-                while ((from taskInfo in TaskList where taskInfo.Status == TransferTaskStatus.Running select taskInfo).Count() < 16 && WaittingTasks.TryDequeue(out IDownloadTask task))
+                while ((from taskInfo in TaskList
+                        where taskInfo.Status == TransferTaskStatus.Running
+                        select taskInfo).Count() < 16
+                        && WaittingTasks.TryDequeue(out IDownloadTask task))
                 {
                     task.RecoveryCommand.Execute(null);
                 }
@@ -52,15 +54,145 @@ namespace SixCloud.Core.Models
                 {
                     errorTasks.ToList().ForEach(x => WaittingTasks.Enqueue(x));
                 }
+
+                if (CompletedCount != 0 && CompletedCount == TotalCount)
+                {
+                    status = TransferTaskStatus.Completed;
+                    DownloadCompleted?.Invoke(this, EventArgs.Empty);
+                }
             }
 
-            if (CompletedCount != 0 && CompletedCount == TotalCount)
+        }
+
+        public DownloadTaskGroup(string targetUUID, string localStoragePath, string name)
+        {
+            TargetUUID = targetUUID;
+            SavedLocalPath = localStoragePath;
+            Name = name;
+        }
+
+        public DownloadTaskGroup(DownloadTaskGroupRecord record) : this(record.TargetUUID, record.LocalPath, record.Name)
+        {
+            downloadTaskGroupRecord = record;
+        }
+
+        /// <summary>
+        /// 初始化任务组
+        /// </summary>
+        /// <returns></returns>
+        public async Task<DownloadTaskGroup> InitTaskGroup()
+        {
+            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), TimerCallBack);
+            completed = "初始化任务队列中";
+            //当前进程创建的任务组
+            if (downloadTaskGroupRecord == null)
             {
-                status = TransferTaskStatus.Completed;
-                DownloadCompleted?.Invoke(this, EventArgs.Empty);
+                await DownloadHelper(TargetUUID, Path.Combine(SavedLocalPath, Name), 0);
+            }
+            //从记录文件恢复的任务组
+            else
+            {
+                IEnumerable<IDownloadTask> waittingTaskList = from task in downloadTaskGroupRecord.TaskList
+                                                              where downloadTaskGroupRecord.CompletedList.FirstOrDefault(x => x.TargetUUID == task.TargetUUID) == default
+                                                              select task;
+                if (waittingTaskList.Any())
+                {
+                    foreach (IDownloadTask waittingTask in waittingTaskList)
+                    {
+                        FileMetaData detail = await FileSystem.GetDetailsByIdentity(waittingTask.TargetUUID);
+                        if (detail.Size == 0)
+                        {
+                            TaskList.Add(new EmptyFileDownloadTask(waittingTask.SavedLocalPath, waittingTask.Name, waittingTask.TargetUUID));
+                        }
+                        else
+                        {
+                            TaskList.Add(new DownloadTask(waittingTask.SavedLocalPath, waittingTask.Name, waittingTask.TargetUUID));
+                        }
+                    }
+                }
+
+                if (downloadTaskGroupRecord.CompletedList.Any())
+                {
+                    foreach (DownloadTaskRecord completedTask in downloadTaskGroupRecord.CompletedList)
+                    {
+                        TaskList.Add(new CompletedDownloadTask(completedTask.LocalPath, completedTask.Name, completedTask.TargetUUID));
+                    }
+                }
+            }
+            completed = null;
+            return this;
+
+            void TimerCallBack(object sender, EventArgs e)
+            {
+                StartWaittingTasks();
+
+                OnPropertyChanged(nameof(Completed));
+                OnPropertyChanged(nameof(FriendlySpeed));
+                OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(Progress));
+                OnPropertyChanged(nameof(Status));
+            }
+
+            async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
+            {
+                await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(0, identity: uuid))
+                {
+                    if (!child.Directory)
+                    {
+                        if (!Directory.Exists(localParentPath))
+                        {
+                            Directory.CreateDirectory(localParentPath);
+                        }
+
+                        FileMetaData detail = await FileSystem.GetDetailsByIdentity(child.UUID);
+                        IDownloadTask newTask;
+                        if (detail.Size == 0)
+                        {
+                            newTask = new EmptyFileDownloadTask(localParentPath, child.Name, child.UUID);
+                        }
+                        else
+                        {
+                            newTask = new DownloadTask(localParentPath, child.Name, child.UUID);
+                        }
+                        TaskList.Add(newTask);
+                        WaittingTasks.Enqueue(newTask);
+                    }
+                    else
+                    {
+                        string nextPath = Path.Combine(localParentPath, child.Name);
+                        Directory.CreateDirectory(nextPath);
+                        if (depthIndex < 32)
+                        {
+                            await DownloadHelper(child.UUID, nextPath, depthIndex + 1);
+                        }
+                        else
+                        {
+                            ThreadPool.QueueUserWorkItem(async (state) => await DownloadHelper(child.UUID, nextPath, 0), null);
+                        }
+                    }
+                }
             }
         }
 
+        public override string ToString()
+        {
+            Pause(null);
+            IEnumerable<DownloadTaskRecord> completed = from task in TaskList
+                                                        where task.Status == TransferTaskStatus.Completed
+                                                        select new DownloadTaskRecord { LocalPath = task.SavedLocalPath, TargetUUID = task.TargetUUID, Name = task.Name };
+
+            DownloadTaskGroupRecord record = new DownloadTaskGroupRecord
+            {
+                Name = Name,
+                TargetUUID = TargetUUID,
+                LocalPath = SavedLocalPath,
+                CompletedList = completed.ToArray(),
+                TaskList = TaskList,
+            };
+            return JsonConvert.SerializeObject(record);
+        }
+
+        #region Properties
         /// <summary>
         /// 目录名
         /// </summary>
@@ -120,7 +252,7 @@ namespace SixCloud.Core.Models
             }
         }
 
-        public override string Completed => $"已完成{CompletedCount}";
+        public override string Completed => completed ?? $"已完成{CompletedCount}";
 
         public override string SavedLocalPath { get; protected set; }
 
@@ -144,109 +276,17 @@ namespace SixCloud.Core.Models
             }
         }
 
+        #endregion
+
+        #region Events
         public override event EventHandler DownloadCompleted;
         public override event EventHandler DownloadCanceled;
 
         public event EventHandler DownloadTaskRecordStatusChanged;
 
-        /// <summary>
-        /// 初始化任务组
-        /// </summary>
-        /// <returns></returns>
-        public async Task<DownloadTaskGroup> InitTaskGroup()
-        {
-            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), TimerCallBack);
+        #endregion
 
-            //当前进程创建的任务组
-            if (downloadTaskGroupRecord == null)
-            {
-                await DownloadHelper(TargetUUID, Path.Combine(SavedLocalPath, Name), 0);
-            }
-            //从记录文件恢复的任务组
-            else
-            {
-                var waittingTaskList = from task in downloadTaskGroupRecord.TaskList
-                                       where downloadTaskGroupRecord.CompletedList.FirstOrDefault(x => x.TargetUUID == task.TargetUUID) == default
-                                       select task;
-                if (waittingTaskList.Any())
-                {
-                    foreach (var waittingTask in waittingTaskList)
-                    {
-                        var detail = await FileSystem.GetDetailsByIdentity(waittingTask.TargetUUID);
-                        if (detail.Size == 0)
-                        {
-                            TaskList.Add(new EmptyFileDownloadTask(waittingTask.SavedLocalPath, waittingTask.Name, waittingTask.TargetUUID));
-                        }
-                        else
-                        {
-                            TaskList.Add(new DownloadTask(waittingTask.SavedLocalPath, waittingTask.Name, waittingTask.TargetUUID));
-                        }
-                    }
-                }
-
-                if (downloadTaskGroupRecord.CompletedList.Any())
-                {
-                    foreach (var completedTask in downloadTaskGroupRecord.CompletedList)
-                    {
-                        TaskList.Add(new CompletedDownloadTask(completedTask.LocalPath, completedTask.Name, completedTask.TargetUUID));
-                    }
-                }
-            }
-
-            return this;
-
-            void TimerCallBack(object sender, EventArgs e)
-            {
-                StartWaittingTasks();
-
-                OnPropertyChanged(nameof(Completed));
-                OnPropertyChanged(nameof(FriendlySpeed));
-                OnPropertyChanged(nameof(Total));
-                OnPropertyChanged(nameof(Progress));
-                OnPropertyChanged(nameof(Status));
-            }
-
-            async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
-            {
-                await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(0, identity: uuid))
-                {
-                    if (!child.Directory)
-                    {
-                        if (!Directory.Exists(localParentPath))
-                        {
-                            Directory.CreateDirectory(localParentPath);
-                        }
-
-                        FileMetaData detail = await FileSystem.GetDetailsByIdentity(child.UUID);
-                        IDownloadTask newTask;
-                        if (detail.Size == 0)
-                        {
-                            newTask = new EmptyFileDownloadTask(localParentPath, child.Name, child.UUID);
-                        }
-                        else
-                        {
-                            newTask = new DownloadTask(localParentPath, child.Name, child.UUID);
-                        }
-                        TaskList.Add(newTask);
-                        WaittingTasks.Enqueue(newTask);
-                    }
-                    else
-                    {
-                        string nextPath = Path.Combine(localParentPath, child.Name);
-                        Directory.CreateDirectory(nextPath);
-                        if (depthIndex < 32)
-                        {
-                            await DownloadHelper(child.UUID, nextPath, depthIndex + 1);
-                        }
-                        else
-                        {
-                            ThreadPool.QueueUserWorkItem(async (state) => await DownloadHelper(child.UUID, nextPath, 0), null);
-                        }
-                    }
-                }
-            }
-        }
-
+        #region Commands
         protected override void Cancel(object parameter)
         {
             status = TransferTaskStatus.Stop;
@@ -282,7 +322,11 @@ namespace SixCloud.Core.Models
                     if (task is DownloadingTaskViewModel downloadingTask && task.Status == TransferTaskStatus.Running)
                     {
                         downloadingTask.PauseCommand.Execute(null);
-                        WaittingTasks.Enqueue(task);
+                        if (downloadingTask is IDownloadTask downloadTask && !WaittingTasks.Contains(downloadTask))
+                        {
+                            WaittingTasks.Enqueue(task);
+                        }
+
                         DownloadTaskRecordStatusChanged?.Invoke(task, EventArgs.Empty);
                     }
                 });
@@ -299,34 +343,8 @@ namespace SixCloud.Core.Models
             PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
         }
 
-        public DownloadTaskGroup(string targetUUID, string localStoragePath, string name)
-        {
-            TargetUUID = targetUUID;
-            SavedLocalPath = localStoragePath;
-            Name = name;
-        }
 
-        public DownloadTaskGroup(DownloadTaskGroupRecord record) : this(record.TargetUUID, record.LocalPath, record.Name)
-        {
-            downloadTaskGroupRecord = record;
-        }
+        #endregion
 
-        public override string ToString()
-        {
-            Pause(null);
-            var completed = from task in TaskList
-                            where task.Status == TransferTaskStatus.Completed
-                            select new DownloadTaskRecord { LocalPath = task.SavedLocalPath, TargetUUID = task.TargetUUID, Name = task.Name };
-
-            DownloadTaskGroupRecord record = new DownloadTaskGroupRecord
-            {
-                Name = Name,
-                TargetUUID = TargetUUID,
-                LocalPath = SavedLocalPath,
-                CompletedList = completed.ToArray(),
-                TaskList = TaskList,
-            };
-            return JsonConvert.SerializeObject(record);
-        }
     }
 }

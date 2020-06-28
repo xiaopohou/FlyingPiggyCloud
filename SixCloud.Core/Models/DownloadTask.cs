@@ -52,7 +52,7 @@ namespace SixCloud.Core.Models
 
             try
             {
-                fileDownloader.StopAndSave()?.Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
+                fileDownloader?.StopAndSave()?.Save(System.IO.Path.Combine(Path, $"{Name}.downloading"));
             }
             catch (NullReferenceException ex)
             {
@@ -108,7 +108,7 @@ namespace SixCloud.Core.Models
 
         public override double Progress => fileDownloader?.DownloadPercentage ?? 0;
 
-        public override TransferTaskStatus Status => (fileDownloader?.Status ?? DownloadStatusEnum.Waiting) switch
+        public override TransferTaskStatus Status => (fileDownloader?.Status ?? DownloadStatusEnum.Paused) switch
         {
             DownloadStatusEnum.Downloading => TransferTaskStatus.Running,
             DownloadStatusEnum.Waiting => TransferTaskStatus.Running,
