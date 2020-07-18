@@ -9,19 +9,6 @@ namespace SixCloud.Core.ViewModels
     /// </summary>
     public abstract class UploadingTaskViewModel : ViewModelBase, ITransferItemViewModel
     {
-        ///// <summary>
-        ///// 用于定时刷新任务进度
-        ///// </summary>
-        //private static readonly DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher)
-        //{
-        //    Interval = TimeSpan.FromSeconds(0.5d)
-        //};
-
-        static UploadingTaskViewModel()
-        {
-
-        }
-
         protected UploadingTaskViewModel()
         {
             RecoveryCommand = new DependencyCommand(Recovery, CanRecovery);

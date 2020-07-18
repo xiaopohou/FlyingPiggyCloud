@@ -1,89 +1,67 @@
-﻿using Newtonsoft.Json;
-using QingzhenyunApis.Utils;
-using SixCloud.Core.ViewModels;
-using SixCloud.Core.Views.UserControls;
+﻿using QingzhenyunApis.Utils;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace SixCloud.Core.Models
 {
-    public class EmptyFileDownloadTask : DownloadingTaskViewModel, IDownloadTask
+    /// <summary>
+    /// 一个大小为0的下载任务
+    /// </summary>
+    public class EmptyFileDownloadTask : ITaskManual
     {
-        private TransferTaskStatus status = TransferTaskStatus.Pause;
+        public string Completed => Calculators.SizeCalculator(0);
 
-        public override string Completed => Calculators.SizeCalculator(0);
+        public double Progress { get; } = 100d;
 
-        public long CompletedBytes { get; } = 0;
+        public string FriendlySpeed => Calculators.SizeCalculator(0) + "/秒";
 
-        /// <summary>
-        /// 下载任务在本地保存的绝对路径
-        /// </summary>
-        public override string CurrentFileFullPath { get; }
+        public string Total => Calculators.SizeCalculator(0);
 
-        public override string Name { get; protected set; }
-
-        public override double Progress { get; } = 100d;
-
-        public override string SavedLocalPath { get; protected set; }
-
-        public long Speed => 0;
-
-        public override string FriendlySpeed => Calculators.SizeCalculator(Speed) + "/秒";
-
-        public override TransferTaskStatus Status { get => status; }
-        public override string TargetUUID { get; protected set; }
-
-        public override string Total => Calculators.SizeCalculator(0);
-
-        protected override void Recovery(object parameter)
+        public void Run()
         {
-            status = TransferTaskStatus.Running;
-            OnPropertyChanged(nameof(Status));
-            if (!Directory.Exists(SavedLocalPath))
+            if (!Directory.Exists(LocalDirectory))
             {
-                Directory.CreateDirectory(SavedLocalPath);
+                Directory.CreateDirectory(LocalDirectory);
             }
-
-            File.Create(CurrentFileFullPath).Close();
-            status = TransferTaskStatus.Completed;
-            OnPropertyChanged(nameof(Status));
+            File.Create(Path.Combine(LocalDirectory, LocalFileName)).Close();
             DownloadCompleted?.Invoke(this, null);
         }
 
-        //public override event EventHandler DownloadCanceled;
-        public override event EventHandler DownloadCompleted;
-
-        public EmptyFileDownloadTask(string storagePath, string name, string targetUUID)
+        public void Stop()
         {
-            Name = name;
+            throw new NotImplementedException();
+        }
+
+        public void Cancel()
+        {
+            throw new NotImplementedException();
+        }
+
+        public event EventHandler DownloadCompleted;
+
+        public string TargetUUID { get; }
+
+        public Guid Guid { get; }
+
+        public Guid Parent { get; }
+
+        public string LocalDirectory { get; }
+
+        public string LocalFileName { get; }
+
+        public EmptyFileDownloadTask(string storagePath, string name, string targetUUID, Guid parent)
+        {
+            LocalFileName = name;
             TargetUUID = targetUUID;
-            SavedLocalPath = storagePath;
-            CurrentFileFullPath = Path.Combine(SavedLocalPath, Name);
+            LocalDirectory = storagePath;
+            Guid = Guid.NewGuid();
+            Parent = parent;
         }
 
-        public DownloadTaskRecord ToRecord()
+        public EmptyFileDownloadTask(ITaskManual taskManual) : this(taskManual.LocalDirectory, taskManual.LocalFileName, taskManual.TargetUUID, taskManual.Parent)
         {
-            return new DownloadTaskRecord
-            {
-                LocalPath = SavedLocalPath,
-                TargetUUID = TargetUUID,
-                Name = Name,
-            };
-        }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(ToRecord());
-        }
-
-        protected override void Pause(object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void Cancel(object parameter)
-        {
-            throw new NotImplementedException();
+            Guid = taskManual.Guid;
         }
     }
 }

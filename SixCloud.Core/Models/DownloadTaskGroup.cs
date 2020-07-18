@@ -23,6 +23,7 @@ namespace SixCloud.Core.Models
         private TransferTaskStatus status = TransferTaskStatus.Pause;
         private readonly DownloadTaskGroupRecord downloadTaskGroupRecord;
         private string completed;
+        private bool isInitialized = false;
 
         /// <summary>
         /// 尝试下载等待的任务，每500毫秒触发一次
@@ -39,8 +40,7 @@ namespace SixCloud.Core.Models
             {
                 while ((from taskInfo in TaskList
                         where taskInfo.Status == TransferTaskStatus.Running
-                        select taskInfo).Count() < 16
-                        && WaittingTasks.TryDequeue(out IDownloadTask task))
+                        select taskInfo).Count() < 16 && WaittingTasks.TryDequeue(out IDownloadTask task))
                 {
                     task.RecoveryCommand.Execute(null);
                 }
@@ -52,7 +52,10 @@ namespace SixCloud.Core.Models
 
                 if (errorTasks.Any())
                 {
-                    errorTasks.ToList().ForEach(x => WaittingTasks.Enqueue(x));
+                    foreach (IDownloadTask task in errorTasks)
+                    {
+                        WaittingTasks.Enqueue(task);
+                    }
                 }
 
                 if (CompletedCount != 0 && CompletedCount == TotalCount)
@@ -120,6 +123,7 @@ namespace SixCloud.Core.Models
                 }
             }
             completed = null;
+            isInitialized = true;
             return this;
 
             void TimerCallBack(object sender, EventArgs e)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -14,6 +16,11 @@ namespace SixCloud.Core.ViewModels
         {
             Interval = TimeSpan.FromSeconds(0.5d)
         };
+
+        /// <summary>
+        /// 全局任务列表，修改此集合需加锁
+        /// </summary>
+        protected static readonly ObservableCollection<ITransferItemViewModel> taskList = new ObservableCollection<ITransferItemViewModel>();
 
         public string Icon { get; }
 

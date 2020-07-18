@@ -13,6 +13,10 @@ namespace SixCloud.Core.ViewModels
 {
     public abstract class DownloadingTaskViewModel : ViewModelBase, ITransferItemViewModel
     {
+        public Guid Guid { get; } = Guid.NewGuid();
+
+        public Guid Parent { get; } = Guid.Empty;
+
         /// <summary>
         /// 创建一个下载器
         /// </summary>
@@ -80,6 +84,7 @@ namespace SixCloud.Core.ViewModels
 
         public DependencyCommand CancelCommand { get; }
         protected bool Cancelled { get; set; } = false;
+
         protected abstract void Cancel(object parameter);
 
         private async Task DownloadingFailedHandler(DownloadTaskInfo taskInfo, HttpDownloader httpDownloader, string targetUUID)
@@ -102,35 +107,6 @@ namespace SixCloud.Core.ViewModels
             PauseCommand = new DependencyCommand(Pause, CanPause);
             CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
         }
-
-    }
-
-    public class DownloadingTaskInGroupViewModel : ViewModelBase
-    {
-        public DownloadTaskGroup Owner { get; }
-
-        public DownloadTaskRecord Record { get; }
-
-        public string Name => Record.Name;
-
-        public string LocalPath => Record.LocalPath;
-
-        public double Progress => throw new NotImplementedException();
-
-        public DownloadTaskStatusInGroup StatusInGroup => throw new NotImplementedException();
-
-        internal DownloadingTaskInGroupViewModel(DownloadTaskGroup downloadTaskGroup, DownloadTaskRecord downloadTaskRecord)
-        {
-            Owner = downloadTaskGroup;
-            Record = downloadTaskRecord;
-        }
-    }
-
-    public enum DownloadTaskStatusInGroup
-    {
-        Running,
-        Waitting,
-        Completed
     }
 
     public class StatusToVisibility : IValueConverter
