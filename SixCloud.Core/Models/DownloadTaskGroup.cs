@@ -2,6 +2,7 @@
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
+using SixCloud.Core.Models.Download;
 using SixCloud.Core.ViewModels;
 using System;
 using System.Collections.Concurrent;

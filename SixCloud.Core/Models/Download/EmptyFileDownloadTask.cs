@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace SixCloud.Core.Models
+namespace SixCloud.Core.Models.Download
 {
     /// <summary>
     /// 一个大小为0的下载任务
@@ -25,7 +25,7 @@ namespace SixCloud.Core.Models
                 Directory.CreateDirectory(LocalDirectory);
             }
             File.Create(Path.Combine(LocalDirectory, LocalFileName)).Close();
-            DownloadCompleted?.Invoke(this, null);
+            IsCompleted = true;
         }
 
         public void Stop()
@@ -38,8 +38,6 @@ namespace SixCloud.Core.Models
             throw new NotImplementedException();
         }
 
-        public event EventHandler DownloadCompleted;
-
         public string TargetUUID { get; }
 
         public Guid Guid { get; }
@@ -49,6 +47,8 @@ namespace SixCloud.Core.Models
         public string LocalDirectory { get; }
 
         public string LocalFileName { get; }
+
+        public bool IsCompleted { get; private set; } = false;
 
         public EmptyFileDownloadTask(string storagePath, string name, string targetUUID, Guid parent)
         {

@@ -1,20 +1,18 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
-using QingzhenyunApis.Utils;
-using SixCloud.Core.ViewModels;
 using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace SixCloud.Core.Models
+namespace SixCloud.Core.Models.Download
 {
     public class CommonFileDownloadTask : HttpDownloader, ITaskManual
     {
         public static CommonFileDownloadTask Create(string storagePath, string name, string targetUUID, Guid parent)
         {
-            var fullPath = Path.Combine(storagePath, name);
+            string fullPath = Path.Combine(storagePath, name);
             DownloadTaskInfo taskInfo = File.Exists(fullPath + ".downloading") ? DownloadTaskInfo.Load(fullPath + ".downloading") : new DownloadTaskInfo()
             {
                 DownloadUrl = null,
@@ -26,7 +24,7 @@ namespace SixCloud.Core.Models
 
         public static CommonFileDownloadTask Create(ITaskManual taskManual)
         {
-            var fullPath = Path.Combine(taskManual.LocalDirectory, taskManual.LocalFileName);
+            string fullPath = Path.Combine(taskManual.LocalDirectory, taskManual.LocalFileName);
             DownloadTaskInfo taskInfo = File.Exists(fullPath + ".downloading") ? DownloadTaskInfo.Load(fullPath + ".downloading") : new DownloadTaskInfo()
             {
                 DownloadUrl = null,
@@ -98,6 +96,8 @@ namespace SixCloud.Core.Models
 
         public string LocalDirectory { get; }
 
+        public bool IsCompleted { get; private set; } = false;
+
         protected CommonFileDownloadTask(string storagePath, string name, string targetUUID, Guid parent, DownloadTaskInfo taskInfo) : base(taskInfo)
         {
             LocalFileName = name;
@@ -105,6 +105,10 @@ namespace SixCloud.Core.Models
             LocalDirectory = storagePath;
             Guid = Guid.NewGuid();
             Parent = parent;
+            DownloadStatusChangedEvent += (sender, e) =>
+            {
+                IsCompleted = e.NewValue == DownloadStatusEnum.Completed;
+            };
         }
 
         protected CommonFileDownloadTask(ITaskManual taskManual, DownloadTaskInfo taskInfo) : this(taskManual.LocalDirectory, taskManual.LocalFileName, taskManual.TargetUUID, taskManual.Parent, taskInfo)

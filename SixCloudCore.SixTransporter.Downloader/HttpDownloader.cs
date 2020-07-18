@@ -24,7 +24,7 @@ namespace SixCloudCore.SixTransporter.Downloader
                 {
                     DownloadStatusEnum temp = _status;
                     _status = value;
-                    DownloadStatusChangedEvent?.Invoke(temp, value, this);
+                    DownloadStatusChangedEvent?.Invoke(this, new StatusChangedEventArgs(temp, _status));
                 }
             }
         }
@@ -33,7 +33,7 @@ namespace SixCloudCore.SixTransporter.Downloader
 
         public float DownloadPercentage { get; set; }
 
-        public event Action<DownloadStatusEnum, DownloadStatusEnum, HttpDownloader> DownloadStatusChangedEvent;
+        public event EventHandler<StatusChangedEventArgs> DownloadStatusChangedEvent;
         public event EventHandler AllFileStreamDisposed;
 
 
@@ -278,5 +278,18 @@ namespace SixCloudCore.SixTransporter.Downloader
         Paused,
         Completed,
         Failed
+    }
+
+    public class StatusChangedEventArgs : EventArgs
+    {
+        public StatusChangedEventArgs(DownloadStatusEnum oldValue, DownloadStatusEnum newValue)
+        {
+            OldValue = oldValue;
+            NewValue = newValue;
+        }
+
+        public DownloadStatusEnum OldValue { get; }
+
+        public DownloadStatusEnum NewValue { get; }
     }
 }

@@ -4,16 +4,15 @@ using SixCloud.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SixCloud.Core.Models
+namespace SixCloud.Core.Models.Download
 {
     public class DirectoryDownloadTask : ITaskManual
     {
-        private bool initialized = false;
-
-        protected List<ITaskManual> Children { get; } = new List<ITaskManual>();
+        private List<ITaskManual> Children { get; } = new List<ITaskManual>();
 
         public bool Running = true;
 
@@ -27,6 +26,13 @@ namespace SixCloud.Core.Models
 
         public string LocalDirectory { get; }
 
+        public int Completed => Children.FindAll(x => x.IsCompleted).Count;
+
+        public int Total => Children.Count;
+
+        public bool Initialized { get; private set; } = false;
+
+        public bool IsCompleted => !Children.Any(x => !x.IsCompleted);
 
         /// <summary>
         /// 初始化任务组
@@ -34,10 +40,10 @@ namespace SixCloud.Core.Models
         /// <returns></returns>
         public async Task<DirectoryDownloadTask> InitTaskGroup()
         {
-            if (!initialized)
+            if (!Initialized)
             {
                 await DownloadHelper(TargetUUID, Path.Combine(LocalDirectory, LocalFileName), 0);
-                initialized = true;
+                Initialized = true;
             }
             return this;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SixCloud.Core.Models
+namespace SixCloud.Core.Models.Download
 {
     /// <summary>
     /// 下载任务信息
@@ -32,10 +32,13 @@ namespace SixCloud.Core.Models
         /// </summary>
         string LocalDirectory { get; }
 
+        bool IsCompleted { get; }
+
         void Run();
 
         void Stop();
 
         void Cancel();
+
     }
 }

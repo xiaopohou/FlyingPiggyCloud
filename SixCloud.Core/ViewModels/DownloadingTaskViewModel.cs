@@ -34,9 +34,9 @@ namespace SixCloud.Core.ViewModels
 
             HttpDownloader httpDownloader = new HttpDownloader(taskInfo); // 下载默认会在StartDownload函数初始化, 保存下载进度文件到file.downloading文件
 
-            httpDownloader.DownloadStatusChangedEvent += async (oldValue, newValue, sender) =>
+            httpDownloader.DownloadStatusChangedEvent += async (sender, e) =>
             {
-                if (newValue == DownloadStatusEnum.Failed)
+                if (e.NewValue == DownloadStatusEnum.Failed)
                 {
                     await DownloadingFailedHandler(taskInfo, httpDownloader, targetUUID);
                 }

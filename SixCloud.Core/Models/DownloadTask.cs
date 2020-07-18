@@ -26,9 +26,9 @@ namespace SixCloud.Core.Models
                 FileMetaData detail = await FileSystem.GetDownloadUrlByIdentity(TargetUUID);
                 string downloadPath = System.IO.Path.Combine(Path, Name);
                 fileDownloader ??= CreateHttpDownloader(downloadPath, detail.DownloadAddress, TargetUUID);
-                fileDownloader.DownloadStatusChangedEvent += (oldValue, newValue, sender) =>
+                fileDownloader.DownloadStatusChangedEvent += (sender, e) =>
                 {
-                    if (newValue == DownloadStatusEnum.Completed)
+                    if (e.NewValue == DownloadStatusEnum.Completed)
                     {
                         DownloadCompleted?.Invoke(sender, null);
                     }
