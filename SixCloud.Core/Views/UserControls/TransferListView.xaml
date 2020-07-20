@@ -62,7 +62,7 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Status,Converter={StaticResource StatusConverter}}" Margin="5,0"/>
                     <TextBlock Text="{Binding Completed}"/>
-                    <TextBlock Text="，共"/>
+                    <TextBlock Text="，"/>
                     <TextBlock Text="{Binding Total}"/>
                 </StackPanel>
                 <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="3" Value="{Binding Progress, Mode=OneWay}" Grid.Row="1"/>
@@ -87,8 +87,8 @@
             <Grid Visibility="Hidden" Margin="15,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="150"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" x:Name="WidthHelperIconCell"/>

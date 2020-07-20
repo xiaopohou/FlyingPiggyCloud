@@ -68,37 +68,44 @@ namespace SixCloud.Core.Models.Download
 
                                 break;
                             case DirectoryDownloadTask directory:
-                                foreach (var child in directory.Children)
+                                if (directory.Initialized)
                                 {
-                                    switch (child)
+                                    foreach (var child in directory.Children)
                                     {
-                                        case CommonFileDownloadTask commonFile:
-                                            switch (commonFile.Status)
+                                        if (i < 10)
+                                        {
+                                            switch (child)
                                             {
-                                                case DownloadStatusEnum.Waiting:
-                                                    i++;
-                                                    yield return commonFile;
+                                                case CommonFileDownloadTask commonFile:
+                                                    switch (commonFile.Status)
+                                                    {
+                                                        case DownloadStatusEnum.Waiting:
+                                                            i++;
+                                                            yield return commonFile;
+                                                            break;
+                                                        case DownloadStatusEnum.Downloading:
+                                                            i++;
+                                                            continue;
+                                                        default:
+                                                            continue;
+                                                    }
+
                                                     break;
-                                                case DownloadStatusEnum.Downloading:
-                                                    i++;
-                                                    continue;
-                                                default:
-                                                    continue;
+                                                case EmptyFileDownloadTask emptyFile:
+                                                    if (emptyFile.IsCompleted)
+                                                    {
+                                                        continue;
+                                                    }
+                                                    else
+                                                    {
+                                                        i++;
+                                                        yield return emptyFile;
+                                                    }
+
+                                                    break;
                                             }
 
-                                            break;
-                                        case EmptyFileDownloadTask emptyFile:
-                                            if (emptyFile.IsCompleted)
-                                            {
-                                                continue;
-                                            }
-                                            else
-                                            {
-                                                i++;
-                                                yield return emptyFile;
-                                            }
-
-                                            break;
+                                        }
                                     }
                                 }
                                 break;
@@ -120,8 +127,12 @@ namespace SixCloud.Core.Models.Download
             {
                 try
                 {
-                    ITaskManual task = EnumerableTask().FirstOrDefault();
-                    task?.Run();
+                    //ITaskManual task = EnumerableTask().FirstOrDefault();
+                    //task?.Run();
+                    foreach (var task in EnumerableTask())
+                    {
+                        task?.Run();
+                    }
                 }
                 catch (Exception ex)
                 {
