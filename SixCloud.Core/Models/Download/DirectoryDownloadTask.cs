@@ -12,9 +12,19 @@ namespace SixCloud.Core.Models.Download
 {
     public class DirectoryDownloadTask : ITaskManual
     {
-        private List<ITaskManual> Children { get; } = new List<ITaskManual>();
+        public List<ITaskManual> Children { get; } = new List<ITaskManual>();
 
         public bool Running = true;
+
+        private bool unCalled = true;
+        public event EventHandler TaskCompleted;
+
+        public DirectoryDownloadTask(string targetUUID, string localDirectory, string localFileName)
+        {
+            LocalDirectory = localDirectory;
+            TargetUUID = targetUUID;
+            LocalFileName = localFileName;
+        }
 
         public string LocalFileName { get; }
 
@@ -69,6 +79,17 @@ namespace SixCloud.Core.Models.Download
                             newTask = CommonFileDownloadTask.Create(localParentPath, child.Name, child.UUID, Guid);
                         }
 
+                        newTask.TaskCompleted += (sender, e) =>
+                        {
+                            lock (TaskCompleted)
+                            {
+                                if (unCalled && IsCompleted)
+                                {
+                                    TaskCompleted?.Invoke(this, EventArgs.Empty);
+                                    unCalled = false;
+                                }
+                            }
+                        };
                         Children.Add(newTask);
                     }
                     else

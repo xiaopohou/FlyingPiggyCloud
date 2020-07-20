@@ -18,6 +18,8 @@ namespace SixCloud.Core.Models.Download
 
         public string Total => Calculators.SizeCalculator(0);
 
+        public event EventHandler TaskCompleted;
+
         public void Run()
         {
             if (!Directory.Exists(LocalDirectory))
@@ -26,6 +28,7 @@ namespace SixCloud.Core.Models.Download
             }
             File.Create(Path.Combine(LocalDirectory, LocalFileName)).Close();
             IsCompleted = true;
+            TaskCompleted?.Invoke(this, EventArgs.Empty);
         }
 
         public void Stop()

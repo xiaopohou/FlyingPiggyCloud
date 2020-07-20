@@ -2,6 +2,7 @@
 using SixCloud.Core.Models.Download;
 using SixCloudCore.SixTransporter.Downloader;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -113,7 +114,7 @@ namespace SixCloud.Core.ViewModels
             {
                 if (innerTask is CommonFileDownloadTask common)
                 {
-                    return common.Info.DownloadedSize * 100 / common.Info.ContentSize;
+                    return common.Info.ContentSize == 0 ? 0 : common.Info.DownloadedSize * 100 / common.Info.ContentSize;
                 }
                 else if (innerTask is DirectoryDownloadTask directory)
                 {

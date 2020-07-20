@@ -1,14 +1,15 @@
-﻿using System.Collections.ObjectModel;
+﻿using SixCloud.Core.Models.Download;
+using System.Collections.ObjectModel;
 
 namespace SixCloud.Core.ViewModels
 {
     internal class DownloadingListViewModel : TransferListViewModel
     {
-        public ObservableCollection<DownloadingTaskViewModel> ObservableCollection => downloadingList;
+        public ObservableCollection<DownloadTaskViewModel> ObservableCollection => DownloadingList;
 
-        public static void NewTask(string targetUUID, string localPath, string name, bool isAutoStart = true)
+        public static async void NewTask(string targetUUID, string localPath, string name, bool isAutoStart = true)
         {
-            NewDownloadTask(targetUUID, localPath, name, isAutoStart);
+            await NewDownloadTask(targetUUID, localPath, name, isAutoStart);
         }
     }
 

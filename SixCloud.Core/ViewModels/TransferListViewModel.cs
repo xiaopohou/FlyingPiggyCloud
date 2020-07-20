@@ -2,10 +2,12 @@
 using QingzhenyunApis.Methods.V3;
 using SixCloud.Core.Controllers;
 using SixCloud.Core.Models;
+using SixCloud.Core.Models.Download;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -15,14 +17,13 @@ namespace SixCloud.Core.ViewModels
     {
         public string DownloadingListTitle => DownloadingList.Count == 0 ? string.Empty : $"在下载队列中（{DownloadingList.Count}）";
 
-        public Visibility DownloadingListVisibility => DownloadingListTitle == string.Empty ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility DownloadingListVisibility => string.IsNullOrEmpty(DownloadingListTitle) ? Visibility.Collapsed : Visibility.Visible;
 
         public string UploadingListTitle => UploadingList.Count == 0 ? string.Empty : $"在上传队列中（{UploadingList.Count}）";
 
-        public Visibility UploadingListVisibility => UploadingListTitle == string.Empty ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility UploadingListVisibility => string.IsNullOrEmpty(UploadingListTitle) ? Visibility.Collapsed : Visibility.Visible;
 
-
-        public ObservableCollection<DownloadingTaskViewModel> DownloadingList => downloadingList;
+        public ObservableCollection<DownloadTaskViewModel> DownloadingList => downloadingList;
 
         public ObservableCollection<UploadingTaskViewModel> UploadingList => uploadingList;
 
@@ -30,7 +31,7 @@ namespace SixCloud.Core.ViewModels
 
         #region FromDownloadingListViewModel
 
-        protected static readonly ObservableCollection<DownloadingTaskViewModel> downloadingList = new ObservableCollection<DownloadingTaskViewModel>();
+        protected static readonly ObservableCollection<DownloadTaskViewModel> downloadingList;
 
         /// <summary>
         /// 创建新的下载任务
@@ -43,92 +44,56 @@ namespace SixCloud.Core.ViewModels
         public static async Task NewDownloadTask(string targetUUID, string localPath, string name, bool isAutoStart = true)
         {
             QingzhenyunApis.EntityModels.FileMetaData detail = await FileSystem.GetDetailsByIdentity(targetUUID);
-            DownloadingTaskViewModel task;
+            ITaskManual task;
 
             if (detail.Size == 0)
             {
-                task = new EmptyFileDownloadTask(localPath, name, targetUUID);
+                task = new EmptyFileDownloadTask(localPath, name, targetUUID, Guid.Empty);
             }
             else
             {
-                task = new DownloadTask(localPath, name, targetUUID);
+                task = CommonFileDownloadTask.Create(localPath, name, targetUUID, Guid.Empty);
 
             }
-
-            //当下载任务结束时从列表中移除任务信息
-            task.DownloadCompleted += (sender, e) =>
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        try
-                        {
-                            downloadingList.Remove(task);
-                            if (File.Exists(task.CurrentFileFullPath))
-                            {
-                                TransferCompletedListViewModel.NewDownloadedTask(task);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-                        }
-                    });
-                };
-
-            task.DownloadCanceled += (sender, e) =>
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    try
-                    {
-                        downloadingList.Remove(task);
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-                    }
-                });
-            };
-
-            AddDownloadingItem(isAutoStart, task);
-
+            AddDownloadingItem(task);
         }
 
         public static async void NewDownloadTaskGroup(string targetUUID, string localPath, string name, bool isAutoStart = true)
         {
             try
             {
-                DownloadTaskGroup task = new DownloadTaskGroup(targetUUID, localPath, name);
-                AddDownloadingItem(false, task);
+                //DownloadTaskGroup task = new DownloadTaskGroup(targetUUID, localPath, name);
+                var task = new DirectoryDownloadTask(targetUUID, localPath, name);
+                AddDownloadingItem(task);
                 await task.InitTaskGroup();
-                task.DownloadCompleted += (sender, e) =>
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        downloadingList.Remove(task);
-                        TransferCompletedListViewModel.NewDownloadedTask(task);
-                    });
-                };
+                //task.DownloadCompleted += (sender, e) =>
+                //{
+                //    Application.Current.Dispatcher.Invoke(() =>
+                //    {
+                //        downloadingList.Remove(task);
+                //        TransferCompletedListViewModel.NewDownloadedTask(task);
+                //    });
+                //};
 
-                task.DownloadCanceled += (sender, e) =>
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        try
-                        {
-                            downloadingList.Remove(task);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Submit("DownloadCompletedEventHandler");
-                        }
-                    });
-                };
+                //task.DownloadCanceled += (sender, e) =>
+                //{
+                //    Application.Current.Dispatcher.Invoke(() =>
+                //    {
+                //        try
+                //        {
+                //            downloadingList.Remove(task);
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            ex.Submit("DownloadCompletedEventHandler");
+                //        }
+                //    });
+                //};
 
-                if (isAutoStart)
-                {
-                    task.RecoveryCommand.Execute(null);
-                }
+                //if (isAutoStart)
+                //{
+                //    task.RecoveryCommand.Execute(null);
+                //}
 
             }
             catch (IOException ex) when (ex.Message.Contains("不正确"))
@@ -139,54 +104,45 @@ namespace SixCloud.Core.ViewModels
 
         public static async void NewDownloadTaskGroup(DownloadTaskGroupRecord record, bool isAutoStart = true)
         {
-            DownloadTaskGroup task = new DownloadTaskGroup(record);
-            AddDownloadingItem(false, task);
-            await task.InitTaskGroup();
+            //DownloadTaskGroup task = new DownloadTaskGroup(record);
+            //AddDownloadingItem(false, task);
+            //await task.InitTaskGroup();
 
-            task.DownloadCompleted += (sender, e) =>
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    downloadingList.Remove(task);
-                    TransferCompletedListViewModel.NewDownloadedTask(task);
-                });
-            };
+            //task.DownloadCompleted += (sender, e) =>
+            //{
+            //    Application.Current.Dispatcher.Invoke(() =>
+            //    {
+            //        downloadingList.Remove(task);
+            //        TransferCompletedListViewModel.NewDownloadedTask(task);
+            //    });
+            //};
 
-            task.DownloadCanceled += (sender, e) =>
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    try
-                    {
-                        downloadingList.Remove(task);
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-                    }
-                });
-            };
+            //task.DownloadCanceled += (sender, e) =>
+            //{
+            //    Application.Current.Dispatcher.Invoke(() =>
+            //    {
+            //        try
+            //        {
+            //            downloadingList.Remove(task);
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
+            //        }
+            //    });
+            //};
 
-            if (isAutoStart)
-            {
-                task.RecoveryCommand.Execute(null);
-            }
+            //if (isAutoStart)
+            //{
+            //    task.RecoveryCommand.Execute(null);
+            //}
         }
 
-
-        private static void AddDownloadingItem(bool isAutoStart, DownloadingTaskViewModel task)
+        private static void AddDownloadingItem(ITaskManual task)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                downloadingList.Add(task);
-            });
-            if (isAutoStart)
-            {
-                task.RecoveryCommand.Execute(null);
-            }
+            TaskManual.Add(task);
+            downloadingList.Add(new DownloadTaskViewModel(task));
         }
-
-
 
         #endregion
 
@@ -236,18 +192,21 @@ namespace SixCloud.Core.ViewModels
 
         static TransferListViewModel()
         {
-            TasksLogger.Downloadings = downloadingList;
+            downloadingList = TaskManual.ToObservableCollection();
+
             TasksLogger.Uploadings = uploadingList;
         }
 
         public TransferListViewModel()
         {
-            WeakEventManager<ObservableCollection<DownloadingTaskViewModel>, NotifyCollectionChangedEventArgs>
-                .AddHandler(downloadingList, nameof(downloadingList.CollectionChanged), (sender, e) =>
+
+            WeakEventManager<ObservableCollection<DownloadTaskViewModel>, NotifyCollectionChangedEventArgs>
+                .AddHandler(DownloadingList, nameof(DownloadingList.CollectionChanged), (sender, e) =>
                 {
                     OnPropertyChanged(nameof(DownloadingListTitle));
                     OnPropertyChanged(nameof(DownloadingListVisibility));
                 });
+
             WeakEventManager<ObservableCollection<UploadingTaskViewModel>, NotifyCollectionChangedEventArgs>
                 .AddHandler(uploadingList, nameof(uploadingList.CollectionChanged), (sender, e) =>
                 {

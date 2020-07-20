@@ -10,6 +10,8 @@ namespace SixCloud.Core.Models.Download
 {
     public class CommonFileDownloadTask : HttpDownloader, ITaskManual
     {
+        public event EventHandler TaskCompleted;
+
         public static CommonFileDownloadTask Create(string storagePath, string name, string targetUUID, Guid parent)
         {
             string fullPath = Path.Combine(storagePath, name);
@@ -108,6 +110,10 @@ namespace SixCloud.Core.Models.Download
             DownloadStatusChangedEvent += (sender, e) =>
             {
                 IsCompleted = e.NewValue == DownloadStatusEnum.Completed;
+                if (IsCompleted)
+                {
+                    TaskCompleted?.Invoke(sender, e);
+                }
             };
         }
 

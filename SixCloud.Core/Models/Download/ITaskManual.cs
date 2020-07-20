@@ -40,5 +40,6 @@ namespace SixCloud.Core.Models.Download
 
         void Cancel();
 
+        event EventHandler TaskCompleted;
     }
 }

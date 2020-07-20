@@ -1,4 +1,5 @@
 ﻿using QingzhenyunApis.Exceptions;
+using SixCloud.Core.ViewModels;
 using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.Collections.Generic;
@@ -10,23 +11,107 @@ namespace SixCloud.Core.Models.Download
 {
     public static class TaskManual
     {
-        public static ObservableCollection<ITaskManual> TaskManuals { get; } = new ObservableCollection<ITaskManual>();
+        private static readonly List<ITaskManual> taskManuals = new List<ITaskManual>();
+
+        /// <summary>
+        /// 回收已完成任务
+        /// </summary>
+        private static void Trim()
+        {
+            lock (taskManuals)
+            {
+                taskManuals.Where(x => x.IsCompleted)
+                           .ToList()
+                           .ForEach(x =>
+                           {
+                               taskManuals.Remove(x);
+                           });
+            }
+        }
 
         private static IEnumerable<ITaskManual> EnumerableTask()
         {
-            for (int index = 0; index < 10; index++)
+            lock (taskManuals)
             {
-                var task = TaskManuals.FirstOrDefault(x => x is CommonFileDownloadTask commonFile && (commonFile.Status == DownloadStatusEnum.Waiting || commonFile.Status == DownloadStatusEnum.Downloading));
-                if (task == default)
+                var i = 0;
+                foreach (var task in taskManuals)
                 {
-                    Thread.Sleep(1000);
-                    yield break;
-                }
-                else if ((task as CommonFileDownloadTask).Status == DownloadStatusEnum.Waiting)
-                {
-                    yield return task;
+                    if (i < 10)
+                    {
+                        switch (task)
+                        {
+                            case CommonFileDownloadTask commonFile:
+                                switch (commonFile.Status)
+                                {
+                                    case DownloadStatusEnum.Waiting:
+                                        i++;
+                                        yield return commonFile;
+                                        break;
+                                    case DownloadStatusEnum.Downloading:
+                                        i++;
+                                        continue;
+                                    default:
+                                        continue;
+                                }
+
+                                break;
+                            case EmptyFileDownloadTask emptyFile:
+                                if (emptyFile.IsCompleted)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    i++;
+                                    yield return emptyFile;
+                                }
+
+                                break;
+                            case DirectoryDownloadTask directory:
+                                foreach (var child in directory.Children)
+                                {
+                                    switch (child)
+                                    {
+                                        case CommonFileDownloadTask commonFile:
+                                            switch (commonFile.Status)
+                                            {
+                                                case DownloadStatusEnum.Waiting:
+                                                    i++;
+                                                    yield return commonFile;
+                                                    break;
+                                                case DownloadStatusEnum.Downloading:
+                                                    i++;
+                                                    continue;
+                                                default:
+                                                    continue;
+                                            }
+
+                                            break;
+                                        case EmptyFileDownloadTask emptyFile:
+                                            if (emptyFile.IsCompleted)
+                                            {
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                i++;
+                                                yield return emptyFile;
+                                            }
+
+                                            break;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
+            Trim();
+            Thread.Sleep(2000);
         }
 
         private static void TaskLoop(object parameters)
@@ -47,9 +132,28 @@ namespace SixCloud.Core.Models.Download
 
         static TaskManual()
         {
-            Thread taskLoopThread = new Thread(TaskLoop);
-            taskLoopThread.Priority = ThreadPriority.BelowNormal;
+            Thread taskLoopThread = new Thread(TaskLoop)
+            {
+                Priority = ThreadPriority.BelowNormal
+            };
             taskLoopThread.Start();
+        }
+
+        public static void Add(ITaskManual taskManual)
+        {
+            lock (taskManuals)
+            {
+                taskManuals.Add(taskManual);
+            }
+            //TaskAdded?.Invoke(taskManual, EventArgs.Empty);
+        }
+
+        public static ObservableCollection<DownloadTaskViewModel> ToObservableCollection()
+        {
+            lock (taskManuals)
+            {
+                return new ObservableCollection<DownloadTaskViewModel>(taskManuals.Select(x => new DownloadTaskViewModel(x)));
+            }
         }
     }
 }
