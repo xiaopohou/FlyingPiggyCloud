@@ -57,7 +57,7 @@ namespace SixCloud.Core.Models.Download
                 }
                 catch (NullReferenceException ex)
                 {
-                    ex.ToSentry().AttachExtraInfo(nameof(DownloadTask), this).Submit();
+                    ex.ToSentry().AttachExtraInfo(nameof(CommonFileDownloadTask), this).Submit();
                 }
             }
         }

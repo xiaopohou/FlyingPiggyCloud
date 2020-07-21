@@ -102,7 +102,7 @@ namespace SixCloud.Core.ViewModels
             }
         }
 
-        public static async void NewDownloadTaskGroup(DownloadTaskGroupRecord record, bool isAutoStart = true)
+        public static async void NewDownloadTaskGroup(/*DownloadTaskGroupRecord record,*/ bool isAutoStart = true)
         {
             //DownloadTaskGroup task = new DownloadTaskGroup(record);
             //AddDownloadingItem(false, task);
