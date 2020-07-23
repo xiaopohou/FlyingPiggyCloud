@@ -66,7 +66,7 @@
                     <TextBlock Text="{Binding Total}"/>
                 </StackPanel>
                 <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="3" Value="{Binding Progress, Mode=OneWay}" Grid.Row="1"/>
-                <TextBlock Grid.Row="2" Text="{Binding Speed}"/>
+                <TextBlock Grid.Row="2" Text="{Binding FriendlySpeed}"/>
             </Grid>
         </DataTemplate>
 

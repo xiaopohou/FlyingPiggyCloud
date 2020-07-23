@@ -145,7 +145,8 @@ namespace SixCloud.Core.Models.Download
         {
             Thread taskLoopThread = new Thread(TaskLoop)
             {
-                Priority = ThreadPriority.BelowNormal
+                Priority = ThreadPriority.BelowNormal,
+                IsBackground = true
             };
             taskLoopThread.Start();
         }
@@ -163,7 +164,23 @@ namespace SixCloud.Core.Models.Download
         {
             lock (taskManuals)
             {
-                return new ObservableCollection<DownloadTaskViewModel>(taskManuals.Select(x => new DownloadTaskViewModel(x)));
+                var list = new ObservableCollection<DownloadTaskViewModel>();
+                taskManuals
+                    .Where(x => !x.IsCompleted)
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        lock (x)
+                        {
+                            var taskVM = new DownloadTaskViewModel(x);
+                            taskVM.TaskComplete += (sender, e) =>
+                            {
+                                list.Remove(taskVM);
+                            };
+                            list.Add(taskVM);
+                        }
+                    });
+                return list;
             }
         }
     }

@@ -17,7 +17,7 @@ namespace SixCloud.Core.Models.Download
         public bool Running = true;
 
         private bool unCalled = true;
-        public event EventHandler TaskCompleted;
+        public event EventHandler TaskComplete;
 
         public DirectoryDownloadTask(string targetUUID, string localDirectory, string localFileName)
         {
@@ -79,13 +79,13 @@ namespace SixCloud.Core.Models.Download
                             newTask = CommonFileDownloadTask.Create(localParentPath, child.Name, child.UUID, Guid);
                         }
 
-                        newTask.TaskCompleted += (sender, e) =>
+                        newTask.TaskComplete += (sender, e) =>
                         {
-                            lock (TaskCompleted)
+                            lock (TaskComplete)
                             {
                                 if (unCalled && IsCompleted)
                                 {
-                                    TaskCompleted?.Invoke(this, EventArgs.Empty);
+                                    TaskComplete?.Invoke(this, EventArgs.Empty);
                                     unCalled = false;
                                 }
                             }

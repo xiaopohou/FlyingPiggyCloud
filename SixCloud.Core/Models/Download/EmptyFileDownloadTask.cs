@@ -18,7 +18,7 @@ namespace SixCloud.Core.Models.Download
 
         public string Total => Calculators.SizeCalculator(0);
 
-        public event EventHandler TaskCompleted;
+        public event EventHandler TaskComplete;
 
         public void Run()
         {
@@ -28,7 +28,7 @@ namespace SixCloud.Core.Models.Download
             }
             File.Create(Path.Combine(LocalDirectory, LocalFileName)).Close();
             IsCompleted = true;
-            TaskCompleted?.Invoke(this, EventArgs.Empty);
+            TaskComplete?.Invoke(this, EventArgs.Empty);
         }
 
         public void Stop()

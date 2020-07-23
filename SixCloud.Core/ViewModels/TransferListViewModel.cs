@@ -140,8 +140,14 @@ namespace SixCloud.Core.ViewModels
 
         private static void AddDownloadingItem(ITaskManual task)
         {
+            var taskViewModel = new DownloadTaskViewModel(task);
+            taskViewModel.TaskComplete += (sender, e) =>
+            {
+                downloadingList.Remove(taskViewModel);
+            };
+
             TaskManual.Add(task);
-            downloadingList.Add(new DownloadTaskViewModel(task));
+            downloadingList.Add(taskViewModel);
         }
 
         #endregion

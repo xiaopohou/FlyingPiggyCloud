@@ -137,6 +137,8 @@ namespace SixCloud.Core.ViewModels
 
         public string FriendlySpeed => innerTask is CommonFileDownloadTask common ? Calculators.SizeCalculator(common.Speed) + "/秒" : string.Empty;
 
+        public event EventHandler TaskComplete;
+
         #region Commands
         public DependencyCommand RecoveryCommand { get; }
         private void Recovery(object parameter)
@@ -212,6 +214,8 @@ namespace SixCloud.Core.ViewModels
             {
                 WeakEventManager<HttpDownloader, StatusChangedEventArgs>.AddHandler(common, nameof(common.DownloadStatusChangedEvent), StatusCallBack);
             }
+
+            WeakEventManager<ITaskManual, EventArgs>.AddHandler(innerTask, nameof(innerTask.TaskComplete), (sender, e) => TaskComplete?.Invoke(sender, e));
 
             WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), TimerCallBack);
 
