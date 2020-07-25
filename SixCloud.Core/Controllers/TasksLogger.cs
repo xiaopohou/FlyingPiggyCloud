@@ -29,11 +29,11 @@ namespace SixCloud.Core.Controllers
         }
         private static ObservableCollection<UploadingTaskViewModel> uploadingList;
 
-        public static ObservableCollection<DownloadingTaskViewModel> Downloadings
-        {
-            set => downloadingList ??= value;
-        }
-        private static ObservableCollection<DownloadingTaskViewModel> downloadingList;
+        //public static ObservableCollection<DownloadingTaskViewModel> Downloadings
+        //{
+        //    set => downloadingList ??= value;
+        //}
+        //private static ObservableCollection<DownloadingTaskViewModel> downloadingList;
 
         private class StartupInformation
         {

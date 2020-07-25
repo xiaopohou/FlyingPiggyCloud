@@ -72,11 +72,6 @@ namespace SixCloud.Core.ViewModels
             DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
         }
 
-        public DownloadedTaskViewModel(DownloadingTaskViewModel task) : this(task.SavedLocalPath, task.Name)
-        {
-
-        }
-
         public DownloadedTaskViewModel(DownloadTaskViewModel task) : this(task.LocalDirectory, task.Name)
         {
 

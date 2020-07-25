@@ -23,8 +23,8 @@ namespace SixCloud.Core.Views.UserControls
             try
             {
                 IList list = (IList)e.Parameter;
-                IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
-                foreach (DownloadingTaskViewModel t in downloadingTasks)
+                IEnumerable<DownloadTaskViewModel> downloadingTasks = list.Cast<DownloadTaskViewModel>();
+                foreach (DownloadTaskViewModel t in downloadingTasks)
                 {
                     if (t.Status == TransferTaskStatus.Pause)
                     {
@@ -48,8 +48,8 @@ namespace SixCloud.Core.Views.UserControls
             try
             {
                 IList list = (IList)e.Parameter;
-                IEnumerable<DownloadingTaskViewModel> downloadingTasks = list.Cast<DownloadingTaskViewModel>();
-                foreach (DownloadingTaskViewModel t in downloadingTasks.ToArray())
+                IEnumerable<DownloadTaskViewModel> downloadingTasks = list.Cast<DownloadTaskViewModel>();
+                foreach (DownloadTaskViewModel t in downloadingTasks.ToArray())
                 {
                     t.CancelCommand.Execute(null);
                 }
