@@ -215,7 +215,7 @@ namespace SixCloud.Core.ViewModels
                 WeakEventManager<HttpDownloader, StatusChangedEventArgs>.AddHandler(common, nameof(common.DownloadStatusChangedEvent), StatusCallBack);
             }
 
-            WeakEventManager<ITaskManual, EventArgs>.AddHandler(innerTask, nameof(innerTask.TaskComplete), (sender, e) => TaskComplete?.Invoke(sender, e));
+            WeakEventManager<ITaskManual, EventArgs>.AddHandler(innerTask, nameof(innerTask.TaskComplete), (sender, e) => Application.Current.Dispatcher.BeginInvoke(() => TaskComplete?.Invoke(sender, e)));
 
             WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), TimerCallBack);
 

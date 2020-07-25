@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SixCloud.Core.Models.Download;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -61,15 +62,31 @@ namespace SixCloud.Core.ViewModels
         }
         public event EventHandler Deleted;
 
-        public DownloadedTaskViewModel(DownloadingTaskViewModel task)
+        public DownloadedTaskViewModel(string directory, string name)
         {
-            fullPath = task.CurrentFileFullPath;
-            Name = task.Name;
+            fullPath = Path.Combine(directory, name);
+            Name = name;
             CompletedTime = DateTime.Now;
             OpenCommand = new DependencyCommand(Open, DependencyCommand.AlwaysCan);
             ShowCommand = new DependencyCommand(Show, DependencyCommand.AlwaysCan);
             DeleteCommand = new DependencyCommand(Delete, DependencyCommand.AlwaysCan);
         }
+
+        public DownloadedTaskViewModel(DownloadingTaskViewModel task) : this(task.SavedLocalPath, task.Name)
+        {
+
+        }
+
+        public DownloadedTaskViewModel(DownloadTaskViewModel task) : this(task.LocalDirectory, task.Name)
+        {
+
+        }
+
+        public DownloadedTaskViewModel(ITaskManual task) : this(task.LocalDirectory, task.LocalFileName)
+        {
+
+        }
+
     }
 
 }

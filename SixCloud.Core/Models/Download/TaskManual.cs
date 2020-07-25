@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Windows;
 
 namespace SixCloud.Core.Models.Download
 {
@@ -155,6 +156,8 @@ namespace SixCloud.Core.Models.Download
         {
             lock (taskManuals)
             {
+                WeakEventManager<ITaskManual, EventArgs>.AddHandler(taskManual, nameof(taskManual.TaskComplete), (sender, e) => TransferCompletedListViewModel.NewDownloadedTask(sender as ITaskManual));
+
                 taskManuals.Add(taskManual);
             }
             //TaskAdded?.Invoke(taskManual, EventArgs.Empty);

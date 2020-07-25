@@ -121,7 +121,7 @@ namespace SixCloud.Core.Models.Download
                         ex.Submit();
                     }
 
-                    TaskComplete?.Invoke(sender, e);
+                    TaskComplete?.Invoke(this, e);
                 }
             };
         }

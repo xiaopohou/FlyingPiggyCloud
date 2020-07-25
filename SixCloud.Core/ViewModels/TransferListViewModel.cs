@@ -31,7 +31,7 @@ namespace SixCloud.Core.ViewModels
 
         #region FromDownloadingListViewModel
 
-        protected static readonly ObservableCollection<DownloadTaskViewModel> downloadingList;
+        private static readonly ObservableCollection<DownloadTaskViewModel> downloadingList = TaskManual.ToObservableCollection();
 
         /// <summary>
         /// 创建新的下载任务
@@ -62,80 +62,14 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                //DownloadTaskGroup task = new DownloadTaskGroup(targetUUID, localPath, name);
                 var task = new DirectoryDownloadTask(targetUUID, localPath, name);
                 AddDownloadingItem(task);
                 await task.InitTaskGroup();
-                //task.DownloadCompleted += (sender, e) =>
-                //{
-                //    Application.Current.Dispatcher.Invoke(() =>
-                //    {
-                //        downloadingList.Remove(task);
-                //        TransferCompletedListViewModel.NewDownloadedTask(task);
-                //    });
-                //};
-
-                //task.DownloadCanceled += (sender, e) =>
-                //{
-                //    Application.Current.Dispatcher.Invoke(() =>
-                //    {
-                //        try
-                //        {
-                //            downloadingList.Remove(task);
-                //        }
-                //        catch (Exception ex)
-                //        {
-                //            ex.Submit("DownloadCompletedEventHandler");
-                //        }
-                //    });
-                //};
-
-                //if (isAutoStart)
-                //{
-                //    task.RecoveryCommand.Execute(null);
-                //}
-
             }
             catch (IOException ex) when (ex.Message.Contains("不正确"))
             {
                 MessageBox.Show(ex.Message, "失败", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        public static async void NewDownloadTaskGroup(/*DownloadTaskGroupRecord record,*/ bool isAutoStart = true)
-        {
-            //DownloadTaskGroup task = new DownloadTaskGroup(record);
-            //AddDownloadingItem(false, task);
-            //await task.InitTaskGroup();
-
-            //task.DownloadCompleted += (sender, e) =>
-            //{
-            //    Application.Current.Dispatcher.Invoke(() =>
-            //    {
-            //        downloadingList.Remove(task);
-            //        TransferCompletedListViewModel.NewDownloadedTask(task);
-            //    });
-            //};
-
-            //task.DownloadCanceled += (sender, e) =>
-            //{
-            //    Application.Current.Dispatcher.Invoke(() =>
-            //    {
-            //        try
-            //        {
-            //            downloadingList.Remove(task);
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            ex.ToSentry().TreatedBy("DownloadCompletedEventHandler").Submit();
-            //        }
-            //    });
-            //};
-
-            //if (isAutoStart)
-            //{
-            //    task.RecoveryCommand.Execute(null);
-            //}
         }
 
         private static void AddDownloadingItem(ITaskManual task)
@@ -153,7 +87,7 @@ namespace SixCloud.Core.ViewModels
         #endregion
 
         #region FromUploadingListViewModel
-        protected static readonly ObservableCollection<UploadingTaskViewModel> uploadingList = new ObservableCollection<UploadingTaskViewModel>();
+        private static readonly ObservableCollection<UploadingTaskViewModel> uploadingList = new ObservableCollection<UploadingTaskViewModel>();
 
         public static void NewUploadTask(FileListViewModel targetList, string path)
         {
@@ -198,8 +132,6 @@ namespace SixCloud.Core.ViewModels
 
         static TransferListViewModel()
         {
-            downloadingList = TaskManual.ToObservableCollection();
-
             TasksLogger.Uploadings = uploadingList;
         }
 

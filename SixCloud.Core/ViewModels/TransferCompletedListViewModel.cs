@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SixCloud.Core.Models.Download;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -20,7 +21,7 @@ namespace SixCloud.Core.ViewModels
             transferCompletedList.Insert(0, task);
         }
 
-        public static void NewDownloadedTask(DownloadingTaskViewModel task)
+        public static void NewDownloadedTask(ITaskManual task)
         {
             DownloadedTaskViewModel record = new DownloadedTaskViewModel(task);
             Application.Current.Dispatcher.Invoke(() => transferCompletedList.Insert(0, record));
@@ -32,7 +33,6 @@ namespace SixCloud.Core.ViewModels
                 Application.Current.Dispatcher.Invoke(() => transferCompletedList.Remove(record));
             }
         }
-
 
     }
 
