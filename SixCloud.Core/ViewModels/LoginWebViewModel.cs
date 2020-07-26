@@ -48,6 +48,8 @@ namespace SixCloud.Core.ViewModels
             }
             catch (RequestFailedException ex)
             {
+                LocalProperties.Token = "";
+#warning 这里有问题
                 DestinationInformation x = await Authentication.CreateDestination();
                 DestinationInfo = x;
 
