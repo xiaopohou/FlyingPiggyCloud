@@ -193,11 +193,6 @@ namespace SixCloud.Core.ViewModels
             Status = TransferTaskStatus.Stop;
             PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
             RecoveryCommand.OnCanExecutedChanged(this, EventArgs.Empty);
-
-            if (innerTask is DirectoryDownloadTask directory)
-            {
-                directory.Running = false;
-            }
             innerTask.Cancel();
         }
 
@@ -228,28 +223,43 @@ namespace SixCloud.Core.ViewModels
             CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
             ShowDetailsCommand = new DependencyCommand(ShowDetails, CanShowDetails);
 
+            if (innerTask.IsCompleted)
+            {
+                Status = TransferTaskStatus.Completed;
+            }
+
             if (innerTask is CommonFileDownloadTask common)
             {
-                WeakEventManager<HttpDownloader, StatusChangedEventArgs>.AddHandler(common, nameof(common.DownloadStatusChangedEvent), StatusCallBack);
+                WeakEventManager<HttpDownloader, StatusChangedEventArgs>.AddHandler(common, nameof(common.DownloadStatusChangedEvent), (sender, e) => StatusConvert(e.NewValue));
+                StatusConvert(common.Status);
+
+                void StatusConvert(DownloadStatusEnum e)
+                {
+                    Status = e switch
+                    {
+                        DownloadStatusEnum.Downloading => TransferTaskStatus.Running,
+                        DownloadStatusEnum.Waiting => TransferTaskStatus.Running,
+
+                        DownloadStatusEnum.Paused => TransferTaskStatus.Pause,
+                        DownloadStatusEnum.Failed => TransferTaskStatus.Failed,
+                        DownloadStatusEnum.Completed => TransferTaskStatus.Completed,
+                        _ => throw new InvalidCastException()
+                    };
+                }
             }
 
-            WeakEventManager<ITaskManual, EventArgs>.AddHandler(innerTask, nameof(innerTask.TaskComplete), (sender, e) => Application.Current.Dispatcher.BeginInvoke(() => TaskComplete?.Invoke(sender, e)));
+            WeakEventManager<ITaskManual, EventArgs>.AddHandler(innerTask, nameof(innerTask.TaskComplete), (sender, e) =>
+            {
+                Status = TransferTaskStatus.Completed;
+                OnPropertyChanged(nameof(Status));
+                PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
+                RecoveryCommand.OnCanExecutedChanged(this, EventArgs.Empty);
+
+                //必须最后触发this.TaskComplete，否则对象会被GC
+                Application.Current.Dispatcher.BeginInvoke(() => TaskComplete?.Invoke(sender, e));
+            });
 
             WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), TimerCallBack);
-
-            void StatusCallBack(object sender, StatusChangedEventArgs e)
-            {
-                Status = e.NewValue switch
-                {
-                    DownloadStatusEnum.Downloading => TransferTaskStatus.Running,
-                    DownloadStatusEnum.Waiting => TransferTaskStatus.Running,
-
-                    DownloadStatusEnum.Paused => TransferTaskStatus.Pause,
-                    DownloadStatusEnum.Failed => TransferTaskStatus.Failed,
-                    DownloadStatusEnum.Completed => TransferTaskStatus.Completed,
-                    _ => throw new InvalidCastException()
-                };
-            }
 
             void TimerCallBack(object sender, EventArgs e)
             {
