@@ -6,50 +6,8 @@
         xmlns:m="clr-namespace:SixCloud.Core.Models"
         xmlns:local="clr-namespace:SixCloud.Core.Views.Dialogs"
         mc:Ignorable="d"
-        Title="DownloadTaskGroupDialog" Height="450" Width="800" d:DataContext="{x:Type m:DownloadTaskGroup}">
-    <Window.Resources>
-        <!--<CollectionViewSource x:Key="taskSources" Source="{Binding TaskList}">
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription Converter="{StaticResource taskGroupConverter}"/>
-            </CollectionViewSource.GroupDescriptions>
-        </CollectionViewSource>-->
-    </Window.Resources>
+        Title="DownloadTaskGroupDialog" Height="450" Width="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <!--进行中-->
-            <RowDefinition Height="Auto"/>
-            <!--等待中-->
-            <RowDefinition Height="Auto"/>
-            <!--已完成-->
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <ListView ItemsSource="{Binding Source={StaticResource taskSources}}">
-            <ListView.GroupStyle>
-                <GroupStyle>
-                    <GroupStyle.ContainerStyle>
-                        <Style TargetType="{x:Type GroupItem}">
-                            <Setter Property="Margin" Value="0,0,0,5"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type GroupItem}">
-                                        <Expander IsExpanded="True" BorderBrush="#FFA4B97F" BorderThickness="0,0,0,1">
-                                            <Expander.Header>
-                                                <DockPanel>
-                                                    <TextBlock FontWeight="Bold" Text="{Binding Path=Name}" Margin="5,0,0,0" Width="100"/>
-                                                    <TextBlock FontWeight="Bold" Text="{Binding Path=ItemCount}"/>
-                                                </DockPanel>
-                                            </Expander.Header>
-                                            <Expander.Content>
-                                                <ItemsPresenter />
-                                            </Expander.Content>
-                                        </Expander>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </GroupStyle.ContainerStyle>
-                </GroupStyle>
-            </ListView.GroupStyle>
-        </ListView>
+        <ListBox Grid.Row="1" SelectionMode="Extended" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
     </Grid>
 </Window>

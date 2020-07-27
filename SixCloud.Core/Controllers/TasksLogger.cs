@@ -46,7 +46,7 @@ namespace SixCloud.Core.Controllers
             public IList<string> SerializedDownloadTaskGroups { get; set; }
         }
 
-        public static void StartUpRecovery(UserInformation user)
+        public static async void StartUpRecovery(UserInformation user)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace SixCloud.Core.Controllers
                                 try
                                 {
                                     DownloadTaskRecord downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record);
-                                    DownloadingListViewModel.NewTask(downloadTaskRecord.TargetUUID, downloadTaskRecord.LocalPath, downloadTaskRecord.Name);
+                                    await TransferListViewModel.NewDownloadTask(downloadTaskRecord.TargetUUID, downloadTaskRecord.LocalPath, downloadTaskRecord.Name);
                                 }
                                 catch (NullReferenceException ex)
                                 {

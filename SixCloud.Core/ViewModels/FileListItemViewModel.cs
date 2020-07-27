@@ -201,7 +201,7 @@ namespace SixCloud.Core.ViewModels
 
         public DependencyCommand DownloadCommand { get; private set; }
 
-        private void Download(object parameter)
+        private async void Download(object parameter)
         {
             using System.Windows.Forms.FolderBrowserDialog downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
             {
@@ -218,7 +218,7 @@ namespace SixCloud.Core.ViewModels
                 }
                 else
                 {
-                    DownloadingListViewModel.NewTask(UUID, downloadPathDialog.SelectedPath, Name);
+                    await TransferListViewModel.NewDownloadTask(UUID, downloadPathDialog.SelectedPath, Name);
                 }
             }
         }
