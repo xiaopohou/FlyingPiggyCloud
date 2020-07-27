@@ -1,8 +1,9 @@
 ﻿using QingzhenyunApis.Utils;
 using SixCloud.Core.Models.Download;
+using SixCloud.Core.Views.Dialogs;
 using SixCloudCore.SixTransporter.Downloader;
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -200,7 +201,23 @@ namespace SixCloud.Core.ViewModels
             innerTask.Cancel();
         }
 
-
+        public DependencyCommand ShowDetailsCommand { get; }
+        private async void ShowDetails(object parameter)
+        {
+            if (innerTask is DirectoryDownloadTask directoryDownloadTask && directoryDownloadTask.Initialized)
+            {
+                DirectoryDownloadTaskViewModel dataContext = await Task.Run(() => new DirectoryDownloadTaskViewModel(directoryDownloadTask));
+                new DownloadTaskGroupDialog
+                {
+                    DataContext = dataContext,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                }.ShowDialog();
+            }
+        }
+        private bool CanShowDetails(object parameter)
+        {
+            return innerTask is DirectoryDownloadTask;
+        }
         #endregion
 
         public DownloadTaskViewModel(ITaskManual task)
@@ -209,6 +226,7 @@ namespace SixCloud.Core.ViewModels
             RecoveryCommand = new DependencyCommand(Recovery, CanRecovery);
             PauseCommand = new DependencyCommand(Pause, CanPause);
             CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
+            ShowDetailsCommand = new DependencyCommand(ShowDetails, CanShowDetails);
 
             if (innerTask is CommonFileDownloadTask common)
             {

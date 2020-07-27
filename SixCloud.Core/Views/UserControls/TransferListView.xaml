@@ -71,7 +71,8 @@
         </DataTemplate>
 
         <DataTemplate x:Key="CommandCell">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <metro:LightButton FontIcon="&#xf06e;" Height="60" Width="60" Command="{Binding ShowDetailsCommand}"/>
                 <metro:LightButton FontIcon="&#xf01e;" Height="60" Width="60" Command="{Binding RecoveryCommand}"/>
                 <metro:LightButton FontIcon="&#xf04c;" Height="60" Width="60" Command="{Binding PauseCommand}"/>
                 <metro:LightButton FontIcon="&#xf00d;" Height="60" Width="60" Command="{Binding CancelCommand}"/>
@@ -89,7 +90,7 @@
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" x:Name="WidthHelperIconCell"/>
                 <Grid Grid.Column="1" x:Name="WidthHelperNameCell"/>

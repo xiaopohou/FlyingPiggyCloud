@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SourceChord.FluentWPF;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -15,7 +16,7 @@ namespace SixCloud.Core.Views.Dialogs
     /// <summary>
     /// DownloadTaskGroupDialog.xaml 的交互逻辑
     /// </summary>
-    public partial class DownloadTaskGroupDialog : Window
+    public partial class DownloadTaskGroupDialog : AcrylicWindow
     {
         public DownloadTaskGroupDialog()
         {

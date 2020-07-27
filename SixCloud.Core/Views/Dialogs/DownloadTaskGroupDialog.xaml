@@ -1,13 +1,92 @@
-﻿<Window x:Class="SixCloud.Core.Views.Dialogs.DownloadTaskGroupDialog"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:m="clr-namespace:SixCloud.Core.Models"
-        xmlns:local="clr-namespace:SixCloud.Core.Views.Dialogs"
-        mc:Ignorable="d"
-        Title="DownloadTaskGroupDialog" Height="450" Width="800">
-    <Grid>
-        <ListBox Grid.Row="1" SelectionMode="Extended" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
+﻿<fluentwpf:AcrylicWindow
+    xmlns:fluentwpf="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+    x:Class="SixCloud.Core.Views.Dialogs.DownloadTaskGroupDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:metro="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary" xmlns:vm="clr-namespace:SixCloud.Core.ViewModels"
+    mc:Ignorable="d"
+    AcrylicWindowStyle="NoIcon" Title="任务详情" BorderThickness="0" MinHeight="700" MinWidth="1200">
+    <Window.Resources>
+        <vm:TaskStatusConverter x:Key="StatusConverter"/>
+
+        <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource ListViewNoHeaderStyle}"/>
+
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <ContentPresenter/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="IconCell">
+            <metro:FontIcon Icon="{Binding Icon}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="NameCell">
+            <TextBlock Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ProgressCell">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Status,Converter={StaticResource StatusConverter}}" Margin="5,0"/>
+                    <TextBlock Text="{Binding Completed}"/>
+                    <TextBlock Text="，"/>
+                    <TextBlock Text="{Binding Total}"/>
+                </StackPanel>
+                <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="3" Value="{Binding Progress, Mode=OneWay}" Grid.Row="1"/>
+                <TextBlock Grid.Row="2" Text="{Binding FriendlySpeed}"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CommandCell">
+            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
+                <metro:LightButton FontIcon="&#xf06e;" Height="60" Width="60" Command="{Binding ShowDetailsCommand}"/>
+                <metro:LightButton FontIcon="&#xf01e;" Height="60" Width="60" Command="{Binding RecoveryCommand}"/>
+                <metro:LightButton FontIcon="&#xf017;" Height="60" Width="60" Command="{Binding PauseCommand}"/>
+                <metro:LightButton FontIcon="&#xf00d;" Height="60" Width="60" Command="{Binding CancelCommand}"/>
+            </StackPanel>
+        </DataTemplate>
+
+    </Window.Resources>
+    <Grid Margin="15">
+        <!--这个Grid用于帮助GridView自动校正分栏宽度-->
+        <Grid Visibility="Hidden" Margin="15,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" x:Name="WidthHelperIconCell"/>
+            <Grid Grid.Column="1" x:Name="WidthHelperNameCell"/>
+            <Grid Grid.Column="2" x:Name="WidthHelperProgressCell"/>
+            <Grid Grid.Column="3" x:Name="WidthHelperCommandCell"/>
+        </Grid>
+
+        <ListView Background="{DynamicResource MainBackgroundBrush}" VerticalAlignment="Top" x:Name="DownloadingList" ItemsSource="{Binding TaskList}" VirtualizingPanel.IsVirtualizing="True">
+            <ListView.View>
+                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}">
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperIconCell}" CellTemplate="{StaticResource IconCell}"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperNameCell}" CellTemplate="{StaticResource NameCell}"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperProgressCell}" CellTemplate="{StaticResource ProgressCell}"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperCommandCell}" CellTemplate="{StaticResource CommandCell}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
-</Window>
+</fluentwpf:AcrylicWindow>

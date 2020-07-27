@@ -1,7 +1,5 @@
-﻿using QingzhenyunApis.Exceptions;
-using QingzhenyunApis.Methods.V3;
+﻿using QingzhenyunApis.Methods.V3;
 using SixCloud.Core.Controllers;
-using SixCloud.Core.Models;
 using SixCloud.Core.Models.Download;
 using System;
 using System.Collections.ObjectModel;
@@ -62,7 +60,7 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                var task = new DirectoryDownloadTask(targetUUID, localPath, name);
+                DirectoryDownloadTask task = new DirectoryDownloadTask(targetUUID, localPath, name);
                 AddDownloadingItem(task);
                 await task.InitTaskGroup();
             }
@@ -74,7 +72,7 @@ namespace SixCloud.Core.ViewModels
 
         private static void AddDownloadingItem(ITaskManual task)
         {
-            var taskViewModel = new DownloadTaskViewModel(task);
+            DownloadTaskViewModel taskViewModel = new DownloadTaskViewModel(task);
             taskViewModel.TaskComplete += (sender, e) =>
             {
                 downloadingList.Remove(taskViewModel);
@@ -151,6 +149,19 @@ namespace SixCloud.Core.ViewModels
                     OnPropertyChanged(nameof(UploadingListTitle));
                     OnPropertyChanged(nameof(UploadingListVisibility));
                 });
+        }
+    }
+
+    public class DirectoryDownloadTaskViewModel : ViewModelBase
+    {
+        private readonly DirectoryDownloadTask innerTask;
+
+        public ObservableCollection<DownloadTaskViewModel> TaskList { get; }
+
+        public DirectoryDownloadTaskViewModel(DirectoryDownloadTask directoryDownloadTask)
+        {
+            innerTask = directoryDownloadTask;
+            TaskList = new ObservableCollection<DownloadTaskViewModel>(innerTask.Children.Select(x => new DownloadTaskViewModel(x)));
         }
     }
 }
