@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using QingzhenyunApis.Exceptions;
 
 namespace SixCloud.Core.Models.Download
 {
@@ -13,6 +14,7 @@ namespace SixCloud.Core.Models.Download
         public string Completed => Calculators.SizeCalculator(0);
 
         public double Progress { get; } = 100d;
+        public bool Paused = false;
 
         public string FriendlySpeed => Calculators.SizeCalculator(0) + "/秒";
 
@@ -33,12 +35,21 @@ namespace SixCloud.Core.Models.Download
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            Paused = true;
         }
 
         public void Cancel()
         {
-            throw new NotImplementedException();
+            Paused = true;
+            try
+            {
+                File.Delete(Path.Combine(LocalDirectory, LocalFileName));
+            }
+            catch (IOException ex)
+            {
+                ex.Submit();
+            }
+            TaskManual.Remove(this);
         }
 
         public string TargetUUID { get; }

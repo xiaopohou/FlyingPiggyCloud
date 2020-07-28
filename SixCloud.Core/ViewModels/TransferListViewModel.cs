@@ -77,6 +77,10 @@ namespace SixCloud.Core.ViewModels
             {
                 downloadingList.Remove(taskViewModel);
             };
+            taskViewModel.TaskCancel += (sender, e) =>
+            {
+                downloadingList.Remove(taskViewModel);
+            };
 
             TaskManual.Add(task);
             downloadingList.Add(taskViewModel);
@@ -161,7 +165,30 @@ namespace SixCloud.Core.ViewModels
         public DirectoryDownloadTaskViewModel(DirectoryDownloadTask directoryDownloadTask)
         {
             innerTask = directoryDownloadTask;
-            TaskList = new ObservableCollection<DownloadTaskViewModel>(innerTask.Children.Select(x => new DownloadTaskViewModel(x)));
+
+            var list = new ObservableCollection<DownloadTaskViewModel>();
+            innerTask.Children
+                .ToList()
+                .ForEach(x =>
+                {
+                    lock (x)
+                    {
+                        var taskVM = new DownloadTaskViewModel(x);
+                        taskVM.TaskComplete += (sender, e) =>
+                        {
+                            list.Remove(taskVM);
+                        };
+
+                        taskVM.TaskCancel += (sender, e) =>
+                        {
+                            list.Remove(taskVM);
+                        };
+
+                        list.Add(taskVM);
+                    }
+                });
+
+            TaskList = list;
         }
     }
 }

@@ -57,7 +57,7 @@ namespace SixCloud.Core.Models.Download
 
                                 break;
                             case EmptyFileDownloadTask emptyFile:
-                                if (emptyFile.IsCompleted)
+                                if (emptyFile.IsCompleted || emptyFile.Paused)
                                 {
                                     continue;
                                 }
@@ -122,6 +122,17 @@ namespace SixCloud.Core.Models.Download
             Thread.Sleep(2000);
         }
 
+        public static void Remove(ITaskManual taskManual)
+        {
+            lock (taskManuals)
+            {
+                if (taskManual.Parent == Guid.Empty)
+                    taskManuals.Remove(taskManual);
+                else if (taskManuals.FirstOrDefault(x => x.Guid == taskManual.Parent) is DirectoryDownloadTask directoryDownloadTask)
+                    directoryDownloadTask.Remove(taskManual);
+            }
+        }
+
         private static void TaskLoop(object parameters)
         {
             do
@@ -180,6 +191,12 @@ namespace SixCloud.Core.Models.Download
                             {
                                 list.Remove(taskVM);
                             };
+
+                            taskVM.TaskCancel += (sender, e) =>
+                            {
+                                list.Remove(taskVM);
+                            };
+
                             list.Add(taskVM);
                         }
                     });

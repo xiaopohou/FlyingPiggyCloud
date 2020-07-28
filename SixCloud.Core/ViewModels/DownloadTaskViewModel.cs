@@ -121,7 +121,15 @@ namespace SixCloud.Core.ViewModels
                 {
                     if (directory.Initialized)
                     {
-                        return directory.Completed * 100 / directory.Total;
+                        if (directory.Total == 0)
+                        {
+                            Cancel(null);
+                            return 0;
+                        }
+                        else
+                        {
+                            return directory.Completed * 100 / directory.Total;
+                        }
                     }
                     else
                     {
@@ -139,6 +147,8 @@ namespace SixCloud.Core.ViewModels
         public string FriendlySpeed => innerTask is CommonFileDownloadTask common ? Calculators.SizeCalculator(common.Speed) + "/秒" : string.Empty;
 
         public event EventHandler TaskComplete;
+
+        public event EventHandler TaskCancel;
 
         #region Commands
         public DependencyCommand RecoveryCommand { get; }
@@ -194,6 +204,7 @@ namespace SixCloud.Core.ViewModels
             PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
             RecoveryCommand.OnCanExecutedChanged(this, EventArgs.Empty);
             innerTask.Cancel();
+            TaskCancel?.Invoke(this, EventArgs.Empty);
         }
 
         public DependencyCommand ShowDetailsCommand { get; }

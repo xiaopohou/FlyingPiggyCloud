@@ -86,6 +86,7 @@ namespace SixCloud.Core.Models.Download
             };
 
             StopAndSave(true);
+            TaskManual.Remove(this);
         }
 
         public string LocalFileName { get; }

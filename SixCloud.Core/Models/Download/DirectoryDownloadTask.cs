@@ -24,6 +24,7 @@ namespace SixCloud.Core.Models.Download
             LocalDirectory = localDirectory;
             TargetUUID = targetUUID;
             LocalFileName = localFileName;
+            Guid = Guid.NewGuid();
         }
 
         public string LocalFileName { get; }
@@ -124,6 +125,11 @@ namespace SixCloud.Core.Models.Download
         {
             Running = false;
             Children.ForEach(x => x.Cancel());
+        }
+
+        internal void Remove(ITaskManual taskManual)
+        {
+            Children.Remove(taskManual);
         }
     }
 }
