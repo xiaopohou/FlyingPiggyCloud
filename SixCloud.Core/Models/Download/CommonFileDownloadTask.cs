@@ -80,7 +80,7 @@ namespace SixCloud.Core.Models.Download
                 }
                 catch (IOException ex)
                 {
-                    ex.Submit();
+                    //ex.Submit();
                 }
 
                 try
@@ -89,12 +89,22 @@ namespace SixCloud.Core.Models.Download
                 }
                 catch (IOException ex)
                 {
-                    ex.Submit();
+                    //ex.Submit();
                 }
             };
 
-            StopAndSave(true);
-            TaskManual.Remove(this);
+            try
+            {
+                StopAndSave(true);
+            }
+            catch (InvalidOperationException)
+            {
+
+            }
+            finally
+            {
+                TaskManual.Remove(this);
+            }
         }
 
         public string LocalFileName { get; }

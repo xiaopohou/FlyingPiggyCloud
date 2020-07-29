@@ -100,12 +100,14 @@ namespace SixCloud.Core.ViewModels
         private async Task OnLoginSuccess()
         {
             UserInformation currentUser = await Authentication.GetUserInformation();
+
             SentryAgent.SetUser(new User
             {
                 Id = currentUser.UUID.ToString(),
                 Username = currentUser.Name,
                 Email = currentUser.Email
             }, currentUser);
+
             await Application.Current.Dispatcher.Invoke(async () =>
             {
                 await new MainFrameViewModel().InitializeComponent().ConfigureAwait(true);
@@ -126,6 +128,7 @@ namespace SixCloud.Core.ViewModels
                         //Application.Current.Shutdown();
                     }
                 };
+
                 InitializeTaskBarIcon?.Invoke();
             });
             TasksLogger.StartUpRecovery(currentUser);

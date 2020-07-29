@@ -184,6 +184,8 @@
             </Border.Triggers>
         </Border>
 
+        <metro:LoadingControl Background="{DynamicResource MainBackgroundBrush}" Visibility="{Binding LoadingElementVisibility}"/>
+
         <Grid.Triggers>
             <EventTrigger RoutedEvent="Button.Click">
                 <BeginStoryboard>

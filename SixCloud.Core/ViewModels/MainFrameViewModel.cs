@@ -10,6 +10,8 @@ namespace SixCloud.Core.ViewModels
     {
         public async Task InitializeComponent()
         {
+            LoadingElementVisibility = Visibility.Visible;
+            OnPropertyChanged(nameof(LoadingElementVisibility));
             if (Environment.OSVersion.Version >= new Version(6, 2))
             {
                 MainFrameWindow = new AcrylicWindow
@@ -24,16 +26,21 @@ namespace SixCloud.Core.ViewModels
                     WindowStyle = WindowStyle.ToolWindow
                 };
             }
+
             MainFrameWindow.MinHeight = 720;
             MainFrameWindow.MinWidth = 800;
             MainFrameWindow.Title = "6盘，留住美好";
             MainFrameWindow.DataContext = this;
             MainFrameWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             MainFrameWindow.Content = new MainFrame();
-
             MainFrameWindow.Show();
+
             await FileVM.NavigateByPath("/");
+            LoadingElementVisibility = Visibility.Collapsed;
+            OnPropertyChanged(nameof(LoadingElementVisibility));
         }
+
+        public Visibility LoadingElementVisibility { get; private set; }
 
         public Window MainFrameWindow { get; private set; }
 

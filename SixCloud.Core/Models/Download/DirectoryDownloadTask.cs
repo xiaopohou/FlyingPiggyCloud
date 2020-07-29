@@ -128,7 +128,14 @@ namespace SixCloud.Core.Models.Download
         public void Cancel()
         {
             Running = false;
-            Children.ToList().ForEach(x => x.Cancel());
+            try
+            {
+                Children.ToList().ForEach(x => x.Cancel());
+            }
+            finally
+            {
+                //Directory.Delete(Path.Combine(LocalDirectory, LocalFileName));
+            }
         }
 
         internal void Remove(ITaskManual taskManual)
