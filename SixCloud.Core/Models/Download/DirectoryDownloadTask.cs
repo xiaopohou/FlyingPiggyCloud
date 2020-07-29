@@ -1,6 +1,7 @@
 ﻿using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Methods.V3;
 using SixCloud.Core.ViewModels;
+using SixCloudCore.SixTransporter.Downloader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,7 +44,7 @@ namespace SixCloud.Core.Models.Download
 
         public bool Initialized { get; private set; } = false;
 
-        public bool IsCompleted => !Children.Any(x => !x.IsCompleted);
+        public bool IsCompleted => Initialized && !Children.Any(x => !x.IsCompleted);
 
         /// <summary>
         /// 初始化任务组
@@ -113,6 +114,9 @@ namespace SixCloud.Core.Models.Download
         public void Run()
         {
             Running = true;
+            Children.Where(x => x is CommonFileDownloadTask commonFile && commonFile.Status == DownloadStatusEnum.Paused)
+                    .ToList()
+                    .ForEach(x => (x as CommonFileDownloadTask).Wait());
         }
 
         public void Stop()
@@ -124,7 +128,7 @@ namespace SixCloud.Core.Models.Download
         public void Cancel()
         {
             Running = false;
-            Children.ForEach(x => x.Cancel());
+            Children.ToList().ForEach(x => x.Cancel());
         }
 
         internal void Remove(ITaskManual taskManual)

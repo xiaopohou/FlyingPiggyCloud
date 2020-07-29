@@ -22,29 +22,38 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                Process.Start(fullPath);
+                ProcessStartInfo psi = new ProcessStartInfo("Explorer.exe")
+                {
+                    Arguments = fullPath
+                };
+                Process.Start(psi);
+
+                //Process.Start(fullPath);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "打开文件失败");
-                Deleted?.Invoke(this, new EventArgs());
+                //Deleted?.Invoke(this, new EventArgs());
             }
         }
 
         public ICommand ShowCommand { get; private set; }
         private void Show(object parameter)
         {
-            if (!File.Exists(fullPath))
+            if (File.Exists(fullPath) || Directory.Exists(fullPath))
+            {
+                ProcessStartInfo psi = new ProcessStartInfo("Explorer.exe")
+                {
+                    Arguments = "/e,/select," + fullPath
+                };
+                Process.Start(psi);
+            }
+            else
             {
                 MessageBox.Show("找不到文件，可能已被删除", "打开文件失败");
                 Deleted?.Invoke(this, new EventArgs());
                 return;
             }
-            ProcessStartInfo psi = new ProcessStartInfo("Explorer.exe")
-            {
-                Arguments = "/e,/select," + fullPath
-            };
-            Process.Start(psi);
         }
 
         public ICommand DeleteCommand { get; private set; }

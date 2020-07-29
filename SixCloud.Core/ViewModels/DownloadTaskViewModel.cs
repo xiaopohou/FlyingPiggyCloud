@@ -164,7 +164,7 @@ namespace SixCloud.Core.ViewModels
                 }
                 else if (innerTask is DirectoryDownloadTask directory)
                 {
-                    directory.Running = true;
+                    directory.Run();
                 }
             }
             PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
@@ -233,6 +233,8 @@ namespace SixCloud.Core.ViewModels
             PauseCommand = new DependencyCommand(Pause, CanPause);
             CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
             ShowDetailsCommand = new DependencyCommand(ShowDetails, CanShowDetails);
+
+            //Status = TransferTaskStatus.Running;
 
             if (innerTask.IsCompleted)
             {

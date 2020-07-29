@@ -36,6 +36,14 @@ namespace SixCloud.Core.Models.Download
             return new CommonFileDownloadTask(taskManual, taskInfo);
         }
 
+        public void Wait()
+        {
+            if (Status == DownloadStatusEnum.Paused)
+            {
+                Status = DownloadStatusEnum.Waiting;
+            }
+        }
+
         public async void Run()
         {
             if (Status != DownloadStatusEnum.Downloading)
