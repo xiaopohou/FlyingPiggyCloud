@@ -89,7 +89,7 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand RenewalCommand { get; set; }
         private void Renewal(object parameter)
         {
-            MessageBox.Show("会员续费功能尚未启用", "尚未启用", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Modern客户端会员续费接口对接中，尚不支持", "尚未启用", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public DependencyCommand ChangeUserNameCommand { get; set; }
