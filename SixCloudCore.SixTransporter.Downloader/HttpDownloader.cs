@@ -167,7 +167,7 @@ namespace SixCloudCore.SixTransporter.Downloader
         {
             if (Threads != null)
             {
-                foreach (DownloadThread thread in Threads)
+                foreach (DownloadThread thread in Threads.ToArray())
                 {
                     thread.FileStreamDisposed += (sender, e) =>
                     {

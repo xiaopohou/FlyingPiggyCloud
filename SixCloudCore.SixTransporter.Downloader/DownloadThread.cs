@@ -78,41 +78,39 @@ namespace SixCloudCore.SixTransporter.Downloader
                 {
                     try
                     {
-                        using (FileStream stream = new FileStream(Info.DownloadPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024 * 1024))
+                        using FileStream stream = new FileStream(Info.DownloadPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024 * 1024);
+                        stream.Seek(Block.BeginOffset, SeekOrigin.Begin);
+                        byte[] array = new byte[1024];
+                        int i = responseStream.Read(array, 0, array.Length);
+                        while (true)
                         {
-                            stream.Seek(Block.BeginOffset, SeekOrigin.Begin);
-                            byte[] array = new byte[1024];
-                            int i = responseStream.Read(array, 0, array.Length);
-                            while (true)
+                            if (_stopped)
                             {
-                                if (_stopped)
-                                {
-                                    stream.Flush();
-                                    Block.Downloading = false;
-                                    return;
-                                }
-
-                                if (i <= 0 && Block.BeginOffset - 1 != Block.EndOffset)
-                                {
-                                    new Thread(Start) { IsBackground = true }.Start();
-                                    return;
-                                }
-
-                                if (i <= 0 || Block.BeginOffset > Block.EndOffset)
-                                {
-                                    break;
-                                }
-
-                                stream.Write(array, 0, i);
-                                Block.BeginOffset += i;
-                                Block.DownloadedSize += i;
-                                Info.DownloadedSize += i;
-                                Info.Limiter.Downloaded(i);
-                                i = responseStream.Read(array, 0, array.Length);
+                                stream.Flush();
+                                Block.Downloading = false;
+                                return;
                             }
 
-                            stream.Flush();
+                            if (i <= 0 && Block.BeginOffset - 1 != Block.EndOffset)
+                            {
+                                new Thread(Start) { IsBackground = true }.Start();
+                                return;
+                            }
+
+                            if (i <= 0 || Block.BeginOffset > Block.EndOffset)
+                            {
+                                break;
+                            }
+
+                            stream.Write(array, 0, i);
+                            Block.BeginOffset += i;
+                            Block.DownloadedSize += i;
+                            Info.DownloadedSize += i;
+                            Info.Limiter.Downloaded(i);
+                            i = responseStream.Read(array, 0, array.Length);
                         }
+
+                        stream.Flush();
 
                     }
                     finally

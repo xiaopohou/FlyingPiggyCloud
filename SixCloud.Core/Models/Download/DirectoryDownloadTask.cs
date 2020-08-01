@@ -98,6 +98,7 @@ namespace SixCloud.Core.Models.Download
                                 }
                             }
                         };
+
                         Children.Add(newTask);
                     }
                     else
@@ -147,6 +148,16 @@ namespace SixCloud.Core.Models.Download
         internal void Remove(ITaskManual taskManual)
         {
             Children.Remove(taskManual);
+
+            lock (TaskComplete)
+            {
+                if (unCalled && IsCompleted)
+                {
+                    TaskComplete?.Invoke(this, EventArgs.Empty);
+                    unCalled = false;
+                }
+            }
+
         }
 
         internal void AddRange(IEnumerable<ITaskManual> enumerable)
