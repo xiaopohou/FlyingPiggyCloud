@@ -21,6 +21,8 @@ namespace SixCloudCore.SixTransporter.Downloader
 
         public long BlockSize { get; set; } = 1024 * 1024 * 250;
 
+        public int RetryCount { get; set; }
+
         public int MaxRetry { get; set; } = 10;
 
         public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>()

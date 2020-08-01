@@ -21,7 +21,6 @@ namespace SixCloudCore.SixTransporter.Downloader
         private bool _stopped;
         private HttpWebRequest _request;
         private HttpWebResponse _response;
-        private int _retryCount;
 
         internal DownloadThread(DownloadBlock block, DownloadTaskInfo info)
         {
@@ -66,8 +65,8 @@ namespace SixCloudCore.SixTransporter.Downloader
 
                 _request = WebRequest.CreateHttp(Info.DownloadUrl);
                 _request.Method = "GET";
-                _request.Timeout = 8000;
-                _request.ReadWriteTimeout = 8000;
+                _request.Timeout = 30000;
+                _request.ReadWriteTimeout = 30000;
                 foreach (KeyValuePair<string, string> header in Info.Headers)
                 {
                     HttpDownloader.SetHeaderValue(_request.Headers, header.Key, header.Value);
@@ -138,8 +137,9 @@ namespace SixCloudCore.SixTransporter.Downloader
                     ThreadCompletedEvent?.Invoke(this);
                     return;
                 }
-                if (++_retryCount < Info.MaxRetry)
+                if (Info.RetryCount < Info.MaxRetry)
                 {
+                    Thread.Sleep(1000);
                     new Thread(Start) { IsBackground = true }.Start();
                     return;
                 }
@@ -147,8 +147,9 @@ namespace SixCloudCore.SixTransporter.Downloader
             }
             catch (Exception)
             {
-                if (++_retryCount < Info.MaxRetry)
+                if (Info.RetryCount < Info.MaxRetry)
                 {
+                    Thread.Sleep(1000);
                     new Thread(Start) { IsBackground = true }.Start();
                     return;
                 }

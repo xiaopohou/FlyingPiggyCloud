@@ -222,7 +222,7 @@ namespace SixCloudCore.SixTransporter.Downloader
                 HttpWebRequest request = WebRequest.Create(Info.DownloadUrl) as HttpWebRequest;
                 request.Method = "GET";
                 //request.UserAgent = "Accelerider-lite download engine";
-                request.Timeout = 5000;
+                request.Timeout = 30000;
                 foreach (KeyValuePair<string, string> header in Info.Headers)
                 {
                     SetHeaderValue(request.Headers, header.Key, header.Value);
@@ -237,10 +237,10 @@ namespace SixCloudCore.SixTransporter.Downloader
             }
             catch (WebException ex)
             {
-                if (ex.Message.Contains("超时") || ex.Message.Contains("timed out"))
-                {
-                    return GetResponse();
-                }
+                //if (ex.Message.Contains("超时") || ex.Message.Contains("timed out"))
+                //{
+                //    return GetResponse();
+                //}
 
                 Stream stream = ex.Response?.GetResponseStream();
                 if (stream == null)
