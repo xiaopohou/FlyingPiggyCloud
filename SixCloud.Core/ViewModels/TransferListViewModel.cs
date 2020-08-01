@@ -70,7 +70,7 @@ namespace SixCloud.Core.ViewModels
             }
         }
 
-        private static void AddDownloadingItem(ITaskManual task)
+        internal static void AddDownloadingItem(ITaskManual task)
         {
             DownloadTaskViewModel taskViewModel = new DownloadTaskViewModel(task);
             taskViewModel.TaskComplete += (sender, e) =>
@@ -83,7 +83,8 @@ namespace SixCloud.Core.ViewModels
             };
 
             TaskManual.Add(task);
-            downloadingList.Add(taskViewModel);
+
+            Application.Current.Dispatcher.Invoke(() => downloadingList.Add(taskViewModel));
         }
 
         #endregion

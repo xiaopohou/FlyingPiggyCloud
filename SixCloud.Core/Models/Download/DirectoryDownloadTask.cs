@@ -28,6 +28,12 @@ namespace SixCloud.Core.Models.Download
             Guid = Guid.NewGuid();
         }
 
+        public DirectoryDownloadTask(ITaskManual taskManual) : this(taskManual.TargetUUID, taskManual.LocalDirectory, taskManual.LocalFileName)
+        {
+            Guid = taskManual.Guid;
+        }
+
+
         public string LocalFileName { get; }
 
         public string TargetUUID { get; }
@@ -141,6 +147,12 @@ namespace SixCloud.Core.Models.Download
         internal void Remove(ITaskManual taskManual)
         {
             Children.Remove(taskManual);
+        }
+
+        internal void AddRange(IEnumerable<ITaskManual> enumerable)
+        {
+            Children.AddRange(enumerable);
+            Initialized = true;
         }
     }
 }

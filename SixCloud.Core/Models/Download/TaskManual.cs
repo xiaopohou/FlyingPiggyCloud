@@ -1,4 +1,6 @@
-﻿using QingzhenyunApis.Exceptions;
+﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
+using QingzhenyunApis.Methods.V3;
 using SixCloud.Core.ViewModels;
 using SixCloudCore.SixTransporter.Downloader;
 using System;
@@ -13,6 +15,7 @@ namespace SixCloud.Core.Models.Download
     public static class TaskManual
     {
         private static readonly List<ITaskManual> taskManuals = new List<ITaskManual>();
+        private static bool ApplicationClosing = false;
 
         /// <summary>
         /// 回收已完成任务
@@ -34,8 +37,8 @@ namespace SixCloud.Core.Models.Download
         {
             lock (taskManuals)
             {
-                var i = 0;
-                foreach (var task in taskManuals)
+                int i = 0;
+                foreach (ITaskManual task in taskManuals)
                 {
                     if (i < 10)
                     {
@@ -71,7 +74,7 @@ namespace SixCloud.Core.Models.Download
                             case DirectoryDownloadTask directory:
                                 if (directory.Initialized)
                                 {
-                                    foreach (var child in directory.Children)
+                                    foreach (ITaskManual child in directory.Children)
                                     {
                                         if (i < 10)
                                         {
@@ -127,9 +130,13 @@ namespace SixCloud.Core.Models.Download
             lock (taskManuals)
             {
                 if (taskManual.Parent == Guid.Empty)
+                {
                     taskManuals.Remove(taskManual);
+                }
                 else if (taskManuals.FirstOrDefault(x => x.Guid == taskManual.Parent) is DirectoryDownloadTask directoryDownloadTask)
+                {
                     directoryDownloadTask.Remove(taskManual);
+                }
             }
         }
 
@@ -141,7 +148,7 @@ namespace SixCloud.Core.Models.Download
                 {
                     //ITaskManual task = EnumerableTask().FirstOrDefault();
                     //task?.Run();
-                    foreach (var task in EnumerableTask())
+                    foreach (ITaskManual task in EnumerableTask())
                     {
                         task?.Run();
                     }
@@ -150,7 +157,7 @@ namespace SixCloud.Core.Models.Download
                 {
                     ex.Submit(nameof(TaskLoop));
                 }
-            } while (true);
+            } while (!ApplicationClosing);
         }
 
         static TaskManual()
@@ -171,14 +178,90 @@ namespace SixCloud.Core.Models.Download
 
                 taskManuals.Add(taskManual);
             }
-            //TaskAdded?.Invoke(taskManual, EventArgs.Empty);
+        }
+
+        public static IEnumerable<TaskManualRecord> Save()
+        {
+            ApplicationClosing = true;
+            lock (taskManuals)
+            {
+                foreach (ITaskManual task in taskManuals)
+                {
+                    if (task.IsCompleted)
+                    {
+                        continue;
+                    }
+                    else if (task is DirectoryDownloadTask directoryDownloadTask)
+                    {
+                        foreach (ITaskManual child in directoryDownloadTask.Children)
+                        {
+                            if (task.IsCompleted)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                yield return child.ToRecord();
+                            }
+                        }
+                    }
+
+                    yield return task.ToRecord();
+                }
+            }
+        }
+
+        public static void Load(IEnumerable<ITaskManual> manuals)
+        {
+            IOrderedEnumerable<IGrouping<Guid, ITaskManual>> taskGroups = from task in manuals
+                                                                          group task by task.Parent into taskGroup
+                                                                          orderby taskGroup.Key ascending
+                                                                          select taskGroup;
+
+            if (taskGroups.Where(x => x.Key == Guid.Empty).Any())
+            {
+                List<ITaskManual> tasks = new List<ITaskManual>();
+                foreach (IGrouping<Guid, ITaskManual> taskGroup in taskGroups)
+                {
+                    if (taskGroup.Key == Guid.Empty)
+                    {
+                        tasks.AddRange(from task in taskGroup select LoadManuals(task));
+                    }
+                    else
+                    {
+                        (tasks.First(x => x.Guid == taskGroup.Key) as DirectoryDownloadTask).AddRange(from task in taskGroup select LoadManuals(task));
+                    }
+                }
+
+                tasks.ForEach(x => TransferListViewModel.AddDownloadingItem(x));
+            }
+
+            static ITaskManual LoadManuals(ITaskManual taskManual)
+            {
+                ITaskManual x;
+                FileMetaData detail = FileSystem.GetDetailsByIdentity(taskManual.TargetUUID).Result;
+                if (detail.Directory)
+                {
+                    x = new DirectoryDownloadTask(taskManual);
+                }
+                else if (detail.Size == 0)
+                {
+                    x = new EmptyFileDownloadTask(taskManual);
+                }
+                else
+                {
+                    x = CommonFileDownloadTask.Create(taskManual);
+
+                }
+                return x;
+            }
         }
 
         public static ObservableCollection<DownloadTaskViewModel> ToObservableCollection()
         {
             lock (taskManuals)
             {
-                var list = new ObservableCollection<DownloadTaskViewModel>();
+                ObservableCollection<DownloadTaskViewModel> list = new ObservableCollection<DownloadTaskViewModel>();
                 taskManuals
                     .Where(x => !x.IsCompleted)
                     .ToList()
@@ -186,7 +269,7 @@ namespace SixCloud.Core.Models.Download
                     {
                         lock (x)
                         {
-                            var taskVM = new DownloadTaskViewModel(x);
+                            DownloadTaskViewModel taskVM = new DownloadTaskViewModel(x);
                             taskVM.TaskComplete += (sender, e) =>
                             {
                                 list.Remove(taskVM);
