@@ -115,7 +115,7 @@ namespace QingzhenyunApis.Methods.V3
             CreateSignature("POST", ref uri, isAnonymous, querys, headers);
 
             //发起请求
-            HttpResponseMessage response = await httpClient.PostAsync(uri, requestObject);
+            HttpResponseMessage response = isAnonymous ? await AnonymousPost(uri, requestObject) : await httpClient.PostAsync(uri, requestObject);
 
             if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
             {
@@ -138,36 +138,11 @@ namespace QingzhenyunApis.Methods.V3
             }
         }
 
-        protected static T Post<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
+        private static async Task<HttpResponseMessage> AnonymousPost(string uri, HttpContent httpContent)
         {
-            using StringContent requestObject = new StringContent(data);
-            //构建请求头
-            HttpContentHeaders headers = CreateHeader(data, requestObject);
-
-            //构建签名
-            CreateSignature("POST", ref uri, isAnonymous, querys, headers);
-
-            //发起请求
-            HttpResponseMessage response = httpClient.PostAsync(uri, requestObject).Result;
-            if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
-            {
-                Token = newToken.FirstOrDefault() ?? Token;
-            }
-
-            string responseBody = response.Content.ReadAsStringAsync().Result;
-            try
-            {
-                return ParseResult<T>(responseBody);
-            }
-            catch (RequestFailedException ex)
-            {
-                ex.Data[nameof(data)] = data;
-                ex.Data[nameof(uri)] = uri;
-                ex.Data[nameof(querys)] = querys;
-                ex.Data[nameof(isAnonymous)] = isAnonymous;
-                ex.Data[nameof(responseBody)] = responseBody;
-                throw;
-            }
+            using HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"qingzhen uwp client {Assembly.GetEntryAssembly().GetName().Version}");
+            return await httpClient.PostAsync(uri, httpContent);
         }
 
         protected static async Task<T> GetAsync<T>(string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
@@ -176,7 +151,7 @@ namespace QingzhenyunApis.Methods.V3
             CreateSignature("GET", ref uri, isAnonymous, querys);
 
             //发起请求
-            HttpResponseMessage response = await httpClient.GetAsync(uri);
+            HttpResponseMessage response = isAnonymous ? await AnonymousGet(uri) : await httpClient.GetAsync(uri);
 
             if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
             {
@@ -196,6 +171,13 @@ namespace QingzhenyunApis.Methods.V3
                 ex.Data[nameof(responseBody)] = responseBody;
                 throw;
             }
+        }
+
+        private static async Task<HttpResponseMessage> AnonymousGet(string uri)
+        {
+            using HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"qingzhen uwp client {Assembly.GetEntryAssembly().GetName().Version}");
+            return await httpClient.GetAsync(uri);
         }
 
         protected static async Task<T> PatchAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
@@ -230,6 +212,7 @@ namespace QingzhenyunApis.Methods.V3
                 throw;
             }
         }
+
 
         protected SixCloudMethodBase(string token = null)
         {

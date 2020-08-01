@@ -78,18 +78,18 @@ namespace SixCloud.Core.Models.Download
                 {
                     File.Delete(Path.Combine(LocalDirectory, LocalFileName));
                 }
-                catch (IOException ex)
+                catch (IOException)
                 {
-                    //ex.Submit();
+
                 }
 
                 try
                 {
                     File.Delete(Path.Combine(LocalDirectory, $"{LocalFileName}.downloading"));
                 }
-                catch (IOException ex)
+                catch (IOException)
                 {
-                    //ex.Submit();
+
                 }
             };
 
