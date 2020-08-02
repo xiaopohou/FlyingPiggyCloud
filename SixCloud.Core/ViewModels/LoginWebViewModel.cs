@@ -56,7 +56,7 @@ namespace SixCloud.Core.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (Environment.OSVersion.Version >= new Version(6, 2) && false)
+                    if (Environment.OSVersion.Version >= new Version(6, 2))
                     {
                         LoginWindow = new AcrylicWindow
                         {
