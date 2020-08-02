@@ -56,7 +56,7 @@ namespace SixCloud.Core.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (Environment.OSVersion.Version >= new Version(6, 2))
+                    if (Environment.OSVersion.Version >= new Version(6, 2) && false)
                     {
                         LoginWindow = new AcrylicWindow
                         {
@@ -79,6 +79,7 @@ namespace SixCloud.Core.ViewModels
                             WindowStyle = WindowStyle.ToolWindow,
                             WindowStartupLocation = WindowStartupLocation.CenterScreen,
                             Content = CreateLoginWebView?.Invoke(),
+                            DataContext = this,
                         };
                     }
                     LoginWindow.Show();
