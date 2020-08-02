@@ -30,7 +30,7 @@ namespace SixCloud.Core
         {
             DisableIriSupport();
             LibVLCSharp.Shared.Core.Initialize();
-            SentrySdk.Init("https://aa9303eba050450187a9c04653e74be5@o387540.ingest.sentry.io/5222970");
+            SentrySdk.Init("https://22d1bd82c69c4667a8604cca40c8f4b3@sentry.qiecdn.com/3");
             Application.Current.DispatcherUnhandledException += (sender, e) =>
             {
                 e.Exception.ToSentry().TreatedBy(nameof(DispatcherUnhandledExceptionEventHandler)).Submit();
