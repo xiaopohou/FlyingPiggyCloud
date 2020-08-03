@@ -157,15 +157,22 @@ namespace SixCloud.Core.ViewModels
 
         public async Task NavigateByUUID(string uuid)
         {
-            previousPath.Push(CurrentPath);
-            fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: uuid, mode: Mode).GetAsyncEnumerator();
-            FileMetaData directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
-            CurrentPath = directoryInfo.Path;
-            CurrentUUID = directoryInfo.UUID;
-            Application.Current.Dispatcher.Invoke(() => FileList.Clear());
-            CreatePathArray(CurrentPath);
-            await LazyLoad();
-            PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+            try
+            {
+                previousPath.Push(CurrentPath);
+                fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: uuid, mode: Mode).GetAsyncEnumerator();
+                FileMetaData directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
+                CurrentPath = directoryInfo.Path;
+                CurrentUUID = directoryInfo.UUID;
+                Application.Current.Dispatcher.Invoke(() => FileList.Clear());
+                CreatePathArray(CurrentPath);
+                await LazyLoad();
+                PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
+            }
+            catch (RequestFailedException ex) when (ex.Code == "FILE_NOT_FOUND")
+            {
+                MessageBox.Show("请求失败，远程服务器未找到该文件", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public async void NavigateByUUIDAsync(string uuid)

@@ -1,5 +1,4 @@
-﻿//using Exceptionless;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
@@ -15,7 +14,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-//using System.Windows.Forms;
 
 namespace SixCloud.Core.ViewModels
 {
@@ -175,6 +173,11 @@ namespace SixCloud.Core.ViewModels
                 }
                 catch (InvalidOperationException ex)
                 {
+                    ex.ToSentry().TreatedBy(nameof(OfflineTaskDialogViewModel)).AttachExtraInfo("torrentTask", task).Submit();
+                }
+                catch (RequestFailedException ex) when (ex.Code == "INTERNAL_SERVER_ERROR")
+                {
+                    MessageBox.Show($"种子文件解析失败：{ex.Message}，请尝试重新上传", ex.Code, MessageBoxButton.OK, MessageBoxImage.Error);
                     ex.ToSentry().TreatedBy(nameof(OfflineTaskDialogViewModel)).AttachExtraInfo("torrentTask", task).Submit();
                 }
             }
