@@ -94,6 +94,7 @@ namespace SixCloud.Core.Controllers
                                         .AttachTag("Location", nameof(DownloadTaskRecord))
                                         .AttachExtraInfo(nameof(record), record)
                                         .AttachExtraInfo(nameof(DownloadTaskRecord), JsonConvert.DeserializeObject<DownloadTaskRecord>(record))
+                                        .TreatedBy(nameof(StartUpRecovery))
                                         .Submit();
                                 }
 

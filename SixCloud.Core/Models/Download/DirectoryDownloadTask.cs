@@ -1,4 +1,5 @@
 ﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloud.Core.ViewModels;
 using SixCloudCore.SixTransporter.Downloader;
@@ -69,39 +70,7 @@ namespace SixCloud.Core.Models.Download
             {
                 await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(0, identity: uuid))
                 {
-                    if (!child.Directory)
-                    {
-                        if (!Directory.Exists(localParentPath))
-                        {
-                            Directory.CreateDirectory(localParentPath);
-                        }
-
-                        FileMetaData detail = await FileSystem.GetDetailsByIdentity(child.UUID);
-                        ITaskManual newTask;
-                        if (detail.Size == 0)
-                        {
-                            newTask = new EmptyFileDownloadTask(localParentPath, child.Name, child.UUID, Guid);
-                        }
-                        else
-                        {
-                            newTask = CommonFileDownloadTask.Create(localParentPath, child.Name, child.UUID, Guid);
-                        }
-
-                        newTask.TaskComplete += (sender, e) =>
-                        {
-                            lock (TaskComplete)
-                            {
-                                if (unCalled && IsCompleted)
-                                {
-                                    TaskComplete?.Invoke(this, EventArgs.Empty);
-                                    unCalled = false;
-                                }
-                            }
-                        };
-
-                        Children.Add(newTask);
-                    }
-                    else
+                    if (child.Directory)
                     {
                         string nextPath = Path.Combine(localParentPath, child.Name);
                         Directory.CreateDirectory(nextPath);
@@ -112,6 +81,45 @@ namespace SixCloud.Core.Models.Download
                         else
                         {
                             ThreadPool.QueueUserWorkItem(async (state) => await DownloadHelper(child.UUID, nextPath, 0), null);
+                        }
+                    }
+                    else
+                    {
+                        if (!Directory.Exists(localParentPath))
+                        {
+                            Directory.CreateDirectory(localParentPath);
+                        }
+
+                        try
+                        {
+                            FileMetaData detail = await FileSystem.GetDetailsByIdentity(child.UUID);
+                            ITaskManual newTask;
+                            if (detail.Size == 0)
+                            {
+                                newTask = new EmptyFileDownloadTask(localParentPath, child.Name, child.UUID, Guid);
+                            }
+                            else
+                            {
+                                newTask = CommonFileDownloadTask.Create(localParentPath, child.Name, child.UUID, Guid);
+                            }
+
+                            newTask.TaskComplete += (sender, e) =>
+                            {
+                                lock (TaskComplete)
+                                {
+                                    if (unCalled && IsCompleted)
+                                    {
+                                        TaskComplete?.Invoke(this, EventArgs.Empty);
+                                        unCalled = false;
+                                    }
+                                }
+                            };
+
+                            Children.Add(newTask);
+                        }
+                        catch (RequestFailedException ex) when (ex.Code == "FILE_NOT_FOUND")
+                        {
+                            continue;
                         }
                     }
                 }

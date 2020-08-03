@@ -225,11 +225,11 @@ namespace SixCloud.Core.Models.Download
                 {
                     if (taskGroup.Key == Guid.Empty)
                     {
-                        tasks.AddRange(from task in taskGroup select LoadManuals(task));
+                        tasks.AddRange(from task in taskGroup let manual = LoadManuals(task) where manual != null select manual);
                     }
                     else
                     {
-                        (tasks.First(x => x.Guid == taskGroup.Key) as DirectoryDownloadTask).AddRange(from task in taskGroup select LoadManuals(task));
+                        (tasks.First(x => x.Guid == taskGroup.Key) as DirectoryDownloadTask).AddRange(from task in taskGroup let manual = LoadManuals(task) where manual != null select manual);
                     }
                 }
 
@@ -239,19 +239,27 @@ namespace SixCloud.Core.Models.Download
             static ITaskManual LoadManuals(ITaskManual taskManual)
             {
                 ITaskManual x;
-                FileMetaData detail = FileSystem.GetDetailsByIdentity(taskManual.TargetUUID).Result;
-                if (detail.Directory)
+                try
                 {
-                    x = new DirectoryDownloadTask(taskManual);
-                }
-                else if (detail.Size == 0)
-                {
-                    x = new EmptyFileDownloadTask(taskManual);
-                }
-                else
-                {
-                    x = CommonFileDownloadTask.Create(taskManual);
+                    FileMetaData detail = FileSystem.GetDetailsByIdentity(taskManual.TargetUUID).Result;
+                    if (detail.Directory)
+                    {
+                        x = new DirectoryDownloadTask(taskManual);
+                    }
+                    else if (detail.Size == 0)
+                    {
+                        x = new EmptyFileDownloadTask(taskManual);
+                    }
+                    else
+                    {
+                        x = CommonFileDownloadTask.Create(taskManual);
 
+                    }
+
+                }
+                catch (RequestFailedException ex) when (ex.Code == "FILE_NOT_FOUND")
+                {
+                    x = null;
                 }
                 return x;
             }

@@ -1,4 +1,6 @@
-﻿using QingzhenyunApis.Methods.V3;
+﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
+using QingzhenyunApis.Methods.V3;
 using SixCloud.Core.Controllers;
 using SixCloud.Core.Models.Download;
 using System;
@@ -41,19 +43,26 @@ namespace SixCloud.Core.ViewModels
         /// <param name="isAutoStart">自动开始</param>
         public static async Task NewDownloadTask(string targetUUID, string localPath, string name, bool isAutoStart = true)
         {
-            QingzhenyunApis.EntityModels.FileMetaData detail = await FileSystem.GetDetailsByIdentity(targetUUID);
-            ITaskManual task;
-
-            if (detail.Size == 0)
+            try
             {
-                task = new EmptyFileDownloadTask(localPath, name, targetUUID, Guid.Empty);
-            }
-            else
-            {
-                task = CommonFileDownloadTask.Create(localPath, name, targetUUID, Guid.Empty);
+                FileMetaData detail = await FileSystem.GetDetailsByIdentity(targetUUID);
+                ITaskManual task;
 
+                if (detail.Size == 0)
+                {
+                    task = new EmptyFileDownloadTask(localPath, name, targetUUID, Guid.Empty);
+                }
+                else
+                {
+                    task = CommonFileDownloadTask.Create(localPath, name, targetUUID, Guid.Empty);
+
+                }
+                AddDownloadingItem(task);
             }
-            AddDownloadingItem(task);
+            catch (RequestFailedException ex) when (ex.Code == "FILE_NOT_FOUND")
+            {
+                MessageBox.Show("请求失败，远程服务器未找到该文件", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public static async void NewDownloadTaskGroup(string targetUUID, string localPath, string name, bool isAutoStart = true)
