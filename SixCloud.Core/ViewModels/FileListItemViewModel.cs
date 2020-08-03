@@ -1,9 +1,11 @@
 ﻿using QingzhenyunApis.EntityModels;
+using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
 using Syroot.Windows.IO;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 
 namespace SixCloud.Core.ViewModels
@@ -111,27 +113,29 @@ namespace SixCloud.Core.ViewModels
 
         public string Path { get; private set; }
 
-        #region Copy
-        public DependencyCommand CopyCommand { get; private set; }
-
         internal async void NewPreView()
         {
 #warning 这里的代码还没有完成
             switch (PreviewType)
             {
                 case PreviewType.HLS:
-                    //PreviewInformation x = await Task.Run(() =>
-                    //{
-                    //    return QingzhenyunApis.Methods.V3.Preview.Video(UUID);
-                    //});
-                    //PreView preView = new PreView(PreView.ResourceType.Video, x.PreviewHlsAddress, x);
-                    //preView.Show();
-                    new MediaPlayerViewModel(await QingzhenyunApis.Methods.V3.Preview.Video(UUID)).InitializeComponent();
+                    try
+                    {
+                        new MediaPlayerViewModel(await QingzhenyunApis.Methods.V3.Preview.Video(UUID)).InitializeComponent();
+                    }
+                    catch (RequestFailedException ex) when (ex.Code == "NEED_SUBSCRIPTION")
+                    {
+                        MessageBox.Show($"限订阅用户在线播放此资源：{ex.Message}", "未能获取资源地址", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+
                     break;
                 default:
                     return;
             }
         }
+
+        #region Copy
+        public DependencyCommand CopyCommand { get; private set; }
 
         private void Copy(object parameter)
         {

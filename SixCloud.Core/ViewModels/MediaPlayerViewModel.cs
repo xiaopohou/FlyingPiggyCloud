@@ -63,7 +63,7 @@ namespace SixCloud.Core.ViewModels
             set => MediaPlayer.Time = (long)(value * MediaPlayer.Length / 100);
         }
 
-        public void InitializeComponent()
+        public VLCView InitializeComponent()
         {
             View = new VLCView
             {
@@ -73,6 +73,7 @@ namespace SixCloud.Core.ViewModels
             MediaPlayer.Play(new Media(libVLC, Source, FromType.FromLocation));
             PauseCommand.OnCanExecutedChanged(this, EventArgs.Empty);
             PlayCommand.OnCanExecutedChanged(this, EventArgs.Empty);
+            return View;
         }
 
         public void Dispose()
