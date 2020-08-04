@@ -167,16 +167,22 @@ namespace SixCloudCore.SixTransporter.Downloader
         {
             if (Threads != null)
             {
-                foreach (DownloadThread thread in Threads.ToArray())
+                var threads = Threads.ToList();
+
+                foreach (DownloadThread thread in Threads)
                 {
+                    //所有线程的文件对象都被释放后触发事件通知调用方删除文件
                     thread.FileStreamDisposed += (sender, e) =>
                     {
-                        Threads.Remove(sender as DownloadThread);
-                        if (!Threads.Any())
+                        threads.Remove(thread);
+
+                        if (!threads.Any())
                         {
                             AllFileStreamDisposed?.Invoke(this, EventArgs.Empty);
                         }
+
                     };
+
                     if (force)
                     {
                         thread.ForceStop();

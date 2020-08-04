@@ -48,10 +48,17 @@ namespace SixCloud.Core.Models.Download
         {
             if (Status != DownloadStatusEnum.Downloading)
             {
-                FileMetaData downloadDetails = await FileSystem.GetDownloadUrlByIdentity(TargetUUID);
-                string downloadPath = Path.Combine(LocalDirectory, LocalFileName);
-                Info.DownloadUrl = downloadDetails.DownloadAddress;
-                await Task.Run(() => StartDownload());
+                try
+                {
+                    FileMetaData downloadDetails = await FileSystem.GetDownloadUrlByIdentity(TargetUUID);
+                    string downloadPath = Path.Combine(LocalDirectory, LocalFileName);
+                    Info.DownloadUrl = downloadDetails.DownloadAddress;
+                    await Task.Run(() => StartDownload());
+                }
+                catch (RequestFailedException ex) when (ex.Code == "FILE_NOT_FOUND")
+                {
+                    Status = DownloadStatusEnum.Failed;
+                }
             }
         }
 

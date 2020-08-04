@@ -146,8 +146,6 @@ namespace SixCloud.Core.Models.Download
             {
                 try
                 {
-                    //ITaskManual task = EnumerableTask().FirstOrDefault();
-                    //task?.Run();
                     foreach (ITaskManual task in EnumerableTask())
                     {
                         task?.Run();
