@@ -87,7 +87,8 @@ namespace SixCloud.Core.ViewModels
 
                 if (!await Authentication.CheckDestination(DestinationInfo))
                 {
-                    throw new Exception("登陆失败", ex);
+                    MessageBox.Show("登陆超时，请重试", "超时", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Application.Current.Shutdown();
                 }
             }
 

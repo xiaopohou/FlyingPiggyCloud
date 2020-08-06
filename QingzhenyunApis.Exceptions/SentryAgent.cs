@@ -4,6 +4,7 @@ using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace QingzhenyunApis.Exceptions
 {
@@ -45,12 +46,12 @@ namespace QingzhenyunApis.Exceptions
             return sentryScopeInfo.AttachTag(nameof(TreatedBy), byWhom);
         }
 
-        public static void Submit(this Exception exception)
-        {
-            exception.ToSentry().Submit();
-        }
+        //public static void Submit(this Exception exception)
+        //{
+        //    exception.ToSentry().Submit();
+        //}
 
-        public static void Submit(this Exception exception, string treatedBy)
+        public static void Submit(this Exception exception, [CallerMemberName] string treatedBy = "Unknown")
         {
             exception.ToSentry().TreatedBy(treatedBy).Submit();
         }

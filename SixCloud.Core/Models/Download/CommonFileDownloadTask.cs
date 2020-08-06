@@ -68,11 +68,14 @@ namespace SixCloud.Core.Models.Download
             {
                 try
                 {
-                    StopAndSave().Save(Path.Combine(LocalDirectory, $"{LocalFileName}.downloading"));
+                    StopAndSave()?.Save(Path.Combine(LocalDirectory, $"{LocalFileName}.downloading"));
                 }
                 catch (NullReferenceException ex)
                 {
-                    ex.ToSentry().AttachExtraInfo(nameof(CommonFileDownloadTask), this).Submit();
+                    ex.ToSentry()
+                      .AttachExtraInfo(nameof(CommonFileDownloadTask), this)
+                      .TreatedBy(nameof(CommonFileDownloadTask))
+                      .Submit();
                 }
             }
         }

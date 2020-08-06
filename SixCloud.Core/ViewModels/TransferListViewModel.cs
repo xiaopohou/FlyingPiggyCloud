@@ -108,17 +108,22 @@ namespace SixCloud.Core.ViewModels
 
         public static async void NewUploadTask(string targetPath, string path)
         {
-            if (Directory.Exists(path))
-            {
-
-            }
-
-            else if (File.Exists(path))
+            if (File.Exists(path))
             {
                 UploadingFileViewModel task = new UploadingFileViewModel(targetPath, path);
                 task.UploadCompleted += CompletedEventHandler;
                 task.UploadAborted += AbortedEventHandler;
-                await task.Run();
+                try
+                {
+                    await task.Run();
+
+                }
+                catch (RequestFailedException ex) when (ex.Code == "INTERNAL_SERVER_ERROR")
+                {
+                    Application.Current.Dispatcher.Invoke(() => MessageBox.Show("远程服务器错误，6盘未能创建任务", "失败", MessageBoxButton.OK, MessageBoxImage.Stop));
+                    return;
+                }
+
                 Application.Current.Dispatcher.Invoke(() => uploadingList.Add(task));
 
                 void CompletedEventHandler(object sender, EventArgs e)

@@ -153,7 +153,7 @@ namespace SixCloud.Core.Models.Download
                 }
                 catch (Exception ex)
                 {
-                    ex.Submit(nameof(TaskLoop));
+                    ex.Submit();
                 }
             } while (!ApplicationClosing);
         }

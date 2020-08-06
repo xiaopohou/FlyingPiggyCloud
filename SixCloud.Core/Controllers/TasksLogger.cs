@@ -136,8 +136,15 @@ namespace SixCloud.Core.Controllers
 
             startupInformation.UploadTasks = uploadList.ToArray();
 
-            using StreamWriter writer = new StreamWriter(File.Create(startupInformationPath));
-            writer.Write(JsonConvert.SerializeObject(startupInformation));
+            try
+            {
+                using StreamWriter writer = new StreamWriter(File.Create(startupInformationPath));
+                writer.Write(JsonConvert.SerializeObject(startupInformation));
+            }
+            catch (IOException)
+            {
+
+            }
 
             LocalProperties.Token = SixCloudMethodBase.Token ?? string.Empty;
         }
