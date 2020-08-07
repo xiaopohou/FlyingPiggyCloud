@@ -20,6 +20,6 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <controls:LoadingControl Grid.Column="1" Grid.Row="1"/>
-        <TextBlock x:Name="FriendlyText" Grid.Row="2" Grid.ColumnSpan="3" Text="{DynamicResource LoadingDescription}" Foreground="{DynamicResource PrimaryHueDarkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock x:Name="FriendlyText" Grid.Row="2" Grid.ColumnSpan="3" Text="{DynamicResource Lang-LoadingDescription}" Foreground="{DynamicResource PrimaryHueDarkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
     </Grid>
 </Window>

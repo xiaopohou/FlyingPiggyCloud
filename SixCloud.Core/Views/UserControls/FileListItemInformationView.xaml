@@ -12,7 +12,7 @@
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
-            <Setter Property="Margin" Value="5"/>
+            <!--<Setter Property="Margin" Value="5"/>-->
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -25,7 +25,7 @@
                 <DropShadowEffect BlurRadius="50" Direction="10" ShadowDepth="5" Opacity="0.1"/>
             </Border.Effect>
         </Border>
-        <TextBlock Background="{DynamicResource MainBackgroundBrush}" Grid.Row="0" Text="详细信息" FontSize="24" Margin="15" />
+        <TextBlock Background="{DynamicResource MainBackgroundBrush}" Grid.Row="0" Text="{DynamicResource Lang-MoreInfo}" FontSize="24" Margin="15" />
         <Grid Background="{DynamicResource MainBackgroundBrush}" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -44,17 +44,44 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>-->
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="文件类型:"/>
+
+            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Margin="5">
+                <TextBlock Text="{DynamicResource Lang-FileType}"/>
+                <TextBlock Text=":"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Margin="5">
+                <TextBlock Text="{DynamicResource Lang-Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+                <TextBlock Text=":"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Margin="5">
+                <TextBlock Text="{DynamicResource Lang-CanPreview}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
+                <TextBlock Text=":"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Margin="5">
+                <TextBlock Text="{DynamicResource Lang-ATime}"/>
+                <TextBlock Text=":"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Horizontal" Margin="5">
+                <TextBlock Text="{DynamicResource Lang-CTime}"/>
+                <TextBlock Text=":"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="0" Grid.Row="5" Orientation="Horizontal" Margin="5">
+                <TextBlock Text="{DynamicResource Lang-MTime}"/>
+                <TextBlock Text=":"/>
+            </StackPanel>
+
+
+
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Mime}"/>
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="大小:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
             <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
-            <TextBlock Grid.Column="0" Grid.Row="2" Text="可预览:" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
             <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Preview}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}}"/>
-            <TextBlock Grid.Column="0" Grid.Row="3" Text="访问时间:"/>
             <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding ATime}"/>
-            <TextBlock Grid.Column="0" Grid.Row="4" Text="创建时间:"/>
             <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding CTime}"/>
-            <TextBlock Grid.Column="0" Grid.Row="5" Text="修改时间:"/>
             <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding MTime}"/>
         </Grid>
     </Grid>

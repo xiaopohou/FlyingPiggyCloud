@@ -119,7 +119,7 @@ namespace SixCloud.Core.ViewModels
             {
                 if (offlineTask.Progress == 100)
                 {
-                    return "已完成";
+                    return parameter as string == "I18N" ? "Completed" : "已完成";
                 }
                 else
                 {
@@ -137,7 +137,7 @@ namespace SixCloud.Core.ViewModels
             {
                 return transferItem switch
                 {
-                    TransferTaskStatus.Completed => "已完成",
+                    TransferTaskStatus.Completed => parameter as string == "I18N" ? "Completed" : "已完成",
                     TransferTaskStatus.Pause => "暂停",
                     TransferTaskStatus.Running => "进行中",
                     TransferTaskStatus.Stop => "停止",

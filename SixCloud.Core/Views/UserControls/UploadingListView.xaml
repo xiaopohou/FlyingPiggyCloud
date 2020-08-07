@@ -18,7 +18,7 @@
                     CommandTarget="{Binding ElementName=UploadingList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                    <TextBlock Text="{DynamicResource RecoveryTaskButton}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource Lang-RecoveryTaskButton}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button Command="MediaCommands.Stop"
@@ -26,7 +26,7 @@
                     CommandTarget="{Binding ElementName=UploadingList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                    <TextBlock Text="{DynamicResource CancelTaskButton}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource Lang-CancelTaskButton}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </StackPanel>
@@ -47,7 +47,7 @@
                         </Grid.ColumnDefinitions>
                         <ProgressBar Style="{StaticResource ProgressBarStyle}" Height="48" Value="{Binding Progress, Mode=OneWay}" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
                         <StackPanel Grid.Column="3" Orientation="Horizontal">
-                            <TextBlock Text="{DynamicResource ProgressDescription}"/>
+                            <TextBlock Text="{DynamicResource Lang-ProgressDescription}"/>
                             <TextBlock Text="{Binding Progress, Mode=OneWay}"/>
                             <TextBlock Text="%"/>
                         </StackPanel>

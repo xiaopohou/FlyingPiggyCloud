@@ -11,7 +11,7 @@
                   xmlns:UserControls="clr-namespace:SixCloud.Core.Views.UserControls"
                   mc:Ignorable="d"
                   fw:PointerTracker.Enabled="True"
-                  AcrylicWindowStyle="NoIcon" Title="{DynamicResource CreateTask}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+                  AcrylicWindowStyle="NoIcon" Title="{DynamicResource Lang-CreateTask}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <fw:AcrylicWindow.Resources>
         <ViewModels:StageConverter x:Key="StageConverter"/>
 
@@ -54,7 +54,7 @@
     <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">
         <TabItem x:Name="NewTaskTabItem"
                  IsSelected="{Binding Stage, Converter={StaticResource StageConverter}, ConverterParameter=WhichType,Mode=OneWay}"
-                 Header="{DynamicResource CreateTask}"
+                 Header="{DynamicResource Lang-CreateTask}"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
             <Grid x:Name="NewTask"  OpacityMask="White">
@@ -70,11 +70,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Margin="0,5" Grid.ColumnSpan="3" Grid.Row="0" Text="{DynamicResource InputUrl}"/>
+                <TextBlock Margin="0,5" Grid.ColumnSpan="3" Grid.Row="0" Text="{DynamicResource Lang-InputUrl}"/>
                 <TextBox Grid.ColumnSpan="3" Grid.Row="1" AcceptsReturn="True" x:Name="InputBox"
                          Height="150" Margin="0,0,0,30"
                          Text="{Binding InputBoxString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                         fw:Extensions.PlaceholderText="{DynamicResource InputUrlPlaceholderText}"
+                         fw:Extensions.PlaceholderText="{DynamicResource Lang-InputUrlPlaceholderText}"
                          LostFocus="InputBox_LostFocus"/>
 
                 <ScrollViewer Grid.ColumnSpan="3" Grid.Row="2" VerticalScrollBarVisibility="Auto">
@@ -100,12 +100,12 @@
                                     </Grid.RowDefinitions>
                                     <TextBox Grid.Column="0" IsEnabled="{Binding AllowEdit}" Text="{Binding SourceUrl}" VerticalContentAlignment="Center"/>
                                     <StackPanel Margin="3,0" Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="1">
-                                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource ResourcePassword}"/>
+                                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource Lang-ResourcePassword}"/>
                                         <TextBox VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="60" Text="{Binding SharePassword,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
                                     </StackPanel>
                                     <controls:FontIcon Grid.Column="2" Icon="{Binding Icon}"/>
-                                    <controls:LightButton HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="{DynamicResource ParseUrl}" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
-                                    <controls:LightButton  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="{DynamicResource CancelTask}" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
+                                    <controls:LightButton HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="{DynamicResource Lang-ParseUrl}" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
+                                    <controls:LightButton  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="{DynamicResource Lang-CancelTask}" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
                                     <TextBlock x:Name="FriendlyErrorInfo" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding FriendlyInfo}" Foreground="DarkRed"/>
                                 </Grid>
                             </DataTemplate>
@@ -115,8 +115,8 @@
 
 
 
-                <Button Grid.Column="0" Grid.Row="4" Content="{DynamicResource UploadTorrent}" Command="{Binding UploadTorrentCommand}"/>
-                <Button Grid.Column="2" Grid.Row="4" Content="{DynamicResource CheckFile}" Command="{Binding UrlParseResultConfirmCommand}"/>
+                <Button Grid.Column="0" Grid.Row="4" Content="{DynamicResource Lang-UploadTorrent}" Command="{Binding UploadTorrentCommand}"/>
+                <Button Grid.Column="2" Grid.Row="4" Content="{DynamicResource Lang-CheckFile}" Command="{Binding UrlParseResultConfirmCommand}"/>
 
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="NewTaskTranslateTransform"/>
@@ -151,7 +151,7 @@
         <TabItem x:Name="CheckFileTabItem"
                  IsSelected="{Binding Stage,Converter={StaticResource StageConverter},ConverterParameter=CheckFiles,Mode=OneWay}"
                  IsEnabled="{Binding IsCheckFileTabEnable}"
-                 Header="{DynamicResource CheckFile}"
+                 Header="{DynamicResource Lang-CheckFile}"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
             <Grid x:Name="CheckFile" Margin="0 16 0 0" OpacityMask="White">
@@ -160,11 +160,11 @@
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{DynamicResource CheckFileDescription}" Margin="5" FontSize="24" VerticalAlignment="Top"/>
+                <TextBlock Text="{DynamicResource Lang-CheckFileDescription}" Margin="5" FontSize="24" VerticalAlignment="Top"/>
                 <ScrollViewer Grid.Row="1">
                     <ItemsControl ItemsSource="{Binding ParseResults}" ItemTemplate="{DynamicResource ParseResultTemplate}" ToggleButton.Checked="CutDownRadioButtonChecked" ToggleButton.Unchecked="CutDownRadioButtonChecked"/>
                 </ScrollViewer>
-                <Button Grid.Row="2" Margin="15" Width="120" Content="{DynamicResource Confirm}" Command="{Binding CheckFilesCommand}"/>
+                <Button Grid.Row="2" Margin="15" Width="120" Content="{DynamicResource Lang-Confirm}" Command="{Binding CheckFilesCommand}"/>
 
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="CheckFileTranslateTransform"/>
@@ -200,7 +200,7 @@
         <TabItem x:Name="SavingPathTabItem"
                  IsSelected="{Binding Stage,Converter={StaticResource StageConverter},ConverterParameter=SelectSavingPath,Mode=OneWay}"
                  IsEnabled="{Binding IsSavingPathTabEnable}"
-                 Header="{DynamicResource SavingPath}"
+                 Header="{DynamicResource Lang-SavingPath}"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
             <Grid x:Name="SavingPath" Margin="0 16 0 0" OpacityMask="White">
@@ -209,14 +209,14 @@
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{DynamicResource SavingPathDescription}" Margin="5" FontSize="24" VerticalAlignment="Top"/>
+                <TextBlock Text="{DynamicResource Lang-SavingPathDescription}" Margin="5" FontSize="24" VerticalAlignment="Top"/>
                 <UserControls:FileGridView Grid.Row="1"
                                            DataContext="{Binding FileGrid}"
                                            x:Name="fileList"
                                            Margin="5"
                                            Command="{Binding NavigateCommand}"
                                            CommandParameter="{Binding SelectObject, ElementName=fileList}"/>
-                <Button x:Name="SavingPathConfirm" Click="SavingPathConfirm_Click" Content="{DynamicResource Submit}" Margin="15" Width="120" Grid.Row="2" Command="{Binding SelectSavingPathCommand}" CommandParameter="{Binding Path=DataContext}"/>
+                <Button x:Name="SavingPathConfirm" Click="SavingPathConfirm_Click" Content="{DynamicResource Lang-Submit}" Margin="15" Width="120" Grid.Row="2" Command="{Binding SelectSavingPathCommand}" CommandParameter="{Binding Path=DataContext}"/>
 
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="SavingPathTranslateTransform"/>

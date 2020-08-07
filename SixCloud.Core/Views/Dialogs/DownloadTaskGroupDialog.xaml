@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:metro="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary" xmlns:vm="clr-namespace:SixCloud.Core.ViewModels"
     mc:Ignorable="d"
-    AcrylicWindowStyle="NoIcon" Title="任务详情" BorderThickness="0" MinHeight="700" MinWidth="1200">
+    AcrylicWindowStyle="NoIcon" Title="{DynamicResource Lang-TaskInfo}" BorderThickness="0" MinHeight="700" MinWidth="1200">
     <Window.Resources>
         <vm:TaskStatusConverter x:Key="StatusConverter"/>
 

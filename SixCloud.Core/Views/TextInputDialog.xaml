@@ -9,7 +9,7 @@
     xmlns:mt="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
     mc:Ignorable="d"
-    Title="{DynamicResource ApplicationName}" Height="170" Width="350" AcrylicWindowStyle="NoIcon" WindowStartupLocation="CenterScreen" fw:PointerTracker.Enabled="True" >
+    Title="{DynamicResource Lang-ApplicationName}" Height="170" Width="350" AcrylicWindowStyle="NoIcon" WindowStartupLocation="CenterScreen" fw:PointerTracker.Enabled="True" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15"/>
@@ -28,7 +28,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="5" Style="{StaticResource TextBoxRevealStyle}" Name="InputBox"/>
-        <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource ButtonAccentRevealStyle}" Name="Confirm" Content="{DynamicResource Confirm}" Width="75" Height="32" Click="Confirm_Click"/>
-        <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource ButtonRevealStyle}" Name="Cancel" Content="{DynamicResource Cancel}" Width="75" Height="32" Click="Cancel_Click"/>
+        <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource ButtonAccentRevealStyle}" Name="Confirm" Content="{DynamicResource Lang-Confirm}" Width="75" Height="32" Click="Confirm_Click"/>
+        <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource ButtonRevealStyle}" Name="Cancel" Content="{DynamicResource Lang-Cancel}" Width="75" Height="32" Click="Cancel_Click"/>
     </Grid>
 </fw:AcrylicWindow>

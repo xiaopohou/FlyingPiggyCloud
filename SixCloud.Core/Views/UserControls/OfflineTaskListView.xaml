@@ -21,20 +21,20 @@
             <Button Command="{Binding NewTaskCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF067;" Margin="5,0"/>
-                    <TextBlock Text="新建任务" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource Lang-CreateTask}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button Command="{Binding CancelTaskCommand}"
                     CommandParameter="{Binding SelectedItems, ElementName=OfflineList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF068;" Margin="5,0"/>
-                    <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource Lang-CancelTask}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button Command="{Binding RefreshListCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <metro:FontIcon Icon="&#xF2F1;" Margin="5,0"/>
-                    <TextBlock Text="刷新列表" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource Lang-RefreshList}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </StackPanel>
@@ -82,7 +82,7 @@
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
                                     <StackPanel HorizontalAlignment="Left" Grid.Row="0" Orientation="Horizontal" x:Name="Progress">
-                                        <TextBlock Text="任务进度："/>
+                                        <TextBlock Text="{DynamicResource Lang-ProgressDescription}"/>
                                         <TextBlock Text="{Binding Progress, Mode=OneWay}"/>
                                         <TextBlock Text="%"/>
                                     </StackPanel>
@@ -95,7 +95,7 @@
                                     </StackPanel>
                                 </Grid>
                                 <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding Converter={StaticResource StatusConverter}}" Value="已完成">
+                                    <DataTrigger Binding="{Binding Converter={StaticResource StatusConverter},ConverterParameter=I18N}" Value="Completed">
                                         <Setter TargetName="Progress" Property="Visibility" Value="Collapsed"/>
                                         <Setter TargetName="Processed" Property="Visibility" Value="Collapsed"/>
                                         <Setter TargetName="ProcessedSlider" Property="Visibility" Value="Collapsed"/>

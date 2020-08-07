@@ -29,7 +29,7 @@
                     <metro:FontIcon Icon="&#xF46C;" Grid.RowSpan="2"/>
                     <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                        <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                        <TextBlock Text="{DynamicResource Lang-CompletedTimeDescription}" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
                         <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
                     </StackPanel>
                 </Grid>
@@ -37,9 +37,9 @@
         </ListBox.ItemTemplate>
         <ListBox.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="打开" Command="{Binding OpenCommand}"/>
-                <MenuItem Header="在文件夹中显示" Command="{Binding ShowCommand}"/>
-                <MenuItem Header="删除" Command="{Binding DeleteCommand}"/>
+                <MenuItem Header="{DynamicResource Lang-Open}" Command="{Binding OpenCommand}"/>
+                <MenuItem Header="{DynamicResource Lang-ShowInExplorer}" Command="{Binding ShowCommand}"/>
+                <MenuItem Header="{DynamicResource Lang-Delete}" Command="{Binding DeleteCommand}"/>
             </ContextMenu>
         </ListBox.ContextMenu>
     </ListBox>

@@ -62,13 +62,13 @@
                 <Button x:Name="Delete" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Command="{Binding DeleteCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=RecoveryList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF1F8;"/>
-                        <TextBlock Text="删除"/>
+                        <TextBlock Text="{DynamicResource Lang-Delete}"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="Cut" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Command="{Binding RecoveryCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=RecoveryList}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <controls:FontIcon Icon="&#xF0C4;"/>
-                        <TextBlock Text="恢复"/>
+                        <TextBlock Text="{DynamicResource Lang-Recovery}"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="Copy" HorizontalAlignment="Left" Width="81" VerticalAlignment="Center" Command="{Binding EmptyCommand}" CommandParameter="{Binding Path=SelectedItems,ElementName=RecoveryList}">

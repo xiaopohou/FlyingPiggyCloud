@@ -79,8 +79,6 @@
             </StackPanel>
         </DataTemplate>
 
-
-
     </UserControl.Resources>
     <ScrollViewer>
         <StackPanel Orientation="Vertical">
@@ -97,7 +95,6 @@
                 <Grid Grid.Column="2" x:Name="WidthHelperProgressCell"/>
                 <Grid Grid.Column="3" x:Name="WidthHelperCommandCell"/>
             </Grid>
-
 
             <!--在下载队列中-->
             <TextBlock Style="{StaticResource Title}" Text="{Binding DownloadingListTitle}" Visibility="{Binding DownloadingListVisibility}"/>
@@ -126,7 +123,7 @@
             </ListView>
 
             <!--最近活动-->
-            <TextBlock Style="{StaticResource Title}" Text="最近活动"/>
+            <TextBlock Style="{StaticResource Title}" Text="{DynamicResource Lang-RecentActivity}"/>
             <ListBox DataContext="{Binding TransferCompletedList}" x:Name="CompletedList" VirtualizingPanel.IsVirtualizing="True" ItemsSource="{Binding TransferCompletedList}">
                 <ListBox.Resources>
                     <DataTemplate DataType="{x:Type vm:UploadedTaskViewModel}">
@@ -146,7 +143,7 @@
                                 <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
                                 <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                    <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                                    <TextBlock Text="{DynamicResource Lang-CompletedTimeDescription}" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
                                     <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
                                 </StackPanel>
                             </Grid>
@@ -171,22 +168,19 @@
                                 <metro:FontIcon Icon="{Binding Icon}" Grid.RowSpan="2"/>
                                 <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                    <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                                    <TextBlock Text="{DynamicResource Lang-CompletedTimeDescription}" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
                                     <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
                                 </StackPanel>
                                 <Grid.ContextMenu>
                                     <ContextMenu Style="{StaticResource MaterialDesignContextMenu}">
-                                        <MenuItem Header="打开" Command="{Binding OpenCommand}"/>
-                                        <MenuItem Header="在文件夹中显示" Command="{Binding ShowCommand}"/>
-                                        <MenuItem Header="删除" Command="{Binding DeleteCommand}"/>
+                                        <MenuItem Header="{DynamicResource Lang-Open}" Command="{Binding OpenCommand}"/>
+                                        <MenuItem Header="{DynamicResource Lang-ShowInExplorer}" Command="{Binding ShowCommand}"/>
+                                        <MenuItem Header="{DynamicResource Lang-Delete}" Command="{Binding DeleteCommand}"/>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                             </Grid>
-
                         </Border>
-
                     </DataTemplate>
-
                 </ListBox.Resources>
             </ListBox>
         </StackPanel>

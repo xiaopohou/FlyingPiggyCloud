@@ -128,8 +128,8 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Foreground="White" Text="文件大小：" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                            <TextBlock Foreground="White" Text="修改时间：" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1"/>
+                            <TextBlock Foreground="White" Margin="5,0" Text="{DynamicResource Lang-Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <TextBlock Foreground="White" Margin="5,0" Text="{DynamicResource Lang-MTime}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1"/>
                             <TextBlock Foreground="White" Text="{Binding Size}" Visibility="{Binding Directory, Converter={StaticResource HidingSizeinfoForDirectoryConverter}, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1"/>
                             <TextBlock Foreground="White" Text="{Binding MTime}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"/>
                         </Grid>
@@ -139,22 +139,22 @@
             <Setter Property="ContextMenu">
                 <Setter.Value>
                     <ContextMenu x:Name="GridViewContextMenu" Background="{DynamicResource MainForegroundBrush}" Foreground="White">
-                        <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
+                        <MenuItem x:Name="Cut" Header="{DynamicResource Lang-Cut}" Command="{Binding CutCommand}">
                             <MenuItem.Icon>
                                 <controls:FontIcon Icon="&#xF0C4;"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem x:Name="Copy" Header="复制" Command="{Binding CopyCommand}">
+                        <MenuItem x:Name="Copy" Header="{DynamicResource Lang-Copy}" Command="{Binding CopyCommand}">
                             <MenuItem.Icon>
                                 <controls:FontIcon Icon="&#xF0C5;"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem x:Name="Rename" Header="重命名" Command="{Binding RenameCommand}">
+                        <MenuItem x:Name="Rename" Header="{DynamicResource Lang-Rename}" Command="{Binding RenameCommand}">
                             <MenuItem.Icon>
                                 <controls:FontIcon Icon="&#xF079;"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem x:Name="Delete" Header="删除" Command="{Binding DeleteCommand}">
+                        <MenuItem x:Name="Delete" Header="{DynamicResource Lang-Delete}" Command="{Binding DeleteCommand}">
                             <MenuItem.Icon>
                                 <controls:FontIcon Icon="&#xF1F8;"/>
                             </MenuItem.Icon>

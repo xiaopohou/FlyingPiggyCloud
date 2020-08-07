@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SixCloud.Core.Views.Dialogs"
         mc:Ignorable="d"
-        Title="关于6盘" Height="550" Width="800" MinHeight="300" MinWidth="400" WindowStartupLocation="CenterOwner">
+        Title="{DynamicResource Lang-AboutDialogTitle}" Height="550" Width="800" MinHeight="300" MinWidth="400" WindowStartupLocation="CenterOwner">
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="150"/>
@@ -20,7 +20,9 @@
             <TextBlock Text="SixCloudCore via Cdorey"/>
             <TextBlock x:Name="VersionBlock"/>
             <TextBlock Width="Auto">
-                    <Hyperlink NavigateUri="https://github.com/Cdorey/FlyingPiggyCloud">依据Apache 2.0许可发布</Hyperlink>
+                <Hyperlink NavigateUri="https://github.com/Cdorey/FlyingPiggyCloud" >
+                    <Run Text="{DynamicResource Lang-PublishDescription}"/>
+                </Hyperlink>
             </TextBlock>
         </StackPanel>
         <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Background="{DynamicResource MainBackgroundBrush}">
@@ -31,9 +33,9 @@
                         <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}"/>
                     </Style>
                 </StackPanel.Resources>
-                <TextBlock Text="本软件引用了如下开源项目（许可）"/>
+                <TextBlock Text="{DynamicResource Lang-ImportPackagesInfo}"/>
                 <TextBlock Width="Auto">
-                    <Hyperlink NavigateUri="https://github.com/cefsharp/CefSharp/blob/master/LICENSE">CefSharp.Wpf (点击以查看许可)</Hyperlink>
+                    <Hyperlink NavigateUri="https://github.com/cefsharp/CefSharp/blob/master/LICENSE">CefSharp.Wpf</Hyperlink>
                 </TextBlock>
                 <TextBlock Width="Auto">
                     <Hyperlink NavigateUri="https://github.com/sourcechord/FluentWPF">FluentWPF via sourcechord (MIT)</Hyperlink>

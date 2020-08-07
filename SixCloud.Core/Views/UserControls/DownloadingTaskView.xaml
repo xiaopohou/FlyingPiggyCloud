@@ -13,24 +13,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <!--<StackPanel Orientation="Horizontal">
-            <Button Command="MediaCommands.Play"
-                    CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
-                    CommandTarget="{Binding ElementName=DownloadingList}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                    <TextBlock Text="开始暂停" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Button>
-            <Button Command="MediaCommands.Stop"
-                    CommandParameter="{Binding SelectedItems, ElementName=DownloadingList}"
-                    CommandTarget="{Binding ElementName=DownloadingList}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <metro:FontIcon Icon="&#xF574;" Margin="5,0"/>
-                    <TextBlock Text="取消任务" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Button>
-        </StackPanel>-->
         <ListBox Grid.Row="1" SelectionMode="Extended" x:Name="DownloadingList" DataContext="{Binding DownloadingList}" ItemsSource="{Binding ObservableCollection}" ItemTemplate="{StaticResource TransferItemDataTemplate}"/>
     </Grid>
 </UserControl>

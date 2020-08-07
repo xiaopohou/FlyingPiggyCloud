@@ -68,7 +68,7 @@
 
         <ViewModels:HidingSizeinfoForDirectoryConverter x:Key="HidingSizeinfoForDirectoryConverter"/>
         <Converters:BrushRoundConverter x:Key="BrushRoundConverter" HighValue="White" LowValue="Black"/>
-        
+
         <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -167,22 +167,22 @@
                 <controls:LightButton Margin="2,0" FontIcon="&#xF141;" FontSize="16" Height="60" Width="60" x:Name="MoreBotton" Command="{Binding MoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
                     <controls:LightButton.ContextMenu>
                         <ContextMenu x:Name="MoreButtonMenu" Background="{DynamicResource ImmersiveSystemAccentBrush}" Foreground="White">
-                            <MenuItem x:Name="Cut" Header="剪切" Command="{Binding CutCommand}">
+                            <MenuItem x:Name="Cut" Header="{DynamicResource Lang-Cut}" Command="{Binding CutCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF0C4;"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem x:Name="Copy" Header="复制" Command="{Binding CopyCommand}">
+                            <MenuItem x:Name="Copy" Header="{DynamicResource Lang-Copy}" Command="{Binding CopyCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF0C5;"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem x:Name="Rename" Header="重命名" Command="{Binding RenameCommand}">
+                            <MenuItem x:Name="Rename" Header="{DynamicResource Lang-Rename}" Command="{Binding RenameCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF079;"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem x:Name="Delete" Header="删除" Command="{Binding DeleteCommand}">
+                            <MenuItem x:Name="Delete" Header="{DynamicResource Lang-Delete}" Command="{Binding DeleteCommand}">
                                 <MenuItem.Icon>
                                     <controls:FontIcon Icon="&#xF1F8;"/>
                                 </MenuItem.Icon>
@@ -224,43 +224,43 @@
             <Button x:Name="UploadButton" Command="{Binding UploadFileCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <controls:FontIcon Icon="&#xF574;"/>
-                    <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource Lang-UploadFile}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button x:Name="UploadFolderButton" Command="{Binding UploadFolderCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <controls:FontIcon Icon="&#xF093;"/>
-                    <TextBlock Text="上传文件夹"/>
+                    <TextBlock Text="{DynamicResource Lang-UploadFolder}"/>
                 </StackPanel>
             </Button>
             <Button x:Name="NewFolderButton" Command="{Binding NewFolderCommand}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <controls:FontIcon Icon="&#xF65E;" />
-                    <TextBlock Text="新建文件夹" />
+                    <TextBlock Text="{DynamicResource Lang-CreateFolder}" />
                 </StackPanel>
             </Button>
             <Button x:Name="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <controls:FontIcon Icon="&#xF1F8;" />
-                    <TextBlock Text="删除" />
+                    <TextBlock Text="{DynamicResource Lang-Delete}" />
                 </StackPanel>
             </Button>
             <Button x:Name="Cut" Command="{Binding CutCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <controls:FontIcon Icon="&#xF0C4;"/>
-                    <TextBlock Text="剪切" />
+                    <TextBlock Text="{DynamicResource Lang-Cut}" />
                 </StackPanel>
             </Button>
             <Button x:Name="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding SelectedItems, ElementName=FileList}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <controls:FontIcon Icon="&#xF0C5;"/>
-                    <TextBlock Text="复制" />
+                    <TextBlock Text="{DynamicResource Lang-Copy}" />
                 </StackPanel>
             </Button>
             <Button x:Name="Stick" Command="{Binding StickCommand}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <controls:FontIcon Icon="&#xF46C;"/>
-                    <TextBlock Text="粘贴"/>
+                    <TextBlock Text="{DynamicResource Lang-Stick}"/>
                 </StackPanel>
             </Button>
         </StackPanel>
@@ -270,9 +270,9 @@
         <ListView Grid.Row="2" SelectedIndex="{Binding SelectedIndex, Mode=OneWayToSource}" ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" ItemsSource="{Binding FileList}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName}" CellTemplate="{StaticResource MetaName}" Header="文件名" />
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileSize}" CellTemplate="{StaticResource MetaSize}" Header="大小"/>
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" CellTemplate="{StaticResource MetaMTime}" Header="修改时间"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName}" CellTemplate="{StaticResource MetaName}" Header="{DynamicResource Lang-FolderName}" />
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileSize}" CellTemplate="{StaticResource MetaSize}" Header="{DynamicResource Lang-Size}"/>
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" CellTemplate="{StaticResource MetaMTime}" Header="{DynamicResource Lang-MTime}"/>
                 </GridView>
             </ListView.View>
             <ListView.ItemContainerStyle>
