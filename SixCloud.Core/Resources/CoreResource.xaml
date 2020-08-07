@@ -12,6 +12,10 @@
         <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
 
         <ResourceDictionary Source="pack://application:,,,/SixCloudCoreCustomControlLibrary;component/Themes/Generic.xaml" />
+
+        <!--L10N-->
+        <ResourceDictionary Source="pack://application:,,,/SixCloud.Core.LocalizationResources;component/zh-CN.xaml" />
+        
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MaterialDesignSlider}"/>

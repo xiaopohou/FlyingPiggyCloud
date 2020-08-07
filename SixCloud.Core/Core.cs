@@ -2,6 +2,8 @@
 using Sentry;
 using SixCloud.Core.Controllers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
@@ -24,6 +26,23 @@ namespace SixCloud.Core
             {
                 ColorSetter.BackgroundColor = LocalProperties.BackgroundColor.Value;
             }
+
+            LangSetter();
+        }
+
+        public static void LangSetter(string lang = "zh-CN")
+        {
+            List<ResourceDictionary> dictionaryList = Application.Current.Resources.MergedDictionaries.ToList();
+            string requestedCulture = $"pack://application:,,,/SixCloud.Core.LocalizationResources;component/{lang}.xaml";
+
+            ResourceDictionary resourceDictionary = dictionaryList.FirstOrDefault(d => d.Source.OriginalString.Equals(requestedCulture));
+
+            if (resourceDictionary != null)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(resourceDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+            }
+
         }
 
         static Core()

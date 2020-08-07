@@ -30,6 +30,7 @@
     <ProjectReference Include="..\FileUploader\FileUploader.csproj" />
     <ProjectReference Include="..\QingzhenyunApis.Exceptions\QingzhenyunApis.Exceptions.csproj" />
     <ProjectReference Include="..\QingzhenyunApis\QingzhenyunApis.csproj" />
+    <ProjectReference Include="..\SixCloud.Core.LocalizationResources\SixCloud.Core.LocalizationResources.csproj" />
     <ProjectReference Include="..\SixCloudCore.SixTransporter.Downloader\SixCloudCore.SixTransporter.Downloader.csproj" />
     <ProjectReference Include="..\SixCloudCoreCustomControlLibrary\SixCloudCoreCustomControlLibrary.csproj" />
   </ItemGroup>

@@ -9,7 +9,7 @@
     xmlns:mt="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
     mc:Ignorable="d"
-    Title="6盘" Height="170" Width="350" AcrylicWindowStyle="NoIcon" WindowStartupLocation="CenterScreen" fw:PointerTracker.Enabled="True" >
+    Title="{DynamicResource ApplicationName}" Height="170" Width="350" AcrylicWindowStyle="NoIcon" WindowStartupLocation="CenterScreen" fw:PointerTracker.Enabled="True" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15"/>
@@ -27,9 +27,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <!--<TextBlock Grid.Row="1" Grid.ColumnSpan="5" Name="HintAssistant" Text="请输入文本" Visibility="Collapsed"/>-->
         <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="5" Style="{StaticResource TextBoxRevealStyle}" Name="InputBox"/>
-        <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource ButtonAccentRevealStyle}" Name="Confirm" Content="确认" Width="75" Height="32" Click="Confirm_Click"/>
-        <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource ButtonRevealStyle}" Name="Cancel" Content="取消" Width="75" Height="32" Click="Cancel_Click"/>
+        <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource ButtonAccentRevealStyle}" Name="Confirm" Content="{DynamicResource Confirm}" Width="75" Height="32" Click="Confirm_Click"/>
+        <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource ButtonRevealStyle}" Name="Cancel" Content="{DynamicResource Cancel}" Width="75" Height="32" Click="Cancel_Click"/>
     </Grid>
 </fw:AcrylicWindow>

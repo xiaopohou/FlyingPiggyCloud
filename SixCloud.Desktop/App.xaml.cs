@@ -16,6 +16,7 @@ namespace SixCloud.Desktop
     {
         public App()
         {
+            InitializeComponent();
             AppDomain.CurrentDomain.AssemblyResolve += Resolver;
             InitializeCefSharp();
             Core.Core.Initialize();

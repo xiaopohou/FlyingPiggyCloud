@@ -11,7 +11,7 @@
                   xmlns:UserControls="clr-namespace:SixCloud.Core.Views.UserControls"
                   mc:Ignorable="d"
                   fw:PointerTracker.Enabled="True"
-                  AcrylicWindowStyle="NoIcon" Title="新建任务" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+                  AcrylicWindowStyle="NoIcon" Title="{DynamicResource CreateTask}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <fw:AcrylicWindow.Resources>
         <ViewModels:StageConverter x:Key="StageConverter"/>
 
@@ -54,7 +54,7 @@
     <TabControl x:Name="MainTab" Margin="60 40 60 30" WindowChrome.IsHitTestVisibleInChrome="True" Background="{x:Null}" BorderBrush="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle}">
         <TabItem x:Name="NewTaskTabItem"
                  IsSelected="{Binding Stage, Converter={StaticResource StageConverter}, ConverterParameter=WhichType,Mode=OneWay}"
-                 Header="新建任务"
+                 Header="{DynamicResource CreateTask}"
                  Background="{x:Null}"
                  BorderBrush="{x:Null}">
             <Grid x:Name="NewTask"  OpacityMask="White">
@@ -70,11 +70,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Margin="0,5" Grid.ColumnSpan="3" Grid.Row="0" Text="请输入链接"/>
+                <TextBlock Margin="0,5" Grid.ColumnSpan="3" Grid.Row="0" Text="{DynamicResource InputUrl}"/>
                 <TextBox Grid.ColumnSpan="3" Grid.Row="1" AcceptsReturn="True" x:Name="InputBox"
                          Height="150" Margin="0,0,0,30"
                          Text="{Binding InputBoxString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                         fw:Extensions.PlaceholderText="每行一个下载任务，支持磁力链接、HTTP、FTP、ED2K、百度网盘等链接"
+                         fw:Extensions.PlaceholderText="{DynamicResource InputUrlPlaceholderText}"
                          LostFocus="InputBox_LostFocus"/>
 
                 <ScrollViewer Grid.ColumnSpan="3" Grid.Row="2" VerticalScrollBarVisibility="Auto">
@@ -100,12 +100,12 @@
                                     </Grid.RowDefinitions>
                                     <TextBox Grid.Column="0" IsEnabled="{Binding AllowEdit}" Text="{Binding SourceUrl}" VerticalContentAlignment="Center"/>
                                     <StackPanel Margin="3,0" Visibility="{Binding PasswordBoxVisibility}" Orientation="Horizontal" Grid.Column="1">
-                                        <TextBlock VerticalAlignment="Center" Text="资源密码："/>
+                                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource ResourcePassword}"/>
                                         <TextBox VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="60" Text="{Binding SharePassword,Mode=OneWayToSource,UpdateSourceTrigger=LostFocus}"/>
                                     </StackPanel>
                                     <controls:FontIcon Grid.Column="2" Icon="{Binding Icon}"/>
-                                    <controls:LightButton HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="解析链接" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
-                                    <controls:LightButton  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="取消任务" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
+                                    <controls:LightButton HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="{DynamicResource ParseUrl}" Margin="3" FontIcon="&#xf1d8;" Command="{Binding ParseCommand}" Grid.Column="3"/>
+                                    <controls:LightButton  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="{DynamicResource CancelTask}" Margin="3" FontIcon="&#xf7a9;" Command="{Binding CancelCommand}" Grid.Column="4"/>
                                     <TextBlock x:Name="FriendlyErrorInfo" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding FriendlyInfo}" Foreground="DarkRed"/>
                                 </Grid>
                             </DataTemplate>
@@ -115,7 +115,7 @@
 
 
 
-                <Button Grid.Column="0" Grid.Row="4" Content="上传种子" Command="{Binding UploadTorrentCommand}"/>
+                <Button Grid.Column="0" Grid.Row="4" Content="{DynamicResource UploadTorrent}" Command="{Binding UploadTorrentCommand}"/>
                 <Button Grid.Column="2" Grid.Row="4" Content="文件搜检" Command="{Binding UrlParseResultConfirmCommand}"/>
 
                 <Grid.RenderTransform>

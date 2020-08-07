@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloud.Core", "SixCloud.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloud.Store", "SixCloud.Store\SixCloud.Store.csproj", "{5E661C5C-66D6-48F1-BF32-15CB5FDBD259}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SixCloud.SixTransporter.Uploader", "SixCloud.SixTransporter.Uploader\SixCloud.SixTransporter.Uploader.csproj", "{F9FCD343-7235-4872-9C79-E2C5FC5F8166}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixCloud.SixTransporter.Uploader", "SixCloud.SixTransporter.Uploader\SixCloud.SixTransporter.Uploader.csproj", "{F9FCD343-7235-4872-9C79-E2C5FC5F8166}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SixCloud.Core.LocalizationResources", "SixCloud.Core.LocalizationResources\SixCloud.Core.LocalizationResources.csproj", "{CD142060-DB1C-416B-852D-494AAEBE414B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -269,6 +271,26 @@ Global
 		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|x64.Build.0 = Release|Any CPU
 		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|x86.ActiveCfg = Release|Any CPU
 		{F9FCD343-7235-4872-9C79-E2C5FC5F8166}.Release|x86.Build.0 = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|x64.Build.0 = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Debug|x86.Build.0 = Debug|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|ARM.Build.0 = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|ARM64.Build.0 = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|x64.ActiveCfg = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|x64.Build.0 = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|x86.ActiveCfg = Release|Any CPU
+		{CD142060-DB1C-416B-852D-494AAEBE414B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
