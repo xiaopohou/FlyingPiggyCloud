@@ -27,7 +27,7 @@
                         <metro:FontIcon Icon="&#xF46C;" Grid.RowSpan="2"/>
                         <TextBlock Grid.ColumnSpan="4" Grid.Column="1" Text="{Binding Name, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Text="完成时间：" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
+                            <TextBlock Text="{DynamicResource CompletedTimeDescription}" Margin="0,0,5,0" Visibility="{Binding Status, Converter={StaticResource StatusToVisibility}, Mode=OneWay}"/>
                             <TextBlock Text="{Binding CompletedTime, Mode=OneWay}"/>
                         </StackPanel>
                     </Grid>

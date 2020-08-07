@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:CustomControls.Controls;assembly=SixCloudCoreCustomControlLibrary"
         mc:Ignorable="d"
         KeyDown="Window_KeyDown"
-        Title="Window1" Height="300" AllowsTransparency="True" Background="Transparent"  Width="400" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+        Height="300" AllowsTransparency="True" Background="Transparent" Width="400" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -20,6 +20,6 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <controls:LoadingControl Grid.Column="1" Grid.Row="1"/>
-        <TextBlock x:Name="FriendlyText" Grid.Row="2" Grid.ColumnSpan="3" Text="正在和服务器不可描述" Foreground="{DynamicResource PrimaryHueDarkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock x:Name="FriendlyText" Grid.Row="2" Grid.ColumnSpan="3" Text="{DynamicResource LoadingDescription}" Foreground="{DynamicResource PrimaryHueDarkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
     </Grid>
 </Window>

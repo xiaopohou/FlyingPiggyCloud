@@ -104,7 +104,7 @@
                 </ControlTemplate>
             </TabControl.Template>
             <!--文件列表-->
-            <TabItem IsSelected="True" DataContext="{Binding FileVM}" Header="所有文件">
+            <TabItem IsSelected="True" DataContext="{Binding FileVM}" Header="{DynamicResource AllFiles}">
                 <Grid Margin="0,15,15,15">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
@@ -115,27 +115,27 @@
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0">
-                        <RadioButton Command="{Binding NavigateCommand}" CommandParameter="/" Content="所有文件" IsChecked="True"/>
-                        <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Video" Content="所有视频"/>
-                        <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Audio" Content="所有音频"/>
-                        <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Image" Content="所有图片"/>
+                        <RadioButton Command="{Binding NavigateCommand}" CommandParameter="/" Content="{DynamicResource AllFiles}" IsChecked="True"/>
+                        <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Video" Content="{DynamicResource AllVideos}"/>
+                        <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Audio" Content="{DynamicResource AllAudios}"/>
+                        <RadioButton Command="{Binding NavigateCommand}" CommandParameter="Image" Content="{DynamicResource AllGraphics}"/>
                     </StackPanel>
                     <usercontrols:FileListItemInformationView Background="{DynamicResource MainBackgroundBrush}" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" x:Name="InfoView" DataContext="{Binding FileListItemInformation}"/>
                     <usercontrols:FileListView x:Name="FileListContainer" Grid.Column="1" Grid.RowSpan="2"/>
                 </Grid>
             </TabItem>
 
-            <TabItem DataContext="{Binding RecVM}" Header="回收中心">
+            <TabItem DataContext="{Binding RecVM}" Header="{DynamicResource RecoveryBox}">
                 <usercontrols:RecoveryBox Margin="15" x:Name="RecoveryBoxContainer"/>
             </TabItem>
 
             <!--离线下载列表-->
-            <TabItem Header="离线任务">
+            <TabItem Header="{DynamicResource OfflineTask}">
                 <usercontrols:OfflineTaskListView DataContext="{Binding OfflineTask}" Margin="15"/>
             </TabItem>
 
             <!--整合全部传输项目的列表-->
-            <TabItem Header="传输列表">
+            <TabItem Header="{DynamicResource TransferList}">
                 <usercontrols:TransferListView DataContext="{Binding TransferList}" Margin="15"/>
             </TabItem>
         </TabControl>
@@ -160,18 +160,18 @@
                         <ProgressBar Grid.Row="2" VerticalAlignment="Top" Value="{Binding AvailableRate}" Style="{StaticResource ProgressBarStyle}" Margin="15" Background="LightGray"/>
                         <TextBlock Grid.Row="3" FontSize="14" VerticalAlignment="Bottom" Text="{Binding FrendlySpaceCapacity}" Margin="15"/>
                     </Grid>
-                    <Button Content="修改用户名" Command="{Binding ChangeUserNameCommand}" Height="50" Width="280"/>
-                    <Button Content="会员续费" Command="{Binding RenewalCommand}" Height="50" Width="280"/>
-                    <Button Content="修改密码" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
+                    <Button Content="{DynamicResource ModifyUsername}" Command="{Binding ChangeUserNameCommand}" Height="50" Width="280"/>
+                    <Button Content="{DynamicResource Subscribe}" Command="{Binding RenewalCommand}" Height="50" Width="280"/>
+                    <Button Content="{DynamicResource ChangePassword}" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
                     <StackPanel Orientation="Horizontal" Height="50" HorizontalAlignment="Center">
-                        <metro:LightButton FontIcon="&#xf53f;" Height="50" Width="50" ToolTip="更换主题色" Command="{Binding ChangeAccentColorCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                        <metro:LightButton FontIcon="&#xf53f;" Height="50" Width="50" ToolTip="{DynamicResource ChangeColor}" Command="{Binding ChangeAccentColorCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                         <!--<metro:LightButton Height="50" Width="50"/>-->
                         <!--<metro:LightButton Height="50" Width="50"/>-->
                         <!--<metro:LightButton Height="50" Width="50"/>-->
                         <!--<metro:LightButton Height="50" Width="50"/>-->
                     </StackPanel>
-                    <Button Content="注销登录" Command="{Binding LogoutCommand}" Height="50" Width="280"/>
-                    <Button Content="关于软件" Command="{Binding AboutCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Height="50" Width="280"/>
+                    <Button Content="{DynamicResource LogOut}" Command="{Binding LogoutCommand}" Height="50" Width="280"/>
+                    <Button Content="{DynamicResource About}" Command="{Binding AboutCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Height="50" Width="280"/>
                 </StackPanel>
             </Border>
             <Border.Triggers>

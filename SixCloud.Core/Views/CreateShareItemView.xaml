@@ -6,7 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:SixCloud.Core.Views"
              mc:Ignorable="d"
-             Title="新建共享" Height="450" Width="800" Background="LightGray" MetroWindowLayout="WideAngle">
+             Title="{DynamicResource CreateShare}" Height="450" Width="800" Background="LightGray" MetroWindowLayout="WideAngle">
     <Grid Margin="50,32,50,75" Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -19,10 +19,10 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Margin="5" FontSize="16" Grid.Column="0" Grid.Row="0" Text="选择共享文件路径"/>
-        <TextBlock Margin="5" FontSize="16" Grid.Column="0" Grid.Row="1" Text="设置需要密码访问"/>
-        <TextBlock Margin="5" FontSize="16" Grid.Column="0" Grid.Row="2" Text="设置共享失效时间"/>
-        <TextBlock Margin="5" FontSize="16" Grid.Column="0" Grid.Row="3" Text="设置最大转存次数"/>
+        <TextBlock Margin="5" FontSize="16" Grid.Column="0" Grid.Row="0" Text="{DynamicResource SelectShareTarget}"/>
+        <TextBlock Margin="5" FontSize="16" Grid.Column="0" Grid.Row="1" Text="{DynamicResource SetSharePassword}"/>
+        <TextBlock Margin="5" FontSize="16" Grid.Column="0" Grid.Row="2" Text="{DynamicResource SetShareExpireTime}"/>
+        <TextBlock Margin="5" FontSize="16" Grid.Column="0" Grid.Row="3" Text="{DynamicResource SetMaxSavedTimes}"/>
         <TextBox Margin="5,0" Grid.Column="1" Grid.Row="0" IsEnabled="False"/>
         <controls:LightButton Margin="5" Grid.Column="2"/>
         <Slider Grid.Column="1" Grid.Row="3"  Margin="15,5" HorizontalAlignment="Left"/>
