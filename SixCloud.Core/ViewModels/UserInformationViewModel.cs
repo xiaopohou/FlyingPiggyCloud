@@ -72,10 +72,10 @@ namespace SixCloud.Core.ViewModels
                 AvailableRate = 100;
             }
 
-            FrendlySpaceCapacity = $"总计：{Calculators.SizeCalculator(currentUser.SpaceCapacity)}{Environment.NewLine}已用：{Calculators.SizeCalculator(currentUser.SpaceUsed)}";
+            FrendlySpaceCapacity = $"{Application.Current.FindResource("Lang-FrendlySpaceCapacity-Total")}{Calculators.SizeCalculator(currentUser.SpaceCapacity)}{Environment.NewLine}{Application.Current.FindResource("Lang-FrendlySpaceCapacity-Used")}{Calculators.SizeCalculator(currentUser.SpaceUsed)}";
             Name = currentUser.Name;
             VipStatus = currentUser.Vip;
-            FriendlyVipExpireTime = currentUser.VipExpireTime == 0 ? "" : $"会员过期时间：{Calculators.UnixTimeStampConverter(currentUser.VipExpireTime)}";
+            FriendlyVipExpireTime = currentUser.VipExpireTime == 0 ? "" : $"{Application.Current.FindResource("Lang-FriendlyVipExpireTime")}{Calculators.UnixTimeStampConverter(currentUser.VipExpireTime)}";
             OnPropertyChanged(nameof(Icon));
             OnPropertyChanged(nameof(AvailableRate));
             OnPropertyChanged(nameof(FrendlySpaceCapacity));
@@ -89,24 +89,32 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand RenewalCommand { get; set; }
         private void Renewal(object parameter)
         {
-            MessageBox.Show("Modern客户端会员续费接口对接中，尚不支持", "尚未启用", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(Application.Current.FindResource("Lang-RenewalMessage").ToString(),
+                            Application.Current.FindResource("Lang-RenewalTitle").ToString(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
         }
 
         public DependencyCommand ChangeUserNameCommand { get; set; }
         private async void ChangeUserName(object parameter)
         {
-            TextInputDialog.Show(out var newUserName, "请输入新用户名", "更改用户名");
+            TextInputDialog.Show(out var newUserName,
+                                 Application.Current.FindResource("Lang-ModifyUsername-InputPlaceHolder").ToString(),
+                                 Application.Current.FindResource("Lang-ModifyUsername").ToString());
             if (!string.IsNullOrWhiteSpace(newUserName))
             {
                 try
                 {
                     var x = await Task.Run(() => Authentication.ChangeUserName(newUserName));
-                    ParseInformation((await Task.Run(async () => await Authentication.GetUserInformation())));
+                    ParseInformation(await Task.Run(async () => await Authentication.GetUserInformation()));
 
                 }
                 catch (RequestFailedException ex)
                 {
-                    MessageBox.Show($"未能成功修改用户名，原因：{ex.Message}", "更改失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"{Application.Current.FindResource("Lang-ModifyUsername-FailedMessage")}{ex.Message}",
+                                    Application.Current.FindResource("Lang-ModifyUsername-FailedTitle").ToString(),
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
                 }
             }
         }
