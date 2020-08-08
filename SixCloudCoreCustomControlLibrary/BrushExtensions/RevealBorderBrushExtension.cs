@@ -58,13 +58,13 @@ namespace CustomControls.BrushExtensions
                 return new SolidColorBrush(FallbackColor);
             }
 
-            Brush brush = CreateGlobalBrush(element);
+            var brush = CreateGlobalBrush(element);
             return brush;
         }
 
         private Brush CreateBrush(UIElement rootVisual, FrameworkElement element)
         {
-            RadialGradientBrush brush = CreateRadialGradientBrush();
+            var brush = CreateRadialGradientBrush();
             rootVisual.MouseMove += OnMouseMove;
             return brush;
 
@@ -76,7 +76,7 @@ namespace CustomControls.BrushExtensions
 
         private Brush CreateGlobalBrush(FrameworkElement element)
         {
-            RadialGradientBrush brush = CreateRadialGradientBrush();
+            var brush = CreateRadialGradientBrush();
             if (_globalRevealingElements is null)
             {
                 CompositionTarget.Rendering -= OnRendering;
@@ -95,12 +95,12 @@ namespace CustomControls.BrushExtensions
                 return;
             }
 
-            List<RadialGradientBrush> toCollect = new List<RadialGradientBrush>();
-            foreach (KeyValuePair<RadialGradientBrush, WeakReference<FrameworkElement>> pair in _globalRevealingElements)
+            var toCollect = new List<RadialGradientBrush>();
+            foreach (var pair in _globalRevealingElements)
             {
-                RadialGradientBrush brush = pair.Key;
-                WeakReference<FrameworkElement> weak = pair.Value;
-                if (weak.TryGetTarget(out FrameworkElement element))
+                var brush = pair.Key;
+                var weak = pair.Value;
+                if (weak.TryGetTarget(out var element))
                 {
                     Reveal(brush, element);
                 }
@@ -110,7 +110,7 @@ namespace CustomControls.BrushExtensions
                 }
             }
 
-            foreach (RadialGradientBrush brush in toCollect)
+            foreach (var brush in toCollect)
             {
                 _globalRevealingElements.Remove(brush);
             }
@@ -136,7 +136,7 @@ namespace CustomControls.BrushExtensions
 
         private RadialGradientBrush CreateRadialGradientBrush()
         {
-            RadialGradientBrush brush = new RadialGradientBrush(Color, Colors.Transparent)
+            var brush = new RadialGradientBrush(Color, Colors.Transparent)
             {
                 MappingMode = BrushMappingMode.Absolute,
                 RadiusX = Radius,
@@ -151,7 +151,7 @@ namespace CustomControls.BrushExtensions
 
         private bool IsUsingMouseOrStylus()
         {
-            StylusDevice device = Stylus.CurrentStylusDevice;
+            var device = Stylus.CurrentStylusDevice;
             if (device is null)
             {
                 return true;

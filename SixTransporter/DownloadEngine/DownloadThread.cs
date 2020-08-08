@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -67,20 +66,20 @@ namespace SixTransporter.DownloadEngine
                 _request.Method = "GET";
                 _request.Timeout = 8000;
                 _request.ReadWriteTimeout = 8000;
-                foreach (KeyValuePair<string, string> header in Info.Headers)
+                foreach (var header in Info.Headers)
                 {
                     HttpDownloader.SetHeaderValue(_request.Headers, header.Key, header.Value);
                 }
 
                 _request.AddRange(Block.BeginOffset, Block.EndOffset);
                 _response = (HttpWebResponse)_request.GetResponse();
-                using (Stream responseStream = _response.GetResponseStream())
-                using (FileStream stream = new FileStream(Info.DownloadPath, FileMode.Open, FileAccess.ReadWrite,
+                using (var responseStream = _response.GetResponseStream())
+                using (var stream = new FileStream(Info.DownloadPath, FileMode.Open, FileAccess.ReadWrite,
                     FileShare.ReadWrite, 1024 * 1024))
                 {
                     stream.Seek(Block.BeginOffset, SeekOrigin.Begin);
-                    byte[] array = new byte[1024];
-                    int i = responseStream.Read(array, 0, array.Length);
+                    var array = new byte[1024];
+                    var i = responseStream.Read(array, 0, array.Length);
                     while (true)
                     {
                         if (_stopped)

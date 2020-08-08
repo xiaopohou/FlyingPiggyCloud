@@ -1,5 +1,4 @@
-﻿using QingzhenyunApis.EntityModels;
-using QingzhenyunApis.Exceptions;
+﻿using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloudCore.SixTransporter.Downloader;
 using System;
@@ -14,8 +13,8 @@ namespace SixCloud.Core.Models.Download
 
         public static CommonFileDownloadTask Create(string storagePath, string name, string targetUUID, Guid parent)
         {
-            string fullPath = Path.Combine(storagePath, name);
-            DownloadTaskInfo taskInfo = File.Exists(fullPath + ".downloading") ? DownloadTaskInfo.Load(fullPath + ".downloading") : new DownloadTaskInfo()
+            var fullPath = Path.Combine(storagePath, name);
+            var taskInfo = File.Exists(fullPath + ".downloading") ? DownloadTaskInfo.Load(fullPath + ".downloading") : new DownloadTaskInfo()
             {
                 DownloadUrl = null,
                 DownloadPath = fullPath,
@@ -26,8 +25,8 @@ namespace SixCloud.Core.Models.Download
 
         public static CommonFileDownloadTask Create(ITaskManual taskManual)
         {
-            string fullPath = Path.Combine(taskManual.LocalDirectory, taskManual.LocalFileName);
-            DownloadTaskInfo taskInfo = File.Exists(fullPath + ".downloading") ? DownloadTaskInfo.Load(fullPath + ".downloading") : new DownloadTaskInfo()
+            var fullPath = Path.Combine(taskManual.LocalDirectory, taskManual.LocalFileName);
+            var taskInfo = File.Exists(fullPath + ".downloading") ? DownloadTaskInfo.Load(fullPath + ".downloading") : new DownloadTaskInfo()
             {
                 DownloadUrl = null,
                 DownloadPath = fullPath,
@@ -50,8 +49,8 @@ namespace SixCloud.Core.Models.Download
             {
                 try
                 {
-                    FileMetaData downloadDetails = await FileSystem.GetDownloadUrlByIdentity(TargetUUID);
-                    string downloadPath = Path.Combine(LocalDirectory, LocalFileName);
+                    var downloadDetails = await FileSystem.GetDownloadUrlByIdentity(TargetUUID);
+                    var downloadPath = Path.Combine(LocalDirectory, LocalFileName);
                     Info.DownloadUrl = downloadDetails.DownloadAddress;
                     await Task.Run(() => StartDownload());
                 }

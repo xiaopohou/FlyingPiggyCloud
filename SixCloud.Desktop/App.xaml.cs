@@ -42,8 +42,8 @@ namespace SixCloud.Desktop
         {
             if (args.Name.StartsWith("CefSharp"))
             {
-                string assemblyName = args.Name.Split(new[] { ',' }, 2)[0] + ".dll";
-                string archSpecificPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, Environment.Is64BitProcess ? "x64" : "x86", assemblyName);
+                var assemblyName = args.Name.Split(new[] { ',' }, 2)[0] + ".dll";
+                var archSpecificPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, Environment.Is64BitProcess ? "x64" : "x86", assemblyName);
 
                 return File.Exists(archSpecificPath) ? Assembly.LoadFile(archSpecificPath) : null;
             }

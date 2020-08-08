@@ -10,36 +10,36 @@ namespace SixCloudCore.FileUploader.Calculators
     {
         public static string ComputeEtag(string filePath)
         {
-            string etag = "";
+            var etag = "";
 
             try
             {
-                using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 {
-                    long fileLength = stream.Length;
-                    byte[] block = new byte[BLOCK_SIZE];
-                    byte[] tag = new byte[SHA1_VALUE_SIZE + 1];
+                    var fileLength = stream.Length;
+                    var block = new byte[BLOCK_SIZE];
+                    var tag = new byte[SHA1_VALUE_SIZE + 1];
                     if (fileLength <= BLOCK_SIZE)
                     {
-                        int readBytes = stream.Read(block, 0, BLOCK_SIZE);
-                        byte[] sha1 = Hash.ComputeSha1(block, 0, readBytes);
+                        var readBytes = stream.Read(block, 0, BLOCK_SIZE);
+                        var sha1 = Hash.ComputeSha1(block, 0, readBytes);
 
                         tag[0] = 0x16;
                         Buffer.BlockCopy(sha1, 0, tag, 1, sha1.Length);
                     }
                     else
                     {
-                        long blockCount = (fileLength + BLOCK_SIZE - 1) / BLOCK_SIZE;
-                        byte[] allBlocksSha1 = new byte[SHA1_VALUE_SIZE * blockCount];
+                        var blockCount = (fileLength + BLOCK_SIZE - 1) / BLOCK_SIZE;
+                        var allBlocksSha1 = new byte[SHA1_VALUE_SIZE * blockCount];
 
-                        for (int i = 0; i < blockCount; i++)
+                        for (var i = 0; i < blockCount; i++)
                         {
-                            int readBytes = stream.Read(block, 0, BLOCK_SIZE);
-                            byte[] currentBlockSha1 = Hash.ComputeSha1(block, 0, readBytes);
+                            var readBytes = stream.Read(block, 0, BLOCK_SIZE);
+                            var currentBlockSha1 = Hash.ComputeSha1(block, 0, readBytes);
                             Buffer.BlockCopy(currentBlockSha1, 0, allBlocksSha1, i * SHA1_VALUE_SIZE, currentBlockSha1.Length);
                         }
 
-                        byte[] sha1 = Hash.ComputeSha1(allBlocksSha1);
+                        var sha1 = Hash.ComputeSha1(allBlocksSha1);
 
                         tag[0] = 0x96;
                         Buffer.BlockCopy(sha1, 0, tag, 1, sha1.Length);
@@ -56,10 +56,10 @@ namespace SixCloudCore.FileUploader.Calculators
 
         public static string ComputeEtag(byte[] data)
         {
-            byte[] tag = new byte[SHA1_VALUE_SIZE + 1];
+            var tag = new byte[SHA1_VALUE_SIZE + 1];
             if (data.Length <= BLOCK_SIZE)
             {
-                byte[] sha1 = Hash.ComputeSha1(data, 0, data.Length);
+                var sha1 = Hash.ComputeSha1(data, 0, data.Length);
 
                 tag[0] = 0x16;
                 Buffer.BlockCopy(sha1, 0, tag, 1, sha1.Length);
@@ -67,16 +67,16 @@ namespace SixCloudCore.FileUploader.Calculators
             else
             {
                 long blockCount = (data.Length + BLOCK_SIZE - 1) / BLOCK_SIZE;
-                byte[] allBlocksSha1 = new byte[SHA1_VALUE_SIZE * blockCount];
+                var allBlocksSha1 = new byte[SHA1_VALUE_SIZE * blockCount];
 
-                for (int i = 0; i < blockCount; i++)
+                for (var i = 0; i < blockCount; i++)
                 {
-                    int readBytes = i < blockCount - 1 ? BLOCK_SIZE : data.Length - BLOCK_SIZE * i;
-                    byte[] currentBlockSha1 = Hash.ComputeSha1(data, BLOCK_SIZE * i, readBytes);
+                    var readBytes = i < blockCount - 1 ? BLOCK_SIZE : data.Length - BLOCK_SIZE * i;
+                    var currentBlockSha1 = Hash.ComputeSha1(data, BLOCK_SIZE * i, readBytes);
                     Buffer.BlockCopy(currentBlockSha1, 0, allBlocksSha1, i * SHA1_VALUE_SIZE, currentBlockSha1.Length);
                 }
 
-                byte[] sha1 = Hash.ComputeSha1(allBlocksSha1);
+                var sha1 = Hash.ComputeSha1(allBlocksSha1);
 
                 tag[0] = 0x96;
                 Buffer.BlockCopy(sha1, 0, tag, 1, sha1.Length);

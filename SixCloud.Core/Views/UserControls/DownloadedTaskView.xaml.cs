@@ -14,7 +14,7 @@ namespace SixCloud.Core.Views.UserControls
 
         private void DownloadedList_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
-            ListBox list = sender as ListBox;
+            var list = sender as ListBox;
             if (list.SelectedItem == null)
             {
                 e.Handled = true;

@@ -2,7 +2,6 @@
 using Sentry;
 using SixCloud.Core.Controllers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -32,10 +31,10 @@ namespace SixCloud.Core
 
         public static void LangSetter(string lang = "zh-CN")
         {
-            List<ResourceDictionary> dictionaryList = Application.Current.Resources.MergedDictionaries.ToList();
-            string requestedCulture = $"pack://application:,,,/SixCloud.Core.LocalizationResources;component/{lang}.xaml";
+            var dictionaryList = Application.Current.Resources.MergedDictionaries.ToList();
+            var requestedCulture = $"pack://application:,,,/SixCloud.Core.LocalizationResources;component/{lang}.xaml";
 
-            ResourceDictionary resourceDictionary = dictionaryList.FirstOrDefault(d => d.Source.OriginalString.Equals(requestedCulture));
+            var resourceDictionary = dictionaryList.FirstOrDefault(d => d.Source.OriginalString.Equals(requestedCulture));
 
             if (resourceDictionary != null)
             {
@@ -58,11 +57,11 @@ namespace SixCloud.Core
 
         private static void DisableIriSupport()
         {
-            bool _ = Uri.IsWellFormedUriString("http://www.baidu.com", UriKind.Absolute);
-            Assembly assembly = Assembly.GetAssembly(typeof(Uri));
+            var _ = Uri.IsWellFormedUriString("http://www.baidu.com", UriKind.Absolute);
+            var assembly = Assembly.GetAssembly(typeof(Uri));
             if (assembly != null)
             {
-                Type uriType = assembly.GetType("System.Uri");
+                var uriType = assembly.GetType("System.Uri");
                 if (uriType != null)
                 {
                     uriType.InvokeMember("s_IdnScope", BindingFlags.Static | BindingFlags.SetField | BindingFlags.NonPublic, null, null, new object[] { UriIdnScope.None });

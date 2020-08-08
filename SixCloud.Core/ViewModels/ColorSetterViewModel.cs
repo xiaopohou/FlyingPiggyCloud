@@ -1,7 +1,5 @@
 ﻿using SixCloud.Core.Controllers;
 using SixCloud.Core.Views.Dialogs;
-using System.Security.Principal;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -90,8 +88,10 @@ namespace SixCloud.Core.ViewModels
 
         public void InitializeComponent(Window owner)
         {
-            dialog = new ColorSetterDialog(owner);
-            dialog.DataContext = this;
+            dialog = new ColorSetterDialog(owner)
+            {
+                DataContext = this
+            };
             dialog.Activated += (sender, e) =>
             {
                 if (LocalProperties.AccentColor != default)

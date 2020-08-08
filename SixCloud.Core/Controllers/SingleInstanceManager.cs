@@ -22,8 +22,8 @@ namespace SixCloud.Core.Controllers
                     do
                     {
                         pipeServer.WaitForConnection();
-                        using StreamReader reader = new StreamReader(pipeServer);
-                        IList<string> newMessage = JsonConvert.DeserializeObject<IList<string>>(reader.ReadLine());
+                        using var reader = new StreamReader(pipeServer);
+                        var newMessage = JsonConvert.DeserializeObject<IList<string>>(reader.ReadLine());
                         NewMessage?.Invoke(new CrossProcessMessageEventArgs
                         {
                             Message = newMessage
@@ -48,9 +48,9 @@ namespace SixCloud.Core.Controllers
             }
             else
             {
-                using NamedPipeClientStream namedPipeClientStream = new NamedPipeClientStream("localhost", "SixCloud", PipeDirection.Out);
+                using var namedPipeClientStream = new NamedPipeClientStream("localhost", "SixCloud", PipeDirection.Out);
                 namedPipeClientStream.Connect(200);
-                using StreamWriter writer = new StreamWriter(namedPipeClientStream);
+                using var writer = new StreamWriter(namedPipeClientStream);
                 writer.WriteLine(JsonConvert.SerializeObject(Environment.GetCommandLineArgs()));
                 return false;
             }

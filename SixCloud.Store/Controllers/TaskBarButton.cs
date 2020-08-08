@@ -1,7 +1,6 @@
 ﻿using SixCloud.Core.ViewModels;
 using System;
 using System.Drawing;
-using System.Windows;
 using System.Windows.Forms;
 
 namespace SixCloud.Store.Controllers
@@ -13,8 +12,8 @@ namespace SixCloud.Store.Controllers
         private void InitialTray()
         {
             //菜单项在这里
-            ContextMenuStrip contextMenu = new ContextMenuStrip();
-            ToolStripMenuItem menuItem = new ToolStripMenuItem
+            var contextMenu = new ContextMenuStrip();
+            var menuItem = new ToolStripMenuItem
             {
                 Text = "退出"
             };
@@ -40,7 +39,7 @@ namespace SixCloud.Store.Controllers
 
         private async void ShowMainWindow(object sender, EventArgs e)
         {
-            Window c = System.Windows.Application.Current.MainWindow;
+            var c = System.Windows.Application.Current.MainWindow;
             if (c != null)
             {
                 c.Activate();

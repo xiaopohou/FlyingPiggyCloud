@@ -1,5 +1,4 @@
-﻿using QingzhenyunApis.EntityModels;
-using QingzhenyunApis.Exceptions;
+﻿using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloud.Core.ViewModels;
 using SixCloudCore.SixTransporter.Downloader;
@@ -68,11 +67,11 @@ namespace SixCloud.Core.Models.Download
 
             async Task DownloadHelper(string uuid, string localParentPath, int depthIndex)
             {
-                await foreach (FileMetaData child in FileListViewModel.CreateFileListEnumerator(0, identity: uuid))
+                await foreach (var child in FileListViewModel.CreateFileListEnumerator(0, identity: uuid))
                 {
                     if (child.Directory)
                     {
-                        string nextPath = Path.Combine(localParentPath, child.Name);
+                        var nextPath = Path.Combine(localParentPath, child.Name);
                         Directory.CreateDirectory(nextPath);
                         if (depthIndex < 32)
                         {
@@ -92,7 +91,7 @@ namespace SixCloud.Core.Models.Download
 
                         try
                         {
-                            FileMetaData detail = await FileSystem.GetDetailsByIdentity(child.UUID);
+                            var detail = await FileSystem.GetDetailsByIdentity(child.UUID);
                             ITaskManual newTask;
                             if (detail.Size == 0)
                             {

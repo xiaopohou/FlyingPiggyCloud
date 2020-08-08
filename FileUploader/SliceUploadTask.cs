@@ -17,7 +17,7 @@ namespace SixCloudCore.FileUploader
         {
             get
             {
-                long completedBytes = CompletedBlockCount * SliceUploadWorker.BLOCKSIZE;
+                var completedBytes = CompletedBlockCount * SliceUploadWorker.BLOCKSIZE;
                 if (completedBytes > TotalBytes)
                 {
                     return TotalBytes;

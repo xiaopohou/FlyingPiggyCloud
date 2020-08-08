@@ -39,7 +39,7 @@ namespace SixCloudCore.FileUploader.HTTP
         /// <returns>便于打印和阅读的字符串</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendFormat("code:{0}", Code);
             sb.AppendLine();
@@ -53,7 +53,7 @@ namespace SixCloudCore.FileUploader.HTTP
             if (Data != null)
             {
                 sb.AppendLine("data:");
-                int maxLength = 1024;
+                var maxLength = 1024;
                 if (Data.Length <= maxLength)
                 {
                     sb.AppendLine(Encoding.UTF8.GetString(Data));
@@ -79,7 +79,7 @@ namespace SixCloudCore.FileUploader.HTTP
             if (ResponseHeaders != null)
             {
                 sb.AppendLine("user-defined-headers:");
-                foreach (KeyValuePair<string, string> d in ResponseHeaders)
+                foreach (var d in ResponseHeaders)
                 {
                     sb.AppendLine(string.Format("{0}:{1}", d.Key, d.Value));
                 }

@@ -23,17 +23,17 @@ namespace SixCloud.Core.Views.UserControls
         {
             if (sender is ListBox listBox && DataContext is FileListViewModel viewmodel)
             {
-                int i = listBox.SelectedIndex;
+                var i = listBox.SelectedIndex;
                 if (i == 0)
                 {
                     viewmodel.NavigateByPathAsync("/");
                 }
                 else if (i != -1)
                 {
-                    string[] pathArray = new string[i];
+                    var pathArray = new string[i];
                     viewmodel.PathArray.CopyTo(1, pathArray, 0, i);
-                    StringBuilder stringBuilder = new StringBuilder();
-                    foreach (string path in pathArray)
+                    var stringBuilder = new StringBuilder();
+                    foreach (var path in pathArray)
                     {
                         stringBuilder.Append("/");
                         stringBuilder.Append(path);
@@ -52,7 +52,7 @@ namespace SixCloud.Core.Views.UserControls
 
         private static void CommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            FileGridView fgv = (FileGridView)d;
+            var fgv = (FileGridView)d;
             fgv.HookUpCommand((ICommand)e.OldValue, (ICommand)e.NewValue);
         }
 
@@ -77,7 +77,7 @@ namespace SixCloud.Core.Views.UserControls
         // Add the command.
         private void AddCommand(ICommand oldCommand, ICommand newCommand)
         {
-            EventHandler handler = new EventHandler(CanExecuteChanged);
+            var handler = new EventHandler(CanExecuteChanged);
             if (newCommand != null)
             {
                 newCommand.CanExecuteChanged += handler;
@@ -126,7 +126,7 @@ namespace SixCloud.Core.Views.UserControls
         {
             if (e.OriginalSource is ScrollViewer viewer)
             {
-                double bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
+                var bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
                 if (viewer.VerticalOffset > 0 && bottomOffset < 0.3)
                 {
                     LazyLoadEventHandler?.Invoke(sender, e);
@@ -143,7 +143,7 @@ namespace SixCloud.Core.Views.UserControls
                 LazyLoadEventHandler = null;
             }
             //懒加载的业务代码
-            FileGridViewModel vm = DataContext as FileGridViewModel;
+            var vm = DataContext as FileGridViewModel;
             await Task.Run(() => vm.LazyLoad());
             LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
         }
@@ -153,7 +153,7 @@ namespace SixCloud.Core.Views.UserControls
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Mode mode = (Mode)value;
+            var mode = (Mode)value;
             if (mode == Mode.FileListContainer)
             {
                 return true;

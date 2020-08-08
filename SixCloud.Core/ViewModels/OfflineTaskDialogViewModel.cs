@@ -31,12 +31,12 @@ namespace SixCloud.Core.ViewModels
             get => inputBoxString;
             set
             {
-                string[] urls = Regex.Split(value, Environment.NewLine);
+                var urls = Regex.Split(value, Environment.NewLine);
                 if (urls.Length != 0)
                 {
                     if (urls.Length > 1)
                     {
-                        for (int index = 0; index < urls.Length - 1; index++)
+                        for (var index = 0; index < urls.Length - 1; index++)
                         {
                             ParseResult x = new UrlResult(urls[index], this);
                             x.Parse();
@@ -97,7 +97,7 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand UrlParseResultConfirmCommand { get; set; }
         private void UrlParseResultConfirm(object parameter)
         {
-            IEnumerable<OfflineTaskParameters> taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
+            var taskParameters = from taskInfo in ParseResults select new OfflineTaskParameters(taskInfo.Identity);
             OfflineTaskParameters = taskParameters.ToArray();
 
             Stage = taskParameters.Any() ? OfflineUrlsDialogStage.CheckFiles : OfflineUrlsDialogStage.WhichType;
@@ -105,9 +105,9 @@ namespace SixCloud.Core.ViewModels
         private bool CanUrlParseResultConfirm(object parameter)
         {
 
-            IEnumerable<ParseResult> unsuccessed = from result in ParseResults
-                                                   where result.Status != ParseResult.ParseResultStatus.Success
-                                                   select result;
+            var unsuccessed = from result in ParseResults
+                              where result.Status != ParseResult.ParseResultStatus.Success
+                              select result;
             return !unsuccessed.Any();
         }
 
@@ -117,7 +117,7 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand UploadTorrentCommand { get; set; }
         private async void UploadTorrent(object parameter)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            var openFileDialog = new OpenFileDialog
             {
                 Multiselect = false,
                 Title = "请选择需要离线下载的种子文件",
@@ -126,16 +126,16 @@ namespace SixCloud.Core.ViewModels
 
             if (openFileDialog.ShowDialog() == true)
             {
-                string Name = openFileDialog.SafeFileName;
-                string targetPath = "/:torrent";
-                string filePath = openFileDialog.FileName;
+                var Name = openFileDialog.SafeFileName;
+                var targetPath = "/:torrent";
+                var filePath = openFileDialog.FileName;
 
                 Name = Path.GetFileName(filePath);
-                string hash = $"{ETag.ComputeEtag(filePath)}{Calculators.LongTo36(new FileInfo(filePath).Length)}";
+                var hash = $"{ETag.ComputeEtag(filePath)}{Calculators.LongTo36(new FileInfo(filePath).Length)}";
                 IUploadTask task;
                 try
                 {
-                    UploadToken x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name);
+                    var x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name);
                     task = x.Created ? new UploadingFileViewModel.HashCachedTask(hash) : EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
 
                 }
@@ -144,11 +144,11 @@ namespace SixCloud.Core.ViewModels
                     task = new UploadingFileViewModel.HashCachedTask(hash);
                 }
 
-                bool uploadSuccess = true;
+                var uploadSuccess = true;
                 await Task.Run(() =>
                 {
 #warning 这里需要更好的实现方式
-                    int timeoutIndex = 0;
+                    var timeoutIndex = 0;
                     while (task.UploadTaskStatus != UploadTaskStatus.Completed)
                     {
                         if (timeoutIndex++ > 50)
@@ -168,7 +168,7 @@ namespace SixCloud.Core.ViewModels
 
                 try
                 {
-                    TorrentResult parsedTorrent = new TorrentResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
+                    var parsedTorrent = new TorrentResult(await OfflineDownloader.Parse(fileHash: task.Hash), this);
                     ParseResults.Add(parsedTorrent);
                 }
                 catch (InvalidOperationException ex)
@@ -206,11 +206,11 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand SelectSavingPathCommand { get; set; }
         private async void SelectSavingPath(object parameter)
         {
-            FileListItemViewModel itemvm = parameter as FileListItemViewModel;
-            string savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
+            var itemvm = parameter as FileListItemViewModel;
+            var savingPath = itemvm?.Path ?? FileGrid.CurrentPath;
             try
             {
-                OfflineTaskAdd tasks = await OfflineDownloader.Add(savingPath, OfflineTaskParameters);
+                var tasks = await OfflineDownloader.Add(savingPath, OfflineTaskParameters);
 
             }
             catch (RequestFailedException ex)

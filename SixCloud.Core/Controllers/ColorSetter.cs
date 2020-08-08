@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace SixCloud.Core.Controllers
 {
-    class ColorSetter
+    internal class ColorSetter
     {
         public static Color AccentColor { get => (Application.Current.Resources["ImmersiveSystemAccentBrush"] as SolidColorBrush).Color; set => SetAccentColor(value); }
 

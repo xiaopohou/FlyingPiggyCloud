@@ -17,7 +17,7 @@ namespace SixCloudCore.FileUploader.Calculators
         /// <returns>SHA1 20 Bytes</returns>
         public static byte[] ComputeSha1(byte[] data, int offset, int count)
         {
-            SHA1 sha1 = SHA1.Create();
+            var sha1 = SHA1.Create();
             return sha1.ComputeHash(data, offset, count);
         }
 
@@ -50,7 +50,7 @@ namespace SixCloudCore.FileUploader.Calculators
         /// <returns>MD5 结果</returns>
         public static byte[] ComputeMd5(byte[] data, int offset, int count)
         {
-            MD5 md5 = MD5.Create();
+            var md5 = MD5.Create();
             return md5.ComputeHash(data, offset, count);
         }
 
@@ -81,8 +81,8 @@ namespace SixCloudCore.FileUploader.Calculators
         /// <returns>Hex 字符串形式</returns>
         public static string ToHexString(byte[] data)
         {
-            StringBuilder sb = new StringBuilder(data.Length * 2);
-            foreach (byte b in data)
+            var sb = new StringBuilder(data.Length * 2);
+            foreach (var b in data)
             {
                 sb.AppendFormat("{0:x2}", b);
             }

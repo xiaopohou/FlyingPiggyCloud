@@ -1,5 +1,4 @@
-﻿using QingzhenyunApis.EntityModels;
-using QingzhenyunApis.Exceptions;
+﻿using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using SixCloud.Core.Controllers;
 using SixCloud.Core.Models.Download;
@@ -45,7 +44,7 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                FileMetaData detail = await FileSystem.GetDetailsByIdentity(targetUUID);
+                var detail = await FileSystem.GetDetailsByIdentity(targetUUID);
                 ITaskManual task;
 
                 if (detail.Size == 0)
@@ -69,7 +68,7 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                DirectoryDownloadTask task = new DirectoryDownloadTask(targetUUID, localPath, name);
+                var task = new DirectoryDownloadTask(targetUUID, localPath, name);
                 AddDownloadingItem(task);
                 await task.InitTaskGroup();
             }
@@ -81,7 +80,7 @@ namespace SixCloud.Core.ViewModels
 
         internal static void AddDownloadingItem(ITaskManual task)
         {
-            DownloadTaskViewModel taskViewModel = new DownloadTaskViewModel(task);
+            var taskViewModel = new DownloadTaskViewModel(task);
             taskViewModel.TaskComplete += (sender, e) =>
             {
                 downloadingList.Remove(taskViewModel);
@@ -110,7 +109,7 @@ namespace SixCloud.Core.ViewModels
         {
             if (File.Exists(path))
             {
-                UploadingFileViewModel task = new UploadingFileViewModel(targetPath, path);
+                var task = new UploadingFileViewModel(targetPath, path);
                 task.UploadCompleted += CompletedEventHandler;
                 task.UploadAborted += AbortedEventHandler;
                 try

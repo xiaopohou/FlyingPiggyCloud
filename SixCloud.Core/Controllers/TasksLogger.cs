@@ -49,14 +49,14 @@ namespace SixCloud.Core.Controllers
             {
                 if (File.Exists(startupInformationPath))
                 {
-                    string s = File.ReadAllText(startupInformationPath);
-                    StartupInformation startupInformation = JsonConvert.DeserializeObject<StartupInformation>(s);
+                    var s = File.ReadAllText(startupInformationPath);
+                    var startupInformation = JsonConvert.DeserializeObject<StartupInformation>(s);
 
                     if (startupInformation?.BelongsTo?.UUID == user.UUID)
                     {
                         if (startupInformation?.UploadTasks?.Any() == true)
                         {
-                            foreach (UploadTaskRecord record in startupInformation.UploadTasks)
+                            foreach (var record in startupInformation.UploadTasks)
                             {
                                 try
                                 {
@@ -80,11 +80,11 @@ namespace SixCloud.Core.Controllers
 
                         if (startupInformation?.SerializedDownloadTasks?.Any() == true)
                         {
-                            foreach (string record in startupInformation.SerializedDownloadTasks)
+                            foreach (var record in startupInformation.SerializedDownloadTasks)
                             {
                                 try
                                 {
-                                    DownloadTaskRecord downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record);
+                                    var downloadTaskRecord = JsonConvert.DeserializeObject<DownloadTaskRecord>(record);
                                     await TransferListViewModel.NewDownloadTask(downloadTaskRecord.TargetUUID, downloadTaskRecord.LocalPath, downloadTaskRecord.Name);
                                 }
                                 catch (NullReferenceException ex)
@@ -119,26 +119,26 @@ namespace SixCloud.Core.Controllers
 
         public static void ExitEventHandler(object sender, ExitEventArgs e)
         {
-            StartupInformation startupInformation = new StartupInformation
+            var startupInformation = new StartupInformation
             {
                 BelongsTo = e.CurrentUser
             };
 
             startupInformation.DownloadTaskManuals = TaskManual.Save().ToArray();
 
-            IEnumerable<UploadTaskRecord> uploadList = from record in uploadingList
-                                                       where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause || record.Status == TransferTaskStatus.Failed
-                                                       select new UploadTaskRecord
-                                                       {
-                                                           LocalFilePath = record.LocalFilePath,
-                                                           TargetPath = record.TargetPath
-                                                       };
+            var uploadList = from record in uploadingList
+                             where record.Status == TransferTaskStatus.Running || record.Status == TransferTaskStatus.Pause || record.Status == TransferTaskStatus.Failed
+                             select new UploadTaskRecord
+                             {
+                                 LocalFilePath = record.LocalFilePath,
+                                 TargetPath = record.TargetPath
+                             };
 
             startupInformation.UploadTasks = uploadList.ToArray();
 
             try
             {
-                using StreamWriter writer = new StreamWriter(File.Create(startupInformationPath));
+                using var writer = new StreamWriter(File.Create(startupInformationPath));
                 writer.Write(JsonConvert.SerializeObject(startupInformation));
             }
             catch (IOException)

@@ -32,10 +32,10 @@ namespace SixCloudCore.FileUploader
         private void PullTask()
         {
             bool isSuccess;
-            int waitingTaskCount = 0;
+            var waitingTaskCount = 0;
             do
             {
-                isSuccess = workbook.TryDequeue(out SliceUploadTask nextUploadTask);
+                isSuccess = workbook.TryDequeue(out var nextUploadTask);
                 if (isSuccess)
                 {
                     switch (nextUploadTask.UploadTaskStatus)
@@ -104,15 +104,15 @@ namespace SixCloudCore.FileUploader
         {
             if (currentTask != null && File.Exists(currentTask.FilePath))
             {
-                SliceUploadTask task = currentTask;
-                FileStream fileStream = new FileStream(task.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                BinaryReader binaryReader = new BinaryReader(fileStream);
+                var task = currentTask;
+                var fileStream = new FileStream(task.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                var binaryReader = new BinaryReader(fileStream);
                 try
                 {
                     long blockIndex = 0;
                     do
                     {
-                        byte[] data = binaryReader.ReadBytes(BLOCKSIZE);
+                        var data = binaryReader.ReadBytes(BLOCKSIZE);
                         if ((task.TotalContents[blockIndex] == null || task.TotalContents[blockIndex] == "") && task.UploadTaskStatus == UploadTaskStatus.Active)
                         {
                             yield return new JobInformation
@@ -144,7 +144,7 @@ namespace SixCloudCore.FileUploader
 
         private void CarryOn()
         {
-            foreach (JobInformation jobs in GetJobInformation())
+            foreach (var jobs in GetJobInformation())
             {
                 try
                 {
@@ -170,23 +170,23 @@ namespace SixCloudCore.FileUploader
                     jobs.UploadTask.UploadTaskStatus = UploadTaskStatus.Pause;
                 }
             }
-            SliceUploadTask task = currentTask;
+            var task = currentTask;
 
             if (task.CompletedBlockCount == task.TotalBlockCount)
             {
-                foreach (string content in task.TotalContents)
+                foreach (var content in task.TotalContents)
                 {
                     if (content == null || content == "")
                     {
                         return;
                     }
                 }
-                HttpResult result = MakeFile(new FileInfo(task.FilePath).Length, Path.GetFileName(task.FilePath), task.TotalContents, task.Token, task.Address, task.UploadBatch);
+                var result = MakeFile(new FileInfo(task.FilePath).Length, Path.GetFileName(task.FilePath), task.TotalContents, task.Token, task.Address, task.UploadBatch);
 
 #if DEBUG
                 Console.WriteLine($"成功合成文件{task.FilePath}");
 #endif
-                JObject jo = JObject.Parse(result.Text);
+                var jo = JObject.Parse(result.Text);
                 if (jo["hash"].ToString() != ETag.ComputeEtag(task.FilePath))
                 {
                     task.UploadTaskStatus = UploadTaskStatus.Error;
@@ -244,11 +244,11 @@ namespace SixCloudCore.FileUploader
                 throw new Exception("文件不足4MB，请使用普通方式上传");
             }
 
-            HttpResult result = MakeBlock(BLOCKSIZE, Index, data, 0, FIRSTCHUNKSIZE, uploadToken, uploadUrl, uploadBatch, Key);
+            var result = MakeBlock(BLOCKSIZE, Index, data, 0, FIRSTCHUNKSIZE, uploadToken, uploadUrl, uploadBatch, Key);
             if ((int)HttpStatusCode.OK == result.Code)
             {
-                JObject jo = JObject.Parse(result.Text);
-                string ctx = jo["ctx"].ToString();
+                var jo = JObject.Parse(result.Text);
+                var ctx = jo["ctx"].ToString();
                 // 上传第 1 个 block 剩下的数据
                 result = Bput(ctx, FIRSTCHUNKSIZE, data, FIRSTCHUNKSIZE, BLOCKSIZE - FIRSTCHUNKSIZE, uploadToken, uploadUrl, uploadBatch, Key);
                 if ((int)HttpStatusCode.OK == result.Code)
@@ -279,10 +279,10 @@ namespace SixCloudCore.FileUploader
         /// <returns></returns>
         private string UploadBlock(byte[] data, long Index, string uploadToken, string uploadUrl, string uploadBatch, string Key)
         {
-            HttpResult result = MakeBlock(data.Length, Index, data, 0, data.Length, uploadToken, uploadUrl, uploadBatch, Key);
+            var result = MakeBlock(data.Length, Index, data, 0, data.Length, uploadToken, uploadUrl, uploadBatch, Key);
             if ((int)HttpStatusCode.OK == result.Code)
             {
-                JObject jo = JObject.Parse(result.Text);
+                var jo = JObject.Parse(result.Text);
                 return jo["ctx"].ToString();
             }
             else
@@ -303,8 +303,8 @@ namespace SixCloudCore.FileUploader
         /// <returns>此操作执行后的返回结果</returns>
         private HttpResult MakeBlock(long blockSize, long blockOrder, byte[] chunk, int chunkOffset, int chunkSize, string uploadToken, string uploadUrl, string uploadBatch, string key = null)
         {
-            string url = uploadUrl + "/mkblk/" + blockSize.ToString() + "/" + blockOrder.ToString();
-            Dictionary<string, string> customHeaders = new Dictionary<string, string>
+            var url = uploadUrl + "/mkblk/" + blockSize.ToString() + "/" + blockOrder.ToString();
+            var customHeaders = new Dictionary<string, string>
             {
                 { "UploadBatch", uploadBatch }
             };
@@ -327,8 +327,8 @@ namespace SixCloudCore.FileUploader
         /// <returns>此操作执行后的返回结果</returns>
         private HttpResult Bput(string context, long offset, byte[] chunk, int chunkOffset, int chunkSize, string uploadToken, string uploadUrl, string uploadBatch, string key = null)
         {
-            string url = uploadUrl + "/bput/" + context + "/" + offset.ToString();
-            Dictionary<string, string> customHeaders = new Dictionary<string, string>
+            var url = uploadUrl + "/bput/" + context + "/" + offset.ToString();
+            var customHeaders = new Dictionary<string, string>
             {
                 { "UploadBatch", uploadBatch }
             };
@@ -351,11 +351,11 @@ namespace SixCloudCore.FileUploader
         /// <returns>此操作执行后的返回结果</returns>
         private HttpResult MakeFile(long size, string key, string[] contexts, string uploadToken, string uploadUrl, string uploadBatch, PutExtra putExtra = null)
         {
-            StringBuilder url = new StringBuilder();
+            var url = new StringBuilder();
             url.Append(uploadUrl + "/mkfile/" + size.ToString());
             if (null != putExtra && null != putExtra.Params && putExtra.Params.Count > 0)
             {
-                foreach (KeyValuePair<string, string> p in putExtra.Params)
+                foreach (var p in putExtra.Params)
                 {
                     if (p.Key.StartsWith("x:"))
                     {
@@ -364,12 +364,12 @@ namespace SixCloudCore.FileUploader
                 }
             }
 
-            StringBuilder ctxList = new StringBuilder();
-            foreach (string ctx in contexts)
+            var ctxList = new StringBuilder();
+            foreach (var ctx in contexts)
             {
                 ctxList.Append(ctx + ",");
             }
-            Dictionary<string, string> customHeaders = new Dictionary<string, string>
+            var customHeaders = new Dictionary<string, string>
             {
                 { "UploadBatch", uploadBatch }
             };

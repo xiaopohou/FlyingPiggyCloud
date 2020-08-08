@@ -33,8 +33,8 @@ namespace SixCloud.Core.Views
 
         private void InputBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            TextBox urlTextBox = sender as TextBox;
-            string urlText = urlTextBox?.Text;
+            var urlTextBox = sender as TextBox;
+            var urlText = urlTextBox?.Text;
             if (!string.IsNullOrWhiteSpace(urlText) && urlText.Last().ToString() != Environment.NewLine)
             {
                 urlTextBox.Text += Environment.NewLine;

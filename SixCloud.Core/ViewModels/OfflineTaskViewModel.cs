@@ -21,14 +21,14 @@ namespace SixCloud.Core.ViewModels
         private IAsyncEnumerator<OfflineTask> taskEnumerator;
         private async IAsyncEnumerable<OfflineTask> GetTaskEnumeratorAsync()
         {
-            int skip = 0;
+            var skip = 0;
             const int limit = 20;
             int count;
             do
             {
-                OfflineTaskList x = await OfflineDownloader.GetList(skip, limit);
+                var x = await OfflineDownloader.GetList(skip, limit);
                 count = x.List.Count;
-                foreach (OfflineTask item in x.List)
+                foreach (var item in x.List)
                 {
                     yield return item;
                 }
@@ -41,7 +41,7 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                for (int count = 0; count < 20; count++)
+                for (var count = 0; count < 20; count++)
                 {
                     if (await taskEnumerator.MoveNextAsync())
                     {
@@ -67,7 +67,7 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand NewTaskCommand { get; set; }
         private void NewTask(object parameters)
         {
-            OfflineTaskDialog a = new OfflineTaskDialog
+            var a = new OfflineTaskDialog
             {
                 DataContext = new OfflineTaskDialogViewModel()
             };
@@ -78,12 +78,12 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand CancelTaskCommand { get; set; }
         private async void CancelTask(object parameters)
         {
-            IList list = parameters as IList;
+            var list = parameters as IList;
             if (list.Count > 0)
             {
-                IEnumerable<OfflineTask> cancellingTasks = list.Cast<OfflineTask>();
-                List<string> taskID = new List<string>(list.Count);
-                foreach (OfflineTask task in cancellingTasks)
+                var cancellingTasks = list.Cast<OfflineTask>();
+                var taskID = new List<string>(list.Count);
+                foreach (var task in cancellingTasks)
                 {
                     taskID.Add(task.TaskIdentity);
                 }

@@ -1,8 +1,7 @@
-﻿using QingzhenyunApis.Utils;
+﻿using QingzhenyunApis.Exceptions;
+using QingzhenyunApis.Utils;
 using System;
 using System.IO;
-using System.Linq;
-using QingzhenyunApis.Exceptions;
 
 namespace SixCloud.Core.Models.Download
 {

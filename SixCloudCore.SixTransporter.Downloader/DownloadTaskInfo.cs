@@ -46,7 +46,7 @@ namespace SixCloudCore.SixTransporter.Downloader
         /// </summary>
         private void Init()
         {
-            long temp = 0L;
+            var temp = 0L;
             BlockList.Clear();
             while (temp + BlockSize < ContentSize)
             {

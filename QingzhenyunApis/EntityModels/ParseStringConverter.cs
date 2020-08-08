@@ -17,8 +17,8 @@ namespace QingzhenyunApis.EntityModels
                 return null;
             }
 
-            string value = serializer.Deserialize<string>(reader);
-            if (long.TryParse(value, out long l))
+            var value = serializer.Deserialize<string>(reader);
+            if (long.TryParse(value, out var l))
             {
                 return l;
             }
@@ -32,7 +32,7 @@ namespace QingzhenyunApis.EntityModels
                 serializer.Serialize(writer, null);
                 return;
             }
-            long value = (long)untypedValue;
+            var value = (long)untypedValue;
             serializer.Serialize(writer, value.ToString());
             return;
         }

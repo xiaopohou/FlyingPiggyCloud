@@ -18,7 +18,7 @@ namespace SixCloud.Core.ViewModels
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool isChecked = (bool)value;
+            var isChecked = (bool)value;
             if (isChecked && parameter is string radioButtonName)
             {
                 return Enum.Parse(typeof(OfflineUrlsDialogStage), radioButtonName);

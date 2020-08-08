@@ -37,7 +37,7 @@ namespace SixCloud.Core.ViewModels
         /// <returns></returns>
         public bool CanExecute(object parameter)
         {
-            bool? x = CanExecuteAction?.Invoke(parameter);
+            var x = CanExecuteAction?.Invoke(parameter);
             if (x != null)
             {
                 return x.Value;

@@ -28,10 +28,10 @@ namespace SixCloud.Core.ViewModels
         {
             if (!new Helpers().IsRunningAsUwp())
             {
-                Uri newPackageUri = await UpdateHelper.Check();
+                var newPackageUri = await UpdateHelper.Check();
                 if (newPackageUri != default)
                 {
-                    MessageBoxResult newPackageMessageBoxResult = MessageBox.Show("发现新的软件包，点击确定下载或者点击取消继续使用当前版本", "更新", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                    var newPackageMessageBoxResult = MessageBox.Show("发现新的软件包，点击确定下载或者点击取消继续使用当前版本", "更新", MessageBoxButton.OKCancel, MessageBoxImage.Question);
                     if (newPackageMessageBoxResult == MessageBoxResult.OK)
                     {
                         System.Diagnostics.Process.Start("explorer.exe", newPackageUri.ToString());
@@ -43,16 +43,16 @@ namespace SixCloud.Core.ViewModels
             //尝试用已保存的Token获取用户信息
             try
             {
-                UserInformation userInfo = await Authentication.GetUserInformation(LocalProperties.Token ?? string.Empty);
+                var userInfo = await Authentication.GetUserInformation(LocalProperties.Token ?? string.Empty);
 
             }
-            catch (RequestFailedException ex)
+            catch (RequestFailedException)
             {
                 LocalProperties.Token = "";
-                DestinationInformation x = await Authentication.CreateDestination();
+                var x = await Authentication.CreateDestination();
                 DestinationInfo = x;
 
-                LoginUrl = Authentication.GetLoginUrl(DestinationInfo.Destination, out string _);
+                LoginUrl = Authentication.GetLoginUrl(DestinationInfo.Destination, out var _);
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -100,7 +100,7 @@ namespace SixCloud.Core.ViewModels
 
         private async Task OnLoginSuccess()
         {
-            UserInformation currentUser = await Authentication.GetUserInformation();
+            var currentUser = await Authentication.GetUserInformation();
 
             SentryAgent.SetUser(new User
             {
@@ -121,7 +121,7 @@ namespace SixCloud.Core.ViewModels
                     TasksLogger.ExitEventHandler(sender, new Controllers.ExitEventArgs(currentUser));
 
                     //尝试自动重启
-                    string x = $"{AppDomain.CurrentDomain.BaseDirectory }{AppDomain.CurrentDomain.FriendlyName}.exe";
+                    var x = $"{AppDomain.CurrentDomain.BaseDirectory }{AppDomain.CurrentDomain.FriendlyName}.exe";
                     if (File.Exists(x))
                     {
                         //应在此处释放互斥锁

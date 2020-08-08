@@ -33,7 +33,7 @@ namespace SixCloudCore.FileUploader.HTTP
 
         public HttpResult Get(string url, string token = null, string mimeType = null, bool binaryMode = false)
         {
-            HttpResult result = new HttpResult();
+            var result = new HttpResult();
             HttpWebRequest webRequest = null;
 
             try
@@ -63,12 +63,12 @@ namespace SixCloudCore.FileUploader.HTTP
 
                     if (binaryMode)
                     {
-                        int length = (int)webResponse.ContentLength;
+                        var length = (int)webResponse.ContentLength;
                         result.Data = new byte[length];
-                        int bytesLeft = length;
-                        int bytesRead = 0;
+                        var bytesLeft = length;
+                        var bytesRead = 0;
 
-                        using (BinaryReader br = new BinaryReader(webResponse.GetResponseStream()))
+                        using (var br = new BinaryReader(webResponse.GetResponseStream()))
                         {
                             while (bytesLeft > 0)
                             {
@@ -79,7 +79,7 @@ namespace SixCloudCore.FileUploader.HTTP
                     }
                     else
                     {
-                        using (StreamReader sr = new StreamReader(webResponse.GetResponseStream()))
+                        using (var sr = new StreamReader(webResponse.GetResponseStream()))
                         {
                             result.Text = sr.ReadToEnd();
                         }
@@ -97,7 +97,7 @@ namespace SixCloudCore.FileUploader.HTTP
 
                     GetHeaders(webExceptionResponse, ref result);
 
-                    using (StreamReader sr = new StreamReader(webExceptionResponse.GetResponseStream()))
+                    using (var sr = new StreamReader(webExceptionResponse.GetResponseStream()))
                     {
                         result.Text = sr.ReadToEnd();
                     }
@@ -112,9 +112,9 @@ namespace SixCloudCore.FileUploader.HTTP
             }
             catch (Exception ex)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.AppendFormat("[{0}] [{1}] [HTTP-GET] Error:", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff"), userAgent);
-                Exception e = ex;
+                var e = ex;
                 while (e != null)
                 {
                     sb.Append(" " + e.Message);
@@ -138,7 +138,7 @@ namespace SixCloudCore.FileUploader.HTTP
 
         public HttpResult Post(string url, byte[] data, int dataOffset, int dataSize, string token = null, string mimeType = null, Dictionary<string, string> customHeaders = null, bool binaryMode = false)
         {
-            HttpResult result = new HttpResult();
+            var result = new HttpResult();
             HttpWebRequest webRequest = null;
 
             try
@@ -161,7 +161,7 @@ namespace SixCloudCore.FileUploader.HTTP
 
                 if (null != customHeaders)
                 {
-                    foreach (KeyValuePair<string, string> header in customHeaders)
+                    foreach (var header in customHeaders)
                     {
                         webRequest.Headers.Add(header.Key, header.Value);
                     }
@@ -183,7 +183,7 @@ namespace SixCloudCore.FileUploader.HTTP
                         Console.WriteLine("Post {0} bytes.", dataSize);
 #endif
                         webRequest.AllowWriteStreamBuffering = true;
-                        using (Stream stream = webRequest.GetRequestStream())
+                        using (var stream = webRequest.GetRequestStream())
                         {
                             stream.Write(data, dataOffset, dataSize);
                             stream.Flush();
@@ -200,12 +200,12 @@ namespace SixCloudCore.FileUploader.HTTP
 
                     if (binaryMode)
                     {
-                        int length = (int)webResponse.ContentLength;
+                        var length = (int)webResponse.ContentLength;
                         result.Data = new byte[length];
-                        int bytesLeft = length;
-                        int bytesRead = 0;
+                        var bytesLeft = length;
+                        var bytesRead = 0;
 
-                        using (BinaryReader br = new BinaryReader(webResponse.GetResponseStream()))
+                        using (var br = new BinaryReader(webResponse.GetResponseStream()))
                         {
                             while (bytesLeft > 0)
                             {
@@ -216,7 +216,7 @@ namespace SixCloudCore.FileUploader.HTTP
                     }
                     else
                     {
-                        using (StreamReader sr = new StreamReader(webResponse.GetResponseStream()))
+                        using (var sr = new StreamReader(webResponse.GetResponseStream()))
                         {
                             result.Text = sr.ReadToEnd();
                         }
@@ -234,7 +234,7 @@ namespace SixCloudCore.FileUploader.HTTP
 
                     GetHeaders(webExceptionResponse, ref result);
 
-                    using (StreamReader sr = new StreamReader(webExceptionResponse.GetResponseStream()))
+                    using (var sr = new StreamReader(webExceptionResponse.GetResponseStream()))
                     {
                         result.Text = sr.ReadToEnd();
                     }
@@ -249,9 +249,9 @@ namespace SixCloudCore.FileUploader.HTTP
             }
             catch (Exception ex)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.AppendFormat("[{0}] [{1}] [HTTP-POST] Error:", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff"), userAgent);
-                Exception e = ex;
+                var e = ex;
                 while (e != null)
                 {
                     sb.Append(" " + e.Message);
@@ -391,10 +391,10 @@ namespace SixCloudCore.FileUploader.HTTP
 
                 result.ResponseHeaders.Add("ContentLength", webResponse.ContentLength.ToString());
 
-                WebHeaderCollection headers = webResponse.Headers;
+                var headers = webResponse.Headers;
                 if (null != headers && headers.Count > 0)
                 {
-                    foreach (string key in headers.AllKeys)
+                    foreach (var key in headers.AllKeys)
                     {
                         result.ResponseHeaders.Add(key, headers[key]);
                     }

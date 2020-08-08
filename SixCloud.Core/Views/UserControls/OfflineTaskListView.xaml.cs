@@ -31,7 +31,7 @@ namespace SixCloud.Core.Views.UserControls
         {
             if (e.OriginalSource is ScrollViewer viewer)
             {
-                double bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
+                var bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
                 if (viewer.VerticalOffset > 0 && bottomOffset < 0.3)
                 {
                     LazyLoadEventHandler?.Invoke(sender, e);

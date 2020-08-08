@@ -41,14 +41,14 @@ namespace SixCloud.Core.ViewModels
 
         private async void ParseInformation(UserInformation user = null)
         {
-            UserInformation currentUser = user ?? await Authentication.GetUserInformation();
+            var currentUser = user ?? await Authentication.GetUserInformation();
             string icon;
             try
             {
                 icon = currentUser.Icon;
                 if (string.IsNullOrEmpty(icon) || icon == "default.jpg" || icon == "default")
                 {
-                    Uri iconSource = new Uri(@"pack://application:,,,/SixCloud.Core;component/MediaResources/MainLogo.png");
+                    var iconSource = new Uri(@"pack://application:,,,/SixCloud.Core;component/MediaResources/MainLogo.png");
                     Icon = new BitmapImage(iconSource);
                 }
                 else
@@ -95,12 +95,12 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand ChangeUserNameCommand { get; set; }
         private async void ChangeUserName(object parameter)
         {
-            TextInputDialog.Show(out string newUserName, "请输入新用户名", "更改用户名");
+            TextInputDialog.Show(out var newUserName, "请输入新用户名", "更改用户名");
             if (!string.IsNullOrWhiteSpace(newUserName))
             {
                 try
                 {
-                    UserInformation x = await Task.Run(() => Authentication.ChangeUserName(newUserName));
+                    var x = await Task.Run(() => Authentication.ChangeUserName(newUserName));
                     ParseInformation((await Task.Run(async () => await Authentication.GetUserInformation())));
 
                 }

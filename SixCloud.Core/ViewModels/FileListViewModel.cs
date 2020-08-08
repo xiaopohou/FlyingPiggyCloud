@@ -114,14 +114,14 @@ namespace SixCloud.Core.ViewModels
         /// <returns></returns>
         public static async IAsyncEnumerable<FileMetaData> CreateFileListEnumerator(int skip, string path = null, string identity = null, Mode mode = Mode.FileListContainer, FileSystem.Type? type = null)
         {
-            int start = skip;
+            var start = skip;
             const int limit = 20;
             int count;
             do
             {
-                FileList x = await FileSystem.GetDirectory(identity, path, start, limit, type);
+                var x = await FileSystem.GetDirectory(identity, path, start, limit, type);
                 count = x.List.Count;
-                foreach (FileMetaData item in x.List)
+                foreach (var item in x.List)
                 {
                     if (mode == Mode.PathSelector && !item.Directory)
                     {
@@ -145,7 +145,7 @@ namespace SixCloud.Core.ViewModels
             }
             else
             {
-                List<string> array = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace))
+                var array = new List<string>(System.Text.RegularExpressions.Regex.Split(path, "/", System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace))
                 {
                     //array.Insert(0, "home");
                     [0] = "home"
@@ -161,7 +161,7 @@ namespace SixCloud.Core.ViewModels
             {
                 previousPath.Push(CurrentPath);
                 fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: uuid, mode: Mode).GetAsyncEnumerator();
-                FileMetaData directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
+                var directoryInfo = await FileSystem.GetDetailsByIdentity(uuid);
                 CurrentPath = directoryInfo.Path;
                 CurrentUUID = directoryInfo.UUID;
                 Application.Current.Dispatcher.Invoke(() => FileList.Clear());
@@ -184,7 +184,7 @@ namespace SixCloud.Core.ViewModels
         {
             previousPath.Push(CurrentPath);
             fileMetaDataEnumerator = CreateFileListEnumerator(0, path, mode: Mode).GetAsyncEnumerator();
-            FileMetaData directoryInfo = (await FileSystem.GetDirectory(path: path, start: 0, limit: 1)).DictionaryInformation;
+            var directoryInfo = (await FileSystem.GetDirectory(path: path, start: 0, limit: 1)).DictionaryInformation;
             CurrentPath = directoryInfo.Path;
             CurrentUUID = directoryInfo.UUID;
             Application.Current.Dispatcher.Invoke(() => FileList.Clear());
@@ -202,12 +202,12 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                for (int count = 0; count < 20; count++)
+                for (var count = 0; count < 20; count++)
                 {
                     if (await fileMetaDataEnumerator.MoveNextAsync())
                     {
                         //异步调用时Current可能为null导致调用失败，疑似因状态机被GC导致
-                        FileMetaData fileMetaData = fileMetaDataEnumerator.Current;
+                        var fileMetaData = fileMetaDataEnumerator.Current;
                         if (fileMetaData == null)
                         {
                             return;
@@ -238,7 +238,7 @@ namespace SixCloud.Core.ViewModels
             nextPath.Push(CurrentPath);
             if (previousPath.Count > 0)
             {
-                string path = previousPath.Pop();
+                var path = previousPath.Pop();
                 await NavigateByPath(path);
             }
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
@@ -264,7 +264,7 @@ namespace SixCloud.Core.ViewModels
             previousPath.Push(CurrentPath);
             if (nextPath.Count > 0)
             {
-                string path = nextPath.Pop();
+                var path = nextPath.Pop();
                 await NavigateByPath(path);
             }
             PreviousNavigateCommand.OnCanExecutedChanged(this, new EventArgs());
@@ -294,9 +294,9 @@ namespace SixCloud.Core.ViewModels
             {
                 CurrentPath = targetPath;
 
-                if (Enum.TryParse<FileSystem.Type>(targetPath, out FileSystem.Type type))
+                if (Enum.TryParse<FileSystem.Type>(targetPath, out var type))
                 {
-                    FileList rootDircetory = await FileSystem.GetDirectory(path: "/");
+                    var rootDircetory = await FileSystem.GetDirectory(path: "/");
 
                     fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: $"::all", mode: Mode, type: type).GetAsyncEnumerator();
                 }
@@ -327,11 +327,11 @@ namespace SixCloud.Core.ViewModels
 
         private async void NewFolder(object parameter)
         {
-            if (TextInputDialog.Show(out string FolderName, "请输入新文件夹的名字", "新建文件夹") && !FolderName.Contains("/"))
+            if (TextInputDialog.Show(out var FolderName, "请输入新文件夹的名字", "新建文件夹") && !FolderName.Contains("/"))
             {
                 try
                 {
-                    FileMetaData x = await Task.Run(() => FileSystem.CreatDirectory(FolderName, CurrentUUID));
+                    var x = await Task.Run(() => FileSystem.CreatDirectory(FolderName, CurrentUUID));
 
                 }
                 catch (RequestFailedException ex)
@@ -356,14 +356,14 @@ namespace SixCloud.Core.ViewModels
         {
             if (CopyList != null && CopyList.Length > 0)
             {
-                string[] copyList = CopyList;
+                var copyList = CopyList;
                 CopyList = null;
                 StickCommand.OnCanExecutedChanged(this, new EventArgs());
                 await FileSystem.Copy(copyList, CurrentUUID);
             }
             else if (CutList != null && CutList.Length > 0)
             {
-                string[] cutList = CutList;
+                var cutList = CutList;
                 CutList = null;
                 StickCommand.OnCanExecutedChanged(this, new EventArgs());
                 await FileSystem.Move(cutList, CurrentUUID);
@@ -402,7 +402,7 @@ namespace SixCloud.Core.ViewModels
         {
             if (parameter is IList selectedItems)
             {
-                List<string> list = new List<string>(selectedItems.Count);
+                var list = new List<string>(selectedItems.Count);
                 foreach (FileListItemViewModel a in selectedItems)
                 {
                     list.Add(a.UUID);
@@ -421,7 +421,7 @@ namespace SixCloud.Core.ViewModels
         {
             if (parameter is IList selectedItems)
             {
-                List<string> list = new List<string>(selectedItems.Count);
+                var list = new List<string>(selectedItems.Count);
                 foreach (FileListItemViewModel a in selectedItems)
                 {
                     list.Add(a.UUID);
@@ -440,7 +440,7 @@ namespace SixCloud.Core.ViewModels
         {
             if (parameter is IList selectedItems)
             {
-                List<string> list = new List<string>(selectedItems.Count);
+                var list = new List<string>(selectedItems.Count);
                 foreach (FileListItemViewModel a in selectedItems)
                 {
                     list.Add(a.UUID);
@@ -456,14 +456,14 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand UploadFileCommand { get; private set; }
         public void UploadFile(object parameter)
         {
-            OpenFileDialog commonOpenFileDialog = new OpenFileDialog
+            var commonOpenFileDialog = new OpenFileDialog
             {
                 Multiselect = true
             };
 
             if (commonOpenFileDialog.ShowDialog() == true)
             {
-                foreach (string p in commonOpenFileDialog.FileNames)
+                foreach (var p in commonOpenFileDialog.FileNames)
                 {
                     if (File.Exists(p))
                     {
@@ -478,7 +478,7 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand UploadFolderCommand { get; private set; }
         public void UploadFolder(object parameter)
         {
-            using (FolderBrowserDialog commonOpenFileDialog = new FolderBrowserDialog())
+            using (var commonOpenFileDialog = new FolderBrowserDialog())
             {
                 if (commonOpenFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -491,13 +491,13 @@ namespace SixCloud.Core.ViewModels
 
             static async Task FoundFolder(DirectoryInfo path, string parentPath)
             {
-                string currentPath = parentPath == "/" ? $"/{path.Name}" : $"{parentPath}/{path.Name}";
+                var currentPath = parentPath == "/" ? $"/{path.Name}" : $"{parentPath}/{path.Name}";
                 if (path.Exists)
                 {
-                    FileInfo[] list = path.GetFiles();
+                    var list = path.GetFiles();
                     if (list.Length != 0)
                     {
-                        foreach (FileInfo a in list)
+                        foreach (var a in list)
                         {
                             if (a.Exists)
                             {
@@ -505,10 +505,10 @@ namespace SixCloud.Core.ViewModels
                             }
                         }
                     }
-                    DirectoryInfo[] directorys = path.GetDirectories();
+                    var directorys = path.GetDirectories();
                     if (directorys.Length != 0)
                     {
-                        foreach (DirectoryInfo a in directorys)
+                        foreach (var a in directorys)
                         {
                             if (a.Exists)
                             {
@@ -551,7 +551,7 @@ namespace SixCloud.Core.ViewModels
         {
             if (value is string str)
             {
-                int length = (parameter as int?) ?? 20;
+                var length = (parameter as int?) ?? 20;
                 if (str.Length > length)
                 {
                     return $"{str.Substring(0, 14)}...{str.Substring(str.Length - 3)}";

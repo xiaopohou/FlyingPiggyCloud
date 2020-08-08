@@ -24,7 +24,7 @@ namespace SixCloud.Core.Views.UserControls
         {
             if (e.OriginalSource is ScrollViewer viewer)
             {
-                double bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
+                var bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
                 if (viewer.VerticalOffset > 0 && bottomOffset < 0.3)
                 {
                     LazyLoadEventHandler?.Invoke(sender, e);
@@ -42,7 +42,7 @@ namespace SixCloud.Core.Views.UserControls
             }
 
             //懒加载的业务代码
-            RecoveryBoxViewModel vm = DataContext as RecoveryBoxViewModel;
+            var vm = DataContext as RecoveryBoxViewModel;
             await Task.Run(() => vm.LazyLoad());
             LazyLoadEventHandler += LazyLoad;
         }

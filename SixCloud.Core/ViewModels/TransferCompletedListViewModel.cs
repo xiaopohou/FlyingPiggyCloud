@@ -13,7 +13,7 @@ namespace SixCloud.Core.ViewModels
 
         public static void NewUploadedTask(UploadingTaskViewModel uploadedTask)
         {
-            UploadedTaskViewModel task = new UploadedTaskViewModel
+            var task = new UploadedTaskViewModel
             {
                 Name = uploadedTask.Name,
                 CompletedTime = DateTime.Now
@@ -23,7 +23,7 @@ namespace SixCloud.Core.ViewModels
 
         public static void NewDownloadedTask(ITaskManual task)
         {
-            DownloadedTaskViewModel record = new DownloadedTaskViewModel(task);
+            var record = new DownloadedTaskViewModel(task);
             Application.Current.Dispatcher.Invoke(() => transferCompletedList.Insert(0, record));
             record.Deleted += RemoveAfterDeleted;
 

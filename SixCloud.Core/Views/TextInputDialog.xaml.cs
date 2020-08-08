@@ -14,7 +14,7 @@ namespace SixCloud.Core.Views
 
         public static bool Show(out string UserInput, string hintText, string title)
         {
-            TextInputDialog textInputDialog = new TextInputDialog
+            var textInputDialog = new TextInputDialog
             {
                 Title = title
             };
@@ -26,7 +26,7 @@ namespace SixCloud.Core.Views
 
         public static bool Show(out string UserInput, string hintText)
         {
-            TextInputDialog textInputDialog = new TextInputDialog();
+            var textInputDialog = new TextInputDialog();
             //textInputDialog.HintAssistant.Text = hintText;
             textInputDialog.ShowDialog();
             UserInput = textInputDialog._userInput;
@@ -35,7 +35,7 @@ namespace SixCloud.Core.Views
 
         public static bool Show(out string UserInput)
         {
-            TextInputDialog textInputDialog = new TextInputDialog();
+            var textInputDialog = new TextInputDialog();
             textInputDialog.ShowDialog();
             UserInput = textInputDialog._userInput;
             return textInputDialog._result;

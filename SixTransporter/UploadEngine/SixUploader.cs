@@ -63,9 +63,9 @@ namespace SixTransporter.UploadEngine
 
             Threads?.ForEach(v => v.Stop());
             Threads = new List<UploadThread>();
-            for (int i = 0; i < Info.Threads; i++)
+            for (var i = 0; i < Info.Threads; i++)
             {
-                UploadThread thread = new UploadThread(Info, Info.BlockList.First(v => !v.Uploaded && !v.Uploading).Id);
+                var thread = new UploadThread(Info, Info.BlockList.First(v => !v.Uploaded && !v.Uploading).Id);
                 thread.BlockUploadCompletedEvent += BlockUploadCompletedEvent;
                 thread.ChunkUploadCompletedEvent += ChunkUploadCompletedEvent;
                 thread.StartUpload();
@@ -84,7 +84,7 @@ namespace SixTransporter.UploadEngine
                 Thread.Sleep(1000);
                 if (Status == UploadTaskStatusEnum.Uploading)
                 {
-                    long uploadedSize = UploadedSize - _startSize;
+                    var uploadedSize = UploadedSize - _startSize;
                     if (uploadedSize / (DateTime.Now - _startTime).TotalSeconds > 0)
                     {
                         Speed = (long)(uploadedSize / (DateTime.Now - _startTime).TotalSeconds);
@@ -102,7 +102,7 @@ namespace SixTransporter.UploadEngine
                 Info.BlockList[sender.BlockId].Uploading = false;
                 if (Info.BlockList.Any(v => !v.Uploaded && !v.Uploading))
                 {
-                    UploadThread thread = new UploadThread(Info, Info.BlockList.First(v => !v.Uploaded && !v.Uploading).Id);
+                    var thread = new UploadThread(Info, Info.BlockList.First(v => !v.Uploaded && !v.Uploading).Id);
                     thread.BlockUploadCompletedEvent += BlockUploadCompletedEvent;
                     thread.ChunkUploadCompletedEvent += ChunkUploadCompletedEvent;
                     thread.StartUpload();
@@ -115,16 +115,16 @@ namespace SixTransporter.UploadEngine
                     return;
                 }
             }
-            using (HttpClient client = new HttpClient())
+            using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Info.Token);
                 client.DefaultRequestHeaders.Add("UploadBatch", Info.Uuid);
-                string body = string.Join(",", Info.BlockList.Select(v => v.Ctx));
+                var body = string.Join(",", Info.BlockList.Select(v => v.Ctx));
                 //Console.WriteLine(body);
-                HttpResponseMessage result = await client.PostAsync($"{Info.UploadUrl}/mkfile/{Info.FileSize}", new StringContent(body));
+                var result = await client.PostAsync($"{Info.UploadUrl}/mkfile/{Info.FileSize}", new StringContent(body));
                 try
                 {
-                    JObject json = JObject.Parse(await result.Content.ReadAsStringAsync());
+                    var json = JObject.Parse(await result.Content.ReadAsStringAsync());
                     //LogHelper.Debug(json.ToString());
                     if (json["code"] != null)
                     {

@@ -22,7 +22,7 @@ namespace SixCloudCore.SixTransporter.Downloader
             {
                 if (_status != value)
                 {
-                    DownloadStatusEnum temp = _status;
+                    var temp = _status;
                     _status = value;
                     DownloadStatusChangedEvent?.Invoke(this, new StatusChangedEventArgs(temp, _status));
                 }
@@ -54,7 +54,7 @@ namespace SixCloudCore.SixTransporter.Downloader
                     return;
                 }
                 Status = DownloadStatusEnum.Downloading;
-                HttpWebResponse response = GetResponse();
+                var response = GetResponse();
                 if (response == null)
                 {
                     Status = DownloadStatusEnum.Failed;
@@ -62,7 +62,7 @@ namespace SixCloudCore.SixTransporter.Downloader
                 }
                 if (!File.Exists(Info.DownloadPath))
                 {
-                    using FileStream _ = File.Create(Info.DownloadPath);
+                    using var _ = File.Create(Info.DownloadPath);
                 }
 
                 if (Info.BlockList.Count == 0)
@@ -89,17 +89,17 @@ namespace SixCloudCore.SixTransporter.Downloader
                 Threads = new List<DownloadThread>();
                 new Thread(ReportDownloadProgress) { IsBackground = true }.Start();
                 Info.Limiter.Run();
-                for (int i = 0; i < Info.Threads; i++)
+                for (var i = 0; i < Info.Threads; i++)
                 {
                     if (Status == DownloadStatusEnum.Downloading)
                     {
-                        DownloadBlock block = Info.BlockList.FirstOrDefault(v => !v.Downloaded && !v.Downloading);
+                        var block = Info.BlockList.FirstOrDefault(v => !v.Downloaded && !v.Downloading);
                         if (block == null)
                         {
                             break;
                         }
 
-                        DownloadThread thread = new DownloadThread(block, Info);
+                        var thread = new DownloadThread(block, Info);
                         thread.ThreadCompletedEvent += HttpDownload_ThreadCompletedEvent;
                         thread.ThreadFailedEvent += OnThreadFailedEvent;
                         thread.BeginDownload();
@@ -118,7 +118,7 @@ namespace SixCloudCore.SixTransporter.Downloader
 
         private void OnThreadFailedEvent(DownloadThread _)
         {
-            foreach (DownloadThread thread in Threads)
+            foreach (var thread in Threads)
             {
                 thread.ForceStop();
             }
@@ -148,13 +148,13 @@ namespace SixCloudCore.SixTransporter.Downloader
                     Info.Limiter.Stop();
                     return;
                 }
-                DownloadBlock block = Info.BlockList.FirstOrDefault(v => !v.Downloaded && !v.Downloading);
+                var block = Info.BlockList.FirstOrDefault(v => !v.Downloaded && !v.Downloading);
                 if (block == null)
                 {
                     return;
                 }
 
-                DownloadThread thread = new DownloadThread(block, Info);
+                var thread = new DownloadThread(block, Info);
                 thread.ThreadCompletedEvent += HttpDownload_ThreadCompletedEvent;
                 thread.ThreadFailedEvent += OnThreadFailedEvent;
                 thread.BeginDownload();
@@ -169,7 +169,7 @@ namespace SixCloudCore.SixTransporter.Downloader
             {
                 var threads = Threads.ToList();
 
-                foreach (DownloadThread thread in Threads)
+                foreach (var thread in Threads)
                 {
                     //所有线程的文件对象都被释放后触发事件通知调用方删除文件
                     thread.FileStreamDisposed += (sender, e) =>
@@ -202,7 +202,7 @@ namespace SixCloudCore.SixTransporter.Downloader
 
         private void ReportDownloadProgress()
         {
-            long temp = 0L;
+            var temp = 0L;
             while (Status == DownloadStatusEnum.Downloading)
             {
                 Thread.Sleep(1000);
@@ -225,11 +225,11 @@ namespace SixCloudCore.SixTransporter.Downloader
         {
             try
             {
-                HttpWebRequest request = WebRequest.Create(Info.DownloadUrl) as HttpWebRequest;
+                var request = WebRequest.Create(Info.DownloadUrl) as HttpWebRequest;
                 request.Method = "GET";
                 //request.UserAgent = "Accelerider-lite download engine";
                 request.Timeout = 30000;
-                foreach (KeyValuePair<string, string> header in Info.Headers)
+                foreach (var header in Info.Headers)
                 {
                     SetHeaderValue(request.Headers, header.Key, header.Value);
                 }
@@ -248,15 +248,15 @@ namespace SixCloudCore.SixTransporter.Downloader
                 //    return GetResponse();
                 //}
 
-                Stream stream = ex.Response?.GetResponseStream();
+                var stream = ex.Response?.GetResponseStream();
                 if (stream == null)
                 {
                     //LogHelper.Error("GetResponse failed url:" + sub, false, ex);
                     return null;
                 }
-                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                using (var reader = new StreamReader(stream, encoding: Encoding.UTF8))
                 {
-                    string result = reader.ReadToEnd();
+                    var result = reader.ReadToEnd();
                     //LogHelper.Info("sub: " + sub + ":" + result);
                 }
             }
@@ -268,11 +268,11 @@ namespace SixCloudCore.SixTransporter.Downloader
         }
         internal static void SetHeaderValue(WebHeaderCollection header, string name, string value)
         {
-            System.Reflection.PropertyInfo property = typeof(WebHeaderCollection).GetProperty("InnerCollection",
+            var property = typeof(WebHeaderCollection).GetProperty("InnerCollection",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             if (property != null)
             {
-                NameValueCollection collection = property.GetValue(header, null) as NameValueCollection;
+                var collection = property.GetValue(header, null) as NameValueCollection;
                 collection[name] = value;
             }
         }

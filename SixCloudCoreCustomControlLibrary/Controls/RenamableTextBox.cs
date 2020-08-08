@@ -54,7 +54,7 @@ namespace CustomControls.Controls
 
         private static void CommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            RenamableTextBox rtb = (RenamableTextBox)d;
+            var rtb = (RenamableTextBox)d;
             rtb.HookUpCommand((ICommand)e.OldValue, (ICommand)e.NewValue);
         }
 
@@ -79,7 +79,7 @@ namespace CustomControls.Controls
         // Add the command.
         private void AddCommand(ICommand oldCommand, ICommand newCommand)
         {
-            EventHandler handler = new EventHandler(CanExecuteChanged);
+            var handler = new EventHandler(CanExecuteChanged);
             if (newCommand != null)
             {
                 newCommand.CanExecuteChanged += handler;

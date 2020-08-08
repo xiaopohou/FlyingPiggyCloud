@@ -212,7 +212,7 @@ namespace SixCloud.Core.ViewModels
         {
             if (innerTask is DirectoryDownloadTask directoryDownloadTask && directoryDownloadTask.Initialized)
             {
-                DirectoryDownloadTaskViewModel dataContext = await Task.Run(() => new DirectoryDownloadTaskViewModel(directoryDownloadTask));
+                var dataContext = await Task.Run(() => new DirectoryDownloadTaskViewModel(directoryDownloadTask));
                 new DownloadTaskGroupDialog
                 {
                     DataContext = dataContext,

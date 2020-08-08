@@ -35,7 +35,7 @@ namespace SixCloud.Core.ViewModels
         {
             if (parameter is IList selectedItems)
             {
-                List<string> list = new List<string>(selectedItems.Count);
+                var list = new List<string>(selectedItems.Count);
                 foreach (RecoveryBoxItem a in selectedItems)
                 {
                     list.Add(a.Identity);
@@ -53,7 +53,7 @@ namespace SixCloud.Core.ViewModels
         {
             if (parameter is IList selectedItems)
             {
-                List<string> list = new List<string>(selectedItems.Count);
+                var list = new List<string>(selectedItems.Count);
                 foreach (RecoveryBoxItem a in selectedItems)
                 {
                     list.Add(a.Identity);
@@ -69,14 +69,14 @@ namespace SixCloud.Core.ViewModels
         private IAsyncEnumerator<RecoveryBoxItem> recoveryBoxItemsEnumerator;
         private async IAsyncEnumerable<RecoveryBoxItem> CreateRecoveryBoxListEnumerator()
         {
-            int skip = 0;
+            var skip = 0;
             const int limit = 20;
             int count;
             do
             {
-                RecoveryBoxPage x = await RecoveryBox.GetList(skip, limit);
+                var x = await RecoveryBox.GetList(skip, limit);
                 count = x.List.Count;
-                foreach (RecoveryBoxItem item in x.List)
+                foreach (var item in x.List)
                 {
                     yield return item;
                 }
@@ -89,7 +89,7 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                for (int count = 0; count < 20; count++)
+                for (var count = 0; count < 20; count++)
                 {
                     if (await recoveryBoxItemsEnumerator.MoveNextAsync())
                     {

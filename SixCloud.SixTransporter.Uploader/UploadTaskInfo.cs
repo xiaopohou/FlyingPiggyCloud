@@ -26,7 +26,7 @@ namespace SixCloud.SixTransporter.Uploader
         public void Init()
         {
             BlockList.Clear();
-            FileInfo info = new FileInfo(FilePath);
+            var info = new FileInfo(FilePath);
             FileSize = info.Length;
             //16MB
             const long blockSize = 16 * 1024 * 1024L;
@@ -41,7 +41,7 @@ namespace SixCloud.SixTransporter.Uploader
                 });
                 return;
             }
-            long temp = 0L;
+            var temp = 0L;
             while (temp + blockSize < FileSize)
             {
                 BlockList.Add(new UploadBlock()

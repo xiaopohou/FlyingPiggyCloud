@@ -30,18 +30,18 @@ namespace QingzhenyunApis.Methods.V3
 
         private static string HmacSha1(string key, string input)
         {
-            byte[] keyBytes = Encoding.ASCII.GetBytes(key);
-            byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-            using HMACSHA1 hmac = new HMACSHA1(keyBytes);
-            byte[] hashBytes = hmac.ComputeHash(inputBytes);
+            var keyBytes = Encoding.ASCII.GetBytes(key);
+            var inputBytes = Encoding.ASCII.GetBytes(input);
+            using var hmac = new HMACSHA1(keyBytes);
+            var hashBytes = hmac.ComputeHash(inputBytes);
             return Convert.ToBase64String(hashBytes);
         }
 
         private static HttpContentHeaders CreateHeader(string data, StringContent requestObject)
         {
-            HttpContentHeaders headers = requestObject.Headers;
+            var headers = requestObject.Headers;
             headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            using (MD5 md5 = MD5.Create())
+            using (var md5 = MD5.Create())
             {
                 headers.ContentMD5 = md5.ComputeHash(Encoding.GetEncoding("UTF-8").GetBytes(data));
             }
@@ -61,30 +61,30 @@ namespace QingzhenyunApis.Methods.V3
             lock (Token)
             {
 
-                string extraHeaders = $"{(isAnonymous ? "" : $"authorization: Bearer {Token}")}{(headers == null ? "" : $"content-md5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}")}";
+                var extraHeaders = $"{(isAnonymous ? "" : $"authorization: Bearer {Token}")}{(headers == null ? "" : $"content-md5: {BitConverter.ToString(headers.ContentMD5).Replace("-", "")}")}";
 
                 if (querys == null)
                 {
                     querys = new Dictionary<string, string>(3);
                 }
-                long unixDateTimeNow = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                var unixDateTimeNow = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
                 querys["appid"] = AccessKeyId;
                 querys["ts"] = unixDateTimeNow.ToString();
                 querys["nonce"] = Guid.NewGuid().ToString();
 
-                IOrderedEnumerable<KeyValuePair<string, string>> queryStrings = from kvPair in querys
-                                                                                orderby kvPair.Key
-                                                                                select kvPair;
-                StringBuilder uriBuilder = new StringBuilder(uri);
+                var queryStrings = from kvPair in querys
+                                   orderby kvPair.Key
+                                   select kvPair;
+                var uriBuilder = new StringBuilder(uri);
                 uriBuilder.Append("?");
-                foreach (KeyValuePair<string, string> query in queryStrings)
+                foreach (var query in queryStrings)
                 {
                     uriBuilder.Append($"{query.Key}={HttpUtility.UrlEncode(query.Value)}&");
                 }
                 //移除最后一个&
                 uriBuilder.Remove(uriBuilder.Length - 1, 1);
 
-                string signature = HmacSha1(AccessKeySecret, $"{method}api.6pan.cn{uriBuilder}{extraHeaders}");
+                var signature = HmacSha1(AccessKeySecret, $"{method}api.6pan.cn{uriBuilder}{extraHeaders}");
                 uriBuilder.Append($"&signature={Calculators.Base64.Base64Encode(signature)}");
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                 uri = uriBuilder.ToString();
@@ -118,10 +118,10 @@ namespace QingzhenyunApis.Methods.V3
 
         protected static async Task<T> PostAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
-            using StringContent requestObject = new StringContent(data);
+            using var requestObject = new StringContent(data);
 
             //构建请求头
-            HttpContentHeaders headers = CreateHeader(data, requestObject);
+            var headers = CreateHeader(data, requestObject);
 
             //构建签名
             CreateSignature("POST", ref uri, isAnonymous, querys, headers);
@@ -130,9 +130,9 @@ namespace QingzhenyunApis.Methods.V3
             try
             {
                 //发起请求
-                HttpResponseMessage response = isAnonymous ? await AnonymousPost(uri, requestObject) : await httpClient.PostAsync(uri, requestObject);
+                var response = isAnonymous ? await AnonymousPost(uri, requestObject) : await httpClient.PostAsync(uri, requestObject);
 
-                if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
+                if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
                 {
                     Token = newToken.FirstOrDefault() ?? Token;
                 }
@@ -163,7 +163,7 @@ namespace QingzhenyunApis.Methods.V3
 
             static async Task<HttpResponseMessage> AnonymousPost(string uri, HttpContent httpContent)
             {
-                using HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
+                using var httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"qingzhen uwp client {Assembly.GetEntryAssembly().GetName().Version}");
                 return await httpClient.PostAsync(uri, httpContent);
             }
@@ -177,13 +177,13 @@ namespace QingzhenyunApis.Methods.V3
             try
             {
                 //发起请求
-                HttpResponseMessage response = isAnonymous ? await AnonymousGet(uri) : await httpClient.GetAsync(uri);
-                if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
+                var response = isAnonymous ? await AnonymousGet(uri) : await httpClient.GetAsync(uri);
+                if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
                 {
                     Token = newToken.FirstOrDefault() ?? Token;
                 }
 
-                string responseBody = await response.Content.ReadAsStringAsync();
+                var responseBody = await response.Content.ReadAsStringAsync();
                 return ParseResult<T>(responseBody);
 
             }
@@ -207,7 +207,7 @@ namespace QingzhenyunApis.Methods.V3
 
             static async Task<HttpResponseMessage> AnonymousGet(string uri)
             {
-                using HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
+                using var httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"qingzhen uwp client {Assembly.GetEntryAssembly().GetName().Version}");
                 return await httpClient.GetAsync(uri);
             }
@@ -215,9 +215,9 @@ namespace QingzhenyunApis.Methods.V3
 
         protected static async Task<T> PatchAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
-            using StringContent requestObject = new StringContent(data);
+            using var requestObject = new StringContent(data);
             //构建请求头
-            HttpContentHeaders headers = CreateHeader(data, requestObject);
+            var headers = CreateHeader(data, requestObject);
 
             //构建签名
             CreateSignature("PATCH", ref uri, isAnonymous, querys, headers);
@@ -225,14 +225,14 @@ namespace QingzhenyunApis.Methods.V3
             try
             {
                 //发起请求
-                HttpResponseMessage response = await httpClient.PatchAsync(uri, requestObject);
+                var response = await httpClient.PatchAsync(uri, requestObject);
 
-                if (response.Headers.TryGetValues("qingzhen-token", out IEnumerable<string> newToken))
+                if (response.Headers.TryGetValues("qingzhen-token", out var newToken))
                 {
                     Token = newToken.FirstOrDefault() ?? Token;
                 }
 
-                string responseBody = await response.Content.ReadAsStringAsync();
+                var responseBody = await response.Content.ReadAsStringAsync();
 
                 return ParseResult<T>(responseBody);
             }

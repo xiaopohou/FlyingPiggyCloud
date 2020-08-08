@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
+using QingzhenyunApis.Exceptions;
 using System;
 using System.Windows.Media;
-using QingzhenyunApis.Exceptions;
 
 namespace SixCloud.Core.Controllers
 {

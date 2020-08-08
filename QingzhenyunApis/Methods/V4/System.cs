@@ -10,7 +10,7 @@ namespace QingzhenyunApis.Methods.V4
         public static async Task<UpdateInformation> Update(Version version)
         {
 #if DEBUG
-            bool debug = true;
+            var debug = true;
 #else
             bool debug = false;
 #endif

@@ -207,7 +207,7 @@ namespace SixCloud.Core.ViewModels
 
         private async void Download(object parameter)
         {
-            using System.Windows.Forms.FolderBrowserDialog downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
+            using var downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
             {
                 Description = "请选择下载文件夹",
                 SelectedPath = DefaultDownloadPath ?? KnownFolders.Downloads.Path
@@ -271,7 +271,7 @@ namespace SixCloud.Core.ViewModels
             }
             else
             {
-                string eName = System.IO.Path.GetExtension(Name);
+                var eName = System.IO.Path.GetExtension(Name);
                 Icon = IconDictionary.ContainsKey(eName) ? IconDictionary[eName] : IconDictionary["default"];
             }
         }

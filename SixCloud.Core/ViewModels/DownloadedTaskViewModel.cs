@@ -22,7 +22,7 @@ namespace SixCloud.Core.ViewModels
         {
             try
             {
-                ProcessStartInfo psi = new ProcessStartInfo("Explorer.exe")
+                var psi = new ProcessStartInfo("Explorer.exe")
                 {
                     Arguments = fullPath
                 };
@@ -42,7 +42,7 @@ namespace SixCloud.Core.ViewModels
         {
             if (File.Exists(fullPath) || Directory.Exists(fullPath))
             {
-                ProcessStartInfo psi = new ProcessStartInfo("Explorer.exe")
+                var psi = new ProcessStartInfo("Explorer.exe")
                 {
                     Arguments = "/e,/select," + fullPath
                 };

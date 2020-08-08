@@ -1,7 +1,6 @@
 ﻿using SixCloud.Core.ViewModels;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,9 +21,9 @@ namespace SixCloud.Core.Views.UserControls
         {
             try
             {
-                IList list = (IList)e.Parameter;
-                IEnumerable<DownloadTaskViewModel> downloadingTasks = list.Cast<DownloadTaskViewModel>();
-                foreach (DownloadTaskViewModel t in downloadingTasks)
+                var list = (IList)e.Parameter;
+                var downloadingTasks = list.Cast<DownloadTaskViewModel>();
+                foreach (var t in downloadingTasks)
                 {
                     if (t.Status == TransferTaskStatus.Pause)
                     {
@@ -47,9 +46,9 @@ namespace SixCloud.Core.Views.UserControls
         {
             try
             {
-                IList list = (IList)e.Parameter;
-                IEnumerable<DownloadTaskViewModel> downloadingTasks = list.Cast<DownloadTaskViewModel>();
-                foreach (DownloadTaskViewModel t in downloadingTasks.ToArray())
+                var list = (IList)e.Parameter;
+                var downloadingTasks = list.Cast<DownloadTaskViewModel>();
+                foreach (var t in downloadingTasks.ToArray())
                 {
                     t.CancelCommand.Execute(null);
                 }

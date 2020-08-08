@@ -18,10 +18,10 @@ namespace SixCloudCore.FileUploader
         {
             try
             {
-                HttpResult result = UploadFile(simpleUploadTask.FilePath, simpleUploadTask.Token, simpleUploadTask.Address, Path.GetFileName(simpleUploadTask.FilePath));
+                var result = UploadFile(simpleUploadTask.FilePath, simpleUploadTask.Token, simpleUploadTask.Address, Path.GetFileName(simpleUploadTask.FilePath));
                 if (result.Code == (int)HttpStatusCode.OK)
                 {
-                    JObject jo = JObject.Parse(result.Text);
+                    var jo = JObject.Parse(result.Text);
                     simpleUploadTask.Hash = jo["hash"].ToString();
                     simpleUploadTask.UploadTaskStatus = UploadTaskStatus.Completed;
                 }
@@ -54,20 +54,20 @@ namespace SixCloudCore.FileUploader
                 putExtra = new PutExtra();
             }
 
-            string filename = key;
+            var filename = key;
             if (string.IsNullOrEmpty(key))
             {
                 filename = "uploading.tmp";
             }
 
-            string boundary = HttpManager.CreateFormDataBoundary();
-            StringBuilder bodyBuilder = new StringBuilder();
+            var boundary = HttpManager.CreateFormDataBoundary();
+            var bodyBuilder = new StringBuilder();
             bodyBuilder.Append("--" + boundary + "\r\n"
                 + "Content-Disposition: form-data; name=\"token\"\r\n\r\n"
                 + token + "\r\n");
             if (null != putExtra.Params && putExtra.Params.Count > 0)
             {
-                foreach (KeyValuePair<string, string> p in putExtra.Params)
+                foreach (var p in putExtra.Params)
                 {
                     if (p.Key.StartsWith("x:"))
                     {
@@ -108,20 +108,20 @@ namespace SixCloudCore.FileUploader
                 + filename + "\"\r\nContent-Type: application/octet-stream\r\n\r\n");
 
             // write file data
-            StringBuilder bodyEnd = new StringBuilder();
+            var bodyEnd = new StringBuilder();
             bodyEnd.Append("\r\n--" + boundary + "--\r\n");
 
-            byte[] partHead = Encoding.UTF8.GetBytes(bodyBuilder.ToString());
-            byte[] partTail = Encoding.UTF8.GetBytes(bodyEnd.ToString());
+            var partHead = Encoding.UTF8.GetBytes(bodyBuilder.ToString());
+            var partTail = Encoding.UTF8.GetBytes(bodyEnd.ToString());
 
             // 允许空内容
-            int dataLength = 0;
+            var dataLength = 0;
             if (null != data)
             {
                 dataLength = data.Length;
             }
 
-            byte[] body = new byte[partHead.Length + dataLength + partTail.Length];
+            var body = new byte[partHead.Length + dataLength + partTail.Length];
             //Array.Copy(partHead, 0, body, 0, partHead.Length);
             // Buffer.BlockCopy 比 Array.Copy 简单，所以更快。
             Buffer.BlockCopy(partHead, 0, body, 0, partHead.Length);
@@ -134,8 +134,8 @@ namespace SixCloudCore.FileUploader
                 Buffer.BlockCopy(data, 0, body, partHead.Length, data.Length);
                 Buffer.BlockCopy(partTail, 0, body, partHead.Length + data.Length, partTail.Length);
             }
-            string url = uploadUrl + "/file/upload";
-            HttpResult result = httpManager.PostMultipart(url, body, boundary);
+            var url = uploadUrl + "/file/upload";
+            var result = httpManager.PostMultipart(url, body, boundary);
 
             return result;
         }
@@ -150,10 +150,10 @@ namespace SixCloudCore.FileUploader
         /// <returns>上传数据流后的返回结果</returns>
         private HttpResult UploadStream(Stream stream, string token, string uploadUrl, string key = null, PutExtra putExtra = null)
         {
-            int bufferSize = 4 * 1024 * 1024;
-            byte[] buffer = new byte[bufferSize];
+            var bufferSize = 4 * 1024 * 1024;
+            var buffer = new byte[bufferSize];
             int bytesRead;
-            using (MemoryStream dataMS = new MemoryStream())
+            using (var dataMS = new MemoryStream())
             {
                 while ((bytesRead = stream.Read(buffer, 0, bufferSize)) != 0)
                 {
@@ -173,7 +173,7 @@ namespace SixCloudCore.FileUploader
         /// <returns>上传数据流后的返回结果</returns>
         private HttpResult UploadFile(string localFilename, string token, string uploadUrl, string key = null, PutExtra putExtra = null)
         {
-            using (FileStream fs = new FileStream(localFilename, FileMode.Open))
+            using (var fs = new FileStream(localFilename, FileMode.Open))
             {
                 return UploadStream(fs, token, uploadUrl, key, putExtra);
             }
@@ -187,20 +187,20 @@ namespace SixCloudCore.FileUploader
 
         private void Check()
         {
-            List<int> completedIndex = new List<int>();
-            for (int i = 0; i < runningTasks.Length; i++)
+            var completedIndex = new List<int>();
+            for (var i = 0; i < runningTasks.Length; i++)
             {
                 if (runningTasks[i] == null || runningTasks[i].UploadTaskStatus != UploadTaskStatus.Active)
                 {
                     completedIndex.Add(i);
                 }
             }
-            for (int i = 0; i < workbook.Count && i < completedIndex.Count; i++)
+            for (var i = 0; i < workbook.Count && i < completedIndex.Count; i++)
             {
-                bool isSuccess = false;
+                var isSuccess = false;
                 do
                 {
-                    if (!workbook.TryDequeue(out SimpleUploadTask task))
+                    if (!workbook.TryDequeue(out var task))
                     {
                         break;
                     }

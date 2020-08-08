@@ -1,9 +1,7 @@
-﻿using SixCloud.Core.Controllers;
-using SixCloud.Core.ViewModels;
+﻿using SixCloud.Core.ViewModels;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace SixCloud.Core.Views.UserControls
@@ -48,7 +46,7 @@ namespace SixCloud.Core.Views.UserControls
         {
             if (e.OriginalSource is ScrollViewer viewer)
             {
-                double bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
+                var bottomOffset = (viewer.ExtentHeight - viewer.VerticalOffset - viewer.ViewportHeight) / viewer.ExtentHeight;
                 if (viewer.VerticalOffset > 0 && bottomOffset < 0.3)
                 {
                     LazyLoadEventHandler?.Invoke(sender, e);
@@ -65,7 +63,7 @@ namespace SixCloud.Core.Views.UserControls
                 LazyLoadEventHandler = null;
             }
             //懒加载的业务代码
-            FileListViewModel vm = DataContext as FileListViewModel;
+            var vm = DataContext as FileListViewModel;
             await vm.LazyLoad();
             LazyLoadEventHandler = new ScrollChangedEventHandler(LazyLoad);
         }
@@ -74,7 +72,7 @@ namespace SixCloud.Core.Views.UserControls
         {
             if (sender is ListBox listBox && DataContext is FileListViewModel viewmodel)
             {
-                int i = listBox.SelectedIndex;
+                var i = listBox.SelectedIndex;
                 if (i == 0)
                 {
                     ZoomAnimation();
@@ -82,10 +80,10 @@ namespace SixCloud.Core.Views.UserControls
                 }
                 else if (i != -1)
                 {
-                    string[] pathArray = new string[i];
+                    var pathArray = new string[i];
                     viewmodel.PathArray.CopyTo(1, pathArray, 0, i);
-                    StringBuilder stringBuilder = new StringBuilder();
-                    foreach (string path in pathArray)
+                    var stringBuilder = new StringBuilder();
+                    foreach (var path in pathArray)
                     {
                         stringBuilder.Append("/");
                         stringBuilder.Append(path);

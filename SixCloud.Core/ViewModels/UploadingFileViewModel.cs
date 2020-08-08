@@ -1,5 +1,4 @@
-﻿using QingzhenyunApis.EntityModels;
-using QingzhenyunApis.Exceptions;
+﻿using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using QingzhenyunApis.Utils;
 using SixCloudCore.FileUploader;
@@ -26,10 +25,10 @@ namespace SixCloud.Core.ViewModels
 
         public async Task Run()
         {
-            string hash = await Task.Run(() => $"{ETag.ComputeEtag(LocalFilePath)}{Calculators.LongTo36(new FileInfo(LocalFilePath).Length)}");
+            var hash = await Task.Run(() => $"{ETag.ComputeEtag(LocalFilePath)}{Calculators.LongTo36(new FileInfo(LocalFilePath).Length)}");
             try
             {
-                UploadToken x = await FileSystem.UploadFile(Name, parentPath: TargetPath, hash: hash, originalFilename: Name);
+                var x = await FileSystem.UploadFile(Name, parentPath: TargetPath, hash: hash, originalFilename: Name);
                 task = x.Created ? new HashCachedTask(hash) : EzWcs.NewTask(LocalFilePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
 
             }
@@ -56,9 +55,9 @@ namespace SixCloud.Core.ViewModels
                 }
                 else
                 {
-                    TimeSpan span = DateTime.Now - lastTime;
+                    var span = DateTime.Now - lastTime;
                     lastTime += span;
-                    long intervalCompleted = task.CompletedBytes - lastCompletedBytes;
+                    var intervalCompleted = task.CompletedBytes - lastCompletedBytes;
                     lastCompletedBytes += intervalCompleted;
                     return Calculators.SizeCalculator((long)Math.Round(span.TotalSeconds == 0 ? 0 : intervalCompleted / span.TotalSeconds, 0)) + "/秒";
                 }

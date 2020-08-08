@@ -54,34 +54,34 @@ namespace SixCloud.SixTransporter.Uploader
             }
             try
             {
-                using (FileStream stream = new FileStream(Info.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var stream = new FileStream(Info.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     stream.Seek(BlockInfo.BeginOffset, SeekOrigin.Begin);
-                    byte[] fdata = new byte[ChunkSize];
-                    int len = stream.Read(fdata, 0, fdata.Length);
+                    var fdata = new byte[ChunkSize];
+                    var len = stream.Read(fdata, 0, fdata.Length);
                     if (len < fdata.Length)
                     {
-                        byte[] arr = new byte[len];
+                        var arr = new byte[len];
                         Array.Copy(fdata, arr, len);
                         fdata = arr;
                     }
-                    HttpWebRequest request = WebRequest.CreateHttp($"{Info.UploadUrl}/mkblk/{BlockInfo.BlockSize}/{BlockInfo.Id}");
+                    var request = WebRequest.CreateHttp($"{Info.UploadUrl}/mkblk/{BlockInfo.BlockSize}/{BlockInfo.Id}");
                     request.ContentLength = fdata.Length;
                     request.ContentType = "application/octet-stream";
                     request.Headers.Add("Authorization", Info.Token);
                     request.Headers.Add("UploadBatch", Info.Uuid);
                     request.Method = "POST";
-                    using (Stream requestStream = request.GetRequestStream())
+                    using (var requestStream = request.GetRequestStream())
                     {
                         requestStream.Write(fdata, 0, fdata.Length);
                     }
 
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    using (var response = (HttpWebResponse)request.GetResponse())
                     {
-                        using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                        using (var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
                         {
-                            string message = reader.ReadToEnd();
-                            JObject json = JObject.Parse(message);
+                            var message = reader.ReadToEnd();
+                            var json = JObject.Parse(message);
                             if (json["code"] != null)
                             {
                                 throw new IOException(json.ToString(Formatting.None));
@@ -107,14 +107,14 @@ namespace SixCloud.SixTransporter.Uploader
             }
             catch (WebException ex)
             {
-                Stream stream = ex.Response?.GetResponseStream();
+                var stream = ex.Response?.GetResponseStream();
                 if (stream != null)
                 {
-                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                    using (var reader = new StreamReader(stream, Encoding.UTF8))
                     {
                         try
                         {
-                            string message = reader.ReadToEnd();
+                            var message = reader.ReadToEnd();
                             Console.WriteLine(message);
                         }
                         catch (IOException)
@@ -125,7 +125,7 @@ namespace SixCloud.SixTransporter.Uploader
                 }
 
                 Console.Write("ERROR: " + ex.Message);
-                Exception e = ex.InnerException;
+                var e = ex.InnerException;
                 while (e != null)
                 {
                     Console.Write("-> " + e.Message);
@@ -151,16 +151,16 @@ namespace SixCloud.SixTransporter.Uploader
 
                 try
                 {
-                    using (FileStream stream = new FileStream(Info.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (var stream = new FileStream(Info.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         stream.Seek(BlockInfo.BeginOffset + LastChunkOffset, SeekOrigin.Begin);
-                        byte[] fdata = new byte[BlockInfo.BeginOffset + LastChunkOffset + ChunkSize > BlockInfo.EndOffset
+                        var fdata = new byte[BlockInfo.BeginOffset + LastChunkOffset + ChunkSize > BlockInfo.EndOffset
                             ? BlockInfo.EndOffset - (BlockInfo.BeginOffset + LastChunkOffset)
                             : ChunkSize];
-                        int len = stream.Read(fdata, 0, fdata.Length);
+                        var len = stream.Read(fdata, 0, fdata.Length);
                         if (len < fdata.Length)
                         {
-                            byte[] arr = new byte[len];
+                            var arr = new byte[len];
                             Array.Copy(fdata, arr, len);
                             fdata = arr;
                         }
@@ -172,13 +172,13 @@ namespace SixCloud.SixTransporter.Uploader
                             BlockUploadCompletedEvent?.Invoke(this);
                             return;
                         }
-                        HttpWebRequest request = WebRequest.CreateHttp($"{Info.UploadUrl}/bput/{LastChunkCtx}/{LastChunkOffset}");
+                        var request = WebRequest.CreateHttp($"{Info.UploadUrl}/bput/{LastChunkCtx}/{LastChunkOffset}");
                         request.ContentLength = fdata.Length;
                         request.ContentType = "application/octet-stream";
                         request.Headers.Add("Authorization", Info.Token);
                         request.Headers.Add("UploadBatch", Info.Uuid);
                         request.Method = "POST";
-                        using (Stream requestStream = request.GetRequestStream())
+                        using (var requestStream = request.GetRequestStream())
                         {
                             requestStream.Write(fdata, 0, fdata.Length);
                         }
@@ -188,12 +188,12 @@ namespace SixCloud.SixTransporter.Uploader
                             return;
                         }
 
-                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        using (var response = (HttpWebResponse)request.GetResponse())
                         {
-                            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                            using (var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
                             {
-                                string message = reader.ReadToEnd();
-                                JObject json = JObject.Parse(message);
+                                var message = reader.ReadToEnd();
+                                var json = JObject.Parse(message);
                                 if (json["code"] != null)
                                 {
                                     throw new IOException(json.ToString(Formatting.None));
@@ -212,14 +212,14 @@ namespace SixCloud.SixTransporter.Uploader
                 }
                 catch (WebException ex)
                 {
-                    Stream stream = ex.Response?.GetResponseStream();
+                    var stream = ex.Response?.GetResponseStream();
                     if (stream != null)
                     {
-                        using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                        using (var reader = new StreamReader(stream, Encoding.UTF8))
                         {
                             try
                             {
-                                string message = reader.ReadToEnd();
+                                var message = reader.ReadToEnd();
                                 Console.WriteLine(message);
                             }
                             catch (IOException)
@@ -230,7 +230,7 @@ namespace SixCloud.SixTransporter.Uploader
                     }
 
                     Console.Write("ERROR: " + ex.Message);
-                    Exception e = ex.InnerException;
+                    var e = ex.InnerException;
                     while (e != null)
                     {
                         Console.Write("-> " + e.Message);

@@ -46,11 +46,11 @@ namespace QingzhenyunApis.Utils
         /// <returns></returns>
         public static string UserMd5(string input)
         {
-            using (MD5 md5 = MD5.Create())
+            using (var md5 = MD5.Create())
             {
-                byte[] bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
-                StringBuilder sBuilder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
+                var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+                var sBuilder = new StringBuilder();
+                for (var i = 0; i < bytes.Length; i++)
                 {
                     sBuilder.Append(bytes[i].ToString("x2"));
                 }
@@ -60,13 +60,13 @@ namespace QingzhenyunApis.Utils
 
         public static string LongTo36(long num)
         {
-            string str = "0123456789abcdefghijklmnopqrstuvwxyz";
-            List<char> numList = new List<char>();
+            var str = "0123456789abcdefghijklmnopqrstuvwxyz";
+            var numList = new List<char>();
 
 
             do
             {
-                int remainder = (int)(num % 36);
+                var remainder = (int)(num % 36);
                 numList.Add(str[remainder]);
 
                 num /= 36;
@@ -137,13 +137,13 @@ namespace QingzhenyunApis.Utils
 
             public static string Base64Encode(string plainText)
             {
-                byte[] plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
                 return Convert.ToBase64String(plainTextBytes);
             }
 
             public static string Base64Decode(string base64EncodedData)
             {
-                byte[] base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+                var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
                 return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
             }
         }
