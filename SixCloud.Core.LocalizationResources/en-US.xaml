@@ -131,4 +131,5 @@
     <system:String x:Key="Lang-FailedToRequest">Request Failed</system:String>
     <system:String x:Key="Lang-InputNothing">Input Nothing</system:String>
     <system:String x:Key="Lang-InvalidPhoneNumber">Invalid Phone Number</system:String>
+    <system:String x:Key="Lang-Exit">退出</system:String>
 </ResourceDictionary>

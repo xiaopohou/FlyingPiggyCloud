@@ -1,4 +1,5 @@
-﻿using SixCloud.Desktop.Controllers;
+﻿using SixCloud.Core.Controllers;
+using SixCloud.Desktop.Controllers;
 using SixCloud.Desktop.Views;
 using System;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace SixCloud.Desktop.ViewModels
         protected override async Task InitializeComponent()
         {
             CreateLoginWebView ??= new Func<Control>(() => new LoginWebView());
-            InitializeTaskBarIcon ??= new Action(() => new TaskBarButton());
+            //InitializeTaskBarIcon ??= new Action(() => new TaskBarButton());
             await base.InitializeComponent();
         }
 

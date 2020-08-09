@@ -18,7 +18,7 @@ namespace SixCloud.Core.ViewModels
         private readonly bool createMainFrame;
 
         protected static Func<Control> CreateLoginWebView;
-        protected static Action InitializeTaskBarIcon;
+        //protected static Action InitializeTaskBarIcon;
 
         private DestinationInformation DestinationInfo { get; set; }
 
@@ -133,7 +133,7 @@ namespace SixCloud.Core.ViewModels
                     }
                 };
 
-                InitializeTaskBarIcon?.Invoke();
+                new TaskBarButton();
             });
             TasksLogger.StartUpRecovery(currentUser);
         }
