@@ -131,5 +131,8 @@
     <system:String x:Key="Lang-FailedToRequest">Request Failed</system:String>
     <system:String x:Key="Lang-InputNothing">Input Nothing</system:String>
     <system:String x:Key="Lang-InvalidPhoneNumber">Invalid Phone Number</system:String>
-    <system:String x:Key="Lang-Exit">退出</system:String>
+    <system:String x:Key="Lang-Exit">Exit</system:String>
+    <system:String x:Key="Lang-DisplayError-Message">Because Microsoft removed the old edge related components in win10 2004 and did not distribute the new version of edge chromium, the login page may not be displayed correctly. Click OK to complete the login using the default browser.</system:String>
+    <system:String x:Key="Lang-DisplayError-Title">Blank?</system:String>
+    <system:String x:Key="Lang-DisplayError-Button">Click here if it shows blank</system:String>
 </ResourceDictionary>

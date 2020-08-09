@@ -132,4 +132,7 @@
     <system:String x:Key="Lang-InputNothing">输入内容为空</system:String>
     <system:String x:Key="Lang-InvalidPhoneNumber">输入的电话号码有误</system:String>
     <system:String x:Key="Lang-Exit">退出</system:String>
+    <system:String x:Key="Lang-DisplayError-Message">由于傻逼微软在win10 2004中移除了旧edge相关组件并且没有分发新版edge chromium，登陆页面有可能无法正确显示，点击确定可以使用默认浏览器完成登陆。</system:String>
+    <system:String x:Key="Lang-DisplayError-Title">一片空白？</system:String>
+    <system:String x:Key="Lang-DisplayError-Button">如显示错误点此</system:String>
 </ResourceDictionary>
