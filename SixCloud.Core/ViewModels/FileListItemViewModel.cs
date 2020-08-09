@@ -10,7 +10,7 @@ using System.Windows.Controls.Primitives;
 
 namespace SixCloud.Core.ViewModels
 {
-    public class FileListItemViewModel
+    public class FileListItemViewModel : ViewModelBase
     {
         private readonly FileListViewModel parent;
         private static readonly Dictionary<string, string> IconDictionary = new Dictionary<string, string>
@@ -125,7 +125,10 @@ namespace SixCloud.Core.ViewModels
                     }
                     catch (RequestFailedException ex) when (ex.Code == "NEED_SUBSCRIPTION")
                     {
-                        MessageBox.Show($"限订阅用户在线播放此资源：{ex.Message}", "未能获取资源地址", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"{FindLocalizationResource("Lang-OnlinePlayError-Nonsubscriber-Message")}{ex.Message}",
+                                        FindLocalizationResource("Lang-OnlinePlayError-Title"),
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Error);
                     }
 
                     break;
@@ -209,7 +212,7 @@ namespace SixCloud.Core.ViewModels
         {
             using var downloadPathDialog = new System.Windows.Forms.FolderBrowserDialog
             {
-                Description = "请选择下载文件夹",
+                Description = FindLocalizationResource("Lang-SelectSavingPath"),
                 SelectedPath = DefaultDownloadPath ?? KnownFolders.Downloads.Path
             };
             if (downloadPathDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)

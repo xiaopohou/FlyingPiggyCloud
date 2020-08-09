@@ -37,11 +37,11 @@ namespace SixCloud.Core.ViewModels
 
             public string FriendlyInfo => Status switch
             {
-                ParseResultStatus.Success => "成功",
-                ParseResultStatus.Parsing => "解析中请稍等",
-                ParseResultStatus.PasswordRequired => "需要密码",
-                ParseResultStatus.InvalidUrl => "地址解析失败",
-                _ => "预期外的任务状态",
+                ParseResultStatus.Success => FindLocalizationResource("Lang-Succeeded"),
+                ParseResultStatus.Parsing => FindLocalizationResource("Lang-Parsing"),
+                ParseResultStatus.PasswordRequired => FindLocalizationResource("Lang-PasswordRequested"),
+                ParseResultStatus.InvalidUrl => FindLocalizationResource("Lang-ParseFailed"),
+                _ => FindLocalizationResource("Lang-ExceptionalStatus"),
             };
 
             //public Visibility FriendlyErrorInfoVisibility => FriendlyErrorInfo == null ? Visibility.Collapsed : Visibility.Visible;

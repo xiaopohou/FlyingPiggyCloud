@@ -31,7 +31,10 @@ namespace SixCloud.Core.ViewModels
                 var newPackageUri = await UpdateHelper.Check();
                 if (newPackageUri != default)
                 {
-                    var newPackageMessageBoxResult = MessageBox.Show("发现新的软件包，点击确定下载或者点击取消继续使用当前版本", "更新", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                    var newPackageMessageBoxResult = MessageBox.Show(FindLocalizationResource("Lang-UpdateDialog-Message"),
+                                                                     FindLocalizationResource("Lang-Update"),
+                                                                     MessageBoxButton.OKCancel,
+                                                                     MessageBoxImage.Question);
                     if (newPackageMessageBoxResult == MessageBoxResult.OK)
                     {
                         System.Diagnostics.Process.Start("explorer.exe", newPackageUri.ToString());
@@ -60,7 +63,7 @@ namespace SixCloud.Core.ViewModels
                     {
                         LoginWindow = new AcrylicWindow
                         {
-                            Title = "登陆",
+                            Title = FindLocalizationResource("Lang-Login"),
                             Height = 650,
                             Width = 400,
                             AcrylicWindowStyle = AcrylicWindowStyle.NoIcon,
@@ -73,7 +76,7 @@ namespace SixCloud.Core.ViewModels
                     {
                         LoginWindow = new Window
                         {
-                            Title = "登陆",
+                            Title = FindLocalizationResource("Lang-Login"),
                             Height = 650,
                             Width = 400,
                             WindowStyle = WindowStyle.ToolWindow,
@@ -87,7 +90,7 @@ namespace SixCloud.Core.ViewModels
 
                 if (!await Authentication.CheckDestination(DestinationInfo))
                 {
-                    MessageBox.Show("登陆超时，请重试", "超时", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(FindLocalizationResource("Lang-LoginTimeOut-Message"), FindLocalizationResource("Lang-TimeOut"), MessageBoxButton.OK, MessageBoxImage.Information);
                     Application.Current.Shutdown();
                 }
             }

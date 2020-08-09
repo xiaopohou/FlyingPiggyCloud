@@ -7,11 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Forms;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
@@ -22,7 +20,6 @@ namespace SixCloud.Core.ViewModels
     public class FileListViewModel : ViewModelBase
     {
         public Mode Mode { get; set; } = Mode.FileListContainer;
-
 
         public static string[] CopyList
         {
@@ -171,7 +168,10 @@ namespace SixCloud.Core.ViewModels
             }
             catch (RequestFailedException ex) when (ex.Code == "FILE_NOT_FOUND")
             {
-                MessageBox.Show("请求失败，远程服务器未找到该文件", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(FindLocalizationResource("Lang-FileNotFoundOnRemoteServer-Message"),
+                                FindLocalizationResource("Lang-Failed"),
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
             }
         }
 
@@ -223,7 +223,7 @@ namespace SixCloud.Core.ViewModels
             }
             catch (RequestFailedException ex)
             {
-                MessageBox.Show($"加载目录失败，由于{ex.Message}");
+                MessageBox.Show($"{FindLocalizationResource("Lang-FailedToLoad")} {ex.Message}");
             }
         }
         #endregion
@@ -327,7 +327,7 @@ namespace SixCloud.Core.ViewModels
 
         private async void NewFolder(object parameter)
         {
-            if (TextInputDialog.Show(out var FolderName, "请输入新文件夹的名字", "新建文件夹") && !FolderName.Contains("/"))
+            if (TextInputDialog.Show(out var FolderName, FindLocalizationResource("Lang-InputNewFolderName"), FindLocalizationResource("Lang-CreateFolder")) && !FolderName.Contains("/"))
             {
                 try
                 {
@@ -336,7 +336,7 @@ namespace SixCloud.Core.ViewModels
                 }
                 catch (RequestFailedException ex)
                 {
-                    MessageBox.Show("创建失败：" + ex.Message);
+                    MessageBox.Show($"{FindLocalizationResource("Lang-FailedToCreate")} {ex.Message}");
                     return;
                 }
 
@@ -536,60 +536,6 @@ namespace SixCloud.Core.ViewModels
             UploadFileCommand = new DependencyCommand(UploadFile, DependencyCommand.AlwaysCan);
             UploadFolderCommand = new DependencyCommand(UploadFolder, DependencyCommand.AlwaysCan);
             NavigateCommand = new DependencyCommand(Navigate, DependencyCommand.AlwaysCan);
-        }
-    }
-
-    public enum Mode
-    {
-        FileListContainer,
-        PathSelector
-    }
-
-    public class TooLongStringConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is string str)
-            {
-                var length = (parameter as int?) ?? 20;
-                if (str.Length > length)
-                {
-                    return $"{str.Substring(0, 14)}...{str.Substring(str.Length - 3)}";
-                }
-                else
-                {
-                    return str;
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class HidingSizeinfoForDirectoryConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is bool directory)
-            {
-                return directory ? Visibility.Collapsed : Visibility.Visible;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

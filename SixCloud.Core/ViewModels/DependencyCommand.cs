@@ -72,7 +72,7 @@ namespace SixCloud.Core.ViewModels
             {
                 if (IsAutoTryCatch)
                 {
-                    MessageBox.Show($"失败，由于{ex.Message}", "请求失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(ex.Message, Application.Current.FindResource("Lang-FailedToRequest").ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
                     ex.ToSentry().TreatedBy(nameof(DependencyCommand)).Submit();
                 }
                 else

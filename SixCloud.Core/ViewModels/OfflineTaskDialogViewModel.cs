@@ -120,8 +120,8 @@ namespace SixCloud.Core.ViewModels
             var openFileDialog = new OpenFileDialog
             {
                 Multiselect = false,
-                Title = "请选择需要离线下载的种子文件",
-                Filter = "BitTorrent种子文件|*.Torrent;*.torrent"
+                Title = FindLocalizationResource("Lang-SelectTorrentDialog-Title"),
+                Filter = $"{FindLocalizationResource("Lang-TorrentFiles")}|*.Torrent;*.torrent"
             };
 
             if (openFileDialog.ShowDialog() == true)
@@ -153,7 +153,7 @@ namespace SixCloud.Core.ViewModels
                     {
                         if (timeoutIndex++ > 50)
                         {
-                            Application.Current.Dispatcher.Invoke(() => MessageBox.Show("种子文件上传失败"));
+                            Application.Current.Dispatcher.Invoke(() => MessageBox.Show(FindLocalizationResource("Lang-UploadTorrentError")));
                             uploadSuccess = false;
                             return;
                         }
@@ -177,7 +177,10 @@ namespace SixCloud.Core.ViewModels
                 }
                 catch (RequestFailedException ex) when (ex.Code == "INTERNAL_SERVER_ERROR")
                 {
-                    MessageBox.Show($"种子文件解析失败：{ex.Message}，请尝试重新上传", ex.Code, MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(string.Format(FindLocalizationResource("Lang-FailedToParseTorrent-Message"), ex.Message),
+                                    ex.Code,
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
                     ex.ToSentry().TreatedBy(nameof(OfflineTaskDialogViewModel)).AttachExtraInfo("torrentTask", task).Submit();
                 }
             }
@@ -215,7 +218,10 @@ namespace SixCloud.Core.ViewModels
             }
             catch (RequestFailedException ex)
             {
-                Application.Current.Dispatcher.Invoke(() => MessageBox.Show($"离线任务添加失败，服务器返回：{ex.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Error));
+                Application.Current.Dispatcher.Invoke(() => MessageBox.Show(string.Format(FindLocalizationResource("Lang-FailedToCreateOfflineTask-Message"), ex.Message),
+                                                                            FindLocalizationResource("Lang-Failed"),
+                                                                            MessageBoxButton.OK,
+                                                                            MessageBoxImage.Error));
             }
         }
         #endregion

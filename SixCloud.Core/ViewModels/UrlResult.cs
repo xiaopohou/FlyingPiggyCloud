@@ -2,6 +2,7 @@
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Methods.V3;
 using System;
+using System.Windows;
 //using System.Windows.Forms;
 
 namespace SixCloud.Core.ViewModels
@@ -14,7 +15,7 @@ namespace SixCloud.Core.ViewModels
             {
                 if (SourceUrl == null)
                 {
-                    throw new InvalidOperationException("Url为空");
+                    throw new InvalidOperationException(Application.Current.FindResource("Lang-EmptyUrl").ToString());
                 }
 
                 try

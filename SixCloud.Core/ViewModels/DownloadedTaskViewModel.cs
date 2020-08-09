@@ -32,7 +32,7 @@ namespace SixCloud.Core.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "打开文件失败");
+                MessageBox.Show(ex.Message, FindLocalizationResource("Lang-FailedToOpenFile"));
                 //Deleted?.Invoke(this, new EventArgs());
             }
         }
@@ -50,7 +50,7 @@ namespace SixCloud.Core.ViewModels
             }
             else
             {
-                MessageBox.Show("找不到文件，可能已被删除", "打开文件失败");
+                MessageBox.Show(FindLocalizationResource("Lang-FileNotFound-MightBeDeleted"), FindLocalizationResource("Lang-FailedToOpenFile"));
                 Deleted?.Invoke(this, new EventArgs());
                 return;
             }
@@ -66,7 +66,7 @@ namespace SixCloud.Core.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "删除失败");
+                MessageBox.Show(ex.Message, FindLocalizationResource("Lang-FailedToDelete"));
             }
         }
         public event EventHandler Deleted;

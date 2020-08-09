@@ -6,11 +6,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 
 namespace SixCloud.Core.ViewModels
 {
@@ -55,7 +53,7 @@ namespace SixCloud.Core.ViewModels
             }
             catch (RequestFailedException ex)
             {
-                MessageBox.Show($"加载目录失败，由于{ex.Message}");
+                MessageBox.Show($"{FindLocalizationResource("Lang-FailedToLoad")} {ex.Message}");
             }
             catch (InvalidOperationException ex)
             {
@@ -110,51 +108,4 @@ namespace SixCloud.Core.ViewModels
             RefreshList();
         }
     }
-
-    internal class TaskStatusConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is OfflineTask offlineTask)
-            {
-                if (offlineTask.Progress == 100)
-                {
-                    return parameter as string == "I18N" ? "Completed" : "已完成";
-                }
-                else
-                {
-                    return offlineTask.Status switch
-                    {
-                        100 => "排队中",
-                        1000 => "下载完成",
-                        1301 => "正在下载",
-                        300 => "正在下载",
-                        _ => "重试中"
-                    };
-                }
-            }
-            else if (value is TransferTaskStatus transferItem)
-            {
-                return transferItem switch
-                {
-                    TransferTaskStatus.Completed => parameter as string == "I18N" ? "Completed" : "已完成",
-                    TransferTaskStatus.Pause => "暂停",
-                    TransferTaskStatus.Running => "进行中",
-                    TransferTaskStatus.Stop => "停止",
-                    TransferTaskStatus.Failed => "失败",
-                    _ => "未定义的状态枚举"
-                };
-            }
-            else
-            {
-                return "未定义的状态枚举";
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }

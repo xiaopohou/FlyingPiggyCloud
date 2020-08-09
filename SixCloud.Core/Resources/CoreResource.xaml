@@ -15,7 +15,7 @@
 
         <!--L10N-->
         <ResourceDictionary Source="pack://application:,,,/SixCloud.Core.LocalizationResources;component/zh-CN.xaml" />
-        
+        <ResourceDictionary Source="pack://application:,,,/SixCloud.Core.LocalizationResources;component/en-US.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MaterialDesignSlider}"/>

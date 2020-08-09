@@ -6,6 +6,7 @@ using SixCloudCore.FileUploader.Calculators;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SixCloud.Core.ViewModels
 {
@@ -51,7 +52,7 @@ namespace SixCloud.Core.ViewModels
                 {
                     lastTime = DateTime.Now;
                     lastCompletedBytes = task.CompletedBytes;
-                    return "0B/秒";
+                    return $"0B/{Application.Current.FindResource("Lang-Units-Second")}";
                 }
                 else
                 {
@@ -59,7 +60,7 @@ namespace SixCloud.Core.ViewModels
                     lastTime += span;
                     var intervalCompleted = task.CompletedBytes - lastCompletedBytes;
                     lastCompletedBytes += intervalCompleted;
-                    return Calculators.SizeCalculator((long)Math.Round(span.TotalSeconds == 0 ? 0 : intervalCompleted / span.TotalSeconds, 0)) + "/秒";
+                    return $"{Calculators.SizeCalculator((long)Math.Round(span.TotalSeconds == 0 ? 0 : intervalCompleted / span.TotalSeconds, 0))}/{Application.Current.FindResource("Lang - Units - Second")}";
                 }
             }
         }

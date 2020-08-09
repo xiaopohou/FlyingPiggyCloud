@@ -2,6 +2,7 @@
 using QingzhenyunApis.Utils;
 using System;
 using System.IO;
+using System.Windows;
 
 namespace SixCloud.Core.Models.Download
 {
@@ -15,7 +16,7 @@ namespace SixCloud.Core.Models.Download
         public double Progress { get; } = 100d;
         public bool Paused = false;
 
-        public string FriendlySpeed => Calculators.SizeCalculator(0) + "/秒";
+        public string FriendlySpeed => $"{ Calculators.SizeCalculator(0)}/{Application.Current.FindResource("Lang-Units-Second")}";
 
         public string Total => Calculators.SizeCalculator(0);
 

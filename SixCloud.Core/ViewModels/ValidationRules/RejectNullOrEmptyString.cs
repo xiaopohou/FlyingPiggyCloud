@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace SixCloud.Core.ViewModels.ValidationRules
@@ -13,7 +14,7 @@ namespace SixCloud.Core.ViewModels.ValidationRules
             }
             else
             {
-                return new ValidationResult(false, "输入内容为空");
+                return new ValidationResult(false, Application.Current.FindResource("Lang-InputNothing").ToString());
             }
         }
     }

@@ -29,7 +29,7 @@ namespace SixCloud.Core.ViewModels
 
             MainFrameWindow.MinHeight = 720;
             MainFrameWindow.MinWidth = 800;
-            MainFrameWindow.Title = "6盘，留住美好";
+            MainFrameWindow.Title = FindLocalizationResource("Lang-Slogan");
             MainFrameWindow.DataContext = this;
             MainFrameWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             MainFrameWindow.Content = new MainFrame();

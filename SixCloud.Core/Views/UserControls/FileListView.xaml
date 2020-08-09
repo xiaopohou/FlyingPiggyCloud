@@ -270,7 +270,7 @@
         <ListView Grid.Row="2" SelectedIndex="{Binding SelectedIndex, Mode=OneWayToSource}" ScrollViewer.ScrollChanged="FileList_ScrollChanged" x:Name="FileList" ItemsSource="{Binding FileList}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName}" CellTemplate="{StaticResource MetaName}" Header="{DynamicResource Lang-FolderName}" />
+                    <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFlieName}" CellTemplate="{StaticResource MetaName}" Header="{DynamicResource Lang-FileName}" />
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperFileSize}" CellTemplate="{StaticResource MetaSize}" Header="{DynamicResource Lang-Size}"/>
                     <GridViewColumn Width="{Binding ActualWidth, ElementName=WidthHelperMTime}" CellTemplate="{StaticResource MetaMTime}" Header="{DynamicResource Lang-MTime}"/>
                 </GridView>

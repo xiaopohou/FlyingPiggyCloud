@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace SixCloud.Core.ViewModels.ValidationRules
@@ -14,7 +15,7 @@ namespace SixCloud.Core.ViewModels.ValidationRules
             }
             else
             {
-                return new ValidationResult(false, "输入的电话号码有误");
+                return new ValidationResult(false, Application.Current.FindResource("Lang-InvalidPhoneNumber"));
             }
         }
     }

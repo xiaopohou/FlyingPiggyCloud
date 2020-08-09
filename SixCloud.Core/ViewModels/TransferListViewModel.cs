@@ -14,11 +14,11 @@ namespace SixCloud.Core.ViewModels
 {
     public class TransferListViewModel : ViewModelBase
     {
-        public string DownloadingListTitle => DownloadingList.Count == 0 ? string.Empty : $"在下载队列中（{DownloadingList.Count}）";
+        public string DownloadingListTitle => DownloadingList.Count == 0 ? string.Empty : string.Format(Application.Current.FindResource("Lang-DownloadListTitle").ToString(), DownloadingList.Count);
 
         public Visibility DownloadingListVisibility => string.IsNullOrEmpty(DownloadingListTitle) ? Visibility.Collapsed : Visibility.Visible;
 
-        public string UploadingListTitle => UploadingList.Count == 0 ? string.Empty : $"在上传队列中（{UploadingList.Count}）";
+        public string UploadingListTitle => UploadingList.Count == 0 ? string.Empty : string.Format(Application.Current.FindResource("Lang-UploadListTitle").ToString(), UploadingList.Count);
 
         public Visibility UploadingListVisibility => string.IsNullOrEmpty(UploadingListTitle) ? Visibility.Collapsed : Visibility.Visible;
 
@@ -60,7 +60,7 @@ namespace SixCloud.Core.ViewModels
             }
             catch (RequestFailedException ex) when (ex.Code == "FILE_NOT_FOUND")
             {
-                MessageBox.Show("请求失败，远程服务器未找到该文件", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Application.Current.FindResource("Lang-DownloadRequestFailed-Message").ToString(), FindLocalizationResource("Lang-Failed"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -72,9 +72,9 @@ namespace SixCloud.Core.ViewModels
                 AddDownloadingItem(task);
                 await task.InitTaskGroup();
             }
-            catch (IOException ex) when (ex.Message.Contains("不正确"))
+            catch (IOException ex)
             {
-                MessageBox.Show(ex.Message, "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, FindLocalizationResource("Lang-Failed"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -119,7 +119,10 @@ namespace SixCloud.Core.ViewModels
                 }
                 catch (RequestFailedException ex) when (ex.Code == "INTERNAL_SERVER_ERROR")
                 {
-                    Application.Current.Dispatcher.Invoke(() => MessageBox.Show("远程服务器错误，6盘未能创建任务", "失败", MessageBoxButton.OK, MessageBoxImage.Stop));
+                    Application.Current.Dispatcher.Invoke(() => MessageBox.Show(FindLocalizationResource("Lang-FailedToCreateTask-RemoteError-Message"),
+                                                                                FindLocalizationResource("Lang-Failed"),
+                                                                                MessageBoxButton.OK,
+                                                                                MessageBoxImage.Stop));
                     return;
                 }
 
@@ -139,7 +142,10 @@ namespace SixCloud.Core.ViewModels
             }
             else
             {
-                Application.Current.Dispatcher.Invoke(() => MessageBox.Show("由于找不到对象，6盘未能创建任务", "失败", MessageBoxButton.OK, MessageBoxImage.Stop));
+                Application.Current.Dispatcher.Invoke(() => MessageBox.Show(FindLocalizationResource("Lang-FailedToCreateTask-TargetNotFound-Message"),
+                                                                            FindLocalizationResource("Lang-Failed"),
+                                                                            MessageBoxButton.OK,
+                                                                            MessageBoxImage.Stop));
             }
         }
 

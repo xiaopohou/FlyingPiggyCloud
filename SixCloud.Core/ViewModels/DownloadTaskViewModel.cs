@@ -63,11 +63,11 @@ namespace SixCloud.Core.ViewModels
                 {
                     if (directory.Initialized)
                     {
-                        return $"已完成{directory.Completed}";
+                        return $"{FindLocalizationResource("Lang-Completed")}{directory.Completed}";
                     }
                     else
                     {
-                        return $"正在枚举下载项";
+                        return FindLocalizationResource("Lang-SearchingDownloadItems");
                     }
                 }
                 else
@@ -92,11 +92,11 @@ namespace SixCloud.Core.ViewModels
                 {
                     if (directory.Initialized)
                     {
-                        return $"共计{directory.Total}项";
+                        return string.Format(FindLocalizationResource("Lang-DownloadTaskGroup-Total"), directory.Total);
                     }
                     else
                     {
-                        return $"已发现{directory.Total}项";
+                        return string.Format(FindLocalizationResource("Lang-DownloadTaskGroup-Found"), directory.Total);
                     }
                 }
                 else
@@ -144,7 +144,7 @@ namespace SixCloud.Core.ViewModels
 
         }
 
-        public string FriendlySpeed => innerTask is CommonFileDownloadTask common ? Calculators.SizeCalculator(common.Speed) + "/秒" : string.Empty;
+        public string FriendlySpeed => innerTask is CommonFileDownloadTask common ? $"{Calculators.SizeCalculator(common.Speed)}/{FindLocalizationResource("Lang-Units-Second")}" : string.Empty;
 
         public event EventHandler TaskComplete;
 
@@ -233,8 +233,6 @@ namespace SixCloud.Core.ViewModels
             PauseCommand = new DependencyCommand(Pause, CanPause);
             CancelCommand = new DependencyCommand(Cancel, DependencyCommand.AlwaysCan);
             ShowDetailsCommand = new DependencyCommand(ShowDetails, CanShowDetails);
-
-            //Status = TransferTaskStatus.Running;
 
             if (innerTask.IsCompleted)
             {

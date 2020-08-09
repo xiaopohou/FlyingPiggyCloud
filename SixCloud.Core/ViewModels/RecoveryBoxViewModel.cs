@@ -103,7 +103,7 @@ namespace SixCloud.Core.ViewModels
             }
             catch (RequestFailedException ex)
             {
-                MessageBox.Show($"加载目录失败，由于{ex.Message}");
+                MessageBox.Show($"{FindLocalizationResource("Lang-FailedToLoad")} {ex.Message}");
             }
         }
 

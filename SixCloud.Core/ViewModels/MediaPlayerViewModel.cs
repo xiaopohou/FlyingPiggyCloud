@@ -53,7 +53,7 @@ namespace SixCloud.Core.ViewModels
 
         public MediaPlayer MediaPlayer { get; }
 
-        public string Title { get; } = "在线预览";
+        public string Title { get; } = FindLocalizationResource("Lang-MediaPlayer-Title");
 
         public string Source { get; }
 

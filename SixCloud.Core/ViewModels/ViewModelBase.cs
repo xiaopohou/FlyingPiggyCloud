@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows;
 
 namespace SixCloud.Core.ViewModels
 {
@@ -9,6 +10,11 @@ namespace SixCloud.Core.ViewModels
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected static string FindLocalizationResource(string langKey)
+        {
+            return Application.Current.FindResource(langKey).ToString();
         }
     }
 }
