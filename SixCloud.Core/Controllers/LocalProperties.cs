@@ -35,7 +35,7 @@ namespace SixCloud.Core.Controllers
             {
                 try
                 {
-                    return (string)ApplicationDictionary.GetValue(nameof(Lang));
+                    return (string)ApplicationDictionary.GetValue(nameof(Lang)) ?? "zh-CN";
                 }
                 catch (Exception ex)
                 {

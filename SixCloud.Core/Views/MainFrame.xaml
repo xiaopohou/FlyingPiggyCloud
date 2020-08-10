@@ -165,7 +165,7 @@
                     <Button Content="{DynamicResource Lang-ChangePassword}" Command="{Binding ChangePasswordCommand}" Height="50" Width="280"/>
                     <StackPanel Orientation="Horizontal" Height="50" HorizontalAlignment="Center">
                         <metro:LightButton FontIcon="&#xf53f;" Height="50" Width="50" ToolTip="{DynamicResource Lang-ChangeColor}" Command="{Binding ChangeAccentColorCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
-                        <!--<metro:LightButton Height="50" Width="50"/>-->
+                        <metro:LightButton FontIcon="&#xf1ab;" Height="50" Width="50" ToolTip="{DynamicResource Lang-ChangeLanguage}" Command="{Binding ChangeLanguageCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                         <!--<metro:LightButton Height="50" Width="50"/>-->
                         <!--<metro:LightButton Height="50" Width="50"/>-->
                         <!--<metro:LightButton Height="50" Width="50"/>-->

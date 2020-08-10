@@ -26,24 +26,10 @@ namespace SixCloud.Core
                 ColorSetter.BackgroundColor = LocalProperties.BackgroundColor.Value;
             }
 
-            LangSetter(LocalProperties.Lang);
+            LanguageSetter.SetLanguage(LocalProperties.Lang);
         }
 
-        public static void LangSetter(string lang = "zh-CN")
-        {
-            var dictionaryList = Application.Current.Resources.MergedDictionaries.ToList();
-            var requestedCulture = $"pack://application:,,,/SixCloud.Core.LocalizationResources;component/{lang}.xaml";
-            requestedCulture = $"pack://application:,,,/SixCloud.Core.LocalizationResources;component/en-US.xaml";
 
-            var resourceDictionary = dictionaryList.FirstOrDefault(d => d.Source.OriginalString.Equals(requestedCulture));
-
-            if (resourceDictionary != null)
-            {
-                Application.Current.Resources.MergedDictionaries.Remove(resourceDictionary);
-                Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
-            }
-
-        }
 
         static Core()
         {

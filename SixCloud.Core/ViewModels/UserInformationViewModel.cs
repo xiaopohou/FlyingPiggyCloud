@@ -7,6 +7,8 @@ using SixCloud.Core.Controllers;
 using SixCloud.Core.Views;
 using SixCloud.Core.Views.Dialogs;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -16,6 +18,8 @@ namespace SixCloud.Core.ViewModels
 {
     public sealed class UserInformationViewModel : ViewModelBase
     {
+        private static readonly IEnumerator<string> languageSwitcher = LanguageSetter.SwitchLanguage().GetEnumerator();
+
         public ImageSource Icon { get; set; }
 
         public double AvailableRate { get; set; }
@@ -30,12 +34,13 @@ namespace SixCloud.Core.ViewModels
 
         public UserInformationViewModel()
         {
-            ChangeUserNameCommand = new DependencyCommand(ChangeUserName, DependencyCommand.AlwaysCan);
-            ChangePasswordCommand = new DependencyCommand(ChangePassword, DependencyCommand.AlwaysCan);
-            LogoutCommand = new DependencyCommand(Logout, DependencyCommand.AlwaysCan);
-            RenewalCommand = new DependencyCommand(Renewal, DependencyCommand.AlwaysCan);
-            AboutCommand = new DependencyCommand(About, DependencyCommand.AlwaysCan);
-            ChangeAccentColorCommand = new DependencyCommand(ChangeAccentColor, DependencyCommand.AlwaysCan);
+            ChangeUserNameCommand = new DependencyCommand(ChangeUserName);
+            ChangePasswordCommand = new DependencyCommand(ChangePassword);
+            LogoutCommand = new DependencyCommand(Logout);
+            RenewalCommand = new DependencyCommand(Renewal);
+            AboutCommand = new DependencyCommand(About);
+            ChangeAccentColorCommand = new DependencyCommand(ChangeAccentColor);
+            ChangeLanguageCommand = new DependencyCommand(ChangeLanguage);
             ParseInformation();
         }
 
@@ -145,6 +150,13 @@ namespace SixCloud.Core.ViewModels
             new AboutDialog { Owner = parameter as Window }.Show();
         }
 
+        public DependencyCommand ChangeLanguageCommand { get; set; }
+        private async void ChangeLanguage(object parameter)
+        {
+            languageSwitcher.MoveNext();
+            (parameter as Window).Close();
+            await new MainFrameViewModel().InitializeComponent();
+        }
         #endregion
     }
 }

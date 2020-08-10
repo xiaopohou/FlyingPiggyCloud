@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 
 namespace SixCloud.Core.Controllers
@@ -39,7 +43,6 @@ namespace SixCloud.Core.Controllers
             LocalProperties.BackgroundColor = color;
         }
 
-
         private static Color Multiply(Color color, double coefficient)
         {
             if (coefficient > 0)
@@ -53,6 +56,62 @@ namespace SixCloud.Core.Controllers
             else
             {
                 return color;
+            }
+        }
+    }
+
+    internal class LanguageSetter
+    {
+        public static void SetLanguage(string lang = "zh-CN")
+        {
+            var dictionaryList = Application.Current.Resources.MergedDictionaries.ToList();
+            var requestedCulture = $"pack://application:,,,/SixCloud.Core.LocalizationResources;component/{lang}.xaml";
+
+            var defaultCulture = $"pack://application:,,,/SixCloud.Core.LocalizationResources;component/en-US.xaml";
+            var defaultPackage = dictionaryList.FirstOrDefault(d => d.Source.OriginalString.Equals(defaultCulture));
+
+            if (defaultPackage != default)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(defaultPackage);
+                Application.Current.Resources.MergedDictionaries.Add(defaultPackage);
+            }
+
+            if (requestedCulture != defaultCulture)
+            {
+                var requestPackage = dictionaryList.FirstOrDefault(d => d.Source.OriginalString.Equals(requestedCulture));
+
+                if (requestPackage != default)
+                {
+                    Application.Current.Resources.MergedDictionaries.Remove(requestPackage);
+                    Application.Current.Resources.MergedDictionaries.Add(requestPackage);
+                }
+            }
+
+            LocalProperties.Lang = lang;
+        }
+
+        public static IEnumerable<string> AvailableLanguage()
+        {
+            return from package in Application.Current.Resources.MergedDictionaries.ToList()
+                   where package.Source.OriginalString.StartsWith("pack://application:,,,/SixCloud.Core.LocalizationResources;component/")
+                   let originalString = package.Source.OriginalString
+                   orderby originalString ascending
+                   select originalString.Substring(originalString.Length - 10, 5);
+        }
+
+        /// <summary>
+        /// 切换语言
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<string> SwitchLanguage()
+        {
+            while (true)
+            {
+                foreach (var lang in AvailableLanguage())
+                {
+                    SetLanguage(lang);
+                    yield return lang;
+                }
             }
         }
     }
