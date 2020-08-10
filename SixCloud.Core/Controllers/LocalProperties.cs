@@ -29,6 +29,24 @@ namespace SixCloud.Core.Controllers
 
             set => ApplicationDictionary.SetValue(nameof(Token), value);
         }
+        public static string Lang
+        {
+            get
+            {
+                try
+                {
+                    return (string)ApplicationDictionary.GetValue(nameof(Lang));
+                }
+                catch (Exception ex)
+                {
+                    ex.ToSentry().TreatedBy(nameof(LocalProperties)).Submit();
+                    Lang = "zh-CN";
+                    return Lang;
+                }
+            }
+
+            set => ApplicationDictionary.SetValue(nameof(Lang), value);
+        }
 
         public static FileViewType FileViewType
         {

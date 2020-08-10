@@ -77,7 +77,7 @@
     <system:String x:Key="Lang-ImportPackagesInfo">This software references the following open source projects (license):</system:String>
     <system:String x:Key="Lang-FrendlySpaceCapacity-Total">Total: </system:String>
     <system:String x:Key="Lang-FrendlySpaceCapacity-Used">Used: </system:String>
-    <system:String x:Key="Lang-FriendlyVipExpireTime">Subscription user expiration time: </system:String>
+    <system:String x:Key="Lang-FriendlyVipExpireTime">Subscription expiration time: </system:String>
     <system:String x:Key="Lang-RenewalMessage">Modern client membership renewal interface docking, not yet supported.</system:String>
     <system:String x:Key="Lang-RenewalTitle">Not Supported</system:String>
     <system:String x:Key="Lang-ModifyUsername-InputPlaceHolder">Please enter a new username.</system:String>
