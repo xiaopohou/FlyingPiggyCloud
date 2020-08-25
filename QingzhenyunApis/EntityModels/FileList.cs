@@ -3,14 +3,8 @@ using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class FileList : EntityBodyBase
+    public class FileList : DataListResult<FileMetaData>
     {
-        /// <summary>
-        /// 文件夹及文件列表
-        /// </summary>
-        [JsonProperty(PropertyName = "dataList")]
-        public List<FileMetaData> List { get; set; }
-
         /// <summary>
         /// 当前目录MetaData
         /// </summary>
@@ -18,4 +12,5 @@ namespace QingzhenyunApis.EntityModels
         public FileMetaData DictionaryInformation { get; set; }
 
     }
+
 }

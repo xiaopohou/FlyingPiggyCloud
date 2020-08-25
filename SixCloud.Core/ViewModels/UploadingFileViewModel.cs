@@ -29,7 +29,7 @@ namespace SixCloud.Core.ViewModels
             var hash = await Task.Run(() => $"{ETag.ComputeEtag(LocalFilePath)}{Calculators.LongTo36(new FileInfo(LocalFilePath).Length)}");
             try
             {
-                var x = await FileSystem.UploadFile(Name, parentPath: TargetPath, hash: hash, originalFilename: Name);
+                var x = await FileSystem.UploadFile(Name, parentPath: TargetPath, hash: hash);
                 task = x.Created ? new HashCachedTask(hash) : EzWcs.NewTask(LocalFilePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
 
             }

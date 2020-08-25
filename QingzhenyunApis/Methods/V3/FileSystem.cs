@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace QingzhenyunApis.Methods.V3
 {
-    public sealed class FileSystem : SixCloudMethodBase
+    public sealed partial class FileSystem : SixCloudMethodBase
     {
         /// <summary>
         /// 新建文件夹，Parent和Path参数不可共存
@@ -31,7 +31,7 @@ namespace QingzhenyunApis.Methods.V3
                 data.path = path;
             }
 
-            return await PostAsync<FileMetaData>(JsonConvert.SerializeObject(data), "/v3/file");
+            return await PostAsync<FileMetaData>(JsonConvert.SerializeObject(data), "/v3/newfile/");
         }
 
         /// <summary>
@@ -41,25 +41,40 @@ namespace QingzhenyunApis.Methods.V3
         /// <returns></returns>
         public static async Task<FileMetaData> GetDetailsByIdentity(string identity)
         {
-            return await GetAsync<FileMetaData>($"/v3/file/{identity}");
+            return await GetAsync<FileMetaData>($"/v3/newfile/{identity}");
         }
 
         /// <summary>
         /// 获取目录
         /// </summary>
         /// <param name="parentIdentity">该文件夹的ID</param>
-        /// <param name="path">路径</param>
+        /// <param name="parentPath">路径</param>
+        /// <param name="skip"></param>
+        /// <param name="limit"></param>
+        /// <param name="type"></param>
+        /// <param name="search"></param>
+        /// <param name="hidden"></param>
+        /// <param name="directory"></param>
+        /// <param name="label"></param>
         /// <returns></returns>
-        public static async Task<FileList> GetDirectory(string parentIdentity = "", string path = "", int start = 0, int limit = 20, Type? type = null)
+        public static async Task<FileList> GetDirectory(string parentIdentity = "",
+                                                        string parentPath = "",
+                                                        int skip = 0,
+                                                        int limit = 20,
+                                                        Type? type = null,
+                                                        string search = "",
+                                                        object hidden = null,
+                                                        bool? directory = null,
+                                                        object label = null)
         {
             dynamic data = new ExpandoObject();
             if (!string.IsNullOrEmpty(parentIdentity))
             {
                 data.parentIdentity = parentIdentity;
             }
-            else if (!string.IsNullOrEmpty(path))
+            else if (!string.IsNullOrEmpty(parentPath))
             {
-                data.parentPath = path;
+                data.parentPath = parentPath;
             }
             else
             {
@@ -71,9 +86,9 @@ namespace QingzhenyunApis.Methods.V3
                 data.type = type;
             }
 
-            data.skip = start;
+            data.skip = skip;
             data.limit = limit;
-            return await PostAsync<FileList>(JsonConvert.SerializeObject(data), "/v3/files/list");
+            return await PostAsync<FileList>(JsonConvert.SerializeObject(data), "/v3/newfiles/");
         }
 
         /// <summary>
@@ -83,7 +98,73 @@ namespace QingzhenyunApis.Methods.V3
         /// <returns></returns>
         public static async Task<FileMetaData> GetDownloadUrlByIdentity(string identity)
         {
-            return await PostAsync<FileMetaData>(JsonConvert.SerializeObject(new { identity }), "/v3/file/download");
+            return await PostAsync<FileMetaData>(JsonConvert.SerializeObject(new { identity }), "/v3/newfile/download");
+        }
+
+        /// <summary>
+        /// 重命名文件夹或文件
+        /// </summary>
+        /// <param name="identity">被重命名的项目</param>
+        /// <param name="name">新名称</param>
+        /// <returns></returns>
+        public static async Task<FileSystemOperate> Rename(string identity, string name)
+        {
+            var data = new { identity, name };
+            return await PostAsync<FileSystemOperate>(JsonConvert.SerializeObject(data), "/v3/newfile/rename");
+        }
+
+        /// <summary>
+        /// 移动一组文件或文件夹到同一个目录
+        /// </summary>
+        /// <param name="sourceUUIDList"></param>
+        /// <param name="targetDirectoryUUID"></param>
+        /// <returns></returns>
+        public static async Task<FileSystemOperate> Move(string[] sourceUUIDList, string targetDirectoryUUID)
+        {
+            var data = new
+            {
+                sourceIdentity = sourceUUIDList,
+                identity = targetDirectoryUUID
+            };
+            return await PostAsync<FileSystemOperate>(JsonConvert.SerializeObject(data), "/v3/newfile/move");
+        }
+
+        /// <summary>
+        /// 复制一组文件夹或文件
+        /// </summary>
+        /// <param name="sourceUUIDList"></param>
+        /// <param name="targetDirectoryUUID"></param>
+        /// <returns></returns>
+        public static async Task<FileSystemOperate> Copy(string[] sourceIdentity, string identity)
+        {
+            var data = new
+            {
+                sourceIdentity,
+                identity
+            };
+            return await PostAsync<FileSystemOperate>(JsonConvert.SerializeObject(data), "/v3/newfile/copy");
+        }
+
+        /// <summary>
+        /// 删除文件夹或文件
+        /// </summary>
+        /// <param name="uuid">被删除的项目</param>
+        /// <returns></returns>
+        public static async Task<FileSystemOperate> Remove(string identity)
+        {
+            return await Remove(new string[] { identity });
+        }
+
+        /// <summary>
+        /// 删除文件夹或文件
+        /// </summary>
+        /// <param name="uuid">被删除的项目</param>
+        /// <returns></returns>
+        public static async Task<FileSystemOperate> Remove(string[] sourceIdentity, bool directDelete = false)
+        {
+            var data = new { sourceIdentity, directDelete };
+
+            return await PostAsync<FileSystemOperate>(JsonConvert.SerializeObject(data), "/v3/newfile/trash");
         }
 
         /// <summary>
@@ -94,10 +175,15 @@ namespace QingzhenyunApis.Methods.V3
         /// <param name="hash">哈希</param>
         /// <param name="originalFilename">保存的源信息的文件名</param>
         /// <returns></returns>
-        public static async Task<UploadToken> UploadFile(string name, string parentUUID = null, string parentPath = null, string hash = null, string originalFilename = null)
+        public static async Task<UploadToken> UploadFile(string name,
+                                                         string parentUUID = null,
+                                                         string parentPath = null,
+                                                         string hash = null,
+                                                         UploadOption op = UploadOption.Overwrite)
         {
             dynamic data = new ExpandoObject();
             data.name = name;
+            data.op = op;
 
             if (parentUUID != null)
             {
@@ -119,106 +205,6 @@ namespace QingzhenyunApis.Methods.V3
 
             dynamic x = await PostAsync<UploadToken>(JsonConvert.SerializeObject(data), "/v3/file/uploadToken");
             return x;
-        }
-
-        /// <summary>
-        /// 移动文件夹或文件
-        /// </summary>
-        /// <param name="SourceMeta">被移动的项目</param>
-        /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
-        /// <returns></returns>
-        public static async Task<SuccessCount> Move(string sourceUUID, string targetDirectoryUUID)
-        {
-            return await Move(new string[] { sourceUUID }, targetDirectoryUUID);
-        }
-
-        /// <summary>
-        /// 移动一组文件或文件夹到同一个目录
-        /// </summary>
-        /// <param name="sourceUUIDList"></param>
-        /// <param name="targetDirectoryUUID"></param>
-        /// <returns></returns>
-        public static async Task<SuccessCount> Move(string[] sourceUUIDList, string targetDirectoryUUID)
-        {
-            var data = new
-            {
-                sourceIdentity = sourceUUIDList,
-                identity = targetDirectoryUUID
-            };
-            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/file/move");
-        }
-
-        /// <summary>
-        /// 复制文件夹或文件
-        /// </summary>
-        /// <param name="SourceMeta">被复制的项目</param>
-        /// <param name="TargetDirectory">目标位置，必须是一个文件夹的Meta信息</param>
-        /// <returns></returns>
-        public static async Task<SuccessCount> Copy(string sourceUUID, string targetDirectoryUUID)
-        {
-            return await Copy(new string[] { sourceUUID }, targetDirectoryUUID);
-        }
-
-        /// <summary>
-        /// 复制一组文件夹或文件
-        /// </summary>
-        /// <param name="sourceUUIDList"></param>
-        /// <param name="targetDirectoryUUID"></param>
-        /// <returns></returns>
-        public static async Task<SuccessCount> Copy(string[] sourceIdentity, string identity)
-        {
-            var data = new
-            {
-                sourceIdentity,
-                identity
-            };
-            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/file/copy");
-        }
-
-        /// <summary>
-        /// 重命名文件夹或文件
-        /// </summary>
-        /// <param name="identity">被重命名的项目</param>
-        /// <param name="name">新名称</param>
-        /// <returns></returns>
-        public static async Task<FileMetaData> Rename(string identity, string name)
-        {
-            var data = new { identity, name };
-            return await PostAsync<FileMetaData>(JsonConvert.SerializeObject(data), "/v3/file/rename");
-        }
-
-        /// <summary>
-        /// 删除文件夹或文件
-        /// </summary>
-        /// <param name="uuid">被删除的项目</param>
-        /// <returns></returns>
-        public static async Task<SuccessCount> Remove(string identity)
-        {
-            return await Remove(new string[] { identity });
-        }
-
-        /// <summary>
-        /// 删除文件夹或文件
-        /// </summary>
-        /// <param name="uuid">被删除的项目</param>
-        /// <returns></returns>
-        public static async Task<SuccessCount> Remove(string[] sourceIdentity)
-        {
-            var data = new { sourceIdentity };
-
-            return await PostAsync<SuccessCount>(JsonConvert.SerializeObject(data), "/v3/file/trash");
-        }
-
-        public enum Type
-        {
-            Unknown = 0,
-            Directory = 10,
-            Image = 20,
-            Video = 30,
-            Document = 40,
-            Audio = 50,
-            Archive = 60,
-            Torrent = 70
         }
     }
 }

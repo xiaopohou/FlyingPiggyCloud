@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class OfflineTaskList : EntityBodyBase
+    public class OfflineTaskList : DataListResult<OfflineTask>
     {
-        [JsonProperty(PropertyName = "dataList")]
-        public List<OfflineTask> List { get; set; }
+
     }
 }

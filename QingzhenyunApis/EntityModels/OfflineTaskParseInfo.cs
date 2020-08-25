@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class OfflineTaskParseInfo : EntityBodyBase
+    public class OfflineTaskParseInfo : DataListResult<OfflineTaskParseFile>
     {
         [JsonProperty("textLink")]
         public string TextLink { get; set; }
@@ -26,7 +26,7 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty("size")]
         public long Size { get; set; }
 
-        [JsonProperty("dataList")]
-        public IList<OfflineTaskParseFile> DataList { get; set; }
+        //[JsonProperty("dataList")]
+        //public IList<OfflineTaskParseFile> DataList { get; set; }
     }
 }

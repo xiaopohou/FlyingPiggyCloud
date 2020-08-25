@@ -75,8 +75,8 @@ namespace SixCloud.Core.ViewModels
             do
             {
                 var x = await RecoveryBox.GetList(skip, limit);
-                count = x.List.Count;
-                foreach (var item in x.List)
+                count = x.DataList.Count;
+                foreach (var item in x.DataList)
                 {
                     yield return item;
                 }

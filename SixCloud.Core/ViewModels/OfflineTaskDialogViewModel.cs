@@ -135,7 +135,7 @@ namespace SixCloud.Core.ViewModels
                 IUploadTask task;
                 try
                 {
-                    var x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash, originalFilename: Name);
+                    var x = await FileSystem.UploadFile(Name, parentPath: targetPath, hash: hash);
                     task = x.Created ? new UploadingFileViewModel.HashCachedTask(hash) : EzWcs.NewTask(filePath, x.UploadTokenUploadToken, x.DirectUploadUrl, x.PartUploadUrl);
 
                 }

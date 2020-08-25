@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class RecoveryBoxPage : EntityBodyBase
+    public class RecoveryBoxPage : DataListResult<RecoveryBoxItem>
     {
-        [JsonProperty(PropertyName = "dataList")]
-        public List<RecoveryBoxItem> List { get; set; }
     }
 }

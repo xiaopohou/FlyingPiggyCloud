@@ -117,8 +117,8 @@ namespace SixCloud.Core.ViewModels
             do
             {
                 var x = await FileSystem.GetDirectory(identity, path, start, limit, type);
-                count = x.List.Count;
-                foreach (var item in x.List)
+                count = x.DataList.Count;
+                foreach (var item in x.DataList)
                 {
                     if (mode == Mode.PathSelector && !item.Directory)
                     {
@@ -184,7 +184,7 @@ namespace SixCloud.Core.ViewModels
         {
             previousPath.Push(CurrentPath);
             fileMetaDataEnumerator = CreateFileListEnumerator(0, path, mode: Mode).GetAsyncEnumerator();
-            var directoryInfo = (await FileSystem.GetDirectory(path: path, start: 0, limit: 1)).DictionaryInformation;
+            var directoryInfo = (await FileSystem.GetDirectory(parentPath: path, skip: 0, limit: 1)).DictionaryInformation;
             CurrentPath = directoryInfo.Path;
             CurrentUUID = directoryInfo.UUID;
             Application.Current.Dispatcher.Invoke(() => FileList.Clear());
@@ -296,7 +296,7 @@ namespace SixCloud.Core.ViewModels
 
                 if (Enum.TryParse<FileSystem.Type>(targetPath, out var type))
                 {
-                    var rootDircetory = await FileSystem.GetDirectory(path: "/");
+                    var rootDircetory = await FileSystem.GetDirectory(parentPath: "/");
 
                     fileMetaDataEnumerator = CreateFileListEnumerator(0, identity: $"::all", mode: Mode, type: type).GetAsyncEnumerator();
                 }
