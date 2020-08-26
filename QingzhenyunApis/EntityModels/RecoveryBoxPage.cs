@@ -2,7 +2,7 @@
 
 namespace QingzhenyunApis.EntityModels
 {
-    public class RecoveryBoxPage : DataListResult<RecoveryBoxItem>
-    {
-    }
+    //public class RecoveryBoxPage : 
+    //{
+    //}
 }
