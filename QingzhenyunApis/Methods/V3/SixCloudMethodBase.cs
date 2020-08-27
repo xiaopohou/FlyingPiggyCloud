@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Utils;
+using SocketIOClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace QingzhenyunApis.Methods.V3
     {
         protected const string AccessKeyId = "bc088aa5e2ad";
         private const string AccessKeySecret = "DyO04JriYoqJ9f57";
+
         private static readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
 
         static SixCloudMethodBase()
@@ -116,6 +118,42 @@ namespace QingzhenyunApis.Methods.V3
 
         public static string Token { get; protected set; } = string.Empty;
 
+        protected static SocketIO SocketIO { get; private set; }
+
+        protected static async void InitializeSocketClient(string uid)
+        {
+            if (SocketIO == null)
+            {
+                return;
+            }
+
+            SocketIO ??= new SocketIO("https://ws.6pan.cn/notice");
+
+            SocketIO.Options.Query["user"] = uid;
+
+            SocketIO.On("file.progress", (x) =>
+            {
+                x.GetValue<string>();
+            });
+
+            SocketIO.On("file.complete", (x) =>
+            {
+                x.GetValue<string>();
+            });
+
+            SocketIO.On("file.error", (x) =>
+            {
+                x.GetValue<string>();
+            });
+
+            SocketIO.On("file.cancel", (x) =>
+            {
+                x.GetValue<string>();
+            });
+
+            await SocketIO.ConnectAsync();
+        }
+
         protected static async Task<T> PostAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
             using var requestObject = new StringContent(data);
@@ -126,7 +164,6 @@ namespace QingzhenyunApis.Methods.V3
             //构建签名
             CreateSignature("POST", ref uri, isAnonymous, querys, headers);
 
-            string responseBody;
             try
             {
                 //发起请求
@@ -136,7 +173,7 @@ namespace QingzhenyunApis.Methods.V3
                 {
                     Token = newToken.FirstOrDefault() ?? Token;
                 }
-                responseBody = await response.Content.ReadAsStringAsync();
+                var responseBody = await response.Content.ReadAsStringAsync();
 
                 return ParseResult<T>(responseBody);
             }

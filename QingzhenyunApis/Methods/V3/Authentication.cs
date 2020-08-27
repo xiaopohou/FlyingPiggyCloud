@@ -11,12 +11,14 @@ namespace QingzhenyunApis.Methods.V3
         public static async Task<UserInformation> GetUserInformation(string token = null)
         {
             Token = token ?? Token;
-            return await GetAsync<UserInformation>("/v3/user/info");
+            var userInfo = await GetAsync<UserInformation>("/v3/user/info");
+            InitializeSocketClient(userInfo.UUID.ToString());
+            return userInfo;
         }
 
         public static async Task Logout()
         {
-            var x = await PostAsync<object>("", "/v3/user/logout");
+            await PostAsync<object>("", "/v3/user/logout");
             Token = null;
         }
 
