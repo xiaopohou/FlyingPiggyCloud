@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using QingzhenyunApis.EntityModels;
 using QingzhenyunApis.Exceptions;
 using QingzhenyunApis.Utils;
 using SocketIOClient;
@@ -24,6 +25,7 @@ namespace QingzhenyunApis.Methods.V3
         private const string AccessKeySecret = "DyO04JriYoqJ9f57";
 
         private static readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://api.6pan.cn") };
+        private static SocketIO socketIO;
 
         static SixCloudMethodBase()
         {
@@ -99,7 +101,12 @@ namespace QingzhenyunApis.Methods.V3
             {
                 try
                 {
-                    return JsonConvert.DeserializeObject<T>(responseBody);
+                    var x = JsonConvert.DeserializeObject<T>(responseBody);
+                    if (x is FileSystemOperate operate)
+                    {
+                        FileSystemOperateList[operate.Identity] = operate;
+                    }
+                    return x;
                 }
                 catch (JsonSerializationException)
                 {
@@ -116,43 +123,58 @@ namespace QingzhenyunApis.Methods.V3
             }
         }
 
+        private static void SocketMessageHandler(string message)
+        {
+            try
+            {
+                var msg = ParseResult<SocketMessage>(message);
+                FileSystemOperateList[msg.Identity]?.OnSocketMessageArrived(msg);
+            }
+            catch (RequestFailedException ex)
+            {
+                ex.Submit("UnkonwnSocketIOMessage");
+            }
+        }
+
         public static string Token { get; protected set; } = string.Empty;
 
-        protected static SocketIO SocketIO { get; private set; }
+        internal static Dictionary<string, FileSystemOperate> FileSystemOperateList { get; } = new Dictionary<string, FileSystemOperate>();
 
         protected static async void InitializeSocketClient(string uid)
         {
-            if (SocketIO == null)
+            if (socketIO == null)
             {
                 return;
             }
 
-            SocketIO ??= new SocketIO("https://ws.6pan.cn/notice");
+            socketIO ??= new SocketIO("https://ws.6pan.cn/notice");
 
-            SocketIO.Options.Query["user"] = uid;
+            socketIO.Options.Query["user"] = uid;
 
-            SocketIO.On("file.progress", (x) =>
+            socketIO.On("file.progress", (x) =>
             {
-                x.GetValue<string>();
+                SocketMessageHandler(x.GetValue<string>());
             });
 
-            SocketIO.On("file.complete", (x) =>
+            socketIO.On("file.complete", (x) =>
             {
-                x.GetValue<string>();
+                SocketMessageHandler(x.GetValue<string>());
             });
 
-            SocketIO.On("file.error", (x) =>
+            socketIO.On("file.error", (x) =>
             {
-                x.GetValue<string>();
+                SocketMessageHandler(x.GetValue<string>());
             });
 
-            SocketIO.On("file.cancel", (x) =>
+            socketIO.On("file.cancel", (x) =>
             {
-                x.GetValue<string>();
+                SocketMessageHandler(x.GetValue<string>());
             });
 
-            await SocketIO.ConnectAsync();
+            await socketIO.ConnectAsync();
         }
+
+        #region HTTP Methods
 
         protected static async Task<T> PostAsync<T>(string data, string uri, Dictionary<string, string> querys = null, bool isAnonymous = false)
         {
@@ -399,6 +421,7 @@ namespace QingzhenyunApis.Methods.V3
             }
 
         }
+        #endregion
 
         protected SixCloudMethodBase(string token = null)
         {

@@ -55,6 +55,11 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty(PropertyName = "deleted")]
         public bool Deleted { get; set; }
 
+        [JsonProperty("hidden")]
+        public bool Hidden { get; set; }
+
+        [JsonProperty("label")]
+        public long Label { get; set; }
 
         /// <summary>
         /// 父目录id
@@ -137,29 +142,22 @@ namespace QingzhenyunApis.EntityModels
         [JsonProperty(PropertyName = "share")]
         public bool Share { get; set; }
 
-
-        /// <summary>
-        /// 0:正常文件，1:回收站
-        /// </summary>
-        [JsonProperty(PropertyName = "recycle")]
-        public int Recycle { get; set; }
-
-
         /// <summary>
         /// 文件下载地址
         /// </summary>
         [JsonProperty(PropertyName = "downloadAddress")]
         public string DownloadAddress { get; set; }
 
-    }
+        [JsonProperty("lockTime")]
+        public long LockTime { get; set; }
 
-    public enum PreviewType
-    {
-        Unknown = 0,
-        HLS = 3010,
-        MP3 = 3020,
-        Image = 3030,
-        Document = 3040,
-        Archive = 3050
+        [JsonProperty("children")]
+        public long Children { get; set; }
+
+        [JsonProperty("childrenTotal")]
+        public long ChildrenTotal { get; set; }
+
+        [JsonProperty("sticky")]
+        public long Sticky { get; set; }
     }
 }
