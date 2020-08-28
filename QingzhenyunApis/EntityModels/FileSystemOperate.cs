@@ -33,7 +33,7 @@ namespace QingzhenyunApis.EntityModels
             {
                 if (disposing)
                 {
-                    SixCloudMethodBase.FileSystemOperateList.Remove(Identity);
+                    SixCloudMethodBase.AsyncFileSystemOperates.Remove(Identity);
                 }
 
                 // TODO: 释放未托管的资源(未托管的对象)并替代终结器

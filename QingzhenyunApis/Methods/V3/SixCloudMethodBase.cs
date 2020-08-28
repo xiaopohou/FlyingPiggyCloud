@@ -102,9 +102,9 @@ namespace QingzhenyunApis.Methods.V3
                 try
                 {
                     var x = JsonConvert.DeserializeObject<T>(responseBody);
-                    if (x is FileSystemOperate operate)
+                    if (x is FileSystemOperate operate && operate.Async)
                     {
-                        FileSystemOperateList[operate.Identity] = operate;
+                        AsyncFileSystemOperates[operate.Identity] = operate;
                     }
                     return x;
                 }
@@ -128,7 +128,7 @@ namespace QingzhenyunApis.Methods.V3
             try
             {
                 var msg = ParseResult<SocketMessage>(message);
-                FileSystemOperateList[msg.Identity]?.OnSocketMessageArrived(msg);
+                AsyncFileSystemOperates[msg.Identity]?.OnSocketMessageArrived(msg);
             }
             catch (RequestFailedException ex)
             {
@@ -138,7 +138,7 @@ namespace QingzhenyunApis.Methods.V3
 
         public static string Token { get; protected set; } = string.Empty;
 
-        internal static Dictionary<string, FileSystemOperate> FileSystemOperateList { get; } = new Dictionary<string, FileSystemOperate>();
+        internal static Dictionary<string, FileSystemOperate> AsyncFileSystemOperates { get; } = new Dictionary<string, FileSystemOperate>();
 
         protected static async void InitializeSocketClient(string uid)
         {
