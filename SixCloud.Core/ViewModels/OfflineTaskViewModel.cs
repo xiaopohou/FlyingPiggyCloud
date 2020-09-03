@@ -24,13 +24,20 @@ namespace SixCloud.Core.ViewModels
             int count;
             do
             {
-                var x = await OfflineDownloader.GetList(skip, limit);
-                count = x.DataList.Count;
-                foreach (var item in x.DataList)
+                var x = await OfflineDownloader.GetList(skip, limit).ConfigureAwait(true);
+                if (x.DataList.Any())
                 {
-                    yield return item;
+                    count = x.DataList.Count;
+                    foreach (var item in x.DataList)
+                    {
+                        yield return item;
+                    }
+                    skip += limit;
                 }
-                skip += limit;
+                else
+                {
+                    yield break;
+                }
             } while (count == limit);
             yield break;
         }
