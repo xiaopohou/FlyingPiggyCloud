@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using QingzhenyunApis.Exceptions;
 using SixCloudCore.FileUploader.Calculators;
 using SixCloudCore.FileUploader.HTTP;
 using System;
@@ -172,11 +173,16 @@ namespace SixCloudCore.FileUploader
             }
             var task = currentTask;
 
+            if (task == null)
+            {
+                return;
+            }
+
             if (task.CompletedBlockCount == task.TotalBlockCount)
             {
                 foreach (var content in task.TotalContents)
                 {
-                    if (content == null || content == "")
+                    if (string.IsNullOrWhiteSpace(content))
                     {
                         return;
                     }
@@ -214,15 +220,22 @@ namespace SixCloudCore.FileUploader
             {
                 while (true)
                 {
-                    if (workbook.Count == 0 && currentTask != null)
+                    try
                     {
-                        Thread.Sleep(500);
+                        if (workbook.Count == 0 && currentTask != null)
+                        {
+                            Thread.Sleep(500);
+                        }
+                        else
+                        {
+                            Check();
+                            CarryOn();
+                            Thread.Sleep(10);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Check();
-                        CarryOn();
-                        Thread.Sleep(10);
+                        ex.Submit(nameof(StartWork));
                     }
                 }
             });

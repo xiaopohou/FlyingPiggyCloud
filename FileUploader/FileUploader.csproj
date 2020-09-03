@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QingzhenyunApis.Exceptions\QingzhenyunApis.Exceptions.csproj" />
     <ProjectReference Include="..\SixTransporter\SixTransporter.csproj" />
   </ItemGroup>
 
