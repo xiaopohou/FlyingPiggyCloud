@@ -15,7 +15,7 @@ namespace SixCloud.Core.ViewModels
             PauseCommand = new DependencyCommand(Pause, CanPause);
             CancelCommand = new DependencyCommand(Stop, DependencyCommand.AlwaysCan);
 
-            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), Callback);
+            WeakEventManager<ITransferItemViewModel.Refresher, EventArgs>.AddHandler(ITransferItemViewModel.refresher, nameof(ITransferItemViewModel.refresher.Tick), Callback);
 
             void Callback(object sender, EventArgs e)
             {

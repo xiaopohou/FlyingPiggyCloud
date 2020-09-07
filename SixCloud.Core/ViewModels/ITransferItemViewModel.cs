@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -6,14 +8,27 @@ namespace SixCloud.Core.ViewModels
 {
     public interface ITransferItemViewModel
     {
+        public sealed class Refresher
+        {
+            public event EventHandler Tick;
+
+            internal Refresher()
+            {
+                Task.Run(() =>
+                {
+                    while (true)
+                    {
+                        Tick?.Invoke(this, EventArgs.Empty);
+                        Thread.Sleep(500);
+                    }
+                });
+            }
+        }
 
         /// <summary>
         /// 用于定时刷新任务进度
         /// </summary>
-        protected static readonly DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher)
-        {
-            Interval = TimeSpan.FromSeconds(0.5d)
-        };
+        protected static readonly Refresher refresher = new Refresher();
 
         public string Icon { get; }
 
@@ -34,10 +49,5 @@ namespace SixCloud.Core.ViewModels
         public DependencyCommand PauseCommand { get; }
 
         public DependencyCommand CancelCommand { get; }
-
-        static ITransferItemViewModel()
-        {
-            timer.Start();
-        }
     }
 }

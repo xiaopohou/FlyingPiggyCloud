@@ -169,7 +169,7 @@ namespace SixCloudCore.SixTransporter.Downloader
             {
                 var threads = Threads.ToList();
 
-                foreach (var thread in Threads)
+                foreach (var thread in Threads.ToList())
                 {
                     //所有线程的文件对象都被释放后触发事件通知调用方删除文件
                     thread.FileStreamDisposed += (sender, e) =>

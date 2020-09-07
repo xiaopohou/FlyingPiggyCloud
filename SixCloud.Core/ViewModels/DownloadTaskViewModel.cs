@@ -270,7 +270,7 @@ namespace SixCloud.Core.ViewModels
                 Application.Current.Dispatcher.BeginInvoke(() => TaskComplete?.Invoke(sender, e));
             });
 
-            WeakEventManager<DispatcherTimer, EventArgs>.AddHandler(ITransferItemViewModel.timer, nameof(ITransferItemViewModel.timer.Tick), TimerCallBack);
+            WeakEventManager<ITransferItemViewModel.Refresher, EventArgs>.AddHandler(ITransferItemViewModel.refresher, nameof(ITransferItemViewModel.refresher.Tick), TimerCallBack);
 
             void TimerCallBack(object sender, EventArgs e)
             {
